@@ -1,3 +1,21 @@
 # microservice specific routes
 
 GET        /hello-world             uk.gov.hmrc.disguisedremunerationfrontend.controllers.HelloWorld.helloWorld
+
+GET         /                                       controllers.JourneyController.index
+
+
+GET         /about-you/                 controllers.JourneyController.aboutYou(id = "")
+GET         /about-you/:id              controllers.JourneyController.aboutYou(id: String)
+POST        /about-you/                 controllers.JourneyController.aboutYou(id = "")
+POST        /about-you/:id              controllers.JourneyController.aboutYou(id: String)
+
+GET         /contact-details/           controllers.JourneyController.contactDetails(id = "")
+GET         /contact-details/:id        controllers.JourneyController.contactDetails(id: String)
+POST        /contact-details/           controllers.JourneyController.contactDetails(id = "")
+POST        /contact-details/:id        controllers.JourneyController.contactDetails(id: String)
+
+GET         /scheme/                    controllers.JourneyController.addScheme(id = "")
+GET         /scheme/:id                 controllers.JourneyController.addScheme(id: String)
+POST        /scheme/                    controllers.JourneyController.addScheme(id = "")
+POST        /scheme/:id                 controllers.JourneyController.addScheme(id: String)

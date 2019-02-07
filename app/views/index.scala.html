@@ -1,0 +1,66 @@
+@*
+ * Copyright 2019 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import ltbs.uniform.widgets.govuk.html._
+
+@(state: controllers.JourneyState)(implicit messages: ltbs.uniform.web.Messages)
+
+<html lang="en" class="govuk-template js-enabled">
+    <head>
+        <meta charset="utf-8" />
+        <title>Uniform Play :: Example Service</title>    
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!--[if gt IE 8]><!--><link href="/assets/govuk-frontend-ie8-2.4.0.min.css" media="screen" rel="stylesheet" type="text/css"><!--<![endif]-->
+        <link rel="stylesheet" type="text/css" href="/assets/application.css">	
+        <script type="text/javascript" src="/assets/jquery-3.3.1.min.js" ></script>    
+        <script type="text/javascript" src="/assets/govuk-frontend-2.4.0.min.js" ></script>
+        <meta name="theme-color" content="#0b0c0c" /> 
+        <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="/assets/images/favicon.ico" type="image/x-icon" />
+        <link rel="mask-icon" href="/assets/images/govuk-mask-icon.svg" color="#0b0c0c" /> 
+        <meta name="robots" content="noindex, nofollow" />
+        <meta property="og:image" content="/assets/images/govuk-opengraph-image.png" />
+    </head>
+    <body class="govuk-template__body ">
+
+        <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
+        
+        @header(Some("Uniform Play Interpreter Example"), Nil, None, Some("EXPERIMENTAL"))
+        <div class="govuk-width-container">
+            <main class="govuk-main-wrapper govuk-main-wrapper--l" id="main-content" role="main">
+		  
+		  <div class="govuk-grid-row">
+		    <div class="govuk-grid-column-two-thirds">
+
+		  @tasklist(
+                     "Enter Your Details" -> Right(List(
+	               ("About You", Some("about-you/").filter(_ => state.aboutYou.isEmpty), None, state.aboutYou.isDefined),
+                       ("Contact details", Some("contact-details/").filter(_ => state.contactDetails.isEmpty), None, state.contactDetails.isDefined), 
+                       ("Add a remuneration scheme", Some("scheme/"), None, state.schemes.nonEmpty)
+		     )), 
+                     "Enter loan details by year" -> Left{Html("""
+You need to <a href="scheme/" class="govuk-link">add a remuneration scheme</a> before you can add loan details.""")
+                     },
+                     "Check and send your details" -> Right(List(
+	               ("Check your answers and send your details", Some("#").filter(_ => state.readyToSubmit), None, false)
+                     ))
+		  )
+</div>
+</div>
+            </main>
+        </div>  
+        @footer(Nil,Nil)
+    </body>
+</html>

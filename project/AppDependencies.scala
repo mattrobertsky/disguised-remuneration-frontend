@@ -5,11 +5,14 @@ import sbt._
 
 object AppDependencies {
 
-  val compile = Seq(
+  val uniformVersion = "c09a0fa2a24fb52f74af11485e7c5bd92b189442-SNAPSHOT"
 
-    "uk.gov.hmrc"             %% "govuk-template"           % "5.27.0-play-25",
-    "uk.gov.hmrc"             %% "play-ui"                  % "7.31.0-play-25",
-    "uk.gov.hmrc"             %% "bootstrap-play-25"        % "4.8.0"
+  val compile = Seq(
+    "uk.gov.hmrc"           %% "govuk-template"      % "5.27.0-play-25",
+    "uk.gov.hmrc"           %% "play-ui"             % "7.31.0-play-25",
+    "uk.gov.hmrc"           %% "bootstrap-play-25"   % "4.8.0",
+    "com.luketebbs.uniform" %% "interpreter-play25"  % uniformVersion,
+    "com.luketebbs.uniform" %% "govuk-widgets"       % uniformVersion
   )
 
   val test = Seq(
