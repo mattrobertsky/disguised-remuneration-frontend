@@ -17,14 +17,13 @@
 package uk.gov.hmrc.disguisedremunerationfrontend.config
 
 import javax.inject.{Inject, Singleton}
-
 import play.api.{Configuration, Environment}
-import play.api.Mode.Mode
-import uk.gov.hmrc.play.config.ServicesConfig
+import play.api.Mode
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 @Singleton
-class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: Environment) extends ServicesConfig {
-  override protected def mode: Mode = environment.mode
+class AppConfig @Inject()(val runModeConfiguration: Configuration, servicesConfig: ServicesConfig, environment: Environment) {
+  protected def mode: Mode = environment.mode
 
   private def loadConfig(key: String) = runModeConfiguration.getString(key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
 

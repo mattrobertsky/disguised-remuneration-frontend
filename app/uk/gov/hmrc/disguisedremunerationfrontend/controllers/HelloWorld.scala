@@ -17,17 +17,16 @@
 package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 
 import javax.inject.{Inject, Singleton}
-
+import play.api.i18n.I18nSupport
 import play.api.mvc._
-
-import scala.concurrent.Future
-import play.api.i18n.{I18nSupport, MessagesApi}
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
 import uk.gov.hmrc.disguisedremunerationfrontend.views
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+
+import scala.concurrent.Future
 
 @Singleton
-class HelloWorld @Inject()(val messagesApi: MessagesApi, implicit val appConfig: AppConfig) extends FrontendController with I18nSupport {
+class HelloWorld @Inject()(mcc: MessagesControllerComponents)(implicit val appConfig: AppConfig) extends FrontendController(mcc) with I18nSupport {
 
   val helloWorld = Action.async { implicit request =>
     Future.successful(Ok(views.html.hello_world()))
