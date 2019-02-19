@@ -1,0 +1,54 @@
+@*
+ * Copyright 2019 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import ltbs.uniform.widgets.govuk.html._
+@import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
+@(state: uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyState)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@*main_template(title = messages("landing.heading.title"), bodyClasses = Some("govuk-template__body ")) {*@
+
+@*
+    <body class="govuk-template__body ">
+
+        <div class="govuk-width-container">
+            <main class="govuk-main-wrapper govuk-main-wrapper--l" id="main-content" role="main">
+
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-two-thirds">
+*@
+                    @tasklist(
+                        messages("landing.details.title") -> Right(List(
+                            ("About you", Some("about-you/").filter(_ => state.aboutYou.isEmpty), None, state.aboutYou.isDefined),
+                            ("Contact details", Some("contact-details/").filter(_ => state.contactDetails.isEmpty), None, state.contactDetails.isDefined)
+                        )),
+                        messages("landing.loan.arrangement.heading") -> Left {
+                            Html(messages("landing.loan.arrangement.info"))
+                        },
+                        messages("landing.loan.taxyear.heading") -> Left {
+                            Html("""You need to <a href="scheme/" class="govuk-link">add a remuneration scheme</a> before you can add loan details.""")
+
+                        },
+                        messages("landing.checkdetails.heading") -> Left {
+                            Html(messages("landing.sendanswers.link"))
+                        }
+)
+@*
+                    </div>
+                </div>
+            </main>
+        </div>
+
+    </body>
+    *@
