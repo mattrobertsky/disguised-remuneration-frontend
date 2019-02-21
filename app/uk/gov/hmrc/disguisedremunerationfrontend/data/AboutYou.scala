@@ -16,36 +16,40 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
+
 import ltbs.uniform._
 import org.atnos.eff._
+import uk.gov.hmrc.disguisedremunerationfrontend.controllers.EmploymentStatus
 import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration._
 
 case class AboutYou(
-  diedOn: Option[Date],
+  completedBySelf: Boolean = true,
+  deceased: Option[Boolean],
   identification: Either[Nino, Utr],
   employmentStatus: Option[EmploymentStatus]
 )
 
 object AboutYou {
 
-  type Stack = Fx.fx4[
+  type Stack = Fx.fx3[
     UniformAsk[Boolean,?],
-    UniformAsk[Option[Date],?],
     UniformAsk[Either[Nino,Utr],?],
     UniformAsk[Option[EmploymentStatus],?]
     ]
 
   def program[R
   : _uniform[Boolean,?]
-  : _uniform[Option[Date],?]
   : _uniform[Either[Nino,Utr],?]
   : _uniform[Option[EmploymentStatus],?]
   ]: Eff[R, Option[AboutYou]] = {
     for {
-      diedOn  <- uask[R,Option[Date]]("diedOn")
-      id      <- uask[R,Either[Nino,Utr]]("identification")
-      status <- uask[R,Option[EmploymentStatus]]("employmentStatus")
-    } yield AboutYou(diedOn, id, status)
-  } when uask[R,Boolean]("otherPerson")
+      alive   <- uask[R, Boolean]("aboutyou-personalive")
+      employmentStatus  <- uask[R,Option[EmploymentStatus]]("aboutyou-employmentstatus") when !alive
+      deceasedBefore  <- uask[R,Boolean]("aboutyou-deceasedbefore") when !alive
+      id      <- uask[R,Either[Nino,Utr]]("aboutyou-identity")
+      isCorrectPerson <- uask[R, Boolean]("aboutyou-confirmation")
+    } yield {
+      AboutYou(false, Some(true), Right("987655"), None)}
+  }  when uask[R, Boolean]("aboutyou-completedby")
 
 }

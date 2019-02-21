@@ -1,6 +1,12 @@
+#Common
+common.yes=Yes
+common.no=No
+common.back=Back
+common.save-continue=Save and continue
+common.save-back-later=Save and come back later
 
 #Landing Page
-landing.heading.title=Send your loan charge details
+landing.heading=Send your loan charge details
 landing.info=Fill in each section as best you can. You can save your answers and come back later to finish.
 landing.details.title=Enter your details
 landing.loan.arrangement.heading=Tell us about loan arrangements you used, which were designed to avoid tax and National Insurance
@@ -8,3 +14,45 @@ landing.loan.arrangement.info=These are sometimes called 'disguised remuneration
 landing.loan.taxyear.heading=Enter loan details by tax year
 landing.checkdetails.heading=Check and send your details
 landing.sendanswers.link=Check your answers and send your details
+
+#About you
+aboutyou-completedby.heading=Are you filling in this form for yourself?
+aboutyou-completedby.FALSE=Yes, for myself
+aboutyou-completedby.TRUE=No, for someone else
+aboutyou-personalive.heading=Is the person you are acting for alive?
+aboutyou-personalive.TRUE=Yes
+aboutyou-personalive.FALSE=No
+aboutyou-identity.heading=How do you want to confirm the identity of the person you are acting for?
+aboutyou-identity.Left.a.heading= The person's National Insurance number
+#aboutyou-identity-nino.info=This will be on their National Insurance card, benefit letter, payslip or P60. For example, 'QQ 12 34 56 C'
+#aboutyou-identity-nino.label=Enter their National Insurance number
+aboutyou-identity.Right.b.heading=The person's Self Assessment Unique Taxpayer Reference (UTR)
+#aboutyou-identity.utr.info=This is the 10 numbers like 12345 67890. It will be on tax returns and other letters about Self Assessment. It may be called 'reference', 'UTR' or 'official use'. <a href="XXX">Find a lost UTR (opens in a new window or tab)</a>.
+#aboutyou-identity.utr.label=Enter their Self Assessment UTR
+aboutyou-employmentstatus.heading=Was the deceased person employed or self-employed when they had a loan?
+aboutyou-employmentstatus-employed=Employed
+aboutyou-employmentstatus-self-employed=Self-employed
+aboutyou-employmentstatus.option.-both=Both employed and self-employed
+aboutyou-deceasedbefore.heading=Did the deceased person die on or before 5 April 2019?
+aboutyou-deceasedbefore.TRUE=Yes
+aboutyou-deceasedbefore.FALSE=No
+aboutyou-noloancharge.heading=You do not need to send any loan charge details
+aboutyou-noloancharge.p1=Based on your answers, you do not need to send any loan charge details.
+aboutyou-noloancharge.p2=This is because you told us the deceased person:
+aboutyou-noloancharge.p3=was employed when they had the loan
+aboutyou-noloancharge.p4=has died on or before 5 April 2019
+aboutyou-noloancharge.p5=If this is not right, you need to <a class="govuk-link" href="/">go back and change your answers<a/>.
+aboutyou-confirmation.heading=Is this the person you are acting for?
+aboutyou-confirmation.TRUE=Yes - this is the correct person
+aboutyou-confirmation.FALSE=No - I need to start over again
+
+#Contact details
+contactdetails.heading=Is this your address?
+contactdetails.address.line1=Building and street
+contactdetails.address.line2=Town or city
+contactdetails.address.line3=County
+contactdetails.address.postcode=Postcode
+contactdetails.correct.heading=Are your contact details correct?
+contactdetails.correct.telephone-number=UK telephone number (optional)
+contactdetails.correct.email=Email address (optional)
+

@@ -16,21 +16,20 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 
-import cats.implicits._
-import cats.kernel.Monoid
+import enumeratum.{Enum, EnumEntry}
 import javax.inject.{Inject, Singleton}
 import ltbs.uniform.ErrorTree
 import ltbs.uniform.interpreters.playframework._
 import ltbs.uniform.web.InferParser._
 import ltbs.uniform.web.parser._
-import ltbs.uniform.web.{Messages => _}
+import ltbs.uniform.web.{NoopMessages, Messages => _}
 import ltbs.uniform.widgets.govuk._
 import org.atnos.eff._
 import play.api.i18n.I18nSupport
 import play.api.mvc.{AnyContent, MessagesControllerComponents, Request}
 import play.twirl.api.Html
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
-import uk.gov.hmrc.disguisedremunerationfrontend.data.AboutYou.Stack
+import uk.gov.hmrc.disguisedremunerationfrontend.data.AboutYou._
 import uk.gov.hmrc.disguisedremunerationfrontend.data._
 import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration._
 import uk.gov.hmrc.disguisedremunerationfrontend.views
@@ -39,12 +38,20 @@ import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
+sealed abstract class EmploymentStatus extends EnumEntry
+object EmploymentStatus extends Enum[EmploymentStatus] {
+  val values = findValues
+  case object Employed      extends EmploymentStatus
+  case object SelfEmployed  extends EmploymentStatus
+  case object Both          extends EmploymentStatus
+}
+
 
 case class JourneyState(
   aboutYou: Option[Option[AboutYou]] = None,
-    schemes: List[Scheme] = Nil,
-    contactDetails: Option[ContactDetails] = None,
-    details: List[LoanDetails] = Nil
+  schemes: List[Scheme] = Nil,
+  contactDetails: Option[ContactDetails] = None,
+  details: List[LoanDetails] = Nil
 ) {
     def readyToSubmit = aboutYou.isDefined
     // && contactDetails.isDefined &&
@@ -53,17 +60,16 @@ case class JourneyState(
 
 
 @Singleton
-class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit val appConfig: AppConfig) extends FrontendController(mcc) with PlayInterpreter with I18nSupport {
+class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit val appConfig: AppConfig)
+      extends FrontendController(mcc) with PlayInterpreter with I18nSupport {
 
   var state: JourneyState = JourneyState()
 
-  def messages( request: Request[AnyContent] ): ltbs.uniform.web.Messages = convertMessages(messagesApi.preferred(request))
+  def messages( request: Request[AnyContent] ): ltbs.uniform.web.Messages = NoopMessages///convertMessages(messagesApi.preferred(request))
 
   def renderForm(key: String, errors: ErrorTree, form: Html, breadcrumbs: List[String], request: Request[AnyContent], messagesIn: ltbs.uniform.web.Messages): Html = {
-    ???
-    //views.html.chrome(key, errors, form, "/" :: breadcrumbs)(messagesIn, request)
+     views.html.chrome(key, errors, form, "/" :: breadcrumbs)(messagesIn, request)
   }
-
 
   override lazy val parse = super[FrontendController].parse
 
@@ -75,22 +81,27 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
     runWeb(
       program = AboutYou.program[FxAppend[Stack, PlayStack]]
         .useForm(PlayForm.automatic[Boolean])
-        .useForm(PlayForm.automatic[Option[Date]])
         .useForm(PlayForm.automatic[Either[Nino,Utr]])
         .useForm(PlayForm.automatic[Option[EmploymentStatus]]),
-      persistence
+      MemoryPersistence
     ){data =>
       state = state.copy(aboutYou = Some(data))
       Future.successful(Redirect(routes.JourneyController.index()))
     }
   }
 
+}
 
-  // Replace with ??
-  val persistence = new Persistence {
-    private var data: DB = Monoid[DB].empty
-    def dataGet: Future[DB] = Future.successful(data)
-    def dataPut(dataIn: DB): Future[Unit] =
-      Future(data = dataIn).map{_ => ()}
+import java.util.concurrent.atomic._
+object MemoryPersistence extends Persistence {
+  private val storage = new AtomicReference(Map.empty[String, String])
+
+  override def dataGet: Future[DB] = {
+    Future.successful(storage.get())
+  }
+
+  override def dataPut(dataIn: DB): Future[Unit] = {
+    storage.set(dataIn)
+    Future.successful(Unit)
   }
 }
