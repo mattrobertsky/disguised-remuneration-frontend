@@ -1,6 +1,6 @@
 #Common
-common.yes=Yes
-common.no=No
+#common.yes=Yes
+#common.no=No
 common.back=Back
 common.save-continue=Save and continue
 common.save-back-later=Save and come back later
@@ -23,21 +23,21 @@ aboutyou-personalive.heading=Is the person you are acting for alive?
 aboutyou-personalive.TRUE=Yes
 aboutyou-personalive.FALSE=No
 aboutyou-identity.heading=How do you want to confirm the identity of the person you are acting for?
-aboutyou-identity.Left.a.heading= The person's National Insurance number
-#aboutyou-identity-nino.info=This will be on their National Insurance card, benefit letter, payslip or P60. For example, 'QQ 12 34 56 C'
-#aboutyou-identity-nino.label=Enter their National Insurance number
-aboutyou-identity.Right.b.heading=The person's Self Assessment Unique Taxpayer Reference (UTR)
-#aboutyou-identity.utr.info=This is the 10 numbers like 12345 67890. It will be on tax returns and other letters about Self Assessment. It may be called 'reference', 'UTR' or 'official use'. <a href="XXX">Find a lost UTR (opens in a new window or tab)</a>.
-#aboutyou-identity.utr.label=Enter their Self Assessment UTR
+aboutyou-identity.Left=The person's National Insurance number
+aboutyou-identity.Left.a.heading=This will be on their National Insurance card, benefit letter, payslip or P60. For example, 'QQ 12 34 56 C'
+aboutyou-identity.Left.a.label=Enter their National Insurance number
+aboutyou-identity.Right=The person's Self Assessment Unique Taxpayer Reference (UTR)
+aboutyou-identity.Right.b.heading=This is the 10 numbers like 12345 67890. It will be on tax returns and other letters about Self Assessment. It may be called 'reference', 'UTR' or 'official use'. <a href="XXX">Find a lost UTR (opens in a new window or tab)</a>.
+aboutyou-identity.Right.label=Enter their Self Assessment UTR
 aboutyou-employmentstatus.heading=Was the deceased person employed or self-employed when they had a loan?
-aboutyou-employmentstatus-employed=Employed
-aboutyou-employmentstatus-self-employed=Self-employed
-aboutyou-employmentstatus.option.-both=Both employed and self-employed
+aboutyou-employmentstatus.Employed=Employed
+aboutyou-employmentstatus.SelfEmployed=Self-employed
+aboutyou-employmentstatus.Both=Both employed and self-employed
 aboutyou-deceasedbefore.heading=Did the deceased person die on or before 5 April 2019?
 aboutyou-deceasedbefore.TRUE=Yes
 aboutyou-deceasedbefore.FALSE=No
 aboutyou-noloancharge.heading=You do not need to send any loan charge details
-aboutyou-noloancharge.p1=Based on your answers, you do not need to send any loan charge details.
+aboutyou-noloancharge.hint=Based on your answers, you do not need to send any loan charge details.
 aboutyou-noloancharge.p2=This is because you told us the deceased person:
 aboutyou-noloancharge.p3=was employed when they had the loan
 aboutyou-noloancharge.p4=has died on or before 5 April 2019

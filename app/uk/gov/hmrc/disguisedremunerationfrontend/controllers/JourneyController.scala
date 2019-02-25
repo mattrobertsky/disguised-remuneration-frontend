@@ -16,13 +16,16 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 
+import cats.data.Validated
 import enumeratum.{Enum, EnumEntry}
 import javax.inject.{Inject, Singleton}
 import ltbs.uniform.ErrorTree
 import ltbs.uniform.interpreters.playframework._
+import ltbs.uniform.web.HtmlField
 import ltbs.uniform.web.InferParser._
 import ltbs.uniform.web.parser._
-import ltbs.uniform.web.{NoopMessages, Messages => _}
+import play.api.data.Form
+import ltbs.uniform.web.{HtmlForm, Input, Messages, NoopMessages}
 import ltbs.uniform.widgets.govuk._
 import org.atnos.eff._
 import play.api.i18n.I18nSupport
@@ -46,7 +49,6 @@ object EmploymentStatus extends Enum[EmploymentStatus] {
   case object Both          extends EmploymentStatus
 }
 
-
 case class JourneyState(
   aboutYou: Option[Option[AboutYou]] = None,
   schemes: List[Scheme] = Nil,
@@ -58,14 +60,13 @@ case class JourneyState(
     //schemes.nonEmpty && detailsStatus.forall(_._3.isDefined)
 }
 
-
 @Singleton
 class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit val appConfig: AppConfig)
       extends FrontendController(mcc) with PlayInterpreter with I18nSupport {
 
   var state: JourneyState = JourneyState()
 
-  def messages( request: Request[AnyContent] ): ltbs.uniform.web.Messages = NoopMessages///convertMessages(messagesApi.preferred(request))
+  def messages( request: Request[AnyContent] ): ltbs.uniform.web.Messages = convertMessages(messagesApi.preferred(request))
 
   def renderForm(key: String, errors: ErrorTree, form: Html, breadcrumbs: List[String], request: Request[AnyContent], messagesIn: ltbs.uniform.web.Messages): Html = {
      views.html.chrome(key, errors, form, "/" :: breadcrumbs)(messagesIn, request)
@@ -77,12 +78,26 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
     Ok(views.html.main_template(title = "Send your loan charge details")(views.html.index(state)))
   }
 
+  // How do I have 2 or more of these?
+  implicit val booleanField = new HtmlField[Boolean] {
+    def render(key: String, values: Input, errors: ErrorTree, messages: Messages) =
+      html.radios(
+        key,
+        Seq("FALSE","TRUE"),
+        values.value.headOption,
+        errors,
+        messages
+      )
+  }
+
+
   def aboutYou(implicit key: String) = Action.async { implicit request =>
     runWeb(
       program = AboutYou.program[FxAppend[Stack, PlayStack]]
         .useForm(PlayForm.automatic[Boolean])
         .useForm(PlayForm.automatic[Either[Nino,Utr]])
-        .useForm(PlayForm.automatic[Option[EmploymentStatus]]),
+        .useForm(PlayForm.automatic[EmploymentStatus])
+        .useForm(PlayForm.automatic[Unit]),
       MemoryPersistence
     ){data =>
       state = state.copy(aboutYou = Some(data))

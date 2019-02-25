@@ -23,33 +23,39 @@ import uk.gov.hmrc.disguisedremunerationfrontend.controllers.EmploymentStatus
 import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration._
 
 case class AboutYou(
-  completedBySelf: Boolean = true,
-  deceased: Option[Boolean],
-  identification: Either[Nino, Utr],
-  employmentStatus: Option[EmploymentStatus]
+  completedBySelf: Boolean,
+  alive: Boolean,
+  identification: Option[Either[Nino, Utr]] = None,
+  deceasedBefore: Option[Boolean] = None,
+  employmentStatus: Option[EmploymentStatus] = None
 )
 
 object AboutYou {
 
-  type Stack = Fx.fx3[
+  type Stack = Fx.fx4[
     UniformAsk[Boolean,?],
+    UniformAsk[Unit,?],
     UniformAsk[Either[Nino,Utr],?],
-    UniformAsk[Option[EmploymentStatus],?]
-    ]
+    UniformAsk[EmploymentStatus,?]
+  ]
 
   def program[R
   : _uniform[Boolean,?]
   : _uniform[Either[Nino,Utr],?]
-  : _uniform[Option[EmploymentStatus],?]
+  : _uniform[EmploymentStatus,?]
+  : _uniform[Unit,?]
   ]: Eff[R, Option[AboutYou]] = {
     for {
       alive   <- uask[R, Boolean]("aboutyou-personalive")
-      employmentStatus  <- uask[R,Option[EmploymentStatus]]("aboutyou-employmentstatus") when !alive
-      deceasedBefore  <- uask[R,Boolean]("aboutyou-deceasedbefore") when !alive
-      id      <- uask[R,Either[Nino,Utr]]("aboutyou-identity")
-      isCorrectPerson <- uask[R, Boolean]("aboutyou-confirmation")
+      employmentStatus  <- uask[R,EmploymentStatus]("aboutyou-employmentstatus") when !alive
+      deceasedBefore  <- uask[R,Boolean]("aboutyou-deceasedbefore") when employmentStatus == Some(EmploymentStatus.Employed)
+      notRequiredToComplete <-  uask[R, Unit]("aboutyou-noloancharge") when deceasedBefore == Some(true)
+      id <- uask[R, Either[Nino,Utr]]("aboutyou-identity") when notRequiredToComplete.isEmpty
+      isCorrectPerson <- uask[R, Boolean]("aboutyou-confirmation") when !id.isEmpty
     } yield {
-      AboutYou(false, Some(true), Right("987655"), None)}
+      AboutYou(false, alive, id, deceasedBefore, employmentStatus)
+    }
+
   }  when uask[R, Boolean]("aboutyou-completedby")
 
 }
