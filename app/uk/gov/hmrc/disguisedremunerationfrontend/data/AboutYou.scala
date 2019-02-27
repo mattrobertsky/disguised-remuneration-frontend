@@ -40,22 +40,23 @@ object AboutYou {
   ]
 
   def program[R
-  : _uniform[Boolean,?]
-  : _uniform[Either[Nino,Utr],?]
-  : _uniform[EmploymentStatus,?]
-  : _uniform[Unit,?]
+      : _uniformCore
+      : _uniformAsk[Boolean,?]
+      : _uniformAsk[Either[Nino,Utr],?]
+      : _uniformAsk[EmploymentStatus,?]
+      : _uniformAsk[Unit,?]
   ]: Eff[R, Option[AboutYou]] = {
     for {
-      alive   <- uask[R, Boolean]("aboutyou-personalive")
-      employmentStatus  <- uask[R,EmploymentStatus]("aboutyou-employmentstatus") when !alive
-      deceasedBefore  <- uask[R,Boolean]("aboutyou-deceasedbefore") when employmentStatus == Some(EmploymentStatus.Employed)
-      notRequiredToComplete <-  uask[R, Unit]("aboutyou-noloancharge") when deceasedBefore == Some(true)
-      id <- uask[R, Either[Nino,Utr]]("aboutyou-identity") when notRequiredToComplete.isEmpty
-      isCorrectPerson <- uask[R, Boolean]("aboutyou-confirmation") when !id.isEmpty
+      alive   <- ask[Boolean]("aboutyou-personalive")
+      employmentStatus  <- ask[EmploymentStatus]("aboutyou-employmentstatus").in[R] when !alive
+      deceasedBefore  <- ask[Boolean]("aboutyou-deceasedbefore").in[R] when employmentStatus == Some(EmploymentStatus.Employed)
+      notRequiredToComplete <-  ask[Unit]("aboutyou-noloancharge").in[R] when deceasedBefore == Some(true)
+      id <- ask[Either[Nino,Utr]]("aboutyou-identity").in[R] when notRequiredToComplete.isEmpty
+      isCorrectPerson <- ask[Boolean]("aboutyou-confirmation").in[R] when !id.isEmpty
     } yield {
       AboutYou(false, alive, id, deceasedBefore, employmentStatus)
     }
 
-  }  when uask[R, Boolean]("aboutyou-completedby")
+  }  when ask[Boolean]("aboutyou-completedby")
 
 }

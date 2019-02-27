@@ -19,7 +19,7 @@ package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 import cats.data.Validated
 import enumeratum.{Enum, EnumEntry}
 import javax.inject.{Inject, Singleton}
-import ltbs.uniform.ErrorTree
+import ltbs.uniform._
 import ltbs.uniform.interpreters.playframework._
 import ltbs.uniform.web.HtmlField
 import ltbs.uniform.web.InferParser._
@@ -71,8 +71,11 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
 
   def messages( request: Request[AnyContent] ): ltbs.uniform.web.Messages = convertMessages(messagesApi.preferred(request))
 
-  def renderForm(key: String, errors: ErrorTree, form: Html, breadcrumbs: List[String], request: Request[AnyContent], messagesIn: ltbs.uniform.web.Messages): Html = {
-    views.html.chrome(key, errors, form, "/" :: breadcrumbs)(messagesIn, request)
+  def listingPage[A](key: List[String],errors: ltbs.uniform.ErrorTree,elements: List[A],messages: ltbs.uniform.web.Messages)(implicit evidence$1: ltbs.uniform.web.Htmlable[A]): play.twirl.api.Html = ???
+
+
+  def renderForm(key: List[String], errors: ErrorTree, form: Html, breadcrumbs: List[String], request: Request[AnyContent], messagesIn: ltbs.uniform.web.Messages): Html = {
+    views.html.chrome(key.last, errors, form, "/" :: breadcrumbs)(messagesIn, request)
   }
 
   override lazy val parse = super[FrontendController].parse
@@ -106,16 +109,18 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
       )
   }
 
-
+  implicit def renderTell: (Unit, String) => Html = {case _ => Html("")}
 
   def aboutYou(implicit key: String) = Action.async { implicit request =>
+    implicit val keys: List[String] = key.split("/").toList
+
     import AboutYou._
     runWeb(
       program = AboutYou.program[FxAppend[Stack, PlayStack]]
-        .useForm(PlayForm.automatic[Boolean])
-        .useForm(PlayForm.automatic[Either[Nino,Utr]])
-        .useForm(PlayForm.automatic[EmploymentStatus])
-        .useForm(PlayForm.automatic[Unit]),
+        .useForm(PlayForm.automatic[Unit,Boolean])
+        .useForm(PlayForm.automatic[Unit,Either[Nino,Utr]])
+        .useForm(PlayForm.automatic[Unit,EmploymentStatus])
+        .useForm(PlayForm.automatic[Unit,Unit]),
       MemoryPersistence
     ){data =>
       state = state.copy(aboutYou = Some(data))
@@ -127,7 +132,7 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
 
 import java.util.concurrent.atomic._
 object MemoryPersistence extends Persistence {
-  private val storage = new AtomicReference(Map.empty[String, String])
+  private val storage = new AtomicReference(Map.empty[List[String], String])
 
   override def dataGet: Future[DB] = {
     Future.successful(storage.get())

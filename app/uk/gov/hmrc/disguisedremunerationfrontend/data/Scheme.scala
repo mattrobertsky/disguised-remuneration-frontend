@@ -47,14 +47,15 @@ object Scheme {
     ]
 
   def program[R
-  : _uniform[String,?]
+    : _uniformCore
+  : _uniformAsk[String,?]
 //  : _uniform[Option[String],?]
 //  : _uniform[Date,?]
 //  : _uniform[Option[Date],?]
 //  : _uniform[Boolean,?]
 //  : _uniform[Option[TaxSettlement],?]
   ]: Eff[R, Scheme] = for {
-    name                  <- uask[R,String]("scheme-namex")
+    name                  <- ask[String]("scheme-namex")
 //    schemeReferenceNumber <- uask[R,Option[String]]("schemeReferenceNumber")
 //    caseReferenceNumber   <- uask[R,Option[String]]("caseReferenceNumber")
 //    otherReferenceNumber  <- uask[R,Option[String]]("otherReferenceNumber")
