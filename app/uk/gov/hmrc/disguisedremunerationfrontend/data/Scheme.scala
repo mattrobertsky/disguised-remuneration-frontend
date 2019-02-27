@@ -16,17 +16,65 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
+import ltbs.uniform._
+import org.atnos.eff.{Eff, Fx}
 import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration.Date
 
 case class Scheme(
-  name: String,
-  referenceNumber: Option[String],
-  caseReferenceNumber: Option[String],
-  schemeReferenceNumber: Option[String],
-  schemeStart: Date,
-  stoppedInvolvmentOn: Option[Date],
-  bankrupted: Boolean,
-  employee: Boolean,
-  loanRecipient: Boolean,
-  taxSettlements: List[TaxSettlement]
+  name: String //,
+//  referenceNumber: Option[String],
+//  caseReferenceNumber: Option[String],
+//  schemeReferenceNumber: Option[String],
+//  schemeStart: Date,
+//  stoppedInvolvmentOn: Option[Date],
+//  bankrupted: Boolean,
+//  employee: Boolean,
+//  loanRecipient: Boolean,
+//  taxSettlements: List[TaxSettlement]
 )
+
+
+object Scheme {
+
+  type Stack = Fx.fx1[
+    UniformAsk[String,?]
+//    ,
+//    UniformAsk[Option[String],?],
+//    UniformAsk[Date,?],
+//    UniformAsk[Option[Date],?],
+//    UniformAsk[Boolean,?],
+//    UniformAsk[Option[TaxSettlement],?]
+    ]
+
+  def program[R
+  : _uniform[String,?]
+//  : _uniform[Option[String],?]
+//  : _uniform[Date,?]
+//  : _uniform[Option[Date],?]
+//  : _uniform[Boolean,?]
+//  : _uniform[Option[TaxSettlement],?]
+  ]: Eff[R, Scheme] = for {
+    name                  <- uask[R,String]("scheme-namex")
+//    schemeReferenceNumber <- uask[R,Option[String]]("schemeReferenceNumber")
+//    caseReferenceNumber   <- uask[R,Option[String]]("caseReferenceNumber")
+//    otherReferenceNumber  <- uask[R,Option[String]]("otherReferenceNumber")
+//    schemeStart           <- uask[R,Date]("schemeStart")
+//    stoppedInvolvmentOn   <- uask[R,Option[Date]]("stoppedInvolvmentOn")
+//    bankrupted            <- uask[R,Boolean]("bankrupted")
+//    employee              <- uask[R,Boolean]("employee")
+//    loanRecipient         <- uask[R,Boolean]("loanRecipient")
+//    taxSettlements        <- uask[R,Option[TaxSettlement]]("taxSettlements").map{_.toList}
+  } yield Scheme(
+    name
+//    schemeReferenceNumber,
+//    caseReferenceNumber,
+//    otherReferenceNumber,
+//    schemeStart,
+//    stoppedInvolvmentOn,
+//    bankrupted,
+//    employee,
+//    loanRecipient,
+//    taxSettlements
+  )
+
+}

@@ -17,8 +17,6 @@
 @import ltbs.uniform.widgets.govuk.html._
 @import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
 @(state: uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyState)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
-@*main_template(title = messages("landing.heading.title"), bodyClasses = Some("govuk-template__body ")) {*@
-
 @*
     <body class="govuk-template__body ">
 
@@ -34,7 +32,15 @@
                             ("Contact details", Some("contact-details/").filter(_ => state.contactDetails.isEmpty), None, state.contactDetails.isDefined)
                         )),
                         messages("landing.loan.arrangement.heading") -> Left {
-                            Html(messages("landing.loan.arrangement.info"))
+                            Html(
+                              """
+                                |These are sometimes called 'disguised remuneration schemes'.
+                                |<br><br>
+                                |<a href="scheme/" class="govuk-link">Add a loan arranngement</a>
+                              """.stripMargin
+                                + ""
+                                    + "You need to .."
+                            )
                         },
                         messages("landing.loan.taxyear.heading") -> Left {
                             Html("""You need to <a href="scheme/" class="govuk-link">add a remuneration scheme</a> before you can add loan details.""")

@@ -32,9 +32,12 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{AnyContent, MessagesControllerComponents, Request}
 import play.twirl.api.Html
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
-import uk.gov.hmrc.disguisedremunerationfrontend.data.AboutYou._
+//import uk.gov.hmrc.disguisedremunerationfrontend.data._
+import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration.{Nino, Utr}
+//import uk.gov.hmrc.disguisedremunerationfrontend.data.AboutYou._
+//import uk.gov.hmrc.disguisedremunerationfrontend.data.Scheme._
 import uk.gov.hmrc.disguisedremunerationfrontend.data._
-import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration._
+//import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration._
 import uk.gov.hmrc.disguisedremunerationfrontend.views
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
@@ -69,13 +72,26 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
   def messages( request: Request[AnyContent] ): ltbs.uniform.web.Messages = convertMessages(messagesApi.preferred(request))
 
   def renderForm(key: String, errors: ErrorTree, form: Html, breadcrumbs: List[String], request: Request[AnyContent], messagesIn: ltbs.uniform.web.Messages): Html = {
-     views.html.chrome(key, errors, form, "/" :: breadcrumbs)(messagesIn, request)
+    views.html.chrome(key, errors, form, "/" :: breadcrumbs)(messagesIn, request)
   }
 
   override lazy val parse = super[FrontendController].parse
 
   def index = Action { implicit request =>
     Ok(views.html.main_template(title = "Send your loan charge details")(views.html.index(state)))
+  }
+
+  def addScheme(implicit key: String) = Action.async { implicit request => ???
+//    import Scheme._
+//    runWeb(
+//      program = Scheme.program[FxAppend[Stack, PlayStack]]
+//        .useForm(PlayForm.automatic[String]),
+//      MemoryPersistence
+//    ){data =>
+//      state = state.copy(schemes = data :: state.schemes)
+//      Future.successful(Ok(data.toString))
+//      Future.successful(Ok("Scheme"))
+//    }
   }
 
   // How do I have 2 or more of these?
@@ -91,7 +107,9 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
   }
 
 
+
   def aboutYou(implicit key: String) = Action.async { implicit request =>
+    import AboutYou._
     runWeb(
       program = AboutYou.program[FxAppend[Stack, PlayStack]]
         .useForm(PlayForm.automatic[Boolean])

@@ -15,7 +15,6 @@
  *@
 
 @(items: (String, Either[Html,List[(String, Option[String],Option[String],Boolean)]])*)(implicit messages: Messages)
-
 <div class="govuk-width-container">
 
   <a href="javascript:history.back();" class="govuk-link link-back">Back</a>
@@ -37,6 +36,7 @@
     <ol class="app-task-list">
 
     @for(((title, group), index) <- items.zipWithIndex) {
+
     <li>
         <h2 class="app-task-list__section">
             <span class="app-task-list__section-number"/>@title

@@ -56,3 +56,7 @@ contactdetails.correct.heading=Are your contact details correct?
 contactdetails.correct.telephone-number=UK telephone number (optional)
 contactdetails.correct.email=Email address (optional)
 
+#Scheme
+scheme-name.heading=What is the name of this scheme?
+scheme-name.headingx=xWhat is the name of this scheme?
+
