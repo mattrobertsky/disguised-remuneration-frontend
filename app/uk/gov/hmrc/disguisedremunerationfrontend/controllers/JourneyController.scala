@@ -97,27 +97,31 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
 //    }
   }
 
-  // How do I have 2 or more of these?
-  implicit val booleanField = new HtmlField[Boolean] {
-    def render(key: String, values: Input, errors: ErrorTree, messages: Messages) =
-      html.radios(
-        key,
-        Seq("FALSE","TRUE"),
-        values.value.headOption,
-        errors,
-        messages
-      )
-  }
 
   implicit def renderTell: (Unit, String) => Html = {case _ => Html("")}
 
   def aboutYou(implicit key: String) = Action.async { implicit request =>
     implicit val keys: List[String] = key.split("/").toList
 
+    val custBool = {
+      implicit val booleanField = new HtmlField[Boolean] {
+        override def render( key: String, values: Input, errors: ErrorTree, messages: Messages ): Html =
+          html.radios(
+            key,
+            Seq("FALSE","TRUE"),
+            values.value.headOption,
+            errors,
+            messages
+          )
+      }
+      PlayForm.automatic[Unit, Boolean]
+    }
     import AboutYou._
     runWeb(
       program = AboutYou.program[FxAppend[Stack, PlayStack]]
-        .useForm(PlayForm.automatic[Unit,Boolean])
+        .useFormMap{
+          case initial @ List("aboutyou-completedby") => println(initial); custBool
+          case others @ _ => println(others); PlayForm.automatic[Unit,Boolean]}
         .useForm(PlayForm.automatic[Unit,Either[Nino,Utr]])
         .useForm(PlayForm.automatic[Unit,EmploymentStatus])
         .useForm(PlayForm.automatic[Unit,Unit]),
