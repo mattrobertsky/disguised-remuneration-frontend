@@ -98,26 +98,49 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
   }
 
   // How do I have 2 or more of these?
-  implicit val booleanField = new HtmlField[Boolean] {
-    def render(key: String, values: Input, errors: ErrorTree, messages: Messages) =
-      html.radios(
-        key,
-        Seq("FALSE","TRUE"),
-        values.value.headOption,
-        errors,
-        messages
-      )
-  }
+  // val booleanField = new HtmlField[Boolean] {
+  //   def render(key: String, values: Input, errors: ErrorTree, messages: Messages) =
+  //     html.radios(
+  //       key,
+  //       Seq("FALSE","TRUE"),
+  //       values.value.headOption,
+  //       errors,
+  //       messages
+  //     )
+  // }
+
+  // val booleanForm = new HtmlForm[Boolean] {
+  //   def render(key: String, values: ltbs.uniform.web.Input, errors: ltbs.uniform.ErrorTree, messages: ltbs.uniform.web.Messages, tell: play.twirl.api.Html): play.twirl.api.Html = ???
+  // }
+
 
   implicit def renderTell: (Unit, String) => Html = {case _ => Html("")}
 
   def aboutYou(implicit key: String) = Action.async { implicit request =>
     implicit val keys: List[String] = key.split("/").toList
 
+    val customBool = {
+      implicit val booleanField = new HtmlField[Boolean] {
+        def render(key: String, values: Input, errors: ErrorTree, messages: Messages) =
+          html.radios(
+            key,
+            Seq("FALSE","TRUE"),
+            values.value.headOption,
+            errors,
+            messages
+          )
+      }
+
+      PlayForm.automatic[Unit,Boolean]
+    }
+
     import AboutYou._
     runWeb(
       program = AboutYou.program[FxAppend[Stack, PlayStack]]
-        .useForm(PlayForm.automatic[Unit,Boolean])
+        .useFormMap{
+          case List("blah") => customBool
+          case _ => PlayForm.automatic[Unit,Boolean]
+        }
         .useForm(PlayForm.automatic[Unit,Either[Nino,Utr]])
         .useForm(PlayForm.automatic[Unit,EmploymentStatus])
         .useForm(PlayForm.automatic[Unit,Unit]),
