@@ -1,6 +1,4 @@
 #Common
-#common.yes=Yes
-#common.no=No
 common.back=Back
 common.save-continue=Save and continue
 common.save-back-later=Save and come back later
@@ -58,5 +56,43 @@ contactdetails.correct.email=Email address (optional)
 
 #Scheme
 scheme-name.heading=What is the name of this scheme?
-scheme-name.headingx=xWhat is the name of this scheme?
+scheme-dotas.heading=Do you have a Disclosure of Tax Avoidance Schemes (DOTAS) number for this scheme?
+scheme-dotas.true.heading=Enter the DOTAS number
+scheme-dotas.Yes=Yes
+scheme-dotas.No=No
+scheme-dotas.DoNotKnow=Do not know
+scheme-dotas.true.hint=For example, 12345678
+scheme-refnumber.heading=Do you have a HMRC case reference number for this scheme?
+scheme-refnumber.TRUE=Yes
+scheme-refnumber.FALSE=No
+scheme-refnumber.true.heading=Enter the HMRC case reference number
+scheme-refnumber.true.hint=This usually begins with ‘CFS’ or ‘CFSS’.
+scheme-stillusing.heading=Are you still using the scheme?
+scheme-stillusing.TRUE=Yes
+scheme-stillusing.FALSE=No
+scheme-stillusingyes.heading=When did you start using the scheme?
+scheme-stillusingno.heading=Dates when you used the scheme
+scheme-stillusingno._1.heading=Start date
+scheme-stillusingno._2.heading=End date
+scheme-dates.p1=If you do not know the exact date, enter an estimated date.
+scheme-dates.start=Start date
+scheme-dates.end=End date
+scheme-dates.hint=For example, 31 3 2015
+scheme-employee.heading=Were you an employee while you were using the scheme?
+scheme-employee.TRUE=Yes
+scheme-employee.FALSE=No
+scheme-employee.hint=If you were a director and an employee of your own company, answer 'Yes'.
+scheme-employername=Your employer’s name
+scheme-dates.employerpayeref=Employer PAYE reference (optional)
+scheme-dates.employerpayeref.hint=This is a 3 digit tax office number, a forward slash, and a tax office employer reference, like 123/AB456. It may be called ‘Employer PAYE reference’ or ‘PAYE reference’. It will be on your P60.
+scheme-fixedterm.heading=Is this loan an approved fixed-term loan?
+scheme-recipient.heading=Was the loan made to you?
+scheme-recipient.TRUE=Yes
+scheme-recipient.FALSE=No
+scheme-recipientname=Enter the name of who the loan was made to
+scheme-agreedpayment.heading=Have you paid, or agreed with us to pay, any tax or National Insurance owed for this scheme?
+scheme-agreedpayment.TRUE=Yes
+scheme-agreedpayment.FALSE=No
+scheme-agreedpayment.p1=If you made payments in response to an Accelerated Payments Notice (APN), do not include these.
+scheme-settlementstatus.heading=How much tax and National Insurance have you paid, or agreed with us to pay, for this scheme?
 

@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 
+
 import cats.data.Validated
 import enumeratum.{Enum, EnumEntry}
 import javax.inject.{Inject, Singleton}
@@ -33,7 +34,7 @@ import play.api.mvc.{AnyContent, MessagesControllerComponents, Request}
 import play.twirl.api.Html
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
 //import uk.gov.hmrc.disguisedremunerationfrontend.data._
-import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration.{Nino, Utr}
+import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration.{Nino, Utr, Date, EndJourney}
 //import uk.gov.hmrc.disguisedremunerationfrontend.data.AboutYou._
 //import uk.gov.hmrc.disguisedremunerationfrontend.data.Scheme._
 import uk.gov.hmrc.disguisedremunerationfrontend.data._
@@ -50,6 +51,16 @@ object EmploymentStatus extends Enum[EmploymentStatus] {
   case object Employed      extends EmploymentStatus
   case object SelfEmployed  extends EmploymentStatus
   case object Both          extends EmploymentStatus
+}
+
+
+
+sealed abstract class YesNoDoNotKnow extends EnumEntry
+object YesNoDoNotKnow extends Enum[YesNoDoNotKnow] {
+  val values = findValues
+  case object Yes extends YesNoDoNotKnow
+  case object No extends YesNoDoNotKnow
+  case object DoNotKnow extends YesNoDoNotKnow
 }
 
 case class JourneyState(
@@ -73,7 +84,6 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
 
   def listingPage[A](key: List[String],errors: ltbs.uniform.ErrorTree,elements: List[A],messages: ltbs.uniform.web.Messages)(implicit evidence$1: ltbs.uniform.web.Htmlable[A]): play.twirl.api.Html = ???
 
-
   def renderForm(key: List[String], errors: ErrorTree, form: Html, breadcrumbs: List[String], request: Request[AnyContent], messagesIn: ltbs.uniform.web.Messages): Html = {
     views.html.chrome(key.last, errors, form, "/" :: breadcrumbs)(messagesIn, request)
   }
@@ -84,21 +94,29 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
     Ok(views.html.main_template(title = "Send your loan charge details")(views.html.index(state)))
   }
 
-  def addScheme(implicit key: String) = Action.async { implicit request => ???
-//    import Scheme._
-//    runWeb(
-//      program = Scheme.program[FxAppend[Stack, PlayStack]]
-//        .useForm(PlayForm.automatic[String]),
-//      MemoryPersistence
-//    ){data =>
+  def addScheme(implicit key: String) = Action.async { implicit request =>  //??? }
+    implicit val keys: List[String] = key.split("/").toList
+    import Scheme._
+    runWeb(
+      program = Scheme.program[FxAppend[Stack, PlayStack]]
+        .useForm(PlayForm.automatic[Unit, String])
+        .useForm(PlayForm.automatic[Unit,YesNoDoNotKnow])
+        .useForm(PlayForm.automatic[Unit, Boolean])
+        .useForm(PlayForm.automatic[Unit, Date])
+        .useForm(PlayForm.automatic[Unit, (Date, Date)]),
+      MemoryPersistence
+    ){data =>
+      state = state.copy(schemes = state.schemes)
 //      state = state.copy(schemes = data :: state.schemes)
-//      Future.successful(Ok(data.toString))
-//      Future.successful(Ok("Scheme"))
-//    }
+      Future.successful(Ok(data.toString))
+      Future.successful(Redirect(routes.JourneyController.index()))
+      //Future.successful(Ok("Scheme"))
+    }
   }
 
 
   implicit def renderTell: (Unit, String) => Html = {case _ => Html("")}
+//  implicit def renderTell: (EndJourney, Unit) => Html = {case _ => Html("XYZ")}
 
   def aboutYou(implicit key: String) = Action.async { implicit request =>
     implicit val keys: List[String] = key.split("/").toList
@@ -120,11 +138,12 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
     runWeb(
       program = AboutYou.program[FxAppend[Stack, PlayStack]]
         .useFormMap{
-          case initial @ List("aboutyou-completedby") => println(initial); custBool
-          case others @ _ => println(others); PlayForm.automatic[Unit,Boolean]}
+          case List("aboutyou-completedby") => custBool
+          case _ => PlayForm.automatic[Unit,Boolean]
+        }
         .useForm(PlayForm.automatic[Unit,Either[Nino,Utr]])
         .useForm(PlayForm.automatic[Unit,EmploymentStatus])
-        .useForm(PlayForm.automatic[Unit,Unit]),
+        .useForm(PlayForm.automatic[Unit, Unit]),
       MemoryPersistence
     ){data =>
       state = state.copy(aboutYou = Some(data))

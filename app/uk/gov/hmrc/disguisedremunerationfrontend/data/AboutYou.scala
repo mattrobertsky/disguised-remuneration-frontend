@@ -34,6 +34,7 @@ object AboutYou {
 
   type Stack = Fx.fx4[
     UniformAsk[Boolean,?],
+//    UniformTell[EndJourney,?],
     UniformAsk[Unit,?],
     UniformAsk[Either[Nino,Utr],?],
     UniformAsk[EmploymentStatus,?]
@@ -44,12 +45,14 @@ object AboutYou {
       : _uniformAsk[Boolean,?]
       : _uniformAsk[Either[Nino,Utr],?]
       : _uniformAsk[EmploymentStatus,?]
+//      : _uniformTell[EndJourney,?]
       : _uniformAsk[Unit,?]
   ]: Eff[R, Option[AboutYou]] = {
     for {
       alive   <- ask[Boolean]("aboutyou-personalive")
       employmentStatus  <- ask[EmploymentStatus]("aboutyou-employmentstatus").in[R] when !alive
       deceasedBefore  <- ask[Boolean]("aboutyou-deceasedbefore").in[R] when employmentStatus == Some(EmploymentStatus.Employed)
+      //notRequiredToComplete <- tell[EndJourney]("aboutyou-noloancharge")("aboutyou-noloancharge").in[R] when deceasedBefore == Some(true)
       notRequiredToComplete <-  ask[Unit]("aboutyou-noloancharge").in[R] when deceasedBefore == Some(true)
       id <- ask[Either[Nino,Utr]]("aboutyou-identity").in[R] when notRequiredToComplete.isEmpty
       isCorrectPerson <- ask[Boolean]("aboutyou-confirmation").in[R] when !id.isEmpty

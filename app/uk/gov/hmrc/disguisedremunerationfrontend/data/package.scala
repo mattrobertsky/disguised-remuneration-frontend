@@ -21,4 +21,6 @@ package object disguisedremuneration {
   type Utr = String
   type Money = Int
   type Date = java.time.LocalDate
+
+  type EndJourney = String
 }

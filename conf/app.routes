@@ -10,3 +10,6 @@ POST       /about-you/              uk.gov.hmrc.disguisedremunerationfrontend.co
 POST       /about-you/:id           uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutYou(id: String)
 
 GET        /scheme/                 uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id = "")
+GET        /scheme/:id              uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id: String)
+POST       /scheme/                 uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id = "")
+POST       /scheme/:id              uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id: String)

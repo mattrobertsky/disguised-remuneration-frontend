@@ -16,66 +16,75 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
+//import java.time.LocalDate
+
 import ltbs.uniform._
 import org.atnos.eff.{Eff, Fx}
+import uk.gov.hmrc.disguisedremunerationfrontend.controllers.{EmploymentStatus, YesNoDoNotKnow}
 import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration.Date
 
+
 case class Scheme(
-  name: String //,
-//  referenceNumber: Option[String],
-//  caseReferenceNumber: Option[String],
-//  schemeReferenceNumber: Option[String],
-//  schemeStart: Date,
-//  stoppedInvolvmentOn: Option[Date],
-//  bankrupted: Boolean,
-//  employee: Boolean,
-//  loanRecipient: Boolean,
-//  taxSettlements: List[TaxSettlement]
+  name: String,
+  dotasReferenceNumber: Option[String],
+  caseReferenceNumber: Option[String],
+  schemeStart: Option[Date], //
+  schemeStopped: Option[Date],
+  employee: Boolean,
+  loanRecipient: Boolean,
+  loanRecipientName: Option[String],
+  settlement: TaxSettlement
 )
 
 
 object Scheme {
 
-  type Stack = Fx.fx1[
-    UniformAsk[String,?]
-//    ,
+  type Stack = Fx.fx5[
+    UniformAsk[String,?],
+    UniformAsk[Boolean,?],
+    UniformAsk[YesNoDoNotKnow,?],
 //    UniformAsk[Option[String],?],
-//    UniformAsk[Date,?],
-//    UniformAsk[Option[Date],?],
-//    UniformAsk[Boolean,?],
+    UniformAsk[Date,?],
+    UniformAsk[(Date, Date),?]
 //    UniformAsk[Option[TaxSettlement],?]
     ]
 
   def program[R
     : _uniformCore
-  : _uniformAsk[String,?]
+    : _uniformAsk[String,?]
+    : _uniformAsk[Boolean,?]
+    : _uniformAsk[YesNoDoNotKnow,?]
+    : _uniformAsk[(Date,Date),?]
+    : _uniformAsk[Date,?]
 //  : _uniform[Option[String],?]
-//  : _uniform[Date,?]
-//  : _uniform[Option[Date],?]
-//  : _uniform[Boolean,?]
+//    : _uniform[Boolean,?]
 //  : _uniform[Option[TaxSettlement],?]
-  ]: Eff[R, Scheme] = for {
-    name                  <- ask[String]("scheme-namex")
-//    schemeReferenceNumber <- uask[R,Option[String]]("schemeReferenceNumber")
-//    caseReferenceNumber   <- uask[R,Option[String]]("caseReferenceNumber")
-//    otherReferenceNumber  <- uask[R,Option[String]]("otherReferenceNumber")
-//    schemeStart           <- uask[R,Date]("schemeStart")
-//    stoppedInvolvmentOn   <- uask[R,Option[Date]]("stoppedInvolvmentOn")
-//    bankrupted            <- uask[R,Boolean]("bankrupted")
-//    employee              <- uask[R,Boolean]("employee")
-//    loanRecipient         <- uask[R,Boolean]("loanRecipient")
-//    taxSettlements        <- uask[R,Option[TaxSettlement]]("taxSettlements").map{_.toList}
-  } yield Scheme(
-    name
-//    schemeReferenceNumber,
-//    caseReferenceNumber,
-//    otherReferenceNumber,
-//    schemeStart,
-//    stoppedInvolvmentOn,
-//    bankrupted,
-//    employee,
-//    loanRecipient,
-//    taxSettlements
-  )
+  ]: Eff[R, Option[Scheme]] =  //{
+    for {
+      schemeName            <-  ask[String]("scheme-name")
+      dotasNumber           <-  ask[YesNoDoNotKnow]("scheme-dotas")
+      schemeReferenceNumber <-  ask[Boolean]("scheme-refnumber")
+      stillUsingScheme      <-  ask[Boolean]("scheme-stillusing")
+      stillUsingYes         <-  ask[Date]("scheme-stillusingyes").in[R] when stillUsingScheme        // change to Date
+      stillUsingNo          <-  ask[(Date, Date)]("scheme-stillusingno").in[R] when !stillUsingScheme       // change to Date
+      employee              <-  ask[Boolean]("scheme-employee")
+      recipient             <-  ask[Boolean]("scheme-recipient")
+      taxNIPaid             <-  ask[Boolean]("scheme-agreedpayment")
+      settlementStatus      <-  ask[Boolean]("scheme-settlementstatus")
+    } yield {
+      val scheme = Scheme(
+        name = schemeName,
+        dotasReferenceNumber = Some("dotas1"),
+        caseReferenceNumber = Some("case Ref1"),
+        schemeStart = Some(java.time.LocalDate.now()),
+        schemeStopped = None,
+        employee = true,
+        loanRecipient = true,
+        loanRecipientName = Some("Shadey accountant"),
+        settlement = new TaxSettlement(123)
+      )
+      Some(scheme)
+    }
+//  }  when ask[String]("scheme-name")
 
 }
