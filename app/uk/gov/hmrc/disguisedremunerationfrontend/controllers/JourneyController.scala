@@ -45,24 +45,19 @@ import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-sealed abstract class EmploymentStatus extends EnumEntry
-object EmploymentStatus extends Enum[EmploymentStatus] {
-  val values = findValues
+sealed trait EmploymentStatus
+object EmploymentStatus {
   case object Employed      extends EmploymentStatus
   case object SelfEmployed  extends EmploymentStatus
   case object Both          extends EmploymentStatus
 }
 
-
-
-sealed abstract class YesNoDoNotKnow extends EnumEntry
-object YesNoDoNotKnow extends Enum[YesNoDoNotKnow] {
-  val values = findValues
-  case object Yes extends YesNoDoNotKnow
-  case object No extends YesNoDoNotKnow
+sealed trait YesNoDoNotKnow
+object YesNoDoNotKnow {
+  case object Yes       extends YesNoDoNotKnow
+  case object No        extends YesNoDoNotKnow
   case object DoNotKnow extends YesNoDoNotKnow
 }
-
 case class JourneyState(
   aboutYou: Option[Option[AboutYou]] = None,
   schemes: List[Scheme] = Nil,
@@ -146,10 +141,13 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
         .useForm(PlayForm.automatic[Unit,String])
         .useForm(PlayForm.automatic[Unit, Unit]),
       MemoryPersistence
-    ){data =>
-      state = state.copy(aboutYou = Some(data))
-      Future.successful(Redirect(routes.JourneyController.index()))
-    }
+    ){_ match {
+      case Left(err) => throw new RuntimeException("logout")
+      case Right(data) => 
+        state = state.copy(aboutYou = Some(data))
+        println(data)
+        Future.successful(Redirect(routes.JourneyController.index()))
+    } }
   }
 
 }

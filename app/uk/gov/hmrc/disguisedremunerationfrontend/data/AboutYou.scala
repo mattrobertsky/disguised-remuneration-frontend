@@ -32,6 +32,9 @@ case class AboutYou(
 
 object AboutYou {
 
+  sealed trait Error
+  case object NoNeedToComplete extends Error
+
   type Stack = Fx.fx5[
     UniformAsk[Boolean,?],
     UniformAsk[String,?],
@@ -49,18 +52,26 @@ object AboutYou {
       : _uniformAsk[EmploymentStatus,?]
 //      : _uniformTell[EndJourney,?]
       : _uniformAsk[Unit,?]
-  ]: Eff[R, Option[AboutYou]] = {
+  ]: Eff[R, Either[Error,Option[AboutYou]]] = 
     for {
-      alive   <- ask[Boolean]("aboutyou-personalive")
-      employmentStatus  <- ask[EmploymentStatus]("aboutyou-employmentstatus").in[R] when !alive
-      deceasedBefore  <- ask[Boolean]("aboutyou-deceasedbefore").in[R] when employmentStatus == Some(EmploymentStatus.Employed)
-      notRequiredToComplete <- tell[Unit]("aboutyou-noloancharge")("_").in[R] when deceasedBefore == Some(true)
-      id <- ask[Either[Nino,Utr]]("aboutyou-identity").in[R] when notRequiredToComplete.isEmpty
-      isCorrectPerson <- ask[String]("aboutyou-confirmation").in[R] when !id.isEmpty
-    } yield {
-      AboutYou(false, alive, id, deceasedBefore, employmentStatus)
-    }
-
-  }  when ask[Boolean]("aboutyou-completedby")
+      completedBy <- ask[Boolean]("aboutyou-completedby")
+      ret <- completedBy match {
+        case false => Eff.pure[R,Either[Error,Option[AboutYou]]](Right(None))
+        case true => for {
+          alive   <- ask[Boolean]("aboutyou-personalive")
+          employmentStatus  <- ask[EmploymentStatus]("aboutyou-employmentstatus").in[R] when !alive
+          deceasedBefore  <- ask[Boolean]("aboutyou-deceasedbefore").in[R] when employmentStatus == Some(EmploymentStatus.Employed)
+          notRequiredToComplete = deceasedBefore == Some(true)
+          _ <- tell[Unit]("aboutyou-noloancharge")("_").in[R] when notRequiredToComplete
+          id <- ask[Either[Nino,Utr]]("aboutyou-identity").in[R] when (!notRequiredToComplete)
+          isCorrectPerson <- ask[String]("aboutyou-confirmation").in[R] when !id.isEmpty 
+        } yield {
+          if (notRequiredToComplete)
+            Left(NoNeedToComplete)
+          else
+            Right(Some(AboutYou(false, alive, id, deceasedBefore, employmentStatus)))
+        }
+      }
+  } yield (ret)
 
 }
