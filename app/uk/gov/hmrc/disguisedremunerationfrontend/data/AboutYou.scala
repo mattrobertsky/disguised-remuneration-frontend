@@ -32,8 +32,9 @@ case class AboutYou(
 
 object AboutYou {
 
-  type Stack = Fx.fx4[
+  type Stack = Fx.fx5[
     UniformAsk[Boolean,?],
+    UniformAsk[String,?],
 //    UniformTell[EndJourney,?],
     UniformAsk[Unit,?],
     UniformAsk[Either[Nino,Utr],?],
@@ -43,6 +44,7 @@ object AboutYou {
   def program[R
       : _uniformCore
       : _uniformAsk[Boolean,?]
+      : _uniformAsk[String,?]
       : _uniformAsk[Either[Nino,Utr],?]
       : _uniformAsk[EmploymentStatus,?]
 //      : _uniformTell[EndJourney,?]
@@ -52,9 +54,9 @@ object AboutYou {
       alive   <- ask[Boolean]("aboutyou-personalive")
       employmentStatus  <- ask[EmploymentStatus]("aboutyou-employmentstatus").in[R] when !alive
       deceasedBefore  <- ask[Boolean]("aboutyou-deceasedbefore").in[R] when employmentStatus == Some(EmploymentStatus.Employed)
-      notRequiredToComplete <- tell[Unit]("aboutyou-noloancharge")("aboutyou-noloancharge").in[R] when deceasedBefore == Some(true)
+      notRequiredToComplete <- tell[Unit]("aboutyou-noloancharge")("_").in[R] when deceasedBefore == Some(true)
       id <- ask[Either[Nino,Utr]]("aboutyou-identity").in[R] when notRequiredToComplete.isEmpty
-      isCorrectPerson <- ask[Boolean]("aboutyou-confirmation").in[R] when !id.isEmpty
+      isCorrectPerson <- ask[String]("aboutyou-confirmation").in[R] when !id.isEmpty
     } yield {
       AboutYou(false, alive, id, deceasedBefore, employmentStatus)
     }

@@ -143,6 +143,7 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
         }
         .useForm(PlayForm.automatic[Unit,Either[Nino,Utr]])
         .useForm(PlayForm.automatic[Unit,EmploymentStatus])
+        .useForm(PlayForm.automatic[Unit,String])
         .useForm(PlayForm.automatic[Unit, Unit]),
       MemoryPersistence
     ){data =>

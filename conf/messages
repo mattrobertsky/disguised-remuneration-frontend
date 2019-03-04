@@ -40,7 +40,8 @@ aboutyou-noloancharge.p2=This is because you told us the deceased person:
 aboutyou-noloancharge.p3=was employed when they had the loan
 aboutyou-noloancharge.p4=has died on or before 5 April 2019
 aboutyou-noloancharge.p5=If this is not right, you need to <a class="govuk-link" href="/">go back and change your answers<a/>.
-aboutyou-confirmation.heading=Is this the person you are acting for?
+#aboutyou-confirmation.heading=Is this the person you are acting for?
+aboutyou-confirmation.heading=What is the full name of the person you are acting for?
 aboutyou-confirmation.TRUE=Yes - this is the correct person
 aboutyou-confirmation.FALSE=No - I need to start over again
 
