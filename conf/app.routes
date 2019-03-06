@@ -1,3 +1,20 @@
 # microservice specific routes
 
 GET        /hello-world             uk.gov.hmrc.disguisedremunerationfrontend.controllers.HelloWorld.helloWorld
+
+GET        /                        uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.index
+
+GET        /about-you/              uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutYou(id = "")
+GET        /about-you/:id           uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutYou(id: String)
+POST       /about-you/              uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutYou(id = "")
+POST       /about-you/:id           uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutYou(id: String)
+
+GET        /contact-details/        uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetails(id = "")
+GET        /contact-details/:id     uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetails(id: String)
+POST       /contact-details/        uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetails(id = "")
+POST       /contact-details/:id     uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetails(id: String)
+
+GET        /scheme/                 uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id = "")
+GET        /scheme/:id              uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id: String)
+POST       /scheme/                 uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id = "")
+POST       /scheme/:id              uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id: String)

@@ -14,9 +14,11 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
-@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@import ltbs.uniform.widgets.govuk.html._
 
-@main_template(title = "Hello from disguised-remuneration-frontend", bodyClasses = None) {
-    <h1>12Hello from disguised-remuneration-frontend !</h1>
-}
+@(key: String, errors: Any, content: Html, breadcrumbs: List[String] = Nil)(implicit messages: ltbs.uniform.web.Messages, request: Request[AnyContent])
+    @helper.form(action = play.api.mvc.Call("post", key)) {
+        @helper.CSRF.formField
+        @content
+        <button type="submit" class="govuk-button">Save and Continue</button>
+    }

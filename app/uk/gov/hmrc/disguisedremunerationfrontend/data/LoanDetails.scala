@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,11 +12,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
-@()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+package uk.gov.hmrc.disguisedremunerationfrontend.data
 
-@main_template(title = "Hello from disguised-remuneration-frontend", bodyClasses = None) {
-    <h1>12Hello from disguised-remuneration-frontend !</h1>
-}
+import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration.Money
+
+class LoanDetails(
+  scheme: Scheme,
+  year: Int,
+  amount: Money,
+  hmrcApproved: Boolean,
+  genuinelyRepaid: Money,
+  writtenOff: Option[WrittenOff]
+)
