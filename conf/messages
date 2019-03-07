@@ -35,7 +35,7 @@ aboutyou-deceasedbefore.heading=Did the deceased person die on or before 5 April
 aboutyou-deceasedbefore.TRUE=Yes
 aboutyou-deceasedbefore.FALSE=No
 aboutyou-noloancharge.heading=You do not need to send any loan charge details
-aboutyou-noloancharge.hint=Based on your answers, you do not need to send any loan charge details.
+aboutyou-noloancharge.hint=<p>Based on your answers, you do not need to send any loan charge details.<ul class="govuk-list govuk-list--bullet"><li>was employed when they had the loan</li><li>has died on or before 5 April 2019</li>
 aboutyou-noloancharge.p2=This is because you told us the deceased person:
 aboutyou-noloancharge.p3=was employed when they had the loan
 aboutyou-noloancharge.p4=has died on or before 5 April 2019

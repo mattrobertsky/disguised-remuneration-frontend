@@ -115,9 +115,7 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
         .useForm(PlayForm.automatic[Unit, (Date, Date)]),
       MemoryPersistence
     ){data =>
-      println(s"State1: $state")
       state = state.copy(schemes = data.get :: state.schemes)  // remove get
-      println(s"State2: $state")
       Future.successful(Redirect(routes.JourneyController.index()))
     }
   }
@@ -154,7 +152,8 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
       MemoryPersistence
     ){
       _ match {
-      case Left(err) => Future.successful(Redirect(routes.HelloWorld.helloWorld())) //throw new RuntimeException("logout")
+      case Left(err) => Future.successful(Redirect(routes.HelloWorld.helloWorld()))
+                        //throw new RuntimeException("logout")
       case Right(data) => 
         state = state.copy(aboutYou = Some(data))
         Future.successful(Redirect(routes.JourneyController.index()))

@@ -31,7 +31,17 @@ case class AboutYou(
   actingFor: Option[String] = None
 )
 
+case class NotRequiredToComplete(
+                                p1: String = "<p>Based on your answers, you do not need to send any loan charge details.</p>",
+                                p2: String = "<p>This is because you told us the deceased person:",
+                                p3: String = "<ul class=\"govuk-list govuk-list--bullet\">\n          <li>was employed when they had the loan</li>\n          <li>has died on or before 5 April 2019</li>\n        </ul>",
+                                p4: String = "<p>If this is not right, you need to <a class=\"govuk-link\" href=\"/disguised-remun-prototype/4-0/was-user-self-employed?user-alive=No\">go back and change your answers<a/>.</p>"
+                                )
+
 object AboutYou {
+
+  lazy val regExUTR = """^(?:[ \t]*(?:[a-zA-Z]{3})?\d[ \t]*){10}$"""
+  lazy val regExNino = """^((?!(BG|GB|KN|NK|NT|TN|ZZ)|(D|F|I|Q|U|V)[A-Z]|[A-Z](D|F|I|O|Q|U|V))[A-Z]{2})[0-9]{6}[A-D]?$"""
 
   sealed trait Error
   case object NoNeedToComplete extends Error
@@ -62,14 +72,29 @@ object AboutYou {
           deceasedBefore  <- ask[Boolean]("aboutyou-deceasedbefore").in[R] when employmentStatus == Some(EmploymentStatus.Employed)
           notRequiredToComplete = deceasedBefore == Some(true)
           _ <- tell[Unit]("aboutyou-noloancharge")("_").in[R] when notRequiredToComplete
-          id <- ask[Either[Nino,Utr]]("aboutyou-identity").in[R] when (!notRequiredToComplete)
-          isCorrectPerson <- ask[String]("aboutyou-confirmation").validating(
-            "name contains invalid characters", _.matches("^[a-zA-Z]+$")).in[R] when !id.isEmpty
+          id <- ask[Either[Nino,Utr]]("aboutyou-identity")
+                  .validating(
+                    "Enter the person's National Insurance number in the correct format",
+                    _ match {
+                      case Left(nino) => nino.matches(regExNino)
+                      case _ => true
+                    }
+                  )
+                  .validating(
+                    "Enter the person's Self Assessment Unique Taxpayer Reference (UTR)",
+                    _ match {
+                      case Left(nino) => true
+                      case Right(utr) => utr.matches(regExUTR)
+                    }
+                  )
+                  .in[R] when (!notRequiredToComplete)
+          personName <- ask[String]("aboutyou-confirmation").in[R] when !id.isEmpty
         } yield {
+          println(s"id: $id")
           if (notRequiredToComplete)
             Left(NoNeedToComplete)
           else
-            Right(Some(AboutYou(false, alive, id, deceasedBefore, employmentStatus, isCorrectPerson)))
+            Right(Some(AboutYou(false, alive, id, deceasedBefore, employmentStatus, personName)))
         }
       }
   } yield (ret)

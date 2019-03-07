@@ -39,13 +39,8 @@ object ContactDetails {
   ]: Eff[R, ContactDetails] = {
     for {
       address <- ask[Address]("contactdetails-address")
-                 // .validating("Address incorrect", x => (x.line1.length < 35) &&  (x.line2.length < 35))
       telAndEmail <- ask[(String, String)]("contactdetails-telehoneemail")
-                  //("Please verify telephone/email")
-                 //   .validating(" tel & email incorrect", te => te._1.length < 20 && te._2.length < 35)
     } yield {
-      println(address)
-      println(telAndEmail)
       ContactDetails(address, (Some(telAndEmail._1), Some(telAndEmail._2)))
     }
   }

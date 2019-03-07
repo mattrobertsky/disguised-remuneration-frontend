@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
+import java.time.LocalDate
+
 import ltbs.uniform._
 import org.atnos.eff.{Eff, Fx}
 import uk.gov.hmrc.disguisedremunerationfrontend.controllers.{EmploymentStatus, YesNoDoNotKnow}
@@ -36,6 +38,16 @@ case class Scheme(
 
 
 object Scheme {
+
+  val earliestDate = LocalDate.parse("1999-04-05")
+//  def isBeforeEarliest(date: LocalDate) =
+  def isInRange(d: LocalDate) = d.isAfter(earliestDate) && d.isBefore(LocalDate.now())
+
+  def startBeforeEnd(dates: (LocalDate, LocalDate)): Boolean = (dates._1, dates._2) match {
+    case (start, end) if (isInRange(start) && isInRange(end) && start.isBefore(end)) => true
+    case _ => false
+  }
+
 
   type Stack = Fx.fx5[
     UniformAsk[String,?],
@@ -58,32 +70,24 @@ object Scheme {
       dotasNumber           <-  ask[YesNoDoNotKnow]("scheme-dotas")
       schemeReferenceNumber <-  ask[Boolean]("scheme-refnumber")
       stillUsingScheme      <-  ask[Boolean]("scheme-stillusing")
-      stillUsingYes         <-  ask[Date]("scheme-stillusingyes").in[R] when stillUsingScheme
-      stillUsingNo          <-  ask[(Date, Date)]("scheme-stillusingno").in[R] when !stillUsingScheme
+      stillUsingYes         <-  ask[Date]("scheme-stillusingyes")
+                                  .validating(s"The date you started using the scheme must after $earliestDate", isInRange(_))
+                                  .validating("The date you started using the scheme must be in the past", _.isBefore(LocalDate.now()))
+                                  .in[R] when stillUsingScheme
+      stillUsingNo          <-  ask[(Date, Date)]("scheme-stillusingno")
+                                  .validating("The date you stopped using the scheme must be the same as or after the date you started using the scheme", startBeforeEnd _)
+                                  .in[R] when !stillUsingScheme
       employee              <-  ask[Boolean]("scheme-employee").in[R] when !stillUsingScheme
       recipient             <-  ask[Boolean]("scheme-recipient").in[R] when !stillUsingScheme
       taxNIPaid             <-  ask[Boolean]("scheme-agreedpayment").in[R] when !stillUsingScheme
       settlementStatus      <-  ask[String]("scheme-settlementstatus").in[R] when taxNIPaid == Some(true)
     } yield {
 
-      println(s"$schemeName")
-      println(s"$dotasNumber")
-      println(s"$schemeReferenceNumber")
-      println(s"$stillUsingScheme")
-      if (stillUsingScheme)
-        println(s"$stillUsingYes")
-      else
-        println(s"$stillUsingNo")
-      println(s"$employee")
-      println(s"$recipient")
-      println(s"$taxNIPaid")
-      println(s"$settlementStatus")
-
       val scheme = Scheme(
         name = schemeName,
         dotasReferenceNumber = Some("dotas1"),
         caseReferenceNumber = Some("case Ref1"),
-        schemeStart = Some(java.time.LocalDate.now()),
+        schemeStart = Some(LocalDate.now()),
         schemeStopped = None,
         employee = true,
         loanRecipient = true,
