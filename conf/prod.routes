@@ -1,5 +1,5 @@
 # Add all the application routes to the app.routes file
-->         /disguised-remuneration/             app.Routes
+->         /disguised-remuneration              app.Routes
 ->         /                                    health.Routes
 ->     	   /template                            template.Routes
 
