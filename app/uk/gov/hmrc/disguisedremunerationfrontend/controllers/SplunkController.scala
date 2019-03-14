@@ -61,7 +61,7 @@ class SplunkController @Inject()(mcc: MessagesControllerComponents, auditConnect
       alive = false,
       identification = Some(Left("AB123456D")),
       deceasedBefore = Some(true),
-      employmentStatus = Some(EmploymentStatus.SelfEmployed),
+      employmentStatus = None,
       actingFor = Some("Derek")
     )
 
