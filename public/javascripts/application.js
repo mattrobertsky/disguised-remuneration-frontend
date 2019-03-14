@@ -14,6 +14,22 @@ $(document).ready(function () {
     showHideContentFoo.init();
 
     $(".govuk-radios__item").addClass('multiple-choice');
+    $(".govuk-radios__item_nino").addClass('multiple-choice');
+    $(".govuk-radios__item_utr").addClass('multiple-choice');
+    $('input[type=radio][name=aboutyou-identity]').change(function() {
+        if (this.value == 'Left') {
+            $('#conditional-aboutyou-identity-conditional-1').show();
+            $('#conditional-aboutyou-identity-conditional-2').hide();
+        }
+        else if (this.value == 'Right') {
+            $('#conditional-aboutyou-identity-conditional-1').hide();
+            $('#conditional-aboutyou-identity-conditional-2').show();
+        }
+    });
+
+
+    $('#conditional-aboutyou-identity-conditional-1').hide();
+    $('#conditional-aboutyou-identity-conditional-2').hide();
 
     $('input.volume').keyup(function(event) {
 

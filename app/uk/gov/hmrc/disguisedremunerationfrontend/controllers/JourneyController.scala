@@ -34,6 +34,7 @@ import play.twirl.api.Html
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
 import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration.{Date, Nino, Utr}
 import uk.gov.hmrc.disguisedremunerationfrontend.data._
+import uk.gov.hmrc.disguisedremunerationfrontend.data.render.RenderHtmlTemplate
 import uk.gov.hmrc.disguisedremunerationfrontend.views
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
@@ -147,6 +148,14 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
       }
       PlayForm.automatic[Unit, Boolean]
     }
+
+    val customNinoUTR = {
+      implicit val booleanField = new HtmlField[Either[Nino,Utr]] {
+        override def render( key: String, values: Input, errors: ErrorTree, messages: Messages ): Html =
+          Html(RenderHtmlTemplate.generateIdentityHtml(messages))
+      }
+      PlayForm.automatic[Unit, Either[Nino,Utr]]
+    }
     import AboutYou._
     runWeb(
       program = AboutYou.program[FxAppend[Stack, PlayStack]]
@@ -154,7 +163,7 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
           case List("aboutyou-completedby") => customBool
           case _ => PlayForm.automatic[Unit,Boolean]
         }
-        .useForm(PlayForm.automatic[Unit,Either[Nino,Utr]])
+        .useForm(customNinoUTR)
         .useForm(PlayForm.automatic[Unit,EmploymentStatus])
         .useForm(PlayForm.automatic[Unit,String])
         .useForm(PlayForm.automatic[Unit, Unit]),
