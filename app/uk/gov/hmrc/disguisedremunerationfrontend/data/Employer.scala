@@ -16,31 +16,6 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
-import ltbs.uniform._
-import org.atnos.eff._
-import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration._
+import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration.Paye
 
-case class ContactDetails(
-  address: Address,
-  telephoneAndEmail: TelEmail
-)
-
-object ContactDetails {
-
-  type Stack = Fx.fx2[
-    UniformAsk[Address, ?],
-    UniformAsk[TelEmail, ?]
-  ]
-  def program[R
-      : _uniformCore
-      : _uniformAsk[Address, ?]
-      : _uniformAsk[TelEmail, ?]
-  ]: Eff[R, ContactDetails] = {
-    for {
-      address <- ask[Address]("contactdetails-address")
-      telAndEmail <- ask[TelEmail]("contactdetails-telehoneemail")
-    } yield {
-      ContactDetails(address, telAndEmail)
-    }
-  }
-}
+case class Employer(name: String, paye: Paye)

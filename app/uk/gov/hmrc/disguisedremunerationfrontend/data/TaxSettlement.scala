@@ -18,8 +18,7 @@ package uk.gov.hmrc.disguisedremunerationfrontend.data
 
 import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration.{Date, Money}
 
-class TaxSettlement(
-  amount: Money
-//  amount: Money,
-//  dateOfSettlement: Date
+case class TaxSettlement(
+  amount: Money,
+  dateOfSettlement: Date
 )

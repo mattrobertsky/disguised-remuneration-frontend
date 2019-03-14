@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 
-
 import cats.data.Validated
 import enumeratum.{Enum, EnumEntry}
 import javax.inject.{Inject, Singleton}
@@ -95,7 +94,7 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
     runWeb(
       program = ContactDetails.program[FxAppend[Stack, PlayStack]]
         .useForm(PlayForm.automatic[Unit, Address])
-        .useForm(PlayForm.automatic[Unit, (String, String)]),
+        .useForm(PlayForm.automatic[Unit, TelEmail]),
       MemoryPersistence
     ){data =>
       state = state.copy(contactDetails = Some(data))
@@ -109,6 +108,9 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
     runWeb(
       program = Scheme.program[FxAppend[Stack, PlayStack]]
         .useForm(PlayForm.automatic[Unit, String])
+        .useForm(PlayForm.automatic[Unit, Option[String]])
+        .useForm(PlayForm.automatic[Unit, Option[Employer]])
+        .useForm(PlayForm.automatic[Unit, TaxSettlement])
         .useForm(PlayForm.automatic[Unit,YesNoDoNotKnow])
         .useForm(PlayForm.automatic[Unit, Boolean])
         .useForm(PlayForm.automatic[Unit, Date])

@@ -30,17 +30,17 @@ case class Scheme(
   caseReferenceNumber: Option[String],
   schemeStart: Option[Date],
   schemeStopped: Option[Date],
-  employee: Boolean,
+  employee: Option[Employer],
   loanRecipient: Boolean,
   loanRecipientName: Option[String],
-  settlement: TaxSettlement
+  settlement: Option[TaxSettlement]
 )
 
 
 object Scheme {
 
   val earliestDate = LocalDate.parse("1999-04-05")
-//  def isBeforeEarliest(date: LocalDate) =
+
   def isInRange(d: LocalDate) = d.isAfter(earliestDate) && d.isBefore(LocalDate.now())
 
   def startBeforeEnd(dates: (LocalDate, LocalDate)): Boolean = (dates._1, dates._2) match {
@@ -49,9 +49,12 @@ object Scheme {
   }
 
 
-  type Stack = Fx.fx5[
+  type Stack = Fx.fx8[
     UniformAsk[String,?],
+    UniformAsk[Option[String],?],
     UniformAsk[Boolean,?],
+    UniformAsk[TaxSettlement,?],
+    UniformAsk[Option[Employer],?],
     UniformAsk[YesNoDoNotKnow,?],
     UniformAsk[Date,?],
     UniformAsk[(Date, Date),?]
@@ -60,7 +63,10 @@ object Scheme {
   def program[R
     : _uniformCore
     : _uniformAsk[String,?]
+    : _uniformAsk[Option[String],?]
+    : _uniformAsk[TaxSettlement,?]
     : _uniformAsk[Boolean,?]
+    : _uniformAsk[Option[Employer],?]
     : _uniformAsk[YesNoDoNotKnow,?]
     : _uniformAsk[(Date,Date),?]
     : _uniformAsk[Date,?]
@@ -68,7 +74,7 @@ object Scheme {
     for {
       schemeName            <-  ask[String]("scheme-name")
       dotasNumber           <-  ask[YesNoDoNotKnow]("scheme-dotas")
-      schemeReferenceNumber <-  ask[Boolean]("scheme-refnumber")
+      schemeReferenceNumber <-  ask[Option[String]]("scheme-refnumber")
       stillUsingScheme      <-  ask[Boolean]("scheme-stillusing")
       stillUsingYes         <-  ask[Date]("scheme-stillusingyes")
                                   .validating(s"The date you started using the scheme must after $earliestDate", isInRange(_))
@@ -77,22 +83,22 @@ object Scheme {
       stillUsingNo          <-  ask[(Date, Date)]("scheme-stillusingno")
                                   .validating("The date you stopped using the scheme must be the same as or after the date you started using the scheme", startBeforeEnd _)
                                   .in[R] when !stillUsingScheme
-      employee              <-  ask[Boolean]("scheme-employee").in[R] when !stillUsingScheme
-      recipient             <-  ask[Boolean]("scheme-recipient").in[R] when !stillUsingScheme
-      taxNIPaid             <-  ask[Boolean]("scheme-agreedpayment").in[R] when !stillUsingScheme
-      settlementStatus      <-  ask[String]("scheme-settlementstatus").in[R] when taxNIPaid == Some(true)
+      employer              <-  ask[Option[Employer]]("scheme-employee").in[R]
+      recipient             <-  ask[Option[String]]("scheme-recipient").in[R]
+      taxNIPaid             <-  ask[Boolean]("scheme-agreedpayment").in[R]
+      settlementStatus      <-  ask[TaxSettlement]("scheme-settlementstatus").in[R] when taxNIPaid
     } yield {
-
+      println(s"dotasNumber: $dotasNumber")
       val scheme = Scheme(
         name = schemeName,
         dotasReferenceNumber = Some("dotas1"),
-        caseReferenceNumber = Some("case Ref1"),
+        caseReferenceNumber = schemeReferenceNumber,
         schemeStart = Some(LocalDate.now()),
         schemeStopped = None,
-        employee = true,
-        loanRecipient = true,
-        loanRecipientName = Some("Shadey accountant"),
-        settlement = new TaxSettlement(123)
+        employee = employer,
+        loanRecipient = recipient.isEmpty,
+        loanRecipientName = recipient,
+        settlement = settlementStatus
       )
       println(s"scheme: $scheme")
       Some(scheme)

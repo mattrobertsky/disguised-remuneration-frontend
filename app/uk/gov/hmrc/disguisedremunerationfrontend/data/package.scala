@@ -19,6 +19,7 @@ package uk.gov.hmrc.disguisedremunerationfrontend.data
 package object disguisedremuneration {
   type Nino = String
   type Utr = String
+  type Paye = String
   type Money = Int
   type Date = java.time.LocalDate
 

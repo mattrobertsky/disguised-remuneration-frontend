@@ -32,11 +32,11 @@ case class AboutYou(
 )
 
 case class NotRequiredToComplete(
-                                p1: String = "<p>Based on your answers, you do not need to send any loan charge details.</p>",
-                                p2: String = "<p>This is because you told us the deceased person:",
-                                p3: String = "<ul class=\"govuk-list govuk-list--bullet\">\n          <li>was employed when they had the loan</li>\n          <li>has died on or before 5 April 2019</li>\n        </ul>",
-                                p4: String = "<p>If this is not right, you need to <a class=\"govuk-link\" href=\"/disguised-remun-prototype/4-0/was-user-self-employed?user-alive=No\">go back and change your answers<a/>.</p>"
-                                )
+  p1: String = "<p>Based on your answers, you do not need to send any loan charge details.</p>",
+  p2: String = "<p>This is because you told us the deceased person:",
+  p3: String = "<ul class=\"govuk-list govuk-list--bullet\">\n          <li>was employed when they had the loan</li>\n          <li>has died on or before 5 April 2019</li>\n        </ul>",
+  p4: String = "<p>If this is not right, you need to <a class=\"govuk-link\" href=\"/disguised-remun-prototype/4-0/was-user-self-employed?user-alive=No\">go back and change your answers<a/>.</p>"
+)
 
 object AboutYou {
 
