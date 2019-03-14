@@ -53,7 +53,7 @@ class SplunkController @Inject()(mcc: MessagesControllerComponents, auditConnect
 
     val _contactDetails = ContactDetails(
       address = _address,
-      telephoneAndEmail = TelAndEmail(Some("0133 656560"), Some("dr@gov.uk"))
+      telephoneAndEmail = TelAndEmail(telephone = "0133 656560", email = "dr@gov.uk")
     )
 
     val _aboutYou = AboutYou(

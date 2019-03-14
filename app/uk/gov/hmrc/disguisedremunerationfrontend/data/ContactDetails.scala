@@ -22,10 +22,12 @@ import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration._
 
-case class TelAndEmail(telephone: Option[String], email: Option[String])
+case class TelAndEmail(telephone: String, email: String)
+
 object TelAndEmail {
   implicit val TelAndEmailFormatter: Format[TelAndEmail] = Json.format[TelAndEmail]
 }
+
 
 case class ContactDetails(
   address: Address,
