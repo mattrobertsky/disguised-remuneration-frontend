@@ -19,6 +19,7 @@ package uk.gov.hmrc.disguisedremunerationfrontend.data
 
 import ltbs.uniform._
 import org.atnos.eff._
+import play.api.libs.json.{JsNull, JsValue, Json, Writes}
 import uk.gov.hmrc.disguisedremunerationfrontend.controllers.EmploymentStatus
 import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration._
 
@@ -40,6 +41,35 @@ case class NotRequiredToComplete(
 
 object AboutYou {
 
+  implicit def eitherWrites[Nino, Utr](implicit Nino: Writes[Nino], Utr: Writes[Utr]): Writes[Either[Nino, Utr]] =
+    Writes[Either[Nino, Utr]] {
+      case Left(l) => Nino.writes(l)
+      case Right(r) => Utr.writes(r)
+    }
+
+  implicit val aboutYouWrites = new Writes[AboutYou] {
+    override def writes(o: AboutYou ): JsValue = Json.obj(
+      "completedBySelf" -> o.completedBySelf,
+      "alive" -> o.alive,
+      "identification" -> o.identification,
+      "deceasedBefore" -> o.deceasedBefore,
+      "employmentStatus" -> o.employmentStatus,
+      "actingFor" -> o.actingFor
+    )
+  }
+
+  implicit val optAboutYouWrites =
+    Writes[Option[Option[AboutYou]]] {
+      case Some(o) => o
+      match {
+        case Some(oo) => aboutYouWrites.writes(oo)
+        case _ => JsNull
+      }
+      case _ => JsNull
+    }
+
+
+  // Move into utils
   lazy val regExUTR = """^(?:[ \t]*(?:[a-zA-Z]{3})?\d[ \t]*){10}$"""
   lazy val regExNino = """^((?!(BG|GB|KN|NK|NT|TN|ZZ)|(D|F|I|Q|U|V)[A-Z]|[A-Z](D|F|I|O|Q|U|V))[A-Z]{2})[0-9]{6}[A-D]?$"""
 

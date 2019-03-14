@@ -17,7 +17,7 @@
 package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 
 import cats.data.Validated
-import enumeratum.{Enum, EnumEntry}
+import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import javax.inject.{Inject, Singleton}
 import ltbs.uniform._
 import ltbs.uniform.interpreters.playframework._
@@ -32,16 +32,18 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{AnyContent, MessagesControllerComponents, Request}
 import play.twirl.api.Html
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
-import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration.{Nino, Utr, Date}
+import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration.{Date, Nino, Utr}
 import uk.gov.hmrc.disguisedremunerationfrontend.data._
 import uk.gov.hmrc.disguisedremunerationfrontend.views
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import enumeratum.values._
+import play.api.libs.json.Json
 
 sealed abstract class EmploymentStatus extends EnumEntry
-object EmploymentStatus extends Enum[EmploymentStatus] {
+object EmploymentStatus extends Enum[EmploymentStatus] with PlayJsonEnum[EmploymentStatus] {
   val values = findValues
   case object Employed      extends EmploymentStatus
   case object SelfEmployed  extends EmploymentStatus
@@ -66,6 +68,11 @@ case class JourneyState(
       //&& detailsStatus.forall(_._3.isDefined)
 }
 
+object JourneyState {
+  //implicit val journeyStateFormatter: Format[JourneyState] = Json.format[JourneyState]
+  implicit val journeyStateWrites = Json.writes[JourneyState]
+
+}
 @Singleton
 class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit val appConfig: AppConfig)
       extends FrontendController(mcc) with PlayInterpreter with I18nSupport {
@@ -94,7 +101,7 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
     runWeb(
       program = ContactDetails.program[FxAppend[Stack, PlayStack]]
         .useForm(PlayForm.automatic[Unit, Address])
-        .useForm(PlayForm.automatic[Unit, TelEmail]),
+        .useForm(PlayForm.automatic[Unit, TelAndEmail]),
       MemoryPersistence
     ){data =>
       state = state.copy(contactDetails = Some(data))

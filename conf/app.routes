@@ -4,6 +4,8 @@ GET        /hello-world             uk.gov.hmrc.disguisedremunerationfrontend.co
 
 GET        /                        uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.index
 
+GET        /audit                   uk.gov.hmrc.disguisedremunerationfrontend.controllers.SplunkController.acceptAndSend
+
 GET        /about-you/              uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutYou(id = "")
 GET        /about-you/:id           uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutYou(id: String)
 POST       /about-you/              uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutYou(id = "")

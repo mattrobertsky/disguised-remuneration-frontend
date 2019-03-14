@@ -16,9 +16,16 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
+import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration.Money
 
-class WrittenOff(
+case class WrittenOff(
   amount: Money,
   taxPaid: Money
 )
+
+object WrittenOff {
+  implicit val schemeFormatter: OFormat[WrittenOff] = Json.format[WrittenOff]
+}
+
+

@@ -18,7 +18,7 @@ package uk.gov.hmrc.disguisedremunerationfrontend.data
 
 import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration.Money
 
-class LoanDetails(
+case class LoanDetails(
   scheme: Scheme,
   year: Int,
   amount: Money,
@@ -26,3 +26,9 @@ class LoanDetails(
   genuinelyRepaid: Money,
   writtenOff: Option[WrittenOff]
 )
+
+import play.api.libs.json.{Json, OFormat}
+
+object LoanDetails {
+  implicit val LoanDetailsFormatter: OFormat[LoanDetails] = Json.format[LoanDetails]
+}

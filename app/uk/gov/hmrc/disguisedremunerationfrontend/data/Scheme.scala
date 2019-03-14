@@ -36,8 +36,11 @@ case class Scheme(
   settlement: Option[TaxSettlement]
 )
 
+import play.api.libs.json.{Format, Json}
 
 object Scheme {
+
+  implicit val schemeFormatter: Format[Scheme] = Json.format[Scheme]
 
   val earliestDate = LocalDate.parse("1999-04-05")
 

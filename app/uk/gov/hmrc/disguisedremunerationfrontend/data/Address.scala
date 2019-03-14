@@ -23,3 +23,9 @@ case class Address(
   county: String,
   postcode: String
 )
+
+import play.api.libs.json.{Format, Json}
+
+object Address {
+  implicit val addressFormatter: Format[Address] = Json.format[Address]
+}

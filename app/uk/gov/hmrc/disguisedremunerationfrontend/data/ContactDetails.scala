@@ -18,27 +18,36 @@ package uk.gov.hmrc.disguisedremunerationfrontend.data
 
 import ltbs.uniform._
 import org.atnos.eff._
+import play.api.libs.json._
+import play.api.libs.functional.syntax._
 import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration._
+
+case class TelAndEmail(telephone: Option[String], email: Option[String])
+object TelAndEmail {
+  implicit val TelAndEmailFormatter: Format[TelAndEmail] = Json.format[TelAndEmail]
+}
 
 case class ContactDetails(
   address: Address,
-  telephoneAndEmail: TelEmail
+  telephoneAndEmail: TelAndEmail
 )
 
 object ContactDetails {
 
+  implicit val contactDetailsFormatter: Format[ContactDetails] = Json.format[ContactDetails]
+
   type Stack = Fx.fx2[
     UniformAsk[Address, ?],
-    UniformAsk[TelEmail, ?]
+    UniformAsk[TelAndEmail, ?]
   ]
   def program[R
       : _uniformCore
       : _uniformAsk[Address, ?]
-      : _uniformAsk[TelEmail, ?]
+      : _uniformAsk[TelAndEmail, ?]
   ]: Eff[R, ContactDetails] = {
     for {
       address <- ask[Address]("contactdetails-address")
-      telAndEmail <- ask[TelEmail]("contactdetails-telehoneemail")
+      telAndEmail <- ask[TelAndEmail]("contactdetails-telehoneemail")
     } yield {
       ContactDetails(address, telAndEmail)
     }
