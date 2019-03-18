@@ -86,6 +86,11 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
 
   def renderForm(key: List[String], errors: ErrorTree, form: Html, breadcrumbs: List[String], request: Request[AnyContent], messagesIn: ltbs.uniform.web.Messages): Html = {
     implicit val r = request
+
+    // Using "/" as a breadcrumb is probably not what you want - I suggest not prepending
+    // and instead using a link with reverse-routing in about_you.scala.html that is presented
+    // when breadcrumbs.isEmpty. That way if you move things around it should all still work. 
+
     views.html.main_template(title = "Send your loan charge details")(views.html.about_you(key.last, errors, form, "/" :: breadcrumbs)(messagesIn, request))
   }
 

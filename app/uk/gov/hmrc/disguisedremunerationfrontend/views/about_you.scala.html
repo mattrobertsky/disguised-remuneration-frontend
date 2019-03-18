@@ -17,6 +17,11 @@
 @import ltbs.uniform.widgets.govuk.html._
 
 @(key: String, errors: Any, content: Html, breadcrumbs: List[String] = Nil)(implicit messages: ltbs.uniform.web.Messages, request: Request[AnyContent])
+
+    @for(back <- breadcrumbs.headOption) {
+      <a href="@back" class="govuk-back-link">@messages(List(s"back-to-$back","back"))</a>
+    }    
+
     @helper.form(action = play.api.mvc.Call("post", key)) {
         @helper.CSRF.formField
         @content
