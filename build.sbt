@@ -64,12 +64,12 @@ lazy val microservice = Project(appName, file("."))
 
 libraryDependencies ++= Seq(
   ws,
-  "uk.gov.hmrc"               %% "domain"                         % "5.3.0",
-  "uk.gov.hmrc"               %% "play-partials"                  % "6.3.0",
+  "uk.gov.hmrc"               %% "domain"                         % "5.6.0-play-26",
+  "uk.gov.hmrc"               %% "play-partials"                  % "6.5.0",
   "com.typesafe.play"         %% "play-json"                      % "2.5.18",
   "org.scalactic"             %% "scalactic"                      % "3.0.5",
-  "uk.gov.hmrc"               %% "auth-client"                    % "2.19.0-play-26",
-  "uk.gov.hmrc"               %% "http-caching-client"            % "8.0.0",
+  "uk.gov.hmrc"               %% "auth-client"                    % "2.20.0-play-26",
+  "uk.gov.hmrc"               %% "http-caching-client"            % "8.1.0",
   "uk.gov.hmrc"               %% "play-conditional-form-mapping"  % "0.2.0",
   "com.softwaremill.macwire"  %% "macros"                         % "2.3.1" % "provided",
   "com.softwaremill.macwire"  %% "macrosakka"                     % "2.3.1" % "provided",
