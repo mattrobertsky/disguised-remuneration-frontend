@@ -103,4 +103,5 @@ scheme-agreedpayment.p1=If you made payments in response to an Accelerated Payme
 scheme-settlementstatus.heading=How much tax and National Insurance have you paid, or agreed with us to pay, for this scheme?
 scheme-settlementstatus.amount.heading=Amount paid
 scheme-settlementstatus.dateOfSettlement.heading=Date paid
+# scheme validation
 
