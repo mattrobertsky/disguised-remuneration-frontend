@@ -42,6 +42,12 @@ object Scheme {
 
   implicit val schemeFormatter: Format[Scheme] = Json.format[Scheme]
 
+  lazy val nameRegex = """^[a-zA-Z0-9'@,-./() ]*$"""
+  lazy val caseRefRegex = """^[a-zA-Z0-9-]*$"""
+  lazy val payeRegex = """^\d{3}/[A-Za-z]{2}\d{3}$"""
+  lazy val maxNameLength = 50
+
+
   val earliestDate = LocalDate.parse("1999-04-05")
 
   def isInRange(d: LocalDate) = d.isAfter(earliestDate) && d.isBefore(LocalDate.now())
@@ -50,7 +56,6 @@ object Scheme {
     case (start, end) if (isInRange(start) && isInRange(end) && start.isBefore(end)) => true
     case _ => false
   }
-
 
   type Stack = Fx.fx8[
     UniformAsk[String,?],
@@ -76,8 +81,39 @@ object Scheme {
   ]: Eff[R, Option[Scheme]] =
     for {
       schemeName            <-  ask[String]("scheme-name")
+                                    .validating(
+                                      "Enter the name of the scheme",
+                                      name => !name.isEmpty
+                                    )
+                                  .validating(
+                                    "Scheme name must be 100 characters or less",
+                                    name => name.length < 100
+                                  )
+                                  .validating(
+                                    "Scheme name must only include letters a to z, numbers, apostrophes, ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces",
+                                    name => name.matches(nameRegex)
+                                  )
       dotasNumber           <-  ask[YesNoDoNotKnow]("scheme-dotas")
+                                  .validating(
+                                    "Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers",
+//                                  case name => println(s"DOTAS LENGTH = ${name.toString}"); name.entryName.length() == 8  // Need to get actual value!
+                                    yn  => true
+                                  )
       schemeReferenceNumber <-  ask[Option[String]]("scheme-refnumber")
+                                  .validating(
+                                    "HMRC case reference number must be 10 characters or less",
+                                    _ match {
+                                      case Some(ref) => ref.length() <= 10
+                                      case _ => true
+                                    }
+                                  )
+                                  .validating(
+                                    "HMRC case reference number must only include letters a to z, numbers and hyphens",
+                                    _ match {
+                                      case Some(ref) => println(s"*REF: $ref"); ref.matches(caseRefRegex)
+                                      case _ => true
+                                    }
+                                  )
       stillUsingScheme      <-  ask[Boolean]("scheme-stillusing")
       stillUsingYes         <-  ask[Date]("scheme-stillusingyes")
                                   .validating(s"The date you started using the scheme must after $earliestDate", isInRange(_))
@@ -86,10 +122,66 @@ object Scheme {
       stillUsingNo          <-  ask[(Date, Date)]("scheme-stillusingno")
                                   .validating("The date you stopped using the scheme must be the same as or after the date you started using the scheme", startBeforeEnd _)
                                   .in[R] when !stillUsingScheme
-      employer              <-  ask[Option[Employer]]("scheme-employee").in[R]
-      recipient             <-  ask[Option[String]]("scheme-recipient").in[R]
+      employer              <-  ask[Option[Employer]]("scheme-employee")
+                                    .validating(
+                                      "Enter the employer's name",
+                                      _ match {
+                                        case Some(employer) =>  println(employer); !employer.name.isEmpty
+                                        case _ => true
+                                      }
+                                    )
+                                    .validating(
+                                      "Employer's name must be 50 characters or less",
+                                      _ match {
+                                        case Some(employer) => employer.name.length <= maxNameLength
+                                        case _ => true
+                                      }
+                                    )
+                                    .validating(
+                                      "Employer's name must only include letters a to z, numbers, apostrophes, ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces",
+                                      _ match {
+                                        case Some(employer) =>  employer.name.matches(nameRegex)
+                                        case _ => true
+                                      }
+                                    )
+                                    .validating(
+                                      "Enter the employer PAYE reference in the correct format",
+                                      _ match {
+                                        case Some(employer) =>  employer.paye.matches(payeRegex)
+                                        case _ => true
+                                      }
+                                    )
+                                    .in[R]
+      recipient             <-  ask[Option[String]]("scheme-recipient")
+                                  .validating(
+                                    "Enter the name of who the loan was made out to",
+                                    _ match {
+                                      case Some(name) =>  !name.isEmpty()
+                                      case _ => true
+                                    }
+                                  )
+                                  .validating(
+                                    "Name of who the loan was made out to must be 50 characters or less",
+                                    _ match {
+                                      case Some(name) =>  name.length <= 50
+                                      case _ => true
+                                    }
+                                  )
+                                  .validating(
+                                    "Name of who the loan was made out to must only include letters a to z, numbers, apostrophes, ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces",
+                                    _ match {
+                                      case Some(name) =>  name.matches(nameRegex)
+                                      case _ => true
+                                    }
+                                  )
+                                  .in[R]
       taxNIPaid             <-  ask[Boolean]("scheme-agreedpayment").in[R]
-      settlementStatus      <-  ask[TaxSettlement]("scheme-settlementstatus").in[R] when taxNIPaid
+      settlementStatus      <-  ask[TaxSettlement]("scheme-settlementstatus")
+                                  .validating(
+                                     "Enter how much tax and National Insurance you have paid, or agreed with us to pay",
+                                     settlement => settlement.amount > 0
+                                  )
+                                  .in[R] when taxNIPaid
     } yield {
       println(s"dotasNumber: $dotasNumber")
       val scheme = Scheme(
