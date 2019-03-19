@@ -599,3 +599,47 @@ li {
     display: block;
     clear: both;
 }
+
+.govuk-date-input__input {
+    margin-bottom: 0;
+    border-bottom-style : solid;
+    border-top-style : solid;
+    border-left-style : solid;
+    border-right-style : solid;
+    border-left-width : 1.99519px;
+    border-right-width : 1.99519px;
+    height : 40px;
+}
+
+.govuk-input--width-2 {
+    max-width: 51.1998p
+
+.govuk-input--width-4 {
+    max-width: 85.333px
+;
+}
+
+.govuk-input {
+    font-size: 19px;
+    line-height: 25px;
+}
+
+.govuk-date-input__label {
+    display: block;
+}
+
+.govuk-date-input__input {
+    margin-bottom: 0;
+}
+
+.govuk-date-input:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+.govuk-date-input__item {
+    display: inline-block;
+    margin-right: 20px;
+    margin-bottom: 0;
+}

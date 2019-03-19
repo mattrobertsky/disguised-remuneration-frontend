@@ -51,14 +51,19 @@ object EmploymentStatus extends Enum[EmploymentStatus] with PlayJsonEnum[Employm
   case object Both          extends EmploymentStatus
 }
 
-sealed abstract class YesNoDoNotKnow extends EnumEntry
-object YesNoDoNotKnow extends Enum[YesNoDoNotKnow] {
-  val values = findValues
-//  case class Yes(dotas: String) extends YesNoDoNotKnow
-  case object Yes extends YesNoDoNotKnow
+sealed trait YesNoDoNotKnow
+
+object YesNoDoNotKnow {
+  case class Yes(dotas: String) extends YesNoDoNotKnow
   case object No extends YesNoDoNotKnow
-  case object DoNotKnow extends YesNoDoNotKnow
+
+  def DoNotKnow = z.DoNotKnow
+  object z {
+    case object DoNotKnow extends YesNoDoNotKnow
+  }
 }
+
+
 case class JourneyState(
   aboutYou: Option[Option[AboutYou]] = None,
   schemes: List[Scheme] = Nil,
