@@ -602,9 +602,37 @@ li {
 
 .app-task-list__task-completed {
     float: right;
+    color : #ffffff;
+    font-weight:700;
+    font-size : 16px;
+    line-height: 20px;
+    margin-top: 0;
+    margin-bottom: 0;
+    background-color: #005ea5;
+    outline-width:1.53846px;
+    padding-bottom: 1px;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 4px;
+    letter-spacing:1px;
+}
+
+.incomplete {
+    float: right;
+    color : #000000;
+    font-weight:700;
+    line-height: 20px;
+    font-size : 16px;
     margin-top: 0;
     margin-bottom: 0;
     background-color: rgba(255, 191, 71, 0.75);
+    outline-width:1.53846px;
+    padding-bottom: 1px;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 4px;
+    letter-spacing:1px;
+
 }
 
 .govuk-tag {
