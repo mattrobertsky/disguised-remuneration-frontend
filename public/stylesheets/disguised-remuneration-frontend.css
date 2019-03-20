@@ -301,9 +301,9 @@ details .address.progressive-reveal {
 }
 
 .govuk-fieldset__heading {
-     font-size: 48px;
-     margin-top : 20px;
-     margin-bottom: 10px;
+    font-size: 48px;
+    margin-top : 20px;
+    margin-bottom: 10px;
 }
 
 .govuk-fieldset__legend--xl {
@@ -600,6 +600,21 @@ li {
     clear: both;
 }
 
+.app-task-list__task-completed {
+    float: right;
+    margin-top: 0;
+    margin-bottom: 0;
+    background-color: rgba(255, 191, 71, 0.75);
+}
+
+.govuk-tag {
+    line-height: 20px;
+}
+
+.govuk-tag incomplete {
+    color: #000;
+}
+
 .govuk-date-input__input {
     margin-bottom: 0;
     border-bottom-style : solid;
@@ -612,16 +627,16 @@ li {
 }
 
 .govuk-input--width-2 {
-    max-width: 51.1998p
-
-.govuk-input--width-4 {
-    max-width: 85.333px
-;
+    max-width: 51.1998px
 }
 
-.govuk-input {
-    font-size: 19px;
-    line-height: 25px;
+.govuk-input--width-4 {
+    max-width: 85.333px;
+}
+
+.govuk-date-input__item {
+    display: inline-block;
+    margin-bottom: 0;
 }
 
 .govuk-date-input__label {
@@ -636,10 +651,4 @@ li {
     content: "";
     display: block;
     clear: both;
-}
-
-.govuk-date-input__item {
-    display: inline-block;
-    margin-right: 20px;
-    margin-bottom: 0;
 }
