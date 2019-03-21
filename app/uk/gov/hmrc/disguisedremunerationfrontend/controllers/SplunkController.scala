@@ -36,16 +36,10 @@ import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
 import scala.concurrent.ExecutionContext
 
-class SplunkController @Inject()(mcc: MessagesControllerComponents, auditConnector: AuditConnector)(implicit executionContext: ExecutionContext)
-  extends FrontendController(mcc) with PlayInterpreter with I18nSupport {
-
-  def acceptAndSend = Action { implicit request =>
-  {
-    val auditSource = "disguised-remuneration"
-
+object TestData {
     // Test data
     val _address = Address(
-      line1 = "11 The Hight Street",
+      line1 = "11 The High Street",
       line2 = Some("Hove"),
       town = "Brighton",
       county = Some("Sussex"),
@@ -74,7 +68,7 @@ class SplunkController @Inject()(mcc: MessagesControllerComponents, auditConnect
       employee = Some(Employer(name = "Tax dodgers ltd", paye = "123/AB456")),
       loanRecipient = true,
       loanRecipientName = Some("Tax Dodger"),
-      settlement = Some(TaxSettlement(amount = 100, dateOfSettlement = LocalDate.now()))
+      settlement = Some(TaxSettlement(amount = 10000, dateOfSettlement = LocalDate.now()))
     )
 
     val _loanDetails = LoanDetails(
@@ -96,6 +90,17 @@ class SplunkController @Inject()(mcc: MessagesControllerComponents, auditConnect
       details = List(_loanDetails)
     )
 
+}
+
+class SplunkController @Inject()(mcc: MessagesControllerComponents, auditConnector: AuditConnector)(implicit executionContext: ExecutionContext)
+  extends FrontendController(mcc) with PlayInterpreter with I18nSupport {
+
+  def acceptAndSend = Action { implicit request =>
+  {
+    val auditSource = "disguised-remuneration"
+
+    import TestData._
+
     auditConnector.sendExplicitAudit(auditSource, Json.toJson(_journeyState))
     Ok(s"auditSource:${Json.toJson(_journeyState)}  -> Splunk")
   }
@@ -107,3 +112,4 @@ class SplunkController @Inject()(mcc: MessagesControllerComponents, auditConnect
 
   override def listingPage[A]( key: List[String], errors: ErrorTree, elements: List[A], messages: Messages )( implicit evidence$1: Htmlable[A] ): Html = Html("")
 }
+

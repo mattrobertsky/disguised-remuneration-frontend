@@ -22,3 +22,6 @@ GET        /scheme/                 uk.gov.hmrc.disguisedremunerationfrontend.co
 GET        /scheme/:id              uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id: String)
 POST       /scheme/                 uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id = "")
 POST       /scheme/:id              uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id: String)
+
+GET        /submit                   uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.cya
+POST       /submit                   uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.cyaPost

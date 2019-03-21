@@ -24,7 +24,7 @@ import ltbs.uniform.interpreters.playframework._
 import ltbs.uniform.web.{HtmlField, DataParser}
 import ltbs.uniform.web.InferParser._
 import ltbs.uniform.web.parser._
-import play.api.data.Form
+import play.api.data._, Forms._
 import ltbs.uniform.web.{HtmlForm, Input, Messages, NoopMessages}
 import ltbs.uniform.widgets.govuk._
 import org.atnos.eff._
@@ -209,6 +209,56 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
       }
     }
   }
+
+  val confirmationForm = Form(single(
+    "confirm" -> boolean.verifying("error.cya.confirmation-needed", identity(_))
+  ))
+
+  val usersNameFromGG = "Joe Bloggs"
+
+  def blocksFormState: List[(String,List[(String,Html)])] = state match {
+    case JourneyState(Some(optAboutYou), schemes, Some(contactDetails), loanDetails) =>
+      (
+        "Personal Details" -> List(
+          "Name" -> Html(usersNameFromGG),
+          "Filling in form for self" -> Html(if(optAboutYou.isDefined) "No" else "Yes"),
+          "Address" -> Html(contactDetails.address.lines.mkString("<br />")),
+          "Contact Details" -> Html{
+            import contactDetails.telephoneAndEmail._
+            List(
+              telephone.map{x => "Telephone: " + x},
+              email.map{x => "Email address: " + x}
+            ).flatten.mkString("<br />")
+          }
+        )
+      ) :: schemes.map { scheme =>
+        import scheme._
+        ("Scheme: " + name) -> List(
+          "Dates you received loans" -> Html(""),
+          "Disclosure of Tax Avoidance Schemes (DOTAS) number" -> Html(dotasReferenceNumber.fold("n/a"){identity}),
+          "HMRC case reference number" -> Html(caseReferenceNumber.fold("n/a"){identity}),
+          "Employment status" -> Html(caseReferenceNumber.fold("n/a"){_ => "Employed"}),
+          "Loan recipient" -> Html(if(loanRecipient) "Yes" else "No"),
+          "Tax or National Insurance paid or agreed to pay" -> Html(settlement.fold("None"){x => f"&pound;${x.amount}%,d"})
+        )
+      }
+    case _ => Nil
+  }
+
+  def cya = Action { implicit request =>
+    val contents = views.html.cya(usersNameFromGG, blocksFormState, confirmationForm)
+    Ok(views.html.main_template(title = "Check your answers before sending your details")(contents))
+  }
+
+  def cyaPost = Action { implicit request =>
+    confirmationForm.bindFromRequest.fold(
+      formWithErrors => {
+        val contents = views.html.cya(usersNameFromGG, blocksFormState, formWithErrors)
+        Ok(views.html.main_template(title = "Check your answers before sending your details")(contents))
+      },
+      postedForm => Ok(state.toString)
+    )
+  }  
 }
 
 import java.util.concurrent.atomic._
