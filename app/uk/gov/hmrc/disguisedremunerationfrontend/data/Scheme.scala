@@ -48,7 +48,7 @@ object Scheme {
   lazy val maxNameLength = 50
 
 
-  val earliestDate = LocalDate.parse("1999-04-05")
+  val earliestDate = LocalDate.parse("1900-01-01")
 
   def isInRange(d: LocalDate) = d.isAfter(earliestDate) && d.isBefore(LocalDate.now())
 
@@ -78,7 +78,7 @@ object Scheme {
     : _uniformAsk[YesNoDoNotKnow,?]
     : _uniformAsk[(Date,Date),?]
     : _uniformAsk[Date,?]
-  ]: Eff[R, Option[Scheme]] =
+  ]: Eff[R, Scheme] =
     for {
       schemeName            <-  ask[String]("scheme-name")
                                     .validating(
@@ -182,9 +182,7 @@ object Scheme {
                                      settlement => settlement.amount > 0
                                   )
                                   .in[R] when taxNIPaid
-    } yield {
-      println(s"dotasNumber: $dotasNumber")
-      val scheme = Scheme(
+    } yield Scheme(
         name = schemeName,
         dotasReferenceNumber = Some("dotas1"),
         caseReferenceNumber = schemeReferenceNumber,
@@ -195,8 +193,4 @@ object Scheme {
         loanRecipientName = recipient,
         settlement = settlementStatus
       )
-      println(s"scheme: $scheme")
-      Some(scheme)
-    }
-
 }

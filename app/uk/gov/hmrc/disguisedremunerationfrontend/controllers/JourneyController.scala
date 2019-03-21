@@ -83,7 +83,17 @@ object JourneyState {
 class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit val appConfig: AppConfig)
       extends FrontendController(mcc) with PlayInterpreter with I18nSupport {
 
-  var state: JourneyState = JourneyState()
+  var state: JourneyState = JourneyState(schemes = List(Scheme(
+    name="Cavalier Finance WanglePlus",
+    dotasReferenceNumber=None,
+    caseReferenceNumber=None,
+    schemeStart=None,
+    schemeStopped=None,
+    employee=None,
+    loanRecipient=true,
+    loanRecipientName=None,
+    settlement=None
+  )))
 
   def messages( request: Request[AnyContent] ): ltbs.uniform.web.Messages = convertMessages(messagesApi.preferred(request))
 
@@ -156,7 +166,7 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
         .useForm(PlayForm.automatic[Unit, (Date, Date)]),
       MemoryPersistence
     ){data =>
-      state = state.copy(schemes = data.get :: state.schemes)  // remove get
+      state = state.copy(schemes = data :: state.schemes)
       Future.successful(Redirect(routes.JourneyController.index()))
     }
   }
