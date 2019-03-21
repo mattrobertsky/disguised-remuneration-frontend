@@ -23,7 +23,7 @@ import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration._
 
-case class TelAndEmail(telephone: String, email: String)
+case class TelAndEmail(telephone: Option[String], email: Option[String])
 
 object TelAndEmail {
   implicit val TelAndEmailFormatter: Format[TelAndEmail] = Json.format[TelAndEmail]
@@ -69,19 +69,19 @@ object ContactDetails {
       telAndEmail <- ask[TelAndEmail]("contactdetails-telehoneemail")
         .validating(
           "Telephone number must be 24 characters or less",
-          contact =>  contact.telephone.length <= 24
+          contact =>  contact.telephone.fold(true)(_.length <= 24)
         )
         .validating(
           "Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 0808 157 0192",
-          contact => contact.telephone.matches(telephoneRegex)
+          contact => contact.telephone.fold(true)(_.matches(telephoneRegex))
         )
         .validating(
           "Email address must be 256 characters or less",
-          contact => contact.email.length <= 256
+          contact => contact.email.fold(true)(_.length <= 256)
         )
         .validating(
           "Email address must only contain letters a to z, numbers, full stops, hyphens, underscores and @ signs",
-          contact => contact.email.matches(emailRegex)
+          contact => contact.email.fold(true)(_.matches(emailRegex))
         )
     } yield {
       ContactDetails(address, telAndEmail)

@@ -21,7 +21,7 @@ import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import javax.inject.{Inject, Singleton}
 import ltbs.uniform._
 import ltbs.uniform.interpreters.playframework._
-import ltbs.uniform.web.HtmlField
+import ltbs.uniform.web.{HtmlField, DataParser}
 import ltbs.uniform.web.InferParser._
 import ltbs.uniform.web.parser._
 import play.api.data.Form
@@ -104,6 +104,31 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
   def contactDetails(implicit key: String) = Action.async { implicit request =>
     implicit val keys: List[String] = key.split("/").toList
     import ContactDetails._
+
+    // tell uniform to not use the nested fields with radio buttons
+    // for an Option[String], instead treat an empty string as None
+    implicit val optStringParser = new DataParser[Option[String]] {
+
+      import cats.implicits._
+
+      def bind(in: Input): Either[ErrorTree,Option[String]] = in.value match {
+        case Nil => Tree("required").asLeft
+        case empty::Nil if empty.trim == "" => none[String].asRight
+        case s::Nil => Some(s).asRight
+        case _ => Tree("badValue").asLeft
+      }
+
+      def unbind(a: Option[String]): Input = Tree(List(a.getOrElse("")))
+    }
+
+    // tell uniform to use the same renderer for an Option[String] as
+    // is used for a String field
+    implicit def optStringHtml(implicit r: HtmlField[String]) =
+      new HtmlField[Option[String]] {
+        def render(key: String, values: Input, errors: ErrorTree, messages: Messages) =
+          r.render(key, values, errors, messages)
+      }
+
     runWeb(
       program = ContactDetails.program[FxAppend[Stack, PlayStack]]
         .useForm(PlayForm.automatic[Unit, Address])
@@ -115,6 +140,7 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
     }
 
   }
+
   def addScheme(implicit key: String) = Action.async { implicit request =>
     implicit val keys: List[String] = key.split("/").toList
     import Scheme._
