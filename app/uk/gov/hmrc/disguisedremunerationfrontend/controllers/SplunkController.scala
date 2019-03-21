@@ -46,14 +46,14 @@ class SplunkController @Inject()(mcc: MessagesControllerComponents, auditConnect
     // Test data
     val _address = Address(
       line1 = "11 The Hight Street",
-      line2 = "Hove",
+      line2 = Some("Hove"),
       town = "Brighton",
-      county = "Sussex",
+      county = Some("Sussex"),
       postcode = "BN1 1AB")
 
     val _contactDetails = ContactDetails(
       address = _address,
-      telephoneAndEmail = TelAndEmail(telephone = "0133 656560", email = "dr@gov.uk")
+      telephoneAndEmail = TelAndEmail(telephone = Some("0133 656560"), email = Some("dr@gov.uk"))
     )
 
     val _aboutYou = AboutYou(
