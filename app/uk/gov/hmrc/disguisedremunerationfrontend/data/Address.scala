@@ -16,11 +16,11 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
-case class Address(
+case class Address (
   line1: String,
-  line2: String,
+  line2: Option[String],
   town: String,
-  county: String,
+  county: Option[String],
   postcode: String
 )
 
@@ -28,4 +28,5 @@ import play.api.libs.json.{Format, Json}
 
 object Address {
   implicit val addressFormatter: Format[Address] = Json.format[Address]
+
 }
