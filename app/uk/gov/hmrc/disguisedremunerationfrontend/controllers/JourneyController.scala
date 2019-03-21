@@ -91,7 +91,7 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
 
   def renderForm(key: List[String], errors: ErrorTree, form: Html, breadcrumbs: List[String], request: Request[AnyContent], messagesIn: ltbs.uniform.web.Messages): Html = {
     implicit val r = request
-    views.html.main_template(title = "Send your loan charge details")(views.html.about_you(key.last, errors, form, "/" :: breadcrumbs)(messagesIn, request))
+    views.html.main_template(title = "Send your loan charge details")(views.html.about_you(key.last, errors, form, breadcrumbs)(messagesIn, request))
   }
 
   override lazy val parse = super[FrontendController].parse
