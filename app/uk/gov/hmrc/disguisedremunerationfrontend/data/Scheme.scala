@@ -21,24 +21,49 @@ import java.time.LocalDate
 import ltbs.uniform._
 import org.atnos.eff.{Eff, Fx}
 import uk.gov.hmrc.disguisedremunerationfrontend.controllers.{EmploymentStatus, YesNoDoNotKnow}
-import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration.Date
-
+import cats.implicits._
 
 case class Scheme(
   name: String,
   dotasReferenceNumber: Option[String],
   caseReferenceNumber: Option[String],
-  schemeStart: Option[Date],
+  schemeStart: Date,
   schemeStopped: Option[Date],
   employee: Option[Employer],
   loanRecipient: Boolean,
   loanRecipientName: Option[String],
-  settlement: Option[TaxSettlement]
-)
+  settlement: Option[TaxSettlement],
+  loanDetailsProvided: Map[Year, LoanDetails] = Map.empty
+) {
+  lazy val loanDetails: Map[Year, Option[LoanDetails]] = {
+    val years = schemeStart.financialYear to schemeStopped.getOrElse(LocalDate.now).financialYear
+    Map( years.map{ y =>
+      y -> loanDetailsProvided.get(y)
+    }:_*)
+  }
+}
 
-import play.api.libs.json.{Format, Json}
+
 
 object Scheme {
+  import play.api.libs.json._
+
+  implicit def intMapFormatter[A: Format] = new Format[Map[Int,A]] {
+    // TODO: Error handling
+    def reads(json: JsValue): JsResult[Map[Int,A]] = {
+      val obj = json.as[Map[String, JsObject]].map {
+        case (intString,valueObj) =>
+          (Integer.parseInt(intString), valueObj.as[A])
+      }
+      JsSuccess(obj)
+    }
+
+    def writes(o: Map[Int,A]): JsValue = JsObject(
+      o.map{ case (keyInt, value) =>
+        (keyInt.toString, Json.toJson(value))
+      }
+    )
+  }
 
   implicit val schemeFormatter: Format[Scheme] = Json.format[Scheme]
 
@@ -66,7 +91,7 @@ object Scheme {
     UniformAsk[YesNoDoNotKnow,?],
     UniformAsk[Date,?],
     UniformAsk[(Date, Date),?]
-    ]
+  ]
 
   def program[R
     : _uniformCore
@@ -78,7 +103,22 @@ object Scheme {
     : _uniformAsk[YesNoDoNotKnow,?]
     : _uniformAsk[(Date,Date),?]
     : _uniformAsk[Date,?]
-  ]: Eff[R, Scheme] =
+  ]: Eff[R, Scheme] = { 
+
+    // subjourney for extracting the date range
+    def getSchemeDateRange: Eff[R, (Date,Option[Date])] =
+      ask[Boolean]("scheme-stillusing") >>= {
+        case true => {
+          ask[Date]("scheme-stillusingyes")
+          .validating(s"The date you started using the scheme must after $earliestDate", isInRange(_))
+          .validating("The date you started using the scheme must be in the past", _.isBefore(LocalDate.now()))
+            .in[R] }.map{(_, none[Date])}
+        case false => ask[(Date, Date)]("scheme-stillusingno")
+          .validating("The date you stopped using the scheme must be the same as or after the date you started using the scheme", startBeforeEnd _)
+          .in[R].map{ case (k,v) => (k,v.some) }
+      }
+
+    // Main journey
     for {
       schemeName            <-  ask[String]("scheme-name")
                                     .validating(
@@ -114,14 +154,7 @@ object Scheme {
                                       case _ => true
                                     }
                                   )
-      stillUsingScheme      <-  ask[Boolean]("scheme-stillusing")
-      stillUsingYes         <-  ask[Date]("scheme-stillusingyes")
-                                  .validating(s"The date you started using the scheme must after $earliestDate", isInRange(_))
-                                  .validating("The date you started using the scheme must be in the past", _.isBefore(LocalDate.now()))
-                                  .in[R] when stillUsingScheme
-      stillUsingNo          <-  ask[(Date, Date)]("scheme-stillusingno")
-                                  .validating("The date you stopped using the scheme must be the same as or after the date you started using the scheme", startBeforeEnd _)
-                                  .in[R] when !stillUsingScheme
+      dateRange             <-  getSchemeDateRange
       employer              <-  ask[Option[Employer]]("scheme-employee")
                                     .validating(
                                       "Enter the employer's name",
@@ -186,11 +219,12 @@ object Scheme {
         name = schemeName,
         dotasReferenceNumber = Some("dotas1"),
         caseReferenceNumber = schemeReferenceNumber,
-        schemeStart = Some(LocalDate.now()),
-        schemeStopped = None,
+        schemeStart = dateRange._1,
+        schemeStopped = dateRange._2,
         employee = employer,
         loanRecipient = recipient.isEmpty,
         loanRecipientName = recipient,
         settlement = settlementStatus
-      )
+    )
+  }
 }

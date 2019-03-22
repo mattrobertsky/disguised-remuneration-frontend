@@ -32,7 +32,6 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{AnyContent, MessagesControllerComponents, Request}
 import play.twirl.api.Html
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
-import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration.{Date, Nino, Utr}
 import uk.gov.hmrc.disguisedremunerationfrontend.data._
 import uk.gov.hmrc.disguisedremunerationfrontend.data.render.RenderHtmlTemplate
 import uk.gov.hmrc.disguisedremunerationfrontend.views
@@ -63,12 +62,10 @@ object YesNoDoNotKnow {
   }
 }
 
-
 case class JourneyState(
   aboutYou: Option[Option[AboutYou]] = None,
   schemes: List[Scheme] = Nil,
-  contactDetails: Option[ContactDetails] = None,
-  details: List[LoanDetails] = Nil
+  contactDetails: Option[ContactDetails] = None
 ) {
     def readyToSubmit = aboutYou.isDefined && contactDetails.isDefined && schemes.nonEmpty
       //&& detailsStatus.forall(_._3.isDefined)
@@ -83,17 +80,34 @@ object JourneyState {
 class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit val appConfig: AppConfig)
       extends FrontendController(mcc) with PlayInterpreter with I18nSupport {
 
-  var state: JourneyState = JourneyState(schemes = List(Scheme(
-    name="Cavalier Finance WanglePlus",
-    dotasReferenceNumber=None,
-    caseReferenceNumber=None,
-    schemeStart=None,
-    schemeStopped=None,
-    employee=None,
-    loanRecipient=true,
-    loanRecipientName=None,
-    settlement=None
-  )))
+  var state: JourneyState = JourneyState(schemes = List(
+    Scheme(
+      name="Cavalier Finance WanglePlus Account",
+      dotasReferenceNumber=None,
+      caseReferenceNumber=None,
+      schemeStart=java.time.LocalDate.of(2015,1,1),
+      schemeStopped=None,
+      employee=None,
+      loanRecipient=true,
+      loanRecipientName=None,
+      settlement=None,
+      loanDetailsProvided=Map(2016 -> LoanDetails(1000, true, 100, None)
+      )
+    ),
+    Scheme(
+      name="Banco Desonesto CartaoCorrupto",
+      dotasReferenceNumber=None,
+      caseReferenceNumber=None,
+      schemeStart=java.time.LocalDate.of(2017,1,1),
+      schemeStopped=None,
+      employee=None,
+      loanRecipient=true,
+      loanRecipientName=None,
+      settlement=None,
+      loanDetailsProvided=Map(2016 -> LoanDetails(1000, true, 100, None)
+      )
+    )
+  ))
 
   def messages( request: Request[AnyContent] ): ltbs.uniform.web.Messages = convertMessages(messagesApi.preferred(request))
 
@@ -167,6 +181,25 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
       MemoryPersistence
     ){data =>
       state = state.copy(schemes = data :: state.schemes)
+      Future.successful(Redirect(routes.JourneyController.index()))
+    }
+  }
+
+  def loanDetails(schemeIndex: Int, year: Year, key: String) = Action.async { implicit request =>
+    implicit val keys: List[String] = key.split("/").toList
+    import LoanDetails._
+    val scheme = state.schemes(schemeIndex)
+    val existing = scheme.loanDetails(year)
+    runWeb(
+      program = LoanDetails.program[FxAppend[Stack, PlayStack]](existing)
+        .useForm(PlayForm.automatic[Unit, Money])
+        .useForm(PlayForm.automatic[Unit, Boolean])
+        .useForm(PlayForm.automatic[Unit, WrittenOff]),
+      MemoryPersistence
+    ){data =>
+      val updatedScheme = scheme.copy(
+        loanDetailsProvided = scheme.loanDetailsProvided + (year -> data))
+      state = state.copy(schemes = state.schemes.patch(schemeIndex, Seq(updatedScheme), 1))
       Future.successful(Redirect(routes.JourneyController.index()))
     }
   }

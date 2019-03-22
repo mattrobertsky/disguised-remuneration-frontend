@@ -17,7 +17,6 @@
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
 import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration.Money
 
 case class WrittenOff(
   amount: Money,

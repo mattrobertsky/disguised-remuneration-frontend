@@ -22,3 +22,8 @@ GET        /scheme/                 uk.gov.hmrc.disguisedremunerationfrontend.co
 GET        /scheme/:id              uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id: String)
 POST       /scheme/                 uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id = "")
 POST       /scheme/:id              uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id: String)
+
+GET        /scheme/:schemeIndex/details/:year/		uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.loanDetails(schemeIndex: Int, year: Int, id = "")
+GET        /scheme/:schemeIndex/details/:year/:id	uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.loanDetails(schemeIndex: Int, year: Int, id: String)
+POST       /scheme/:schemeIndex/details/:year/		uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.loanDetails(schemeIndex: Int, year: Int, id = "")
+POST       /scheme/:schemeIndex/details/:year/:id	uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.loanDetails(schemeIndex: Int, year: Int, id: String)

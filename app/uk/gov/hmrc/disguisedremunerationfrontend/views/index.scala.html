@@ -18,32 +18,41 @@
 @import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
 @(state: uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyState)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-                    @tasklist(
-                        messages("landing.details.title") -> Right(List(
-                            ("About you", Some("about-you/").filter(_ => state.aboutYou.isEmpty), None, state.aboutYou.isDefined),
-                            ("Contact details", Some("contact-details/").filter(_ => state.contactDetails.isEmpty), None, state.contactDetails.isDefined)
-                        )),
-                        messages("landing.loan.arrangement.heading") -> {
-if (state.schemes.isEmpty) {
-Left {
-                            Html(
-                              """
-                                |These are sometimes called 'disguised remuneration schemes'.
-                                |<br><br>
-                                |<li><a href="scheme/" class="govuk-link">Add, change or remove a loan arrangement</a></li>
-                              """.stripMargin
-                            )
-                        }
-} else {
-Right(state.schemes.map{ scheme =>
-  (scheme.name, Some("schemes/"), None, true)
-} :+ (("Add another remuneration scheme", Some("scheme/"), None, false)))
-}
-                        },
-                        messages("landing.loan.taxyear.heading") -> Left {
-                            Html("""You need to <a href="scheme/" class="govuk-link">add a remuneration scheme</a> before you can add loan details.""")
-                        },
-                        messages("landing.checkdetails.heading") -> Left {
-                            Html(messages("landing.sendanswers.link"))
-                        }
+@tasklist(
+    messages("landing.details.title") -> Right(List(
+        ("About you", Some("about-you/").filter(_ => state.aboutYou.isEmpty), None, state.aboutYou.isDefined),
+        ("Contact details", Some("contact-details/").filter(_ => state.contactDetails.isEmpty), None, state.contactDetails.isDefined)
+    )),
+    messages("landing.loan.arrangement.heading") -> {
+        if (state.schemes.isEmpty) {
+            Left {
+                Html(
+                    """
+                                  |These are sometimes called 'disguised remuneration schemes'.
+                                  |<br><br>
+                                  |<li><a href="scheme/" class="govuk-link">Add, change or remove a loan arrangement</a></li>
+                                """.stripMargin
+                )
+            }
+        } else {
+            Right(state.schemes.map{ scheme =>
+                (scheme.name, Some("schemes/"), None, true)
+            } :+ 
+                (("Add another remuneration scheme", Some("scheme/"), None, false)))
+	}
+    },
+    messages("landing.loan.taxyear.heading") -> {
+	val details = state.schemes.zipWithIndex.flatMap{ case (scheme,schemeIndex) =>
+	    scheme.loanDetails.map { case (year, optDetails) => 
+		((s"${scheme.name} $year", Some(s"scheme/$schemeIndex/details/$year/"), None, optDetails.isDefined))
+	    }
+	}.sortBy(_._1)
+
+	if (details.isEmpty) Left {
+	    Html("""You need to <a href="scheme/" class="govuk-link">add a remuneration scheme</a> before you can add loan details.""")
+	} else Right(details)
+    },
+    messages("landing.checkdetails.heading") -> Left {
+	Html(messages("landing.sendanswers.link"))
+    }
 )

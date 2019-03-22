@@ -21,7 +21,6 @@ import org.atnos.eff._
 import play.api.i18n.Messages
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
-import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration._
 
 case class TelAndEmail(telephone: Option[String], email: Option[String])
 

@@ -44,6 +44,7 @@ class SplunkController @Inject()(mcc: MessagesControllerComponents, auditConnect
     val auditSource = "disguised-remuneration"
 
     // Test data
+    // TODO: Find out why we have test data in the production codebase
     val _address = Address(
       line1 = "11 The Hight Street",
       line2 = Some("Hove"),
@@ -65,21 +66,7 @@ class SplunkController @Inject()(mcc: MessagesControllerComponents, auditConnect
       actingFor = Some("Derek")
     )
 
-    val _scheme = Scheme(
-      name = "dp02",
-      dotasReferenceNumber = Some("Dotas_001"),
-      caseReferenceNumber = Some("CSS-002"),
-      schemeStart = Some(LocalDate.now()),
-      schemeStopped = None,
-      employee = Some(Employer(name = "Tax dodgers ltd", paye = "123/AB456")),
-      loanRecipient = true,
-      loanRecipientName = Some("Tax Dodger"),
-      settlement = Some(TaxSettlement(amount = 100, dateOfSettlement = LocalDate.now()))
-    )
-
     val _loanDetails = LoanDetails(
-      scheme = _scheme,
-      year = 2010,
       hmrcApproved = false,
       genuinelyRepaid = 100,
       amount = 300,
@@ -89,11 +76,23 @@ class SplunkController @Inject()(mcc: MessagesControllerComponents, auditConnect
       ))
     )
 
+    val _scheme = Scheme(
+      name = "dp02",
+      dotasReferenceNumber = Some("Dotas_001"),
+      caseReferenceNumber = Some("CSS-002"),
+      schemeStart = LocalDate.now(),
+      schemeStopped = None,
+      employee = Some(Employer(name = "Tax dodgers ltd", paye = "123/AB456")),
+      loanRecipient = true,
+      loanRecipientName = Some("Tax Dodger"),
+      settlement = Some(TaxSettlement(amount = 100, dateOfSettlement = LocalDate.now())),
+      loanDetailsProvided = Map(2010 -> _loanDetails)
+    )
+
     val _journeyState = JourneyState(
       aboutYou = Some(Some(_aboutYou)),
       schemes = List(_scheme),
-      contactDetails = Some(_contactDetails),
-      details = List(_loanDetails)
+      contactDetails = Some(_contactDetails)
     )
 
     auditConnector.sendExplicitAudit(auditSource, Json.toJson(_journeyState))

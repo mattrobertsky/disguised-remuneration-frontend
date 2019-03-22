@@ -14,14 +14,22 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.disguisedremunerationfrontend.data
+package uk.gov.hmrc.disguisedremunerationfrontend
 
-package object disguisedremuneration {
+package object data {
   type Nino = String
   type Utr = String
   type Paye = String
   type Money = Int
   type Date = java.time.LocalDate
-
+  type Year = Int
   type EndJourney = String
+
+  implicit class HMRCDate(val date: Date) {
+    def financialYear: Int =
+      if (date.getMonthValue < 4)
+        date.getYear - 1
+      else
+        date.getYear
+  }
 }
