@@ -26,10 +26,13 @@ package object data {
   type EndJourney = String
 
   implicit class HMRCDate(val date: Date) {
-    def financialYear: Int =
-      if (date.getMonthValue < 4)
+
+    def financialYear: Int = {
+      val turningPoint = java.time.LocalDate.of(date.getYear, 4, 6)
+      if (date.isBefore(turningPoint))
         date.getYear - 1
       else
         date.getYear
+    }
   }
 }
