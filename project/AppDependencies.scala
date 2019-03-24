@@ -11,8 +11,7 @@ object AppDependencies {
     "uk.gov.hmrc"             %% "play-ui"                  % "7.33.0-play-26",
     "uk.gov.hmrc"             %% "bootstrap-play-26"        % "0.36.0",
     "com.beachape"            %% "enumeratum-play-json"     % "1.5.0",
-    "com.luketebbs.uniform"   %% "interpreter-play26"       % uniformVersion,
-    "com.luketebbs.uniform"   %% "govuk-widgets"            % uniformVersion
+    "com.luketebbs.uniform"   %% "interpreter-play26"       % uniformVersion
   )
 
   val test = Seq(

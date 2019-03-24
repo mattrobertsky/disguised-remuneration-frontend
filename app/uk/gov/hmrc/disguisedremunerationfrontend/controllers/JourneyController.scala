@@ -21,19 +21,16 @@ import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import javax.inject.{Inject, Singleton}
 import ltbs.uniform._
 import ltbs.uniform.interpreters.playframework._
-import ltbs.uniform.web.{HtmlField, DataParser}
+import ltbs.uniform.web._
 import ltbs.uniform.web.InferParser._
 import ltbs.uniform.web.parser._
 import play.api.data.Form
-import ltbs.uniform.web.{HtmlForm, Input, Messages, NoopMessages}
-import ltbs.uniform.widgets.govuk._
 import org.atnos.eff._
 import play.api.i18n.I18nSupport
 import play.api.mvc.{AnyContent, MessagesControllerComponents, Request}
 import play.twirl.api.Html
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
 import uk.gov.hmrc.disguisedremunerationfrontend.data._
-import uk.gov.hmrc.disguisedremunerationfrontend.data.render.RenderHtmlTemplate
 import uk.gov.hmrc.disguisedremunerationfrontend.views
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
@@ -41,6 +38,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import enumeratum.values._
 import play.api.libs.json.Json
+import AssetsFrontend.{optionHtml => _, _}
 
 sealed abstract class EmploymentStatus extends EnumEntry
 object EmploymentStatus extends Enum[EmploymentStatus] with PlayJsonEnum[EmploymentStatus] {
@@ -147,11 +145,10 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
 
     // tell uniform to use the same renderer for an Option[String] as
     // is used for a String field
-    implicit def optStringHtml(implicit r: HtmlField[String]) =
-      new HtmlField[Option[String]] {
-        def render(key: String, values: Input, errors: ErrorTree, messages: Messages) =
-          r.render(key, values, errors, messages)
-      }
+    implicit val optStringHtml = new HtmlField[Option[String]] {
+      def render(key: String, values: Input, errors: ErrorTree, messages: Messages) =
+        implicitly[HtmlField[String]].render(key, values, errors, messages)
+    }
 
     runWeb(
       program = ContactDetails.program[FxAppend[Stack, PlayStack]]
@@ -212,7 +209,7 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
     val customBool = {
       implicit val booleanField = new HtmlField[Boolean] {
         override def render( key: String, values: Input, errors: ErrorTree, messages: Messages ): Html =
-          html.radios(
+          views.html.uniform.radios(
             key,
             Seq("FALSE","TRUE"),
             values.value.headOption,
@@ -223,13 +220,6 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
       PlayForm.automatic[Unit, Boolean]
     }
 
-    val customNinoUTR = {
-      implicit val booleanField = new HtmlField[Either[Nino,Utr]] {
-        override def render( key: String, values: Input, errors: ErrorTree, messages: Messages ): Html =
-          Html(RenderHtmlTemplate.generateIdentityHtml(messages))
-      }
-      PlayForm.automatic[Unit, Either[Nino,Utr]]
-    }
     import AboutYou._
     runWeb(
       program = AboutYou.program[FxAppend[Stack, PlayStack]]
@@ -237,7 +227,7 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
           case List("aboutyou-completedby") => customBool
           case _ => PlayForm.automatic[Unit,Boolean]
         }
-        .useForm(customNinoUTR)
+        .useForm(PlayForm.automatic[Unit, Either[Nino,Utr]])
         .useForm(PlayForm.automatic[Unit,EmploymentStatus])
         .useForm(PlayForm.automatic[Unit,String])
         .useForm(PlayForm.automatic[Unit, Unit]),

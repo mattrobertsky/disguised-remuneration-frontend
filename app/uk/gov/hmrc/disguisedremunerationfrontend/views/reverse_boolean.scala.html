@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import ltbs.uniform.widgets.govuk.html._
+@import uniform._
 @(key: String, options: Seq[String], existing: Option[String], messages: ltbs.uniform.web.Messages, conditional: PartialFunction[String,Html] = PartialFunction.empty )
 
 @keyNoDots=@{key.replace(".","-")}
