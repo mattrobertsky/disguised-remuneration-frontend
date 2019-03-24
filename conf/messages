@@ -60,7 +60,7 @@ contactdetails-telehoneemail.email.heading=Email address (optional)
 #Scheme
 scheme-name.heading=What is the name of this scheme?
 scheme-dotas.heading=Do you have a Disclosure of Tax Avoidance Schemes (DOTAS) number for this scheme?
-scheme-dotas.true.heading=Enter the DOTAS number
+scheme-dotas.Yes.dotas.heading=Enter the DOTAS number For example, 12345678
 scheme-dotas.Yes=Yes
 scheme-dotas.No=No
 scheme-dotas.DoNotKnow=Do not know

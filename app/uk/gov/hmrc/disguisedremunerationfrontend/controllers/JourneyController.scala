@@ -41,7 +41,10 @@ import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import enumeratum.values._
-import play.api.libs.json.Json
+import play.api.libs.json._
+import play.api.libs.json.Reads._
+import play.api.libs.functional.syntax._
+import uk.gov.hmrc.disguisedremunerationfrontend.repo.SessionStore
 
 sealed abstract class EmploymentStatus extends EnumEntry
 object EmploymentStatus extends Enum[EmploymentStatus] with PlayJsonEnum[EmploymentStatus] {
@@ -51,6 +54,8 @@ object EmploymentStatus extends Enum[EmploymentStatus] with PlayJsonEnum[Employm
   case object Both          extends EmploymentStatus
 }
 
+// unable to move to data package!
+// knownDirectSubclasses of YesNoDoNotKnow observed before subclass Yes registered
 sealed trait YesNoDoNotKnow
 
 object YesNoDoNotKnow {
@@ -64,23 +69,8 @@ object YesNoDoNotKnow {
 }
 
 
-case class JourneyState(
-  aboutYou: Option[Option[AboutYou]] = None,
-  schemes: List[Scheme] = Nil,
-  contactDetails: Option[ContactDetails] = None,
-  details: List[LoanDetails] = Nil
-) {
-    def readyToSubmit = aboutYou.isDefined && contactDetails.isDefined && schemes.nonEmpty
-      //&& detailsStatus.forall(_._3.isDefined)
-}
-
-object JourneyState {
-  //implicit val journeyStateFormatter: Format[JourneyState] = Json.format[JourneyState]
-  implicit val journeyStateWrites = Json.writes[JourneyState]
-
-}
 @Singleton
-class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit val appConfig: AppConfig)
+class JourneyController @Inject()(mcc: MessagesControllerComponents, cache: SessionStore)( implicit val appConfig: AppConfig)
       extends FrontendController(mcc) with PlayInterpreter with I18nSupport {
 
   var state: JourneyState = JourneyState()
@@ -100,6 +90,8 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
     Ok(views.html.main_template(title = "Send your loan charge details")(views.html.index(state)))
   }
 
+  def cacheWrite(sessionId: String, journeyState: JourneyState)(implicit request: Request[AnyContent]) =
+    cache.store[JourneyState](sessionId, "drCache", journeyState)
 
   def contactDetails(implicit key: String) = Action.async { implicit request =>
     implicit val keys: List[String] = key.split("/").toList
@@ -136,6 +128,9 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
       MemoryPersistence
     ){data =>
       state = state.copy(contactDetails = Some(data))
+      val uuid = cache.sessionUuid.getOrElse("dr-sessionId1")
+      //what do we need here??+ ("uuid" -> java.util.UUID.randomUUID.toString)
+      cacheWrite(uuid, state)
       Future.successful(Redirect(routes.JourneyController.index()))
     }
 
@@ -157,6 +152,9 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
       MemoryPersistence
     ){data =>
       state = state.copy(schemes = data.get :: state.schemes)  // remove get
+      val uuid = cache.sessionUuid.getOrElse("dr-sessionId1")
+      //??+ ("uuid" -> java.util.UUID.randomUUID.toString)
+      cacheWrite(uuid, state)
       Future.successful(Redirect(routes.JourneyController.index()))
     }
   }
@@ -203,8 +201,11 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
       _ match {
       case Left(err) => Future.successful(Redirect(routes.HelloWorld.helloWorld()))
                         //throw new RuntimeException("logout")
-      case Right(data) => 
-        state = state.copy(aboutYou = Some(data))
+      case Right(data) =>
+        state = state.copy(aboutYou = data)
+        val uuid = cache.sessionUuid.getOrElse("dr-sessionId1")
+        //??+ ("uuid" -> java.util.UUID.randomUUID.toString)
+        cacheWrite(uuid, state)
         Future.successful(Redirect(routes.JourneyController.index()))
       }
     }

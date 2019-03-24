@@ -19,7 +19,8 @@ package uk.gov.hmrc.disguisedremunerationfrontend.data
 
 import ltbs.uniform._
 import org.atnos.eff._
-import play.api.libs.json.{JsNull, JsValue, Json, Writes}
+import play.api.libs.json._
+import play.api.libs.functional.syntax._
 import uk.gov.hmrc.disguisedremunerationfrontend.controllers.EmploymentStatus
 import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration._
 
@@ -28,7 +29,7 @@ case class AboutYou(
   alive: Boolean,
   identification: Option[Either[Nino, Utr]] = None,
   deceasedBefore: Option[Boolean] = None,
-  employmentStatus: Option[EmploymentStatus] = None,
+//  employmentStatus: Option[EmploymentStatus] = None,
   actingFor: Option[String] = None
 )
 
@@ -41,11 +42,7 @@ case class NotRequiredToComplete(
 
 object AboutYou {
 
-  implicit def eitherWrites[Nino, Utr](implicit Nino: Writes[Nino], Utr: Writes[Utr]): Writes[Either[Nino, Utr]] =
-    Writes[Either[Nino, Utr]] {
-      case Left(l) => Nino.writes(l)
-      case Right(r) => Utr.writes(r)
-    }
+  import NinoOrUtr._
 
   implicit val aboutYouWrites = new Writes[AboutYou] {
     override def writes(o: AboutYou ): JsValue = Json.obj(
@@ -53,10 +50,19 @@ object AboutYou {
       "alive" -> o.alive,
       "identification" -> o.identification,
       "deceasedBefore" -> o.deceasedBefore,
-      "employmentStatus" -> o.employmentStatus,
+//      "employmentStatus" -> o.employmentStatus,
       "actingFor" -> o.actingFor
     )
   }
+
+  implicit val aboutYouReads: Reads[AboutYou] = (
+    (__ \ "completedBySelf").read[Boolean] and
+      (__ \ "alive").read[Boolean] and
+      (__ \ "identification").readNullable[Either[Nino, Utr]] and
+      (__ \ "deceasedBefore").readNullable[Boolean] and
+//      (__ \ "employmentStatus").readNullable[EmploymentStatus] and
+      (__ \ "actingFor").readNullable[String]
+  )(AboutYou.apply _)
 
   implicit val optAboutYouWrites =
     Writes[Option[Option[AboutYou]]] {
@@ -67,7 +73,6 @@ object AboutYou {
       }
       case _ => JsNull
     }
-
 
   // Move into utils
   lazy val regExUTR = """^(?:[ \t]*(?:[a-zA-Z]{3})?\d[ \t]*){10}$"""
@@ -99,7 +104,7 @@ object AboutYou {
         case true => for {
           alive   <- ask[Boolean]("aboutyou-personalive")
           employmentStatus  <- ask[EmploymentStatus]("aboutyou-employmentstatus").in[R] when !alive
-          deceasedBefore  <- ask[Boolean]("aboutyou-deceasedbefore").in[R] when employmentStatus == Some(EmploymentStatus.Employed)
+          deceasedBefore    <- ask[Boolean]("aboutyou-deceasedbefore").in[R] when employmentStatus == Some(EmploymentStatus.Employed)
           notRequiredToComplete = deceasedBefore == Some(true)
           _ <- tell[Unit]("aboutyou-noloancharge")("_").in[R] when notRequiredToComplete
           id <- ask[Either[Nino,Utr]]("aboutyou-identity")
@@ -124,7 +129,8 @@ object AboutYou {
           if (notRequiredToComplete)
             Left(NoNeedToComplete)
           else
-            Right(Some(AboutYou(false, alive, id, deceasedBefore, employmentStatus, personName)))
+            Right(Some(AboutYou(false, alive, id, deceasedBefore, personName)))
+//            Right(Some(AboutYou(false, alive, id, deceasedBefore, employmentStatus, personName)))
         }
       }
   } yield (ret)

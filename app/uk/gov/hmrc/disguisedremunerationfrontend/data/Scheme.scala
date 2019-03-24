@@ -184,12 +184,20 @@ object Scheme {
                                   .in[R] when taxNIPaid
     } yield {
       println(s"dotasNumber: $dotasNumber")
+      println(s"stillUsingYes: ${if (stillUsingScheme) stillUsingYes else stillUsingNo}")
+
+      val(startDate, stopDate): (Option[LocalDate], Option[LocalDate]) =
+                                  if (stillUsingScheme)
+                                      (stillUsingYes, None)
+                                  else
+                                    stillUsingNo.map(x => (Some(x._1), Some(x._2))).getOrElse((None,None))
+
       val scheme = Scheme(
         name = schemeName,
         dotasReferenceNumber = Some("dotas1"),
         caseReferenceNumber = schemeReferenceNumber,
-        schemeStart = Some(LocalDate.now()),
-        schemeStopped = None,
+        schemeStart = startDate,
+        schemeStopped = stopDate,
         employee = employer,
         loanRecipient = recipient.isEmpty,
         loanRecipientName = recipient,
