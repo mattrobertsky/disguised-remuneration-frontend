@@ -21,20 +21,20 @@
 <div class="multiple-choice">
 
   @for((opt,num) <- options.zipWithIndex) {
-    <div class="govuk-checkboxes__item" data-target="@keyNoDots">
-      <input class="govuk-checkboxes__input" id="@keyNoDots-@num" name="@{key}[]" type="checkbox" value="@opt" @if(existing.exists(_ == opt)){ checked } @if(conditional.isDefinedAt(opt)) {aria-controls="ting" aria-expanded="true"}>
-      <label class="form-label govuk-checkboxes__label" for="@key-@num">
+    <div class="checkboxes__item" data-target="@keyNoDots">
+      <input class="checkboxes__input" id="@keyNoDots-@num" name="@{key}[]" type="checkbox" value="@opt" @if(existing.exists(_ == opt)){ checked } @if(conditional.isDefinedAt(opt)) {aria-controls="ting" aria-expanded="true"}>
+      <label class="form-label checkboxes__label" for="@key-@num">
 	@messages.decompose(s"$key.$opt")
       </label>
       @messages.get(s"$key.$opt.hint").map { hint => 
-      <span id="@key-@opt-item-hint" class="govuk-hint govuk-checkboxes__hint">
+      <span id="@key-@opt-item-hint" class="hint checkboxes__hint">
         @hint
       </span>
       }
     </div>
 
     @if(conditional.isDefinedAt(opt)) { 
-      <div id="conditional-@keyNoDots-@opt" class="conditional-@keyNoDots @if(existing.exists(_ == opt)){govuk-checkboxes__conditional} else {govuk-checkboxes__conditional--hidden}" aria-hidden="false">
+      <div id="conditional-@keyNoDots-@opt" class="conditional-@keyNoDots @if(existing.exists(_ == opt)){checkboxes__conditional} else {checkboxes__conditional--hidden}" aria-hidden="false">
         @conditional(opt)
       </div>
     }

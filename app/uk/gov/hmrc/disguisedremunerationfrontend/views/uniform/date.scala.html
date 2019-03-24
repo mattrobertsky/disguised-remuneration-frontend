@@ -20,15 +20,15 @@
 
 @path=@{key.split("[.]").filter(_.nonEmpty).tail}
 
-<div class="govuk-date-input" id="@key">
+<div class="date-input" id="@key">
   @for(field <- List("day","month","year")) {
-    <div class="govuk-date-input__item">
-      <div class="govuk-form-group">
-        <label class="govuk-label govuk-date-input__label" for="@key-@field">
+    <div class="date-input__item">
+      <div class="form-group">
+        <label class="label date-input__label" for="@key-@field">
           @messages(List(s"$key.$field",field))
         </label>
         <input
-	  class="govuk-input govuk-date-input__input govuk-input--width-@if(field=="year"){4}else{2}"
+	  class="input date-input__input input--width-@if(field=="year"){4}else{2}"
 	  id="@key-@field"
 	  name="@key.@field"
 	  type="number"
