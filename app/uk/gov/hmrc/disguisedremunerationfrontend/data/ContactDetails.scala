@@ -50,9 +50,10 @@ object ContactDetails {
       : _uniformCore
       : _uniformAsk[Address, ?]
       : _uniformAsk[TelAndEmail, ?]
-  ]: Eff[R, ContactDetails] = {
+  ](default: Option[ContactDetails]): Eff[R, ContactDetails] = {
     for {
       address <- ask[Address]("contactdetails-address")
+        .defaultOpt(default.map(_.address))
         .validating(
           "Enter the building or street of your address",
           address => !address.line1.isEmpty()
@@ -66,6 +67,7 @@ object ContactDetails {
           address => address.line1.matches(nameRegex)
         )
       telAndEmail <- ask[TelAndEmail]("contactdetails-telehoneemail")
+        .defaultOpt(default.map(_.telephoneAndEmail))
         .validating(
           "Telephone number must be 24 characters or less",
           contact =>  contact.telephone.fold(true)(_.length <= 24)

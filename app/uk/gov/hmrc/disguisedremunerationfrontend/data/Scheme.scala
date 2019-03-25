@@ -103,17 +103,19 @@ object Scheme {
     : _uniformAsk[YesNoDoNotKnow,?]
     : _uniformAsk[(Date,Date),?]
     : _uniformAsk[Date,?]
-  ]: Eff[R, Scheme] = { 
+  ](default: Option[Scheme]): Eff[R, Scheme] = { 
 
     // subjourney for extracting the date range
     def getSchemeDateRange: Eff[R, (Date,Option[Date])] =
-      ask[Boolean]("scheme-stillusing") >>= {
+      ask[Boolean]("scheme-stillusing").defaultOpt(default.map(_.schemeStopped.isEmpty)) >>= {
         case true => {
           ask[Date]("scheme-stillusingyes")
+          .defaultOpt(default.map{_.schemeStart})
           .validating(s"The date you started using the scheme must after $earliestDate", isInRange(_))
           .validating("The date you started using the scheme must be in the past", _.isBefore(LocalDate.now()))
             .in[R] }.map{(_, none[Date])}
         case false => ask[(Date, Date)]("scheme-stillusingno")
+          .defaultOpt(default.map{x => (x.schemeStart, x.schemeStopped.get)})
           .validating("The date you stopped using the scheme must be the same as or after the date you started using the scheme", startBeforeEnd _)
           .in[R].map{ case (k,v) => (k,v.some) }
       }
@@ -121,6 +123,7 @@ object Scheme {
     // Main journey
     for {
       schemeName            <-  ask[String]("scheme-name")
+                                    .defaultOpt(default.map{_.name})
                                     .validating(
                                       "Enter the name of the scheme",
                                       name => !name.isEmpty
@@ -134,12 +137,18 @@ object Scheme {
                                     name => name.matches(nameRegex)
                                   )
       dotasNumber           <-  ask[YesNoDoNotKnow]("scheme-dotas")
+                                  .defaultOpt(default.map{_.dotasReferenceNumber match {
+                                    case Some(msg)       => YesNoDoNotKnow.Yes(msg)
+                                    case None            => YesNoDoNotKnow.No
+                                    case Some("unknown") => YesNoDoNotKnow.DoNotKnow
+                                  }})
                                   .validating(
                                     "Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers",
 //                                  case name => println(s"DOTAS LENGTH = ${name.toString}"); name.entryName.length() == 8  // Need to get actual value!
                                     yn  => true
                                   )
       schemeReferenceNumber <-  ask[Option[String]]("scheme-refnumber")
+                                  .defaultOpt(default.map{_.caseReferenceNumber})
                                   .validating(
                                     "HMRC case reference number must be 10 characters or less",
                                     _ match {
@@ -156,6 +165,7 @@ object Scheme {
                                   )
       dateRange             <-  getSchemeDateRange
       employer              <-  ask[Option[Employer]]("scheme-employee")
+                                    .defaultOpt(default.map{_.employee})
                                     .validating(
                                       "Enter the employer's name",
                                       _ match {
@@ -186,6 +196,7 @@ object Scheme {
                                     )
                                     .in[R]
       recipient             <-  ask[Option[String]]("scheme-recipient")
+                                  .defaultOpt(default.map{_.loanRecipientName})
                                   .validating(
                                     "Enter the name of who the loan was made out to",
                                     _ match {
@@ -208,12 +219,15 @@ object Scheme {
                                     }
                                   )
                                   .in[R]
-      taxNIPaid             <-  ask[Boolean]("scheme-agreedpayment").in[R]
+      taxNIPaid             <-  ask[Boolean]("scheme-agreedpayment")
+                                  .defaultOpt(default.map{_.settlement.isDefined}).in[R]
+
       settlementStatus      <-  ask[TaxSettlement]("scheme-settlementstatus")
                                   .validating(
                                      "Enter how much tax and National Insurance you have paid, or agreed with us to pay",
                                      settlement => settlement.amount > 0
                                   )
+                                  .defaultOpt(default.flatMap{_.settlement})
                                   .in[R] when taxNIPaid
     } yield Scheme(
         name = schemeName,

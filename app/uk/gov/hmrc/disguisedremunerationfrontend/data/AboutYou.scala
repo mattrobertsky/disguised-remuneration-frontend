@@ -90,18 +90,24 @@ object AboutYou {
       : _uniformAsk[Either[Nino,Utr],?]
       : _uniformAsk[EmploymentStatus,?]
       : _uniformAsk[Unit,?]
-  ]: Eff[R, Either[Error,Option[AboutYou]]] = 
+  ](default: Option[Option[AboutYou]]): Eff[R, Either[Error,Option[AboutYou]]] = 
     for {
       completedBy <- ask[Boolean]("aboutyou-completedby")
+                       .defaultOpt(default.map(_.isDefined))
       ret <- completedBy match {
         case false => Eff.pure[R,Either[Error,Option[AboutYou]]](Right(None))
         case true => for {
           alive   <- ask[Boolean]("aboutyou-personalive")
-          employmentStatus  <- ask[EmploymentStatus]("aboutyou-employmentstatus").in[R] when !alive
-          deceasedBefore  <- ask[Boolean]("aboutyou-deceasedbefore").in[R] when employmentStatus == Some(EmploymentStatus.Employed)
+                       .defaultOpt(default.flatMap(_.map(_.alive)))
+          employmentStatus  <- ask[EmploymentStatus]("aboutyou-employmentstatus")
+                                 .defaultOpt(default.flatMap(_.flatMap(_.employmentStatus))).in[R] when !alive
+          deceasedBefore  <- ask[Boolean]("aboutyou-deceasedbefore")
+                                  .defaultOpt(default.flatMap(_.flatMap(_.deceasedBefore)))
+                                  .in[R] when employmentStatus == Some(EmploymentStatus.Employed)
           notRequiredToComplete = deceasedBefore == Some(true)
           _ <- tell[Unit]("aboutyou-noloancharge")("_").in[R] when notRequiredToComplete
           id <- ask[Either[Nino,Utr]]("aboutyou-identity")
+                  .defaultOpt(default.flatMap(_.flatMap(_.identification)))
                   .validating(
                     "Enter the person's National Insurance number in the correct format",
                     _ match {
@@ -117,7 +123,9 @@ object AboutYou {
                     }
                   )
                   .in[R] when (!notRequiredToComplete)
-          personName <- ask[String]("aboutyou-confirmation").in[R] when !id.isEmpty
+          personName <- ask[String]("aboutyou-confirmation")                  
+                          .defaultOpt(default.flatMap(_.flatMap(_.actingFor)))
+                          .in[R] when !id.isEmpty
         } yield {
           println(s"id: $id")
           if (notRequiredToComplete)

@@ -18,10 +18,16 @@ GET        /contact-details/:id     uk.gov.hmrc.disguisedremunerationfrontend.co
 POST       /contact-details/        uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetails(id = "")
 POST       /contact-details/:id     uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetails(id: String)
 
-GET        /scheme/                 uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id = "")
-GET        /scheme/:id              uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id: String)
-POST       /scheme/                 uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id = "")
-POST       /scheme/:id              uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id: String)
+GET        /scheme/new/     uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id = "")
+GET        /scheme/new/:id  uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id: String)
+POST       /scheme/new/     uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id = "")
+POST       /scheme/new/:id  uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id: String)
+
+
+GET        /scheme/:schemeIndex/     uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.editScheme(schemeIndex: Int, id = "")
+GET        /scheme/:schemeIndex/:id  uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.editScheme(schemeIndex: Int, id: String)
+POST       /scheme/:schemeIndex/     uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.editScheme(schemeIndex: Int, id = "")
+POST       /scheme/:schemeIndex/:id  uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.editScheme(schemeIndex: Int, id: String)
 
 GET        /scheme/:schemeIndex/details/:year/		uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.loanDetails(schemeIndex: Int, year: Int, id = "")
 GET        /scheme/:schemeIndex/details/:year/:id	uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.loanDetails(schemeIndex: Int, year: Int, id: String)

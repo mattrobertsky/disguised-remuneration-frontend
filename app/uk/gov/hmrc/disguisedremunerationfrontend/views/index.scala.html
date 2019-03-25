@@ -20,8 +20,8 @@
 
 @tasklist(
     messages("landing.details.title") -> Right(List(
-        ("About you", Some("about-you/").filter(_ => state.aboutYou.isEmpty), None, state.aboutYou.isDefined),
-        ("Contact details", Some("contact-details/").filter(_ => state.contactDetails.isEmpty), None, state.contactDetails.isDefined)
+        ("About you", Some("about-you/aboutyou-completedby"), None, state.aboutYou.isDefined),
+        ("Contact details", Some("contact-details/contactdetails-address"), None, state.contactDetails.isDefined)
     )),
     messages("landing.loan.arrangement.heading") -> {
         if (state.schemes.isEmpty) {
@@ -30,21 +30,21 @@
                     """
                                   |These are sometimes called 'disguised remuneration schemes'.
                                   |<br><br>
-                                  |<li><a href="scheme/" class="govuk-link">Add, change or remove a loan arrangement</a></li>
+                                  |<li><a href="scheme/new/" class="govuk-link">Add, change or remove a loan arrangement</a></li>
                                 """.stripMargin
                 )
             }
         } else {
-            Right(state.schemes.map{ scheme =>
-                (scheme.name, Some("schemes/"), None, true)
+            Right(state.schemes.zipWithIndex.map{ case (scheme, schemeIndex) =>
+                (scheme.name, Some(s"scheme/$schemeIndex/scheme-name"), None, true)
             } :+ 
-                (("Add another remuneration scheme", Some("scheme/"), None, false)))
+                (("Add another remuneration scheme", Some("scheme/new/"), None, false)))
 	}
     },
     messages("landing.loan.taxyear.heading") -> {
 	val details = state.schemes.zipWithIndex.flatMap{ case (scheme,schemeIndex) =>
 	    scheme.loanDetails.map { case (year, optDetails) => 
-		((s"${scheme.name} $year", Some(s"scheme/$schemeIndex/details/$year/"), None, optDetails.isDefined))
+		((s"${scheme.name} $year", Some(s"scheme/$schemeIndex/details/$year/details-amount"), None, optDetails.isDefined))
 	    }
 	}.sortBy(_._1)
 

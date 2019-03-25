@@ -104,5 +104,4 @@ class SplunkController @Inject()(mcc: MessagesControllerComponents, auditConnect
 
   override def renderForm( key: List[String], errors: ErrorTree, form: Html, breadcrumbs: List[String], request: Request[AnyContent], messages: Messages ): Html = Html("")
 
-  override def listingPage[A]( key: List[String], errors: ErrorTree, elements: List[A], messages: Messages )( implicit evidence$1: Htmlable[A] ): Html = Html("")
 }

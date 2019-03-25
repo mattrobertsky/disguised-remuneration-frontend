@@ -109,8 +109,6 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
 
   def messages( request: Request[AnyContent] ): ltbs.uniform.web.Messages = convertMessages(messagesApi.preferred(request))
 
-  def listingPage[A](key: List[String],errors: ltbs.uniform.ErrorTree,elements: List[A],messages: ltbs.uniform.web.Messages)(implicit evidence$1: ltbs.uniform.web.Htmlable[A]): play.twirl.api.Html = ???
-
   def renderForm(key: List[String], errors: ErrorTree, form: Html, breadcrumbs: List[String], request: Request[AnyContent], messagesIn: ltbs.uniform.web.Messages): Html = {
     implicit val r = request
     views.html.main_template(title = "Send your loan charge details")(views.html.about_you(key.last, errors, form, breadcrumbs)(messagesIn, request))
@@ -151,9 +149,9 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
     }
 
     runWeb(
-      program = ContactDetails.program[FxAppend[Stack, PlayStack]]
-        .useForm(PlayForm.automatic[Unit, Address])
-        .useForm(PlayForm.automatic[Unit, TelAndEmail]),
+      program = ContactDetails.program[FxAppend[Stack, PlayStack]](state.contactDetails)
+        .useForm(automatic[Unit, Address])
+        .useForm(automatic[Unit, TelAndEmail]),
       MemoryPersistence
     ){data =>
       state = state.copy(contactDetails = Some(data))
@@ -162,22 +160,35 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
 
   }
 
-  def addScheme(implicit key: String) = Action.async { implicit request =>
+  def addScheme(key: String) = runScheme(None, key)
+
+  def editScheme(schemeIndex: Int, key: String) = runScheme(Some(schemeIndex), key)  
+
+  def runScheme(schemeIndex: Option[Int], key: String) = Action.async { implicit request =>
+
+    val default: Option[Scheme] = schemeIndex.map(state.schemes(_))
     implicit val keys: List[String] = key.split("/").toList
+    import AssetsFrontend.optionHtml
     import Scheme._
     runWeb(
-      program = Scheme.program[FxAppend[Stack, PlayStack]]
-        .useForm(PlayForm.automatic[Unit, String])
-        .useForm(PlayForm.automatic[Unit, Option[String]])
-        .useForm(PlayForm.automatic[Unit, Option[Employer]])
-        .useForm(PlayForm.automatic[Unit, TaxSettlement])
-        .useForm(PlayForm.automatic[Unit,YesNoDoNotKnow])
-        .useForm(PlayForm.automatic[Unit, Boolean])
-        .useForm(PlayForm.automatic[Unit, Date])
-        .useForm(PlayForm.automatic[Unit, (Date, Date)]),
+      program = Scheme.program[FxAppend[Stack, PlayStack]](default)
+        .useForm(automatic[Unit, String])
+        .useForm(automatic[Unit, Option[String]])
+        .useForm(automatic[Unit, Option[Employer]])
+        .useForm(automatic[Unit, TaxSettlement])
+        .useForm(automatic[Unit,YesNoDoNotKnow])
+        .useForm(automatic[Unit, Boolean])
+        .useForm(automatic[Unit, Date])
+        .useForm(automatic[Unit, (Date, Date)]),
       MemoryPersistence
     ){data =>
-      state = state.copy(schemes = data :: state.schemes)
+      state = schemeIndex match {
+        case Some(i) =>
+          val updatedScheme = data.copy(loanDetailsProvided = default.fold(Map.empty[Year, LoanDetails])(_.loanDetailsProvided))
+          state.copy(schemes = state.schemes.patch(i, Seq(updatedScheme), 1))
+        case None    => 
+          state.copy(schemes = data :: state.schemes)
+      }
       Future.successful(Redirect(routes.JourneyController.index()))
     }
   }
@@ -189,9 +200,9 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
     val existing = scheme.loanDetails(year)
     runWeb(
       program = LoanDetails.program[FxAppend[Stack, PlayStack]](existing)
-        .useForm(PlayForm.automatic[Unit, Money])
-        .useForm(PlayForm.automatic[Unit, Boolean])
-        .useForm(PlayForm.automatic[Unit, WrittenOff]),
+        .useForm(automatic[Unit, Money])
+        .useForm(automatic[Unit, Boolean])
+        .useForm(automatic[Unit, WrittenOff]),
       MemoryPersistence
     ){data =>
       val updatedScheme = scheme.copy(
@@ -217,20 +228,20 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
             messages
           )
       }
-      PlayForm.automatic[Unit, Boolean]
+      automatic[Unit, Boolean]
     }
 
     import AboutYou._
     runWeb(
-      program = AboutYou.program[FxAppend[Stack, PlayStack]]
+      program = AboutYou.program[FxAppend[Stack, PlayStack]](state.aboutYou)
         .useFormMap{
           case List("aboutyou-completedby") => customBool
-          case _ => PlayForm.automatic[Unit,Boolean]
+          case _ => automatic[Unit,Boolean]
         }
-        .useForm(PlayForm.automatic[Unit, Either[Nino,Utr]])
-        .useForm(PlayForm.automatic[Unit,EmploymentStatus])
-        .useForm(PlayForm.automatic[Unit,String])
-        .useForm(PlayForm.automatic[Unit, Unit]),
+        .useForm(automatic[Unit, Either[Nino,Utr]])
+        .useForm(automatic[Unit,EmploymentStatus])
+        .useForm(automatic[Unit,String])
+        .useForm(automatic[Unit, Unit]),
       MemoryPersistence
     ){
       _ match {
