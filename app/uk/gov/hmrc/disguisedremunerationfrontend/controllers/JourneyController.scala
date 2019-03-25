@@ -21,10 +21,11 @@ import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import javax.inject.{Inject, Singleton}
 import ltbs.uniform._
 import ltbs.uniform.interpreters.playframework._
-import ltbs.uniform.web.{HtmlField, DataParser}
+import ltbs.uniform.web.{DataParser, HtmlField}
 import ltbs.uniform.web.InferParser._
 import ltbs.uniform.web.parser._
-import play.api.data.Form
+import play.api.data._
+import Forms._
 import ltbs.uniform.web.{HtmlForm, Input, Messages, NoopMessages}
 import ltbs.uniform.widgets.govuk._
 import org.atnos.eff._
@@ -37,6 +38,7 @@ import uk.gov.hmrc.disguisedremunerationfrontend.data._
 import uk.gov.hmrc.disguisedremunerationfrontend.data.render.RenderHtmlTemplate
 import uk.gov.hmrc.disguisedremunerationfrontend.views
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -45,6 +47,7 @@ import play.api.libs.json._
 import play.api.libs.json.Reads._
 import play.api.libs.functional.syntax._
 import uk.gov.hmrc.disguisedremunerationfrontend.repo.SessionStore
+import uk.gov.hmrc.http.HeaderCarrier
 
 sealed abstract class EmploymentStatus extends EnumEntry
 object EmploymentStatus extends Enum[EmploymentStatus] with PlayJsonEnum[EmploymentStatus] {
@@ -70,7 +73,7 @@ object YesNoDoNotKnow {
 
 
 @Singleton
-class JourneyController @Inject()(mcc: MessagesControllerComponents, cache: SessionStore)( implicit val appConfig: AppConfig)
+class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnector: AuditConnector, cache: SessionStore)( implicit val appConfig: AppConfig)
       extends FrontendController(mcc) with PlayInterpreter with I18nSupport {
 
   var state: JourneyState = JourneyState()
@@ -209,6 +212,65 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents, cache: Sess
         Future.successful(Redirect(routes.JourneyController.index()))
       }
     }
+  }
+
+  val confirmationForm = Form(single(
+    "confirm" -> boolean.verifying("error.cya.confirmation-needed", identity(_))
+  ))
+
+  val usersNameFromGG = "Joe Bloggs"
+
+  def blocksFormState: List[(String,List[(String,Html)])] = state match {
+    case JourneyState(Some(aboutYou), schemes, Some(contactDetails), loanDetails) =>
+      (
+        "Personal Details" -> List(
+          "Name" -> Html(usersNameFromGG),
+          "Filling in form for self" -> Html(if(aboutYou.completedBySelf) "Yes" else "No"),
+          "Address" -> Html(contactDetails.address.lines.mkString("<br />")),
+          "Contact Details" -> Html{
+            import contactDetails.telephoneAndEmail._
+            List(
+              telephone.map{x => "Telephone: " + x},
+              email.map{x => "Email address: " + x}
+            ).flatten.mkString("<br />")
+          }
+        )
+      ) :: schemes.map { scheme =>
+        import scheme._
+        ("Scheme: " + name) -> List(
+          "Dates you received loans" -> Html(""),
+          "Disclosure of Tax Avoidance Schemes (DOTAS) number" -> Html(dotasReferenceNumber.fold("n/a"){identity}),
+          "HMRC case reference number" -> Html(caseReferenceNumber.fold("n/a"){identity}),
+          "Employment status" -> Html(caseReferenceNumber.fold("n/a"){_ => "Employed"}),
+          "Loan recipient" -> Html(if(loanRecipient) "Yes" else "No"),
+          "Tax or National Insurance paid or agreed to pay" -> Html(settlement.fold("None"){x => f"&pound;${x.amount}%,d"})
+        )
+      }
+    case _ => Nil
+  }
+
+  def cya = Action { implicit request =>
+    val contents = views.html.cya(usersNameFromGG, blocksFormState, confirmationForm)
+    Ok(views.html.main_template(title = "Check your answers before sending your details")(contents))
+  }
+
+  def sendToSplunk(State: JourneyState)(implicit hc: HeaderCarrier): Unit = {
+    val auditSource = "disguised-remuneration"
+    val auditType = "disguisedRemunerationCheck"
+    auditConnector.sendExplicitAudit(auditSource, Json.toJson(state))
+  }
+
+  def cyaPost = Action { implicit request =>
+    confirmationForm.bindFromRequest.fold(
+      formWithErrors => {
+        val contents = views.html.cya(usersNameFromGG, blocksFormState, formWithErrors)
+        Ok(views.html.main_template(title = "Check your answers before sending your details")(contents))
+      },
+      postedForm => {
+        sendToSplunk(state)
+        Ok(Json.toJson(state))  // TODO: Need to add confirmation page
+      }
+    )
   }
 }
 

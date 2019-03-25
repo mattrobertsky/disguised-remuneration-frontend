@@ -22,7 +22,9 @@ case class Address (
   town: String,
   county: Option[String],
   postcode: String
-)
+) {
+  def lines: List[String] = List(Some(line1), line2, Some(town), county, Some(postcode)).flatten
+}
 
 import play.api.libs.json.{Format, Json}
 

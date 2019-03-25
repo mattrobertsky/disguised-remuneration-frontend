@@ -210,7 +210,6 @@ object Scheme {
         loanRecipientName = recipient,
         settlement = settlementStatus
       )
-      println(s"scheme: $scheme")
       Some(scheme)
     }
 

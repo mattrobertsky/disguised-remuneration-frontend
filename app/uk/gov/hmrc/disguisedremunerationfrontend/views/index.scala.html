@@ -36,7 +36,12 @@
                             Html("""You need to <a href="scheme/" class="govuk-link">add a remuneration scheme</a> before you can add loan details.""")
 
                         },
-                        messages("landing.checkdetails.heading") -> Left {
-                            Html(messages("landing.sendanswers.link"))
-                        }
-)
+                        messages("landing.checkdetails.heading") ->
+                          {if(state.readyToSubmit) {
+                            Right(List(
+                              ("Check your answers and send your details", Some("submit"), None , false)
+                            ))
+                          } else {
+                            Left{ Html(messages("landing.sendanswers.link")) }
+                          }}
+                      )
