@@ -20,6 +20,8 @@ import java.time.LocalDate
 
 import ltbs.uniform._
 import org.atnos.eff.{Eff, Fx}
+import uk.gov.hmrc.disguisedremunerationfrontend.controllers.YesNoDoNotKnow._
+import uk.gov.hmrc.disguisedremunerationfrontend.controllers.YesNoDoNotKnow.z.DoNotKnow
 import uk.gov.hmrc.disguisedremunerationfrontend.controllers.{EmploymentStatus, YesNoDoNotKnow}
 import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration.Date
 
@@ -183,18 +185,23 @@ object Scheme {
                                   )
                                   .in[R] when taxNIPaid
     } yield {
-      println(s"dotasNumber: $dotasNumber")
-      println(s"stillUsingYes: ${if (stillUsingScheme) stillUsingYes else stillUsingNo}")
+
+      val dotas = dotasNumber match {
+        case Yes(ref) => Some(ref)
+        case No => Some("No")
+        case DoNotKnow => Some("Do not know")
+      }
 
       val(startDate, stopDate): (Option[LocalDate], Option[LocalDate]) =
                                   if (stillUsingScheme)
                                       (stillUsingYes, None)
                                   else
-                                    stillUsingNo.map(x => (Some(x._1), Some(x._2))).getOrElse((None,None))
+                                    stillUsingNo.map(period => (Some(period._1), Some(period._2)))
+                                      .getOrElse((None,None))
 
       val scheme = Scheme(
         name = schemeName,
-        dotasReferenceNumber = Some("dotas1"),
+        dotasReferenceNumber = dotas,
         caseReferenceNumber = schemeReferenceNumber,
         schemeStart = startDate,
         schemeStopped = stopDate,
