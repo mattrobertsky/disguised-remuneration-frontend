@@ -62,7 +62,7 @@ class SplunkController @Inject()(mcc: MessagesControllerComponents, auditConnect
       alive = false,
       identification = Some(Left("AB123456D")),
       deceasedBefore = Some(true),
-      employmentStatus = None,
+//      employmentStatus = None,
       actingFor = Some("Derek")
     )
 
@@ -90,7 +90,7 @@ class SplunkController @Inject()(mcc: MessagesControllerComponents, auditConnect
     )
 
     val _journeyState = JourneyState(
-      aboutYou = Some(Some(_aboutYou)),
+      aboutYou = Some(_aboutYou),
       schemes = List(_scheme),
       contactDetails = Some(_contactDetails)
     )

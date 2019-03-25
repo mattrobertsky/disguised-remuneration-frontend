@@ -22,23 +22,32 @@ import javax.inject.{Inject, Singleton}
 import ltbs.uniform._
 import ltbs.uniform.interpreters.playframework._
 import ltbs.uniform.web._
+import ltbs.uniform.web.{HtmlField, DataParser}
 import ltbs.uniform.web.InferParser._
 import ltbs.uniform.web.parser._
 import play.api.data.Form
+import ltbs.uniform.web.{HtmlForm, Input, Messages, NoopMessages}
+import ltbs.uniform.widgets.govuk._
 import org.atnos.eff._
 import play.api.i18n.I18nSupport
 import play.api.mvc.{AnyContent, MessagesControllerComponents, Request}
 import play.twirl.api.Html
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
+import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration.{Date, Nino, Utr}
 import uk.gov.hmrc.disguisedremunerationfrontend.data._
+import uk.gov.hmrc.disguisedremunerationfrontend.data.render.RenderHtmlTemplate
 import uk.gov.hmrc.disguisedremunerationfrontend.views
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import enumeratum.values._
+import play.api.libs.json._
 import play.api.libs.json.Json
 import AssetsFrontend.{optionHtml => _, _}
+import play.api.libs.json.Reads._
+import play.api.libs.functional.syntax._
+import uk.gov.hmrc.disguisedremunerationfrontend.repo.SessionStore
 
 sealed abstract class EmploymentStatus extends EnumEntry
 object EmploymentStatus extends Enum[EmploymentStatus] with PlayJsonEnum[EmploymentStatus] {
@@ -48,6 +57,8 @@ object EmploymentStatus extends Enum[EmploymentStatus] with PlayJsonEnum[Employm
   case object Both          extends EmploymentStatus
 }
 
+// unable to move to data package!
+// knownDirectSubclasses of YesNoDoNotKnow observed before subclass Yes registered
 sealed trait YesNoDoNotKnow
 
 object YesNoDoNotKnow {
@@ -59,6 +70,7 @@ object YesNoDoNotKnow {
     case object DoNotKnow extends YesNoDoNotKnow
   }
 }
+
 
 case class JourneyState(
   aboutYou: Option[Option[AboutYou]] = None,
@@ -109,6 +121,8 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
 
   def messages( request: Request[AnyContent] ): ltbs.uniform.web.Messages = convertMessages(messagesApi.preferred(request))
 
+  def listingPage[A](key: List[String],errors: ltbs.uniform.ErrorTree,elements: List[A],messages: ltbs.uniform.web.Messages)(implicit evidence$1: ltbs.uniform.web.Htmlable[A]): play.twirl.api.Html = ???
+
   def renderForm(key: List[String], errors: ErrorTree, form: Html, breadcrumbs: List[String], request: Request[AnyContent], messagesIn: ltbs.uniform.web.Messages): Html = {
     implicit val r = request
     views.html.main_template(title = "Send your loan charge details")(views.html.about_you(key.last, errors, form, breadcrumbs)(messagesIn, request))
@@ -120,6 +134,8 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
     Ok(views.html.main_template(title = "Send your loan charge details")(views.html.index(state)))
   }
 
+  def cacheWrite(sessionId: String, journeyState: JourneyState)(implicit request: Request[AnyContent]) =
+    cache.store[JourneyState](sessionId, "drCache", journeyState)
 
   def contactDetails(implicit key: String) = Action.async { implicit request =>
     implicit val keys: List[String] = key.split("/").toList
@@ -155,6 +171,9 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
       MemoryPersistence
     ){data =>
       state = state.copy(contactDetails = Some(data))
+      val uuid = cache.sessionUuid.getOrElse("dr-sessionId1")
+      //what do we need here??+ ("uuid" -> java.util.UUID.randomUUID.toString)
+      cacheWrite(uuid, state)
       Future.successful(Redirect(routes.JourneyController.index()))
     }
 
@@ -231,6 +250,13 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
       automatic[Unit, Boolean]
     }
 
+    val customNinoUTR = {
+      implicit val booleanField = new HtmlField[Either[Nino,Utr]] {
+        override def render( key: String, values: Input, errors: ErrorTree, messages: Messages ): Html =
+          Html(RenderHtmlTemplate.generateIdentityHtml(messages))
+      }
+      PlayForm.automatic[Unit, Either[Nino,Utr]]
+    }
     import AboutYou._
     runWeb(
       program = AboutYou.program[FxAppend[Stack, PlayStack]](state.aboutYou)

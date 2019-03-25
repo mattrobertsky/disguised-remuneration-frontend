@@ -69,6 +69,7 @@ lazy val microservice = Project(appName, file("."))
 libraryDependencies ++= Seq(
   ws,
   "uk.gov.hmrc"               %% "domain"                         % "5.6.0-play-26",
+  "uk.gov.hmrc"               %% "mongo-caching"                  % "6.1.0-play-26",
   "uk.gov.hmrc"               %% "play-partials"                  % "6.5.0",
   "com.typesafe.play"         %% "play-json"                      % "2.5.18",
   "org.scalactic"             %% "scalactic"                      % "3.0.5",

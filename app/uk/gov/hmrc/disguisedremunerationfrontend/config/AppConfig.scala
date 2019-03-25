@@ -21,6 +21,8 @@ import play.api.{Configuration, Environment}
 import play.api.Mode
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
+import scala.concurrent.duration.Duration
+
 @Singleton
 class AppConfig @Inject()(val runModeConfiguration: Configuration, servicesConfig: ServicesConfig, environment: Environment) {
   protected def mode: Mode = environment.mode
@@ -35,4 +37,6 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, servicesConfi
   lazy val analyticsHost = loadConfig(s"google-analytics.host")
   lazy val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
   lazy val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
+
+  val mongoSessionExpireAfter: Duration = servicesConfig.getDuration("mongodb.session.expireAfter")
 }

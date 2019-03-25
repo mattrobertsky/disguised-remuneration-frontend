@@ -16,7 +16,7 @@
 
 @import uniform._
 @import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
-@(state: uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyState)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(state: uk.gov.hmrc.disguisedremunerationfrontend.data.JourneyState)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @tasklist(
     messages("landing.details.title") -> Right(List(

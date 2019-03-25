@@ -21,6 +21,7 @@ import ltbs.uniform._
 import org.atnos.eff._
 import play.api.libs.json.{JsNull, JsValue, Json, Writes}
 import uk.gov.hmrc.disguisedremunerationfrontend.controllers.EmploymentStatus
+import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration._
 
 case class AboutYou(
   completedBySelf: Boolean,

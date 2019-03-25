@@ -21,7 +21,9 @@ import java.time.LocalDate
 import ltbs.uniform._
 import org.atnos.eff.{Eff, Fx}
 import uk.gov.hmrc.disguisedremunerationfrontend.controllers.{EmploymentStatus, YesNoDoNotKnow}
+import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration.Date
 import cats.implicits._
+
 
 case class Scheme(
   name: String,
@@ -43,7 +45,7 @@ case class Scheme(
   }
 }
 
-
+import play.api.libs.json.{Format, Json}
 
 object Scheme {
   import play.api.libs.json._
@@ -91,7 +93,7 @@ object Scheme {
     UniformAsk[YesNoDoNotKnow,?],
     UniformAsk[Date,?],
     UniformAsk[(Date, Date),?]
-  ]
+    ]
 
   def program[R
     : _uniformCore
@@ -163,9 +165,17 @@ object Scheme {
                                       case _ => true
                                     }
                                   )
+      
       dateRange             <-  getSchemeDateRange
+      stillUsingScheme      <-  ask[Boolean]("scheme-stillusing")
+      stillUsingYes         <-  ask[Date]("scheme-stillusingyes")
+                                  .validating(s"The date you started using the scheme must after $earliestDate", isInRange(_))
+                                  .validating("The date you started using the scheme must be in the past", _.isBefore(LocalDate.now()))
+                                  .in[R] when stillUsingScheme
+      stillUsingNo          <-  ask[(Date, Date)]("scheme-stillusingno")
+                                  .validating("The date you stopped using the scheme must be the same as or after the date you started using the scheme", startBeforeEnd _)
+                                  .in[R] when !stillUsingScheme
       employer              <-  ask[Option[Employer]]("scheme-employee")
-                                    .defaultOpt(default.map{_.employee})
                                     .validating(
                                       "Enter the employer's name",
                                       _ match {
@@ -196,8 +206,8 @@ object Scheme {
                                     )
                                     .in[R]
       recipient             <-  ask[Option[String]]("scheme-recipient")
-                                  .defaultOpt(default.map{_.loanRecipientName})
-                                  .validating(
+                                .defaultOpt(default.map{_.loanRecipientName})  
+				.validating(
                                     "Enter the name of who the loan was made out to",
                                     _ match {
                                       case Some(name) =>  !name.isEmpty()
@@ -227,9 +237,24 @@ object Scheme {
                                      "Enter how much tax and National Insurance you have paid, or agreed with us to pay",
                                      settlement => settlement.amount > 0
                                   )
-                                  .defaultOpt(default.flatMap{_.settlement})
+				  .defaultOpt(default.flatMap{_.settlement})
                                   .in[R] when taxNIPaid
-    } yield Scheme(
+    } yield {
+
+      val dotas = dotasNumber match {
+        case Yes(ref) => Some(ref)
+        case No => Some("No")
+        case DoNotKnow => Some("Do not know")
+      }
+
+      val(startDate, stopDate): (Option[LocalDate], Option[LocalDate]) =
+                                  if (stillUsingScheme)
+                                      (stillUsingYes, None)
+                                  else
+                                    stillUsingNo.map(period => (Some(period._1), Some(period._2)))
+                                      .getOrElse((None,None))
+
+      val scheme = Scheme(
         name = schemeName,
         dotasReferenceNumber = Some("dotas1"),
         caseReferenceNumber = schemeReferenceNumber,
@@ -239,6 +264,9 @@ object Scheme {
         loanRecipient = recipient.isEmpty,
         loanRecipientName = recipient,
         settlement = settlementStatus
-    )
-  }
+      )
+      println(s"scheme: $scheme")
+      Some(scheme)
+    }
+
 }
