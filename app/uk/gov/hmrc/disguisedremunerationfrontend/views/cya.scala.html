@@ -18,7 +18,8 @@
 
 <a href="/disguised-remuneration/" class="govuk-link link-back">@messages(List(s"back-to-service-page","back"))</a>
 
-<h1>Check your answers before sending your details</h1>
+<div class="govuk-grid-column-two-thirds">
+<h1 class="govuk-heading-xl">Check your answers before sending your details</h1>
 
 <p class="govuk-body">
     Make sure you check your answers before you send them. If you need
@@ -30,14 +31,17 @@
     <h2 class="govuk-heading-m">@messages(blockTitle)</h2>
 
     <dl class="app-check-your-answers app-check-your-answers--short">
-    @for((title, value) <- items) {
-        <dt class="app-check-your-answers__question">@messages(title)</dt>
-        <dd class="app-check-your-answers__answer">@value</dd>
-    }
+        @for((title, value) <- items) {
+                <div class="app-check-your-answers__contents">
+                <dt class="app-check-your-answers__question">@messages(title)</dt>
+                <dd class="app-check-your-answers__answer">@value</dd>
+                </div>
+        }
+
     </dl>
 }
 
-<a href="#" class="govuk-link">Print or save this page</a>
+<a href="#" class="govuk-body">Print or save this page</a>
 
 <p>
     By submitting your answers, you confirm that, to the best of your
@@ -48,24 +52,32 @@
 <div class="govuk-warning-text">
     <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
     <strong class="govuk-warning-text__text">
-        <span class="govuk-warning-text__assistive">Warning</span>
+        <span class="govuk-warning-text__assistive"></span>
         You could be prosecuted if you deliberately give untrue or misleading information.
     </strong>
 </div>
 
+    <div>
+    @helper.form(action = play.api.mvc.Call("post", "submit")) {
+        @helper.CSRF.formField
+        <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
+                <div class="govuk-checkboxes">
+                    <div class="govuk-checkboxes__item">
+                        <input class="govuk-checkboxes__input" id="declaration" name="declaration" type="checkbox" value="accept">
+                        <label class="govuk-label govuk-checkboxes__label" for="declaration">
+                            I,
+                            @usersName, confirm that, to the best of my knowledge, the information given is true and correct.
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <button type="submit" class="govuk-button">Accept and send details</button>
+    }
+</div>
+
+</div>
 
 
-@helper.form(action = play.api.mvc.Call("post", "submit")) {
-    @helper.CSRF.formField
-    <input type="checkbox"
-    name="confirm"
-    class="govuk-checkboxes__input"
-    value="true"
-        @if(form.value.contains("true")) { checked="checked" }>
 
-    <label class="govuk-label govuk-checkboxes__label" for="declaration">
-        I, @usersName, confirm that to the best of my knowledge, the information given is true and correct.
-    </label>
-
-    <button type="submit" class="govuk-button">Accept and send details</button>
-}
