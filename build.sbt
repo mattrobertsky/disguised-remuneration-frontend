@@ -15,6 +15,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(integrationTestSettings(): _*)
   .settings(
     resolvers += Resolver.jcenterRepo,
+    resolvers += Resolver.bintrayRepo("hmrc", "releases"),
     addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.3"),
     scalacOptions ++= Seq(
       //    "-Xfatal-warnings",                  // Fail the compilation if there are any warnings.
@@ -65,14 +66,8 @@ lazy val microservice = Project(appName, file("."))
 libraryDependencies ++= Seq(
   ws,
   "uk.gov.hmrc"               %% "domain"                         % "5.6.0-play-26",
-  "uk.gov.hmrc"               %% "play-partials"                  % "6.5.0",
-  "com.typesafe.play"         %% "play-json"                      % "2.5.18",
   "org.scalactic"             %% "scalactic"                      % "3.0.5",
   "uk.gov.hmrc"               %% "auth-client"                    % "2.20.0-play-26",
   "uk.gov.hmrc"               %% "http-caching-client"            % "8.1.0",
-  "uk.gov.hmrc"               %% "play-conditional-form-mapping"  % "0.2.0",
-  "com.softwaremill.macwire"  %% "macros"                         % "2.3.1" % "provided",
-  "com.softwaremill.macwire"  %% "macrosakka"                     % "2.3.1" % "provided",
-  "com.softwaremill.macwire"  %% "util"                           % "2.3.1",
-  "com.softwaremill.macwire"  %% "proxy"                          % "2.3.1"
+  "uk.gov.hmrc"               %% "play-conditional-form-mapping"  % "0.2.0"
 )

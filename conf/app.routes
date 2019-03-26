@@ -6,6 +6,8 @@ GET        /hello-world             uk.gov.hmrc.disguisedremunerationfrontend.co
 
 GET        /                        uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.index
 
+GET        /sign-in                 uk.gov.hmrc.disguisedremunerationfrontend.controllers.AuthenticationController.signIn()
+
 GET        /audit                   uk.gov.hmrc.disguisedremunerationfrontend.controllers.SplunkController.acceptAndSend
 
 GET        /about-you/              uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutYou(id = "")

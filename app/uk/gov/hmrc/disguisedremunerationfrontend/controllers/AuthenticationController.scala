@@ -16,24 +16,18 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.Inject
 
 import play.api.i18n.I18nSupport
-import play.api.mvc._
-import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
-import uk.gov.hmrc.disguisedremunerationfrontend.actions.AuthorisedAction
+import play.api.mvc.{Action, MessagesControllerComponents}
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
-import uk.gov.hmrc.disguisedremunerationfrontend.views
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
-import scala.concurrent.{ExecutionContext, Future}
+class AuthenticationController @Inject()(mcc: MessagesControllerComponents)
+                              (implicit appConfig: AppConfig)
+  extends FrontendController(mcc) with I18nSupport {
 
-@Singleton
-class HelloWorld @Inject()(mcc: MessagesControllerComponents, val authConnector: AuthConnector, authorisedAction: AuthorisedAction)(implicit val appConfig: AppConfig, ec: ExecutionContext) extends FrontendController(mcc) with I18nSupport with AuthorisedFunctions {
-
-  val helloWorld = authorisedAction.async { implicit request =>
-        Future.successful(Ok(views.html.hello_world()))
-      }
-    }
-
-
+  def signIn = Action { implicit request =>
+    Redirect(appConfig.ggLoginUrl, Map("continue" -> Seq(appConfig.drIndexPage), "origin" -> Seq(appConfig.appName)))
+  }
+}

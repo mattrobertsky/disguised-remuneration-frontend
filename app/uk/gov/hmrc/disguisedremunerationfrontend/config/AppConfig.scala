@@ -35,4 +35,12 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, servicesConfi
   lazy val analyticsHost = loadConfig(s"google-analytics.host")
   lazy val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
   lazy val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
+
+  //Auth related config
+  lazy val appName: String = loadConfig("appName")
+  //TODO Check if this is right url for SCP
+  private lazy val companyAuthFrontend = servicesConfig.getConfString("company-auth.url", "")
+  private lazy val companyAuthSignInPath = servicesConfig.getConfString("company-auth.sign-in-path", "")
+  lazy val drIndexPage: String = loadConfig("dr-index-page-url")
+  lazy val ggLoginUrl: String = s"$companyAuthFrontend$companyAuthSignInPath"
 }

@@ -19,6 +19,7 @@ package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 import cats.data.Validated
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import javax.inject.{Inject, Singleton}
+
 import ltbs.uniform._
 import ltbs.uniform.interpreters.playframework._
 import ltbs.uniform.web.HtmlField
@@ -29,7 +30,7 @@ import ltbs.uniform.web.{HtmlForm, Input, Messages, NoopMessages}
 import ltbs.uniform.widgets.govuk._
 import org.atnos.eff._
 import play.api.i18n.I18nSupport
-import play.api.mvc.{AnyContent, MessagesControllerComponents, Request}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
 import play.twirl.api.Html
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
 import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration.{Date, Nino, Utr}
@@ -42,6 +43,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import enumeratum.values._
 import play.api.libs.json.Json
+import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
+import uk.gov.hmrc.disguisedremunerationfrontend.actions.AuthorisedAction
 
 sealed abstract class EmploymentStatus extends EnumEntry
 object EmploymentStatus extends Enum[EmploymentStatus] with PlayJsonEnum[EmploymentStatus] {
@@ -70,7 +73,7 @@ case class JourneyState(
   contactDetails: Option[ContactDetails] = None,
   details: List[LoanDetails] = Nil
 ) {
-    def readyToSubmit = aboutYou.isDefined && contactDetails.isDefined && schemes.nonEmpty
+    def readyToSubmit: Boolean = aboutYou.isDefined && contactDetails.isDefined && schemes.nonEmpty
       //&& detailsStatus.forall(_._3.isDefined)
 }
 
@@ -80,8 +83,8 @@ object JourneyState {
 
 }
 @Singleton
-class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit val appConfig: AppConfig)
-      extends FrontendController(mcc) with PlayInterpreter with I18nSupport {
+class JourneyController @Inject()(mcc: MessagesControllerComponents, authorisedAction: AuthorisedAction, val authConnector: AuthConnector)(implicit val appConfig: AppConfig)
+      extends FrontendController(mcc) with PlayInterpreter with I18nSupport with AuthorisedFunctions {
 
   var state: JourneyState = JourneyState()
 
@@ -96,48 +99,47 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
 
   override lazy val parse = super[FrontendController].parse
 
-  def index = Action { implicit request =>
-    Ok(views.html.main_template(title = "Send your loan charge details")(views.html.index(state)))
+  def index: Action[AnyContent] = authorisedAction.async { implicit request =>
+      Future.successful(Ok(views.html.main_template(title = "Send your loan charge details")(views.html.index(state))))
   }
 
 
-  def contactDetails(implicit key: String) = Action.async { implicit request =>
+  def contactDetails(implicit key: String): Action[AnyContent] = authorisedAction.async { implicit request =>
     implicit val keys: List[String] = key.split("/").toList
     import ContactDetails._
-    runWeb(
-      program = ContactDetails.program[FxAppend[Stack, PlayStack]]
-        .useForm(PlayForm.automatic[Unit, Address])
-        .useForm(PlayForm.automatic[Unit, TelAndEmail]),
-      MemoryPersistence
-    ){data =>
-      state = state.copy(contactDetails = Some(data))
-      Future.successful(Redirect(routes.JourneyController.index()))
+      runWeb(
+        program = ContactDetails.program[FxAppend[Stack, PlayStack]]
+          .useForm(PlayForm.automatic[Unit, Address])
+          .useForm(PlayForm.automatic[Unit, TelAndEmail]),
+        MemoryPersistence
+      ) { data =>
+        state = state.copy(contactDetails = Some(data))
+        Future.successful(Redirect(routes.JourneyController.index()))
     }
-
   }
-  def addScheme(implicit key: String) = Action.async { implicit request =>
+  def addScheme(implicit key: String): Action[AnyContent] = authorisedAction.async { implicit request =>
     implicit val keys: List[String] = key.split("/").toList
     import Scheme._
-    runWeb(
-      program = Scheme.program[FxAppend[Stack, PlayStack]]
-        .useForm(PlayForm.automatic[Unit, String])
-        .useForm(PlayForm.automatic[Unit, Option[String]])
-        .useForm(PlayForm.automatic[Unit, Option[Employer]])
-        .useForm(PlayForm.automatic[Unit, TaxSettlement])
-        .useForm(PlayForm.automatic[Unit,YesNoDoNotKnow])
-        .useForm(PlayForm.automatic[Unit, Boolean])
-        .useForm(PlayForm.automatic[Unit, Date])
-        .useForm(PlayForm.automatic[Unit, (Date, Date)]),
-      MemoryPersistence
-    ){data =>
-      state = state.copy(schemes = data.get :: state.schemes)  // remove get
-      Future.successful(Redirect(routes.JourneyController.index()))
+      runWeb(
+        program = Scheme.program[FxAppend[Stack, PlayStack]]
+          .useForm(PlayForm.automatic[Unit, String])
+          .useForm(PlayForm.automatic[Unit, Option[String]])
+          .useForm(PlayForm.automatic[Unit, Option[Employer]])
+          .useForm(PlayForm.automatic[Unit, TaxSettlement])
+          .useForm(PlayForm.automatic[Unit, YesNoDoNotKnow])
+          .useForm(PlayForm.automatic[Unit, Boolean])
+          .useForm(PlayForm.automatic[Unit, Date])
+          .useForm(PlayForm.automatic[Unit, (Date, Date)]),
+        MemoryPersistence
+      ) { data =>
+        state = state.copy(schemes = data.get :: state.schemes) // remove get
+        Future.successful(Redirect(routes.JourneyController.index()))
     }
   }
 
   implicit def renderTell: (Unit, String) => Html = {case _ => Html("")}
 
-  def aboutYou(implicit key: String) = Action.async { implicit request =>
+  def aboutYou(implicit key: String): Action[AnyContent] = authorisedAction.async { implicit request =>
     implicit val keys: List[String] = key.split("/").toList
 
     val customBool = {
@@ -162,24 +164,24 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
       PlayForm.automatic[Unit, Either[Nino,Utr]]
     }
     import AboutYou._
-    runWeb(
-      program = AboutYou.program[FxAppend[Stack, PlayStack]]
-        .useFormMap{
-          case List("aboutyou-completedby") => customBool
-          case _ => PlayForm.automatic[Unit,Boolean]
-        }
-        .useForm(customNinoUTR)
-        .useForm(PlayForm.automatic[Unit,EmploymentStatus])
-        .useForm(PlayForm.automatic[Unit,String])
-        .useForm(PlayForm.automatic[Unit, Unit]),
-      MemoryPersistence
-    ){
-      _ match {
-      case Left(err) => Future.successful(Redirect(routes.HelloWorld.helloWorld()))
-                        //throw new RuntimeException("logout")
-      case Right(data) => 
-        state = state.copy(aboutYou = Some(data))
-        Future.successful(Redirect(routes.JourneyController.index()))
+      runWeb(
+        program = AboutYou.program[FxAppend[Stack, PlayStack]]
+          .useFormMap {
+            case List("aboutyou-completedby") => customBool
+            case _ => PlayForm.automatic[Unit, Boolean]
+          }
+          .useForm(customNinoUTR)
+          .useForm(PlayForm.automatic[Unit, EmploymentStatus])
+          .useForm(PlayForm.automatic[Unit, String])
+          .useForm(PlayForm.automatic[Unit, Unit]),
+        MemoryPersistence
+      ) {
+        _ match {
+          case Left(err) => Future.successful(Redirect(routes.HelloWorld.helloWorld()))
+          //throw new RuntimeException("logout")
+          case Right(data) =>
+            state = state.copy(aboutYou = Some(data))
+            Future.successful(Redirect(routes.JourneyController.index()))
       }
     }
   }
