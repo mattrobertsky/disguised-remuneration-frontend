@@ -3,7 +3,7 @@ import sbt._
 
 object AppDependencies {
 
-  val uniformVersion = "0.4.1"
+  val uniformVersion = "0.4.4"
 
   val compile = Seq(
 
@@ -14,8 +14,7 @@ object AppDependencies {
     "uk.gov.hmrc"             %% "play-reactivemongo"       % "6.4.0",
     "uk.gov.hmrc"             %% "simple-reactivemongo"     % "7.12.0-play-26",
     "com.beachape"            %% "enumeratum-play-json"     % "1.5.13",
-    "com.luketebbs.uniform"   %% "interpreter-play26"       % uniformVersion,
-    "com.luketebbs.uniform"   %% "govuk-widgets"            % uniformVersion
+    "com.luketebbs.uniform"   %% "interpreter-play26"       % uniformVersion
   )
 
   val test = Seq(

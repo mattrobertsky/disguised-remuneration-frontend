@@ -17,24 +17,21 @@
 package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 
 import java.time.LocalDate
-
-//import cats.implicits._
 import javax.inject.Inject
 import ltbs.uniform.ErrorTree
 import ltbs.uniform.interpreters.playframework.PlayInterpreter
 import ltbs.uniform.web.{Htmlable, Messages}
 import play.api.i18n.I18nSupport
-import play.api.libs.json.{Json} //, Reads, Writes}
+import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
 import play.twirl.api.Html
-//import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
+import scala.concurrent.ExecutionContext
 import uk.gov.hmrc.disguisedremunerationfrontend.data._
-//import uk.gov.hmrc.disguisedremunerationfrontend.views
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
-import scala.concurrent.ExecutionContext
+import JsonConversion._
 
 object TestData {
   // Test data
@@ -63,7 +60,7 @@ object TestData {
     name = "dp02",
     dotasReferenceNumber = Some("Dotas_001"),
     caseReferenceNumber = Some("CSS-002"),
-    schemeStart = Some(LocalDate.now()),
+    schemeStart = LocalDate.now(),
     schemeStopped = None,
     employee = Some(Employer(name = "Tax dodgers ltd", paye = "123/AB456")),
     loanRecipient = true,
@@ -72,8 +69,6 @@ object TestData {
   )
 
   val _loanDetails = LoanDetails(
-    scheme = _scheme,
-    year = 2010,
     hmrcApproved = false,
     genuinelyRepaid = 100,
     amount = 300,
@@ -84,10 +79,9 @@ object TestData {
   )
 
   val _journeyState = JourneyState(
-    aboutYou = Some(_aboutYou),
+    aboutYou = Some(Some(_aboutYou)),
     schemes = List(_scheme),
-    contactDetails = Some(_contactDetails),
-    details = List(_loanDetails)
+    contactDetails = Some(_contactDetails)
   )
 
 }
@@ -99,7 +93,57 @@ class SplunkController @Inject()(mcc: MessagesControllerComponents, auditConnect
   {
     val auditSource = "disguised-remuneration"
 
-    import TestData._
+    // Test data
+    // TODO: Find out why we have test data in the production codebase
+    val _address = Address(
+      line1 = "11 The Hight Street",
+      line2 = Some("Hove"),
+      town = "Brighton",
+      county = Some("Sussex"),
+      postcode = "BN1 1AB")
+
+    val _contactDetails = ContactDetails(
+      address = _address,
+      telephoneAndEmail = TelAndEmail(telephone = Some("0133 656560"), email = Some("dr@gov.uk"))
+    )
+
+    val _aboutYou = AboutYou(
+      completedBySelf = true,
+      alive = false,
+      identification = Some(Left("AB123456D")),
+      deceasedBefore = Some(true),
+//      employmentStatus = None,
+      actingFor = Some("Derek")
+    )
+
+    val _loanDetails = LoanDetails(
+      hmrcApproved = false,
+      genuinelyRepaid = 100,
+      amount = 300,
+      writtenOff = Some(WrittenOff(
+        amount = 300,
+        taxPaid = 120
+      ))
+    )
+
+    val _scheme = Scheme(
+      name = "dp02",
+      dotasReferenceNumber = Some("Dotas_001"),
+      caseReferenceNumber = Some("CSS-002"),
+      schemeStart = LocalDate.now(),
+      schemeStopped = None,
+      employee = Some(Employer(name = "Tax dodgers ltd", paye = "123/AB456")),
+      loanRecipient = true,
+      loanRecipientName = Some("Tax Dodger"),
+      settlement = Some(TaxSettlement(amount = 100, dateOfSettlement = LocalDate.now())),
+      loanDetailsProvided = Map(2010 -> _loanDetails)
+    )
+
+    val _journeyState = JourneyState(
+      aboutYou = Some(Some(_aboutYou)),
+      schemes = List(_scheme),
+      contactDetails = Some(_contactDetails)
+    )
 
     auditConnector.sendExplicitAudit(auditSource, Json.toJson(_journeyState))
     Ok(s"auditSource:${Json.toJson(_journeyState)}  -> Splunk")
@@ -111,5 +155,4 @@ class SplunkController @Inject()(mcc: MessagesControllerComponents, auditConnect
 
   override def renderForm( key: List[String], errors: ErrorTree, form: Html, breadcrumbs: List[String], request: Request[AnyContent], messages: Messages ): Html = Html("")
 
-  override def listingPage[A]( key: List[String], errors: ErrorTree, elements: List[A], messages: Messages )( implicit evidence$1: Htmlable[A] ): Html = Html("")
 }

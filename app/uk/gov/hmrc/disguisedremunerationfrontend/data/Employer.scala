@@ -16,11 +16,4 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
-import play.api.libs.json.{Format, Json}
-import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration.Paye
-
 case class Employer(name: String, paye: Paye)
-
-object Employer {
-  implicit val EmployerFormatter: Format[Employer] = Json.format[Employer]
-}

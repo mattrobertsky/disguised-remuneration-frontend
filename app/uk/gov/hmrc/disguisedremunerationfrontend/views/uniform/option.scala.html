@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,27 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package uk.gov.hmrc.disguisedremunerationfrontend
+@(key: String, values: Input, errors: ErrorTree, messages: ltbs.uniform.web.Messages, inner: (String, Input, ErrorTree, ltbs.uniform.web.Messages) => Html)
 
-package object data {
-  type Nino = String
-  type Utr = String
-  type Paye = String
-  type Money = Int
-  type Date = java.time.LocalDate
-  type Year = Int
-  type EndJourney = String
+@path=@{key.split("[.]").toList.filter(_.nonEmpty).tail: List[String]}
 
-  implicit class HMRCDate(val date: Date) {
-
-    def financialYear: Int = {
-      val turningPoint = java.time.LocalDate.of(date.getYear, 4, 6)
-      if (date.isBefore(turningPoint))
-        date.getYear - 1
-      else
-        date.getYear
-    }
-  }
-}
+@radios(s"${key}.outer", Seq("TRUE","FALSE"), values.atPath({path :+ "outer"}:_*).flatMap(_.headOption), errors, messages, {case "TRUE" => inner(s"${key}.inner", values, errors, messages)})

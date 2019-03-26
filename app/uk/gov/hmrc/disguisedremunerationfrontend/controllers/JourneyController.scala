@@ -17,37 +17,30 @@
 package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 
 import cats.data.Validated
+import enumeratum.values._
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import javax.inject.{Inject, Singleton}
-import ltbs.uniform._
+import ltbs.uniform._, web._, InferParser._, parser._
 import ltbs.uniform.interpreters.playframework._
-import ltbs.uniform.web.{DataParser, HtmlField}
-import ltbs.uniform.web.InferParser._
-import ltbs.uniform.web.parser._
-import play.api.data._
-import Forms._
-import ltbs.uniform.web.{HtmlForm, Input, Messages, NoopMessages}
-import ltbs.uniform.widgets.govuk._
 import org.atnos.eff._
+import play.api.data._, Forms._
 import play.api.i18n.I18nSupport
+import play.api.libs.functional.syntax._
+import play.api.libs.json._, Reads._
 import play.api.mvc.{AnyContent, MessagesControllerComponents, Request}
 import play.twirl.api.Html
-import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
-import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration.{Date, Nino, Utr}
-import uk.gov.hmrc.disguisedremunerationfrontend.data._
-import uk.gov.hmrc.disguisedremunerationfrontend.data.render.RenderHtmlTemplate
-import uk.gov.hmrc.disguisedremunerationfrontend.views
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import enumeratum.values._
-import play.api.libs.json._
-import play.api.libs.json.Reads._
-import play.api.libs.functional.syntax._
+import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
+import uk.gov.hmrc.disguisedremunerationfrontend.data._
 import uk.gov.hmrc.disguisedremunerationfrontend.repo.SessionStore
+import uk.gov.hmrc.disguisedremunerationfrontend.views
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+
+import AssetsFrontend.{optionHtml => _, _}
+import JsonConversion._
 
 sealed abstract class EmploymentStatus extends EnumEntry
 object EmploymentStatus extends Enum[EmploymentStatus] with PlayJsonEnum[EmploymentStatus] {
@@ -65,22 +58,47 @@ object YesNoDoNotKnow {
   case class Yes(dotas: String) extends YesNoDoNotKnow
   case object No extends YesNoDoNotKnow
 
-  def DoNotKnow = z.DoNotKnow
+  val DoNotKnow = z.DoNotKnow
   object z {
     case object DoNotKnow extends YesNoDoNotKnow
   }
 }
 
-
 @Singleton
 class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnector: AuditConnector, cache: SessionStore)( implicit val appConfig: AppConfig)
       extends FrontendController(mcc) with PlayInterpreter with I18nSupport {
 
-  var state: JourneyState = JourneyState()
+  var state: JourneyState = JourneyState(schemes = List(
+    Scheme(
+      name="Cavalier Finance WanglePlus Account",
+      dotasReferenceNumber=None,
+      caseReferenceNumber=None,
+      schemeStart=java.time.LocalDate.of(2015,1,1),
+      schemeStopped=None,
+      employee=None,
+      loanRecipient=true,
+      loanRecipientName=None,
+      settlement=None,
+      loanDetailsProvided=Map(2016 -> LoanDetails(1000, true, 100, None)
+      )
+    ),
+    Scheme(
+      name="Banco Desonesto CartaoCorrupto",
+      dotasReferenceNumber=None,
+      caseReferenceNumber=None,
+      schemeStart=java.time.LocalDate.of(2017,1,1),
+      schemeStopped=None,
+      employee=None,
+      loanRecipient=true,
+      loanRecipientName=None,
+      settlement=None,
+      loanDetailsProvided=Map(2016 -> LoanDetails(1000, true, 100, None)
+      )
+    )
+  ))
 
-  def messages( request: Request[AnyContent] ): ltbs.uniform.web.Messages = convertMessages(messagesApi.preferred(request))
-
-  def listingPage[A](key: List[String],errors: ltbs.uniform.ErrorTree,elements: List[A],messages: ltbs.uniform.web.Messages)(implicit evidence$1: ltbs.uniform.web.Htmlable[A]): play.twirl.api.Html = ???
+  def messages( request: Request[AnyContent] ): ltbs.uniform.web.Messages =
+    convertMessages(messagesApi.preferred(request))
 
   def renderForm(key: List[String], errors: ErrorTree, form: Html, breadcrumbs: List[String], request: Request[AnyContent], messagesIn: ltbs.uniform.web.Messages): Html = {
     implicit val r = request
@@ -118,16 +136,15 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnec
 
     // tell uniform to use the same renderer for an Option[String] as
     // is used for a String field
-    implicit def optStringHtml(implicit r: HtmlField[String]) =
-      new HtmlField[Option[String]] {
-        def render(key: String, values: Input, errors: ErrorTree, messages: Messages) =
-          r.render(key, values, errors, messages)
-      }
+    implicit val optStringHtml = new HtmlField[Option[String]] {
+      def render(key: String, values: Input, errors: ErrorTree, messages: Messages) =
+        implicitly[HtmlField[String]].render(key, values, errors, messages)
+    }
 
     runWeb(
-      program = ContactDetails.program[FxAppend[Stack, PlayStack]]
-        .useForm(PlayForm.automatic[Unit, Address])
-        .useForm(PlayForm.automatic[Unit, TelAndEmail]),
+      program = ContactDetails.program[FxAppend[Stack, PlayStack]](state.contactDetails)
+        .useForm(automatic[Unit, Address])
+        .useForm(automatic[Unit, TelAndEmail]),
       MemoryPersistence
     ){data =>
       state = state.copy(contactDetails = Some(data))
@@ -139,25 +156,54 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnec
 
   }
 
-  def addScheme(implicit key: String) = Action.async { implicit request =>
+  def addScheme(key: String) = runScheme(None, key)
+
+  def editScheme(schemeIndex: Int, key: String) = runScheme(Some(schemeIndex), key)
+
+  def runScheme(schemeIndex: Option[Int], key: String) = Action.async { implicit request =>
+
+    val default: Option[Scheme] = schemeIndex.map(state.schemes(_))
     implicit val keys: List[String] = key.split("/").toList
+    import AssetsFrontend.optionHtml
     import Scheme._
     runWeb(
-      program = Scheme.program[FxAppend[Stack, PlayStack]]
-        .useForm(PlayForm.automatic[Unit, String])
-        .useForm(PlayForm.automatic[Unit, Option[String]])
-        .useForm(PlayForm.automatic[Unit, Option[Employer]])
-        .useForm(PlayForm.automatic[Unit, TaxSettlement])
-        .useForm(PlayForm.automatic[Unit,YesNoDoNotKnow])
-        .useForm(PlayForm.automatic[Unit, Boolean])
-        .useForm(PlayForm.automatic[Unit, Date])
-        .useForm(PlayForm.automatic[Unit, (Date, Date)]),
+      program = Scheme.program[FxAppend[Stack, PlayStack]](default)
+        .useForm(automatic[Unit, String])
+        .useForm(automatic[Unit, Option[String]])
+        .useForm(automatic[Unit, Option[Employer]])
+        .useForm(automatic[Unit, TaxSettlement])
+        .useForm(automatic[Unit,YesNoDoNotKnow])
+        .useForm(automatic[Unit, Boolean])
+        .useForm(automatic[Unit, Date])
+        .useForm(automatic[Unit, (Date, Date)]),
       MemoryPersistence
     ){data =>
-      state = state.copy(schemes = data.get :: state.schemes)  // remove get
-      val uuid = cache.sessionUuid.getOrElse("dr-sessionId1")
-      //??+ ("uuid" -> java.util.UUID.randomUUID.toString)
-      cacheWrite(uuid, state)
+      state = schemeIndex match {
+        case Some(i) =>
+          val updatedScheme = data.copy(loanDetailsProvided = default.fold(Map.empty[Year, LoanDetails])(_.loanDetailsProvided))
+          state.copy(schemes = state.schemes.patch(i, Seq(updatedScheme), 1))
+        case None    =>
+          state.copy(schemes = data :: state.schemes)
+      }
+      Future.successful(Redirect(routes.JourneyController.index()))
+    }
+  }
+
+  def loanDetails(schemeIndex: Int, year: Year, key: String) = Action.async { implicit request =>
+    implicit val keys: List[String] = key.split("/").toList
+    import LoanDetails._
+    val scheme = state.schemes(schemeIndex)
+    val existing = scheme.loanDetails(year)
+    runWeb(
+      program = LoanDetails.program[FxAppend[Stack, PlayStack]](existing)
+        .useForm(automatic[Unit, Money])
+        .useForm(automatic[Unit, Boolean])
+        .useForm(automatic[Unit, WrittenOff]),
+      MemoryPersistence
+    ){data =>
+      val updatedScheme = scheme.copy(
+        loanDetailsProvided = scheme.loanDetailsProvided + (year -> data))
+      state = state.copy(schemes = state.schemes.patch(schemeIndex, Seq(updatedScheme), 1))
       Future.successful(Redirect(routes.JourneyController.index()))
     }
   }
@@ -170,7 +216,7 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnec
     val customBool = {
       implicit val booleanField = new HtmlField[Boolean] {
         override def render( key: String, values: Input, errors: ErrorTree, messages: Messages ): Html =
-          html.radios(
+          views.html.uniform.radios(
             key,
             Seq("FALSE","TRUE"),
             values.value.headOption,
@@ -178,37 +224,27 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnec
             messages
           )
       }
-      PlayForm.automatic[Unit, Boolean]
+      automatic[Unit, Boolean]
     }
 
-    val customNinoUTR = {
-      implicit val booleanField = new HtmlField[Either[Nino,Utr]] {
-        override def render( key: String, values: Input, errors: ErrorTree, messages: Messages ): Html =
-          Html(RenderHtmlTemplate.generateIdentityHtml(messages))
-      }
-      PlayForm.automatic[Unit, Either[Nino,Utr]]
-    }
     import AboutYou._
     runWeb(
-      program = AboutYou.program[FxAppend[Stack, PlayStack]]
+      program = AboutYou.program[FxAppend[Stack, PlayStack]](state.aboutYou)
         .useFormMap{
           case List("aboutyou-completedby") => customBool
-          case _ => PlayForm.automatic[Unit,Boolean]
+          case _ => automatic[Unit,Boolean]
         }
-        .useForm(customNinoUTR)
-        .useForm(PlayForm.automatic[Unit,EmploymentStatus])
-        .useForm(PlayForm.automatic[Unit,String])
-        .useForm(PlayForm.automatic[Unit, Unit]),
+        .useForm(automatic[Unit, Either[Nino,Utr]])
+        .useForm(automatic[Unit,EmploymentStatus])
+        .useForm(automatic[Unit,String])
+        .useForm(automatic[Unit, Unit]),
       MemoryPersistence
     ){
       _ match {
       case Left(err) => Future.successful(Redirect(routes.HelloWorld.helloWorld()))
                         //throw new RuntimeException("logout")
-      case Right(data) =>
-        state = state.copy(aboutYou = data)
-        val uuid = cache.sessionUuid.getOrElse("dr-sessionId1")
-        //??+ ("uuid" -> java.util.UUID.randomUUID.toString)
-        cacheWrite(uuid, state)
+      case Right(data: Option[AboutYou]) =>
+        state = state.copy(aboutYou = Some(data))
         Future.successful(Redirect(routes.JourneyController.index()))
       }
     }
@@ -221,11 +257,11 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnec
   val usersNameFromGG = "Joe Bloggs"
 
   def blocksFormState: List[(String,List[(String,Html)])] = state match {
-    case JourneyState(Some(aboutYou), schemes, Some(contactDetails), loanDetails) =>
+    case JourneyState(Some(aboutYou), schemes, Some(contactDetails)) =>
       (
         "Personal Details" -> List(
           "Name" -> Html(usersNameFromGG),
-          "Filling in form for self" -> Html(if(aboutYou.completedBySelf) "Yes" else "No"),
+          "Filling in form for self" -> Html(if(aboutYou.isEmpty) "Yes" else "No"),
           "Address" -> Html(contactDetails.address.lines.mkString("<br />")),
           "Contact Details" -> Html{
             import contactDetails.telephoneAndEmail._
@@ -250,6 +286,7 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnec
   }
 
   def cya = Action { implicit request =>
+    implicit val m: Messages = messages(request)
     val contents = views.html.cya(usersNameFromGG, blocksFormState, confirmationForm)
     Ok(views.html.main_template(title = "Check your answers before sending your details")(contents))
   }
@@ -263,6 +300,7 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnec
   def cyaPost = Action { implicit request =>
     confirmationForm.bindFromRequest.fold(
       formWithErrors => {
+        implicit val m: Messages = messages(request)
         val contents = views.html.cya(usersNameFromGG, blocksFormState, formWithErrors)
         Ok(views.html.main_template(title = "Check your answers before sending your details")(contents))
       },

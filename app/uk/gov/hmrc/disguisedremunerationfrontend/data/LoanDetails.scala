@@ -16,19 +16,50 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
-import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration.Money
-
 case class LoanDetails(
-  scheme: Scheme,
-  year: Int,
   amount: Money,
   hmrcApproved: Boolean,
   genuinelyRepaid: Money,
   writtenOff: Option[WrittenOff]
 )
 
-import play.api.libs.json.{Json, OFormat}
+import cats.implicits._
+import org.atnos.eff._
+import ltbs.uniform._
 
 object LoanDetails {
-  implicit val LoanDetailsFormatter: OFormat[LoanDetails] = Json.format[LoanDetails]
+
+  type Stack = Fx3[
+    UniformAsk[Money,?],
+    UniformAsk[Boolean,?],
+    UniformAsk[WrittenOff,?]
+  ]
+
+  def program[R
+    : _uniformCore
+    : _uniformAsk[Money,?]
+    : _uniformAsk[Boolean,?]
+    : _uniformAsk[WrittenOff,?]
+  ](default: Option[LoanDetails] = None): Eff[R, LoanDetails] = {
+    println(default)
+    (
+      ask[Money]("details-amount")
+        .defaultOpt(default.map(_.amount)).in[R],
+
+      ask[Boolean]("details-hmrc-approved")
+        .defaultOpt(default.map(_.hmrcApproved)).in[R],
+
+      ask[Money]("details-genuinely-repaid-amount")
+        .defaultOpt(default.map(_.genuinelyRepaid)).in[R] emptyUnless
+        ask[Boolean]("details-genuinely-repaid")
+        .defaultOpt(default.map(_.genuinelyRepaid != 0)).in[R],
+
+      ask[WrittenOff]("details-written-off-amount")
+        .defaultOpt(default.flatMap(_.writtenOff)).in[R] when
+        ask[Boolean]("details-written-off")
+        .defaultOpt(default.map(_.writtenOff.isDefined)).in[R]
+
+    ).mapN(LoanDetails.apply)
+  }
+
 }

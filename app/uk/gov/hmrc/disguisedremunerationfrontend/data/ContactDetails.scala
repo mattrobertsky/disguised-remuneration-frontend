@@ -19,16 +19,8 @@ package uk.gov.hmrc.disguisedremunerationfrontend.data
 import ltbs.uniform._
 import org.atnos.eff._
 import play.api.i18n.Messages
-import play.api.libs.json._
-import play.api.libs.functional.syntax._
-import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration._
 
 case class TelAndEmail(telephone: Option[String], email: Option[String])
-
-object TelAndEmail {
-  implicit val TelAndEmailFormatter: Format[TelAndEmail] = Json.format[TelAndEmail]
-}
-
 
 case class ContactDetails(
   address: Address,
@@ -36,8 +28,6 @@ case class ContactDetails(
 )
 
 object ContactDetails {
-
-  implicit val contactDetailsFormatter: Format[ContactDetails] = Json.format[ContactDetails]
 
   lazy val nameRegex = """^[a-zA-Z0-9'@,-./ ]*$"""
   lazy val telephoneRegex = """^[0-9+ ]*$"""
@@ -51,9 +41,10 @@ object ContactDetails {
       : _uniformCore
       : _uniformAsk[Address, ?]
       : _uniformAsk[TelAndEmail, ?]
-  ]: Eff[R, ContactDetails] = {
+  ](default: Option[ContactDetails]): Eff[R, ContactDetails] = {
     for {
       address <- ask[Address]("contactdetails-address")
+        .defaultOpt(default.map(_.address))
         .validating(
           "Enter the building or street of your address",
           address => !address.line1.isEmpty()
@@ -67,6 +58,7 @@ object ContactDetails {
           address => address.line1.matches(nameRegex)
         )
       telAndEmail <- ask[TelAndEmail]("contactdetails-telehoneemail")
+        .defaultOpt(default.map(_.telephoneAndEmail))
         .validating(
           "Telephone number must be 24 characters or less",
           contact =>  contact.telephone.fold(true)(_.length <= 24)

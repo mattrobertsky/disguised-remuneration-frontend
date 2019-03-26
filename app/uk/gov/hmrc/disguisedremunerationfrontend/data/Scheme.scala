@@ -20,29 +20,31 @@ import java.time.LocalDate
 
 import ltbs.uniform._
 import org.atnos.eff.{Eff, Fx}
-import uk.gov.hmrc.disguisedremunerationfrontend.controllers.YesNoDoNotKnow._
-import uk.gov.hmrc.disguisedremunerationfrontend.controllers.YesNoDoNotKnow.z.DoNotKnow
 import uk.gov.hmrc.disguisedremunerationfrontend.controllers.{EmploymentStatus, YesNoDoNotKnow}
-import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration.Date
+import cats.implicits._
 
 
 case class Scheme(
   name: String,
   dotasReferenceNumber: Option[String],
   caseReferenceNumber: Option[String],
-  schemeStart: Option[Date],
+  schemeStart: Date,
   schemeStopped: Option[Date],
   employee: Option[Employer],
   loanRecipient: Boolean,
   loanRecipientName: Option[String],
-  settlement: Option[TaxSettlement]
-)
-
-import play.api.libs.json.{Format, Json}
+  settlement: Option[TaxSettlement],
+  loanDetailsProvided: Map[Year, LoanDetails] = Map.empty
+) {
+  lazy val loanDetails: Map[Year, Option[LoanDetails]] = {
+    val years = schemeStart.financialYear to schemeStopped.getOrElse(LocalDate.now).financialYear
+    Map( years.map{ y =>
+      y -> loanDetailsProvided.get(y)
+    }:_*)
+  }
+}
 
 object Scheme {
-
-  implicit val schemeFormatter: Format[Scheme] = Json.format[Scheme]
 
   lazy val nameRegex = """^[a-zA-Z0-9'@,-./() ]*$"""
   lazy val caseRefRegex = """^[a-zA-Z0-9-]*$"""
@@ -50,7 +52,7 @@ object Scheme {
   lazy val maxNameLength = 50
 
 
-  val earliestDate = LocalDate.parse("1999-04-05")
+  val earliestDate = LocalDate.parse("1900-01-01")
 
   def isInRange(d: LocalDate) = d.isAfter(earliestDate) && d.isBefore(LocalDate.now())
 
@@ -80,9 +82,27 @@ object Scheme {
     : _uniformAsk[YesNoDoNotKnow,?]
     : _uniformAsk[(Date,Date),?]
     : _uniformAsk[Date,?]
-  ]: Eff[R, Option[Scheme]] =
+  ](default: Option[Scheme]): Eff[R, Scheme] = {
+
+    // subjourney for extracting the date range
+    def getSchemeDateRange: Eff[R, (Date,Option[Date])] =
+      ask[Boolean]("scheme-stillusing").defaultOpt(default.map(_.schemeStopped.isEmpty)) >>= {
+        case true => {
+          ask[Date]("scheme-stillusingyes")
+          .defaultOpt(default.map{_.schemeStart})
+          .validating(s"The date you started using the scheme must after $earliestDate", isInRange(_))
+          .validating("The date you started using the scheme must be in the past", _.isBefore(LocalDate.now()))
+            .in[R] }.map{(_, none[Date])}
+        case false => ask[(Date, Date)]("scheme-stillusingno")
+          .defaultOpt(default.map{x => (x.schemeStart, x.schemeStopped.get)})
+          .validating("The date you stopped using the scheme must be the same as or after the date you started using the scheme", startBeforeEnd _)
+          .in[R].map{ case (k,v) => (k,v.some) }
+      }
+
+    // Main journey
     for {
       schemeName            <-  ask[String]("scheme-name")
+                                    .defaultOpt(default.map{_.name})
                                     .validating(
                                       "Enter the name of the scheme",
                                       name => !name.isEmpty
@@ -96,12 +116,18 @@ object Scheme {
                                     name => name.matches(nameRegex)
                                   )
       dotasNumber           <-  ask[YesNoDoNotKnow]("scheme-dotas")
+                                  .defaultOpt(default.map{_.dotasReferenceNumber match {
+                                    case Some(msg)       => YesNoDoNotKnow.Yes(msg)
+                                    case None            => YesNoDoNotKnow.No
+                                    case Some("unknown") => YesNoDoNotKnow.DoNotKnow
+                                  }})
                                   .validating(
                                     "Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers",
 //                                  case name => println(s"DOTAS LENGTH = ${name.toString}"); name.entryName.length() == 8  // Need to get actual value!
                                     yn  => true
                                   )
       schemeReferenceNumber <-  ask[Option[String]]("scheme-refnumber")
+                                  .defaultOpt(default.map{_.caseReferenceNumber})
                                   .validating(
                                     "HMRC case reference number must be 10 characters or less",
                                     _ match {
@@ -116,6 +142,8 @@ object Scheme {
                                       case _ => true
                                     }
                                   )
+
+      dateRange             <-  getSchemeDateRange
       stillUsingScheme      <-  ask[Boolean]("scheme-stillusing")
       stillUsingYes         <-  ask[Date]("scheme-stillusingyes")
                                   .validating(s"The date you started using the scheme must after $earliestDate", isInRange(_))
@@ -155,7 +183,8 @@ object Scheme {
                                     )
                                     .in[R]
       recipient             <-  ask[Option[String]]("scheme-recipient")
-                                  .validating(
+                                .defaultOpt(default.map{_.loanRecipientName})
+				.validating(
                                     "Enter the name of who the loan was made out to",
                                     _ match {
                                       case Some(name) =>  !name.isEmpty()
@@ -177,15 +206,18 @@ object Scheme {
                                     }
                                   )
                                   .in[R]
-      taxNIPaid             <-  ask[Boolean]("scheme-agreedpayment").in[R]
+      taxNIPaid             <-  ask[Boolean]("scheme-agreedpayment")
+                                  .defaultOpt(default.map{_.settlement.isDefined}).in[R]
+
       settlementStatus      <-  ask[TaxSettlement]("scheme-settlementstatus")
                                   .validating(
                                      "Enter how much tax and National Insurance you have paid, or agreed with us to pay",
                                      settlement => settlement.amount > 0
                                   )
+				  .defaultOpt(default.flatMap{_.settlement})
                                   .in[R] when taxNIPaid
     } yield {
-
+      import YesNoDoNotKnow._
       val dotas = dotasNumber match {
         case Yes(ref) => Some(ref)
         case No => Some("No")
@@ -201,16 +233,17 @@ object Scheme {
 
       val scheme = Scheme(
         name = schemeName,
-        dotasReferenceNumber = dotas,
+        dotasReferenceNumber = Some("dotas1"),
         caseReferenceNumber = schemeReferenceNumber,
-        schemeStart = startDate,
-        schemeStopped = stopDate,
+        schemeStart = dateRange._1,
+        schemeStopped = dateRange._2,
         employee = employer,
         loanRecipient = recipient.isEmpty,
         loanRecipientName = recipient,
         settlement = settlementStatus
       )
-      Some(scheme)
+      scheme
     }
+  }
 
 }

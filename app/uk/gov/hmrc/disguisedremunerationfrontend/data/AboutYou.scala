@@ -19,17 +19,14 @@ package uk.gov.hmrc.disguisedremunerationfrontend.data
 
 import ltbs.uniform._
 import org.atnos.eff._
-import play.api.libs.json._
-import play.api.libs.functional.syntax._
 import uk.gov.hmrc.disguisedremunerationfrontend.controllers.EmploymentStatus
-import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration._
 
 case class AboutYou(
   completedBySelf: Boolean,
   alive: Boolean,
   identification: Option[Either[Nino, Utr]] = None,
   deceasedBefore: Option[Boolean] = None,
-//  employmentStatus: Option[EmploymentStatus] = None,
+  employmentStatus: Option[EmploymentStatus] = None,
   actingFor: Option[String] = None
 )
 
@@ -41,38 +38,6 @@ case class NotRequiredToComplete(
 )
 
 object AboutYou {
-
-  import NinoOrUtr._
-
-  implicit val aboutYouWrites = new Writes[AboutYou] {
-    override def writes(o: AboutYou ): JsValue = Json.obj(
-      "completedBySelf" -> o.completedBySelf,
-      "alive" -> o.alive,
-      "identification" -> o.identification,
-      "deceasedBefore" -> o.deceasedBefore,
-//      "employmentStatus" -> o.employmentStatus,
-      "actingFor" -> o.actingFor
-    )
-  }
-
-  implicit val aboutYouReads: Reads[AboutYou] = (
-    (__ \ "completedBySelf").read[Boolean] and
-      (__ \ "alive").read[Boolean] and
-      (__ \ "identification").readNullable[Either[Nino, Utr]] and
-      (__ \ "deceasedBefore").readNullable[Boolean] and
-//      (__ \ "employmentStatus").readNullable[EmploymentStatus] and
-      (__ \ "actingFor").readNullable[String]
-  )(AboutYou.apply _)
-
-  implicit val optAboutYouWrites =
-    Writes[Option[Option[AboutYou]]] {
-      case Some(o) => o
-      match {
-        case Some(oo) => aboutYouWrites.writes(oo)
-        case _ => JsNull
-      }
-      case _ => JsNull
-    }
 
   // Move into utils
   lazy val regExUTR = """^(?:[ \t]*(?:[a-zA-Z]{3})?\d[ \t]*){10}$"""
@@ -96,18 +61,24 @@ object AboutYou {
       : _uniformAsk[Either[Nino,Utr],?]
       : _uniformAsk[EmploymentStatus,?]
       : _uniformAsk[Unit,?]
-  ]: Eff[R, Either[Error,Option[AboutYou]]] = 
+  ](default: Option[Option[AboutYou]]): Eff[R, Either[Error,Option[AboutYou]]] =
     for {
       completedBy <- ask[Boolean]("aboutyou-completedby")
+                       .defaultOpt(default.map(_.isDefined))
       ret <- completedBy match {
         case false => Eff.pure[R,Either[Error,Option[AboutYou]]](Right(None))
         case true => for {
           alive   <- ask[Boolean]("aboutyou-personalive")
-          employmentStatus  <- ask[EmploymentStatus]("aboutyou-employmentstatus").in[R] when !alive
-          deceasedBefore    <- ask[Boolean]("aboutyou-deceasedbefore").in[R] when employmentStatus == Some(EmploymentStatus.Employed)
+                       .defaultOpt(default.flatMap(_.map(_.alive)))
+          employmentStatus  <- ask[EmploymentStatus]("aboutyou-employmentstatus")
+                                 .defaultOpt(default.flatMap(_.flatMap(_.employmentStatus))).in[R] when !alive
+          deceasedBefore  <- ask[Boolean]("aboutyou-deceasedbefore")
+                                  .defaultOpt(default.flatMap(_.flatMap(_.deceasedBefore)))
+                                  .in[R] when employmentStatus == Some(EmploymentStatus.Employed)
           notRequiredToComplete = deceasedBefore == Some(true)
           _ <- tell[Unit]("aboutyou-noloancharge")("_").in[R] when notRequiredToComplete
           id <- ask[Either[Nino,Utr]]("aboutyou-identity")
+                  .defaultOpt(default.flatMap(_.flatMap(_.identification)))
                   .validating(
                     "Enter the person's National Insurance number in the correct format",
                     _ match {
@@ -123,14 +94,15 @@ object AboutYou {
                     }
                   )
                   .in[R] when (!notRequiredToComplete)
-          personName <- ask[String]("aboutyou-confirmation").in[R] when !id.isEmpty
+          personName <- ask[String]("aboutyou-confirmation")
+                          .defaultOpt(default.flatMap(_.flatMap(_.actingFor)))
+                          .in[R] when !id.isEmpty
         } yield {
           println(s"id: $id")
           if (notRequiredToComplete)
             Left(NoNeedToComplete)
           else
-            Right(Some(AboutYou(false, alive, id, deceasedBefore, personName)))
-//            Right(Some(AboutYou(false, alive, id, deceasedBefore, employmentStatus, personName)))
+            Right(Some(AboutYou(false, alive, id, deceasedBefore, employmentStatus, personName)))
         }
       }
   } yield (ret)
