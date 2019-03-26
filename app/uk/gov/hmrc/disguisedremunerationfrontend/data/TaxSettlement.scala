@@ -20,9 +20,3 @@ case class TaxSettlement(
   amount: Money,
   dateOfSettlement: Date
 )
-
-import play.api.libs.json.{Format, Json}
-
-object TaxSettlement {
-  implicit val TaxSettlementFormatter: Format[TaxSettlement] = Json.format[TaxSettlement]
-}

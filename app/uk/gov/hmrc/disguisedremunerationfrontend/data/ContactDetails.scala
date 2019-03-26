@@ -19,15 +19,8 @@ package uk.gov.hmrc.disguisedremunerationfrontend.data
 import ltbs.uniform._
 import org.atnos.eff._
 import play.api.i18n.Messages
-import play.api.libs.json._
-import play.api.libs.functional.syntax._
 
 case class TelAndEmail(telephone: Option[String], email: Option[String])
-
-object TelAndEmail {
-  implicit val TelAndEmailFormatter: Format[TelAndEmail] = Json.format[TelAndEmail]
-}
-
 
 case class ContactDetails(
   address: Address,
@@ -35,8 +28,6 @@ case class ContactDetails(
 )
 
 object ContactDetails {
-
-  implicit val contactDetailsFormatter: Format[ContactDetails] = Json.format[ContactDetails]
 
   lazy val nameRegex = """^[a-zA-Z0-9'@,-./ ]*$"""
   lazy val telephoneRegex = """^[0-9+ ]*$"""

@@ -19,7 +19,6 @@ package uk.gov.hmrc.disguisedremunerationfrontend.data
 
 import ltbs.uniform._
 import org.atnos.eff._
-import play.api.libs.json._
 import uk.gov.hmrc.disguisedremunerationfrontend.controllers.EmploymentStatus
 
 case class AboutYou(
@@ -39,36 +38,6 @@ case class NotRequiredToComplete(
 )
 
 object AboutYou {
-
-  implicit def aboutYouFormatter: Format[AboutYou] = ???
-
-  implicit def eitherWrites[Nino, Utr](implicit Nino: Writes[Nino], Utr: Writes[Utr]): Writes[Either[Nino, Utr]] =
-    Writes[Either[Nino, Utr]] {
-      case Left(l) => Nino.writes(l)
-      case Right(r) => Utr.writes(r)
-    }
-
-  // implicit val aboutYouWrites = new Writes[AboutYou] {
-  //   override def writes(o: AboutYou ): JsValue = Json.obj(
-  //     "completedBySelf" -> o.completedBySelf,
-  //     "alive" -> o.alive,
-  //     "identification" -> o.identification,
-  //     "deceasedBefore" -> o.deceasedBefore,
-  //     "employmentStatus" -> o.employmentStatus,
-  //     "actingFor" -> o.actingFor
-  //   )
-  // }
-
-  implicit def optAboutYouWrites =
-    Writes[Option[Option[AboutYou]]] {
-      case Some(o) => o
-      match {
-        case Some(oo) => aboutYouFormatter.writes(oo)
-        case _ => JsNull
-      }
-      case _ => JsNull
-    }
-
 
   // Move into utils
   lazy val regExUTR = """^(?:[ \t]*(?:[a-zA-Z]{3})?\d[ \t]*){10}$"""

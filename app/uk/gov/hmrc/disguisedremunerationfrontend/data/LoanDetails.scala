@@ -23,14 +23,11 @@ case class LoanDetails(
   writtenOff: Option[WrittenOff]
 )
 
-import play.api.libs.json.{Json, OFormat}
 import cats.implicits._
 import org.atnos.eff._
 import ltbs.uniform._
 
 object LoanDetails {
-
-  implicit val LoanDetailsFormatter: OFormat[LoanDetails] = Json.format[LoanDetails]
 
   type Stack = Fx3[
     UniformAsk[Money,?],
@@ -61,7 +58,7 @@ object LoanDetails {
         .defaultOpt(default.flatMap(_.writtenOff)).in[R] when
         ask[Boolean]("details-written-off")
         .defaultOpt(default.map(_.writtenOff.isDefined)).in[R]
-        
+
     ).mapN(LoanDetails.apply)
   }
 

@@ -19,10 +19,11 @@ package uk.gov.hmrc.disguisedremunerationfrontend.data
 import org.scalatest.{Matchers, WordSpec}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-
 import play.api.libs.json._
 
-class JsonEncodingSpec extends WordSpec with Matchers with GuiceOneAppPerSuite {
+import JsonConversion._
+
+class JsonConversionSpec extends WordSpec with Matchers with GuiceOneAppPerSuite {
 
   "eitherFormatter" should {
     "encode and decode correctly" in {

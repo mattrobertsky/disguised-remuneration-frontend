@@ -17,24 +17,21 @@
 package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 
 import java.time.LocalDate
-
-//import cats.implicits._
 import javax.inject.Inject
 import ltbs.uniform.ErrorTree
 import ltbs.uniform.interpreters.playframework.PlayInterpreter
 import ltbs.uniform.web.{Htmlable, Messages}
 import play.api.i18n.I18nSupport
-import play.api.libs.json.{Json} //, Reads, Writes}
+import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
 import play.twirl.api.Html
-//import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
+import scala.concurrent.ExecutionContext
 import uk.gov.hmrc.disguisedremunerationfrontend.data._
-//import uk.gov.hmrc.disguisedremunerationfrontend.views
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
-import scala.concurrent.ExecutionContext
+import JsonConversion._
 
 object TestData {
   // Test data

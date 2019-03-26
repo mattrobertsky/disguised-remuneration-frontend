@@ -25,10 +25,3 @@ case class Address (
 ) {
   def lines: List[String] = List(Some(line1), line2, Some(town), county, Some(postcode)).flatten
 }
-
-import play.api.libs.json.{Format, Json}
-
-object Address {
-  implicit val addressFormatter: Format[Address] = Json.format[Address]
-
-}

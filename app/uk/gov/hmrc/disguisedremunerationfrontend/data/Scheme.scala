@@ -44,29 +44,7 @@ case class Scheme(
   }
 }
 
-import play.api.libs.json.{Format, Json}
-
 object Scheme {
-  import play.api.libs.json._
-
-  implicit def intMapFormatter[A: Format] = new Format[Map[Int,A]] {
-    // TODO: Error handling
-    def reads(json: JsValue): JsResult[Map[Int,A]] = {
-      val obj = json.as[Map[String, JsObject]].map {
-        case (intString,valueObj) =>
-          (Integer.parseInt(intString), valueObj.as[A])
-      }
-      JsSuccess(obj)
-    }
-
-    def writes(o: Map[Int,A]): JsValue = JsObject(
-      o.map{ case (keyInt, value) =>
-        (keyInt.toString, Json.toJson(value))
-      }
-    )
-  }
-
-  implicit val schemeFormatter: Format[Scheme] = Json.format[Scheme]
 
   lazy val nameRegex = """^[a-zA-Z0-9'@,-./() ]*$"""
   lazy val caseRefRegex = """^[a-zA-Z0-9-]*$"""

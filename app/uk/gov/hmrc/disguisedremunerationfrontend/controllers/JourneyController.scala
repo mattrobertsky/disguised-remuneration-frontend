@@ -17,37 +17,30 @@
 package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 
 import cats.data.Validated
+import enumeratum.values._
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import javax.inject.{Inject, Singleton}
-import ltbs.uniform._
+import ltbs.uniform._, web._, InferParser._, parser._
 import ltbs.uniform.interpreters.playframework._
-import ltbs.uniform.web._
-import ltbs.uniform.web.{HtmlField, DataParser}
-import ltbs.uniform.web.InferParser._
-import ltbs.uniform.web.parser._
-import play.api.data._
-import Forms._
-import ltbs.uniform.web.{HtmlForm, Input, Messages, NoopMessages}
 import org.atnos.eff._
+import play.api.data._, Forms._
 import play.api.i18n.I18nSupport
+import play.api.libs.functional.syntax._
+import play.api.libs.json._, Reads._
 import play.api.mvc.{AnyContent, MessagesControllerComponents, Request}
 import play.twirl.api.Html
-import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
-import uk.gov.hmrc.disguisedremunerationfrontend.data._
-import uk.gov.hmrc.disguisedremunerationfrontend.views
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import enumeratum.values._
-import play.api.libs.json._
-import play.api.libs.json.Json
-import AssetsFrontend.{optionHtml => _, _}
-import play.api.libs.json.Reads._
-import play.api.libs.functional.syntax._
+import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
+import uk.gov.hmrc.disguisedremunerationfrontend.data._
 import uk.gov.hmrc.disguisedremunerationfrontend.repo.SessionStore
+import uk.gov.hmrc.disguisedremunerationfrontend.views
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+
+import AssetsFrontend.{optionHtml => _, _}
+import JsonConversion._
 
 sealed abstract class EmploymentStatus extends EnumEntry
 object EmploymentStatus extends Enum[EmploymentStatus] with PlayJsonEnum[EmploymentStatus] {
