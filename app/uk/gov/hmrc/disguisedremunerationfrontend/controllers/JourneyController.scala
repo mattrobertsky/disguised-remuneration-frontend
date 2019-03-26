@@ -16,31 +16,32 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 
-import cats.data.Validated
-import enumeratum.values._
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import javax.inject.{Inject, Singleton}
-import ltbs.uniform._, web._, InferParser._, parser._
+import ltbs.uniform._
 import ltbs.uniform.interpreters.playframework._
+import ltbs.uniform.web.InferParser._
+import ltbs.uniform.web.parser._
+import ltbs.uniform.web.{DataParser, HtmlField, Input, Messages}
 import org.atnos.eff._
-import play.api.data._, Forms._
+import play.api.data.Forms._
+import play.api.data._
 import play.api.i18n.I18nSupport
-import play.api.libs.functional.syntax._
-import play.api.libs.json._, Reads._
+import play.api.libs.json._
 import play.api.mvc.{AnyContent, MessagesControllerComponents, Request}
 import play.twirl.api.Html
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
-import uk.gov.hmrc.disguisedremunerationfrontend.data._
-import uk.gov.hmrc.disguisedremunerationfrontend.repo.SessionStore
+import uk.gov.hmrc.disguisedremunerationfrontend.controllers.AssetsFrontend.{optionHtml => _, _}
+import uk.gov.hmrc.disguisedremunerationfrontend.data.JsonConversion._
+import uk.gov.hmrc.disguisedremunerationfrontend.data.{Date, Nino, Utr, _}
+import uk.gov.hmrc.disguisedremunerationfrontend.repo.ShortLivedStore
 import uk.gov.hmrc.disguisedremunerationfrontend.views
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
-import AssetsFrontend.{optionHtml => _, _}
-import JsonConversion._
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 sealed abstract class EmploymentStatus extends EnumEntry
 object EmploymentStatus extends Enum[EmploymentStatus] with PlayJsonEnum[EmploymentStatus] {
@@ -65,7 +66,7 @@ object YesNoDoNotKnow {
 }
 
 @Singleton
-class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnector: AuditConnector, cache: SessionStore)( implicit val appConfig: AppConfig)
+class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnector: AuditConnector, shortLivedStore: ShortLivedStore)( implicit val appConfig: AppConfig)
       extends FrontendController(mcc) with PlayInterpreter with I18nSupport {
 
   var state: JourneyState = JourneyState(schemes = List(
@@ -111,9 +112,6 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnec
     Ok(views.html.main_template(title = "Send your loan charge details")(views.html.index(state)))
   }
 
-  def cacheWrite(sessionId: String, journeyState: JourneyState)(implicit request: Request[AnyContent]) =
-    cache.store[JourneyState](sessionId, "drCache", journeyState)
-
   def contactDetails(implicit key: String) = Action.async { implicit request =>
     implicit val keys: List[String] = key.split("/").toList
     import ContactDetails._
@@ -145,12 +143,9 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnec
       program = ContactDetails.program[FxAppend[Stack, PlayStack]](state.contactDetails)
         .useForm(automatic[Unit, Address])
         .useForm(automatic[Unit, TelAndEmail]),
-      MemoryPersistence
+      shortLivedStore.persistence("todo-userId") // TODO get the userId from auth
     ){data =>
       state = state.copy(contactDetails = Some(data))
-      val uuid = cache.sessionUuid.getOrElse("dr-sessionId1")
-      //what do we need here??+ ("uuid" -> java.util.UUID.randomUUID.toString)
-      cacheWrite(uuid, state)
       Future.successful(Redirect(routes.JourneyController.index()))
     }
 
@@ -176,7 +171,7 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnec
         .useForm(automatic[Unit, Boolean])
         .useForm(automatic[Unit, Date])
         .useForm(automatic[Unit, (Date, Date)]),
-      MemoryPersistence
+      shortLivedStore.persistence("todo-userId") // TODO get the userId from auth
     ){data =>
       state = schemeIndex match {
         case Some(i) =>
@@ -199,7 +194,7 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnec
         .useForm(automatic[Unit, Money])
         .useForm(automatic[Unit, Boolean])
         .useForm(automatic[Unit, WrittenOff]),
-      MemoryPersistence
+      shortLivedStore.persistence("todo-userId") // TODO get the userId from auth
     ){data =>
       val updatedScheme = scheme.copy(
         loanDetailsProvided = scheme.loanDetailsProvided + (year -> data))
@@ -238,7 +233,7 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnec
         .useForm(automatic[Unit,EmploymentStatus])
         .useForm(automatic[Unit,String])
         .useForm(automatic[Unit, Unit]),
-      MemoryPersistence
+      shortLivedStore.persistence("todo-userId") // TODO get the userId from auth
     ){
       _ match {
       case Left(err) => Future.successful(Redirect(routes.HelloWorld.helloWorld()))
@@ -309,19 +304,5 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnec
         Ok(Json.toJson(state))  // TODO: Need to add confirmation page
       }
     )
-  }
-}
-
-import java.util.concurrent.atomic._
-object MemoryPersistence extends Persistence {
-  private val storage = new AtomicReference(Map.empty[List[String], String])
-
-  override def dataGet: Future[DB] = {
-    Future.successful(storage.get())
-  }
-
-  override def dataPut(dataIn: DB): Future[Unit] = {
-    storage.set(dataIn)
-    Future.successful(Unit)
   }
 }

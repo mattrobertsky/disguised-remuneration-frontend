@@ -39,4 +39,5 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, servicesConfi
   lazy val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
 
   val mongoSessionExpireAfter: Duration = servicesConfig.getDuration("mongodb.session.expireAfter")
+  val mongoShortLivedCacheExpireAfter: Duration = servicesConfig.getDuration("mongodb.shortLivedCache.expireAfter")
 }
