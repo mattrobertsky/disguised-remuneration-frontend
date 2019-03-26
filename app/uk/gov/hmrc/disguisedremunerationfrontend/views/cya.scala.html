@@ -1,0 +1,71 @@
+@*
+ * Copyright 2019 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@(usersName: String, blocks: List[(String,List[(String,Html)])], form: Form[Boolean])(implicit messages: ltbs.uniform.web.Messages, request: Request[AnyContent])
+
+<a href="/disguised-remuneration/" class="govuk-link link-back">@messages(List(s"back-to-service-page","back"))</a>
+
+<h1>Check your answers before sending your details</h1>
+
+<p class="govuk-body">
+    Make sure you check your answers before you send them. If you need
+    to add or change any details later, you will need to fill in this
+    form again.
+</p>
+
+@for((blockTitle, items) <- blocks) {
+    <h2 class="govuk-heading-m">@messages(blockTitle)</h2>
+
+    <dl class="app-check-your-answers app-check-your-answers--short">
+    @for((title, value) <- items) {
+        <dt class="app-check-your-answers__question">@messages(title)</dt>
+        <dd class="app-check-your-answers__answer">@value</dd>
+    }
+    </dl>
+}
+
+<a href="#" class="govuk-link">Print or save this page</a>
+
+<p>
+    By submitting your answers, you confirm that, to the best of your
+    knowledge, the information you have provided is correct and
+    complete.
+</p>
+
+<div class="govuk-warning-text">
+    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+    <strong class="govuk-warning-text__text">
+        <span class="govuk-warning-text__assistive">Warning</span>
+        You could be prosecuted if you deliberately give untrue or misleading information.
+    </strong>
+</div>
+
+
+
+@helper.form(action = play.api.mvc.Call("post", "submit")) {
+    @helper.CSRF.formField
+    <input type="checkbox"
+    name="confirm"
+    class="govuk-checkboxes__input"
+    value="true"
+        @if(form.value.contains("true")) { checked="checked" }>
+
+    <label class="govuk-label govuk-checkboxes__label" for="declaration">
+        I, @usersName, confirm that to the best of my knowledge, the information given is true and correct.
+    </label>
+
+    <button type="submit" class="govuk-button">Accept and send details</button>
+}

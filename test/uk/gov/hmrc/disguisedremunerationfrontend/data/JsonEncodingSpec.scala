@@ -16,19 +16,23 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
-case class Address (
-  line1: String,
-  line2: Option[String],
-  town: String,
-  county: Option[String],
-  postcode: String
-) {
-  def lines: List[String] = List(Some(line1), line2, Some(town), county, Some(postcode)).flatten
-}
+import org.scalatest.{Matchers, WordSpec}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.http.Status
 
-import play.api.libs.json.{Format, Json}
+import play.api.libs.json._
 
-object Address {
-  implicit val addressFormatter: Format[Address] = Json.format[Address]
+class JsonEncodingSpec extends WordSpec with Matchers with GuiceOneAppPerSuite {
 
+  "eitherFormatter" should {
+    "encode and decode correctly" in {
+      import JourneyState._
+      val ef = eitherFormatter[String,String]("nino", "utr")
+
+      val inputs = List(Left("one"),Right("two"))
+      inputs.map { input =>
+        ef.reads(ef.writes(input)) shouldBe JsSuccess(input)
+      }
+    }
+  }
 }

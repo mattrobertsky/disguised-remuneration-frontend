@@ -36,6 +36,59 @@ import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
 import scala.concurrent.ExecutionContext
 
+object TestData {
+  // Test data
+  val _address = Address(
+    line1 = "11 The High Street",
+    line2 = Some("Hove"),
+    town = "Brighton",
+    county = Some("Sussex"),
+    postcode = "BN1 1AB")
+
+  val _contactDetails = ContactDetails(
+    address = _address,
+    telephoneAndEmail = TelAndEmail(telephone = Some("0133 656560"), email = Some("dr@gov.uk"))
+  )
+
+  val _aboutYou = AboutYou(
+    completedBySelf = true,
+    alive = false,
+    identification = Some(Left("AB123456D")),
+    deceasedBefore = Some(true),
+    //      employmentStatus = None,
+    actingFor = Some("Derek")
+  )
+
+  val _scheme = Scheme(
+    name = "dp02",
+    dotasReferenceNumber = Some("Dotas_001"),
+    caseReferenceNumber = Some("CSS-002"),
+    schemeStart = LocalDate.now(),
+    schemeStopped = None,
+    employee = Some(Employer(name = "Tax dodgers ltd", paye = "123/AB456")),
+    loanRecipient = true,
+    loanRecipientName = Some("Tax Dodger"),
+    settlement = Some(TaxSettlement(amount = 10000, dateOfSettlement = LocalDate.now()))
+  )
+
+  val _loanDetails = LoanDetails(
+    hmrcApproved = false,
+    genuinelyRepaid = 100,
+    amount = 300,
+    writtenOff = Some(WrittenOff(
+      amount = 300,
+      taxPaid = 120
+    ))
+  )
+
+  val _journeyState = JourneyState(
+    aboutYou = Some(Some(_aboutYou)),
+    schemes = List(_scheme),
+    contactDetails = Some(_contactDetails)
+  )
+
+}
+
 class SplunkController @Inject()(mcc: MessagesControllerComponents, auditConnector: AuditConnector)(implicit executionContext: ExecutionContext)
   extends FrontendController(mcc) with PlayInterpreter with I18nSupport {
 
@@ -90,7 +143,7 @@ class SplunkController @Inject()(mcc: MessagesControllerComponents, auditConnect
     )
 
     val _journeyState = JourneyState(
-      aboutYou = Some(_aboutYou),
+      aboutYou = Some(Some(_aboutYou)),
       schemes = List(_scheme),
       contactDetails = Some(_contactDetails)
     )
@@ -98,7 +151,8 @@ class SplunkController @Inject()(mcc: MessagesControllerComponents, auditConnect
     auditConnector.sendExplicitAudit(auditSource, Json.toJson(_journeyState))
     Ok(s"auditSource:${Json.toJson(_journeyState)}  -> Splunk")
   }
-  }
+}
+
 
   override def messages( request: Request[AnyContent] ): Messages = convertMessages(messagesApi.preferred(request))
 

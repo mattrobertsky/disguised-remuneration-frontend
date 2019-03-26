@@ -21,7 +21,6 @@ import java.time.LocalDate
 import ltbs.uniform._
 import org.atnos.eff.{Eff, Fx}
 import uk.gov.hmrc.disguisedremunerationfrontend.controllers.{EmploymentStatus, YesNoDoNotKnow}
-import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration.Date
 import cats.implicits._
 
 
@@ -105,7 +104,7 @@ object Scheme {
     : _uniformAsk[YesNoDoNotKnow,?]
     : _uniformAsk[(Date,Date),?]
     : _uniformAsk[Date,?]
-  ](default: Option[Scheme]): Eff[R, Scheme] = { 
+  ](default: Option[Scheme]): Eff[R, Scheme] = {
 
     // subjourney for extracting the date range
     def getSchemeDateRange: Eff[R, (Date,Option[Date])] =
@@ -165,7 +164,7 @@ object Scheme {
                                       case _ => true
                                     }
                                   )
-      
+
       dateRange             <-  getSchemeDateRange
       stillUsingScheme      <-  ask[Boolean]("scheme-stillusing")
       stillUsingYes         <-  ask[Date]("scheme-stillusingyes")
@@ -206,7 +205,7 @@ object Scheme {
                                     )
                                     .in[R]
       recipient             <-  ask[Option[String]]("scheme-recipient")
-                                .defaultOpt(default.map{_.loanRecipientName})  
+                                .defaultOpt(default.map{_.loanRecipientName})
 				.validating(
                                     "Enter the name of who the loan was made out to",
                                     _ match {
@@ -240,7 +239,7 @@ object Scheme {
 				  .defaultOpt(default.flatMap{_.settlement})
                                   .in[R] when taxNIPaid
     } yield {
-
+      import YesNoDoNotKnow._
       val dotas = dotasNumber match {
         case Yes(ref) => Some(ref)
         case No => Some("No")
@@ -265,8 +264,8 @@ object Scheme {
         loanRecipientName = recipient,
         settlement = settlementStatus
       )
-      println(s"scheme: $scheme")
-      Some(scheme)
+      scheme
     }
+  }
 
 }

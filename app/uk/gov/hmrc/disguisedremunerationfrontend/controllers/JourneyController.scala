@@ -25,19 +25,18 @@ import ltbs.uniform.web._
 import ltbs.uniform.web.{HtmlField, DataParser}
 import ltbs.uniform.web.InferParser._
 import ltbs.uniform.web.parser._
-import play.api.data.Form
+import play.api.data._
+import Forms._
 import ltbs.uniform.web.{HtmlForm, Input, Messages, NoopMessages}
-import ltbs.uniform.widgets.govuk._
 import org.atnos.eff._
 import play.api.i18n.I18nSupport
 import play.api.mvc.{AnyContent, MessagesControllerComponents, Request}
 import play.twirl.api.Html
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
-import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration.{Date, Nino, Utr}
 import uk.gov.hmrc.disguisedremunerationfrontend.data._
-import uk.gov.hmrc.disguisedremunerationfrontend.data.render.RenderHtmlTemplate
 import uk.gov.hmrc.disguisedremunerationfrontend.views
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -48,6 +47,7 @@ import AssetsFrontend.{optionHtml => _, _}
 import play.api.libs.json.Reads._
 import play.api.libs.functional.syntax._
 import uk.gov.hmrc.disguisedremunerationfrontend.repo.SessionStore
+import uk.gov.hmrc.http.HeaderCarrier
 
 sealed abstract class EmploymentStatus extends EnumEntry
 object EmploymentStatus extends Enum[EmploymentStatus] with PlayJsonEnum[EmploymentStatus] {
@@ -65,29 +65,14 @@ object YesNoDoNotKnow {
   case class Yes(dotas: String) extends YesNoDoNotKnow
   case object No extends YesNoDoNotKnow
 
-  def DoNotKnow = z.DoNotKnow
+  val DoNotKnow = z.DoNotKnow
   object z {
     case object DoNotKnow extends YesNoDoNotKnow
   }
 }
 
-
-case class JourneyState(
-  aboutYou: Option[Option[AboutYou]] = None,
-  schemes: List[Scheme] = Nil,
-  contactDetails: Option[ContactDetails] = None
-) {
-    def readyToSubmit = aboutYou.isDefined && contactDetails.isDefined && schemes.nonEmpty
-      //&& detailsStatus.forall(_._3.isDefined)
-}
-
-object JourneyState {
-  //implicit val journeyStateFormatter: Format[JourneyState] = Json.format[JourneyState]
-  implicit val journeyStateWrites = Json.writes[JourneyState]
-
-}
 @Singleton
-class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit val appConfig: AppConfig)
+class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnector: AuditConnector, cache: SessionStore)( implicit val appConfig: AppConfig)
       extends FrontendController(mcc) with PlayInterpreter with I18nSupport {
 
   var state: JourneyState = JourneyState(schemes = List(
@@ -119,9 +104,8 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
     )
   ))
 
-  def messages( request: Request[AnyContent] ): ltbs.uniform.web.Messages = convertMessages(messagesApi.preferred(request))
-
-  def listingPage[A](key: List[String],errors: ltbs.uniform.ErrorTree,elements: List[A],messages: ltbs.uniform.web.Messages)(implicit evidence$1: ltbs.uniform.web.Htmlable[A]): play.twirl.api.Html = ???
+  def messages( request: Request[AnyContent] ): ltbs.uniform.web.Messages =
+    convertMessages(messagesApi.preferred(request))
 
   def renderForm(key: List[String], errors: ErrorTree, form: Html, breadcrumbs: List[String], request: Request[AnyContent], messagesIn: ltbs.uniform.web.Messages): Html = {
     implicit val r = request
@@ -181,7 +165,7 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
 
   def addScheme(key: String) = runScheme(None, key)
 
-  def editScheme(schemeIndex: Int, key: String) = runScheme(Some(schemeIndex), key)  
+  def editScheme(schemeIndex: Int, key: String) = runScheme(Some(schemeIndex), key)
 
   def runScheme(schemeIndex: Option[Int], key: String) = Action.async { implicit request =>
 
@@ -205,7 +189,7 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
         case Some(i) =>
           val updatedScheme = data.copy(loanDetailsProvided = default.fold(Map.empty[Year, LoanDetails])(_.loanDetailsProvided))
           state.copy(schemes = state.schemes.patch(i, Seq(updatedScheme), 1))
-        case None    => 
+        case None    =>
           state.copy(schemes = data :: state.schemes)
       }
       Future.successful(Redirect(routes.JourneyController.index()))
@@ -250,13 +234,6 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
       automatic[Unit, Boolean]
     }
 
-    val customNinoUTR = {
-      implicit val booleanField = new HtmlField[Either[Nino,Utr]] {
-        override def render( key: String, values: Input, errors: ErrorTree, messages: Messages ): Html =
-          Html(RenderHtmlTemplate.generateIdentityHtml(messages))
-      }
-      PlayForm.automatic[Unit, Either[Nino,Utr]]
-    }
     import AboutYou._
     runWeb(
       program = AboutYou.program[FxAppend[Stack, PlayStack]](state.aboutYou)
@@ -273,11 +250,72 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents)(implicit va
       _ match {
       case Left(err) => Future.successful(Redirect(routes.HelloWorld.helloWorld()))
                         //throw new RuntimeException("logout")
-      case Right(data) => 
+      case Right(data: Option[AboutYou]) =>
         state = state.copy(aboutYou = Some(data))
         Future.successful(Redirect(routes.JourneyController.index()))
       }
     }
+  }
+
+  val confirmationForm = Form(single(
+    "confirm" -> boolean.verifying("error.cya.confirmation-needed", identity(_))
+  ))
+
+  val usersNameFromGG = "Joe Bloggs"
+
+  def blocksFormState: List[(String,List[(String,Html)])] = state match {
+    case JourneyState(Some(aboutYou), schemes, Some(contactDetails)) =>
+      (
+        "Personal Details" -> List(
+          "Name" -> Html(usersNameFromGG),
+          "Filling in form for self" -> Html(if(aboutYou.isEmpty) "Yes" else "No"),
+          "Address" -> Html(contactDetails.address.lines.mkString("<br />")),
+          "Contact Details" -> Html{
+            import contactDetails.telephoneAndEmail._
+            List(
+              telephone.map{x => "Telephone: " + x},
+              email.map{x => "Email address: " + x}
+            ).flatten.mkString("<br />")
+          }
+        )
+      ) :: schemes.map { scheme =>
+        import scheme._
+        ("Scheme: " + name) -> List(
+          "Dates you received loans" -> Html(""),
+          "Disclosure of Tax Avoidance Schemes (DOTAS) number" -> Html(dotasReferenceNumber.fold("n/a"){identity}),
+          "HMRC case reference number" -> Html(caseReferenceNumber.fold("n/a"){identity}),
+          "Employment status" -> Html(caseReferenceNumber.fold("n/a"){_ => "Employed"}),
+          "Loan recipient" -> Html(if(loanRecipient) "Yes" else "No"),
+          "Tax or National Insurance paid or agreed to pay" -> Html(settlement.fold("None"){x => f"&pound;${x.amount}%,d"})
+        )
+      }
+    case _ => Nil
+  }
+
+  def cya = Action { implicit request =>
+    implicit val m: Messages = messages(request)
+    val contents = views.html.cya(usersNameFromGG, blocksFormState, confirmationForm)
+    Ok(views.html.main_template(title = "Check your answers before sending your details")(contents))
+  }
+
+  def sendToSplunk(State: JourneyState)(implicit hc: HeaderCarrier): Unit = {
+    val auditSource = "disguised-remuneration"
+    val auditType = "disguisedRemunerationCheck"
+    auditConnector.sendExplicitAudit(auditSource, Json.toJson(state))
+  }
+
+  def cyaPost = Action { implicit request =>
+    confirmationForm.bindFromRequest.fold(
+      formWithErrors => {
+        implicit val m: Messages = messages(request)
+        val contents = views.html.cya(usersNameFromGG, blocksFormState, formWithErrors)
+        Ok(views.html.main_template(title = "Check your answers before sending your details")(contents))
+      },
+      postedForm => {
+        sendToSplunk(state)
+        Ok(Json.toJson(state))  // TODO: Need to add confirmation page
+      }
+    )
   }
 }
 

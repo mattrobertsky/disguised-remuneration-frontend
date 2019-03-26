@@ -19,9 +19,8 @@ package uk.gov.hmrc.disguisedremunerationfrontend.data
 
 import ltbs.uniform._
 import org.atnos.eff._
-import play.api.libs.json.{JsNull, JsValue, Json, Writes}
+import play.api.libs.json._
 import uk.gov.hmrc.disguisedremunerationfrontend.controllers.EmploymentStatus
-import uk.gov.hmrc.disguisedremunerationfrontend.data.disguisedremuneration._
 
 case class AboutYou(
   completedBySelf: Boolean,
@@ -41,28 +40,30 @@ case class NotRequiredToComplete(
 
 object AboutYou {
 
+  implicit def aboutYouFormatter: Format[AboutYou] = ???
+
   implicit def eitherWrites[Nino, Utr](implicit Nino: Writes[Nino], Utr: Writes[Utr]): Writes[Either[Nino, Utr]] =
     Writes[Either[Nino, Utr]] {
       case Left(l) => Nino.writes(l)
       case Right(r) => Utr.writes(r)
     }
 
-  implicit val aboutYouWrites = new Writes[AboutYou] {
-    override def writes(o: AboutYou ): JsValue = Json.obj(
-      "completedBySelf" -> o.completedBySelf,
-      "alive" -> o.alive,
-      "identification" -> o.identification,
-      "deceasedBefore" -> o.deceasedBefore,
-      "employmentStatus" -> o.employmentStatus,
-      "actingFor" -> o.actingFor
-    )
-  }
+  // implicit val aboutYouWrites = new Writes[AboutYou] {
+  //   override def writes(o: AboutYou ): JsValue = Json.obj(
+  //     "completedBySelf" -> o.completedBySelf,
+  //     "alive" -> o.alive,
+  //     "identification" -> o.identification,
+  //     "deceasedBefore" -> o.deceasedBefore,
+  //     "employmentStatus" -> o.employmentStatus,
+  //     "actingFor" -> o.actingFor
+  //   )
+  // }
 
-  implicit val optAboutYouWrites =
+  implicit def optAboutYouWrites =
     Writes[Option[Option[AboutYou]]] {
       case Some(o) => o
       match {
-        case Some(oo) => aboutYouWrites.writes(oo)
+        case Some(oo) => aboutYouFormatter.writes(oo)
         case _ => JsNull
       }
       case _ => JsNull
@@ -91,7 +92,7 @@ object AboutYou {
       : _uniformAsk[Either[Nino,Utr],?]
       : _uniformAsk[EmploymentStatus,?]
       : _uniformAsk[Unit,?]
-  ](default: Option[Option[AboutYou]]): Eff[R, Either[Error,Option[AboutYou]]] = 
+  ](default: Option[Option[AboutYou]]): Eff[R, Either[Error,Option[AboutYou]]] =
     for {
       completedBy <- ask[Boolean]("aboutyou-completedby")
                        .defaultOpt(default.map(_.isDefined))
@@ -124,7 +125,7 @@ object AboutYou {
                     }
                   )
                   .in[R] when (!notRequiredToComplete)
-          personName <- ask[String]("aboutyou-confirmation")                  
+          personName <- ask[String]("aboutyou-confirmation")
                           .defaultOpt(default.flatMap(_.flatMap(_.actingFor)))
                           .in[R] when !id.isEmpty
         } yield {

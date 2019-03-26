@@ -10,7 +10,10 @@ object AppDependencies {
     "uk.gov.hmrc"             %% "govuk-template"           % "5.26.0-play-26",
     "uk.gov.hmrc"             %% "play-ui"                  % "7.33.0-play-26",
     "uk.gov.hmrc"             %% "bootstrap-play-26"        % "0.36.0",
-    "com.beachape"            %% "enumeratum-play-json"     % "1.5.0",
+    "uk.gov.hmrc"             %% "mongo-caching"            % "6.1.0-play-26",
+    "uk.gov.hmrc"             %% "play-reactivemongo"       % "6.4.0",
+    "uk.gov.hmrc"             %% "simple-reactivemongo"     % "7.12.0-play-26",
+    "com.beachape"            %% "enumeratum-play-json"     % "1.5.13",
     "com.luketebbs.uniform"   %% "interpreter-play26"       % uniformVersion
   )
 
