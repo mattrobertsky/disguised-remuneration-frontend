@@ -29,6 +29,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(integrationTestSettings(): _*)
   .settings(
     resolvers += Resolver.jcenterRepo,
+    resolvers += Resolver.bintrayRepo("hmrc", "releases"),
     addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.3"),
     scalacOptions ++= Seq(
       //    "-Xfatal-warnings",                  // Fail the compilation if there are any warnings.

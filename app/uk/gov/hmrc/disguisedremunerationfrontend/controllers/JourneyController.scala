@@ -27,9 +27,11 @@ import org.atnos.eff._
 import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.I18nSupport
-import play.api.libs.json._
-import play.api.mvc.{AnyContent, MessagesControllerComponents, Request}
+import play.api.libs.json.Json
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
 import play.twirl.api.Html
+import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
+import uk.gov.hmrc.disguisedremunerationfrontend.actions.AuthorisedAction
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
 import uk.gov.hmrc.disguisedremunerationfrontend.controllers.AssetsFrontend.{optionHtml => _, _}
 import uk.gov.hmrc.disguisedremunerationfrontend.data.JsonConversion._
@@ -66,8 +68,8 @@ object YesNoDoNotKnow {
 }
 
 @Singleton
-class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnector: AuditConnector, shortLivedStore: ShortLivedStore)( implicit val appConfig: AppConfig)
-      extends FrontendController(mcc) with PlayInterpreter with I18nSupport {
+class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnector: AuditConnector, shortLivedStore: ShortLivedStore, authorisedAction: AuthorisedAction, val authConnector: AuthConnector)( implicit val appConfig: AppConfig)
+      extends FrontendController(mcc) with PlayInterpreter with I18nSupport with AuthorisedFunctions {
 
   var state: JourneyState = JourneyState(schemes = List(
     Scheme(
@@ -108,11 +110,11 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnec
 
   override lazy val parse = super[FrontendController].parse
 
-  def index = Action { implicit request =>
-    Ok(views.html.main_template(title = "Send your loan charge details")(views.html.index(state)))
+  def index: Action[AnyContent] = authorisedAction.async { implicit request =>
+      Future.successful(Ok(views.html.main_template(title = "Send your loan charge details")(views.html.index(state))))
   }
 
-  def contactDetails(implicit key: String) = Action.async { implicit request =>
+  def contactDetails(implicit key: String) = authorisedAction.async { implicit request =>
     implicit val keys: List[String] = key.split("/").toList
     import ContactDetails._
 
@@ -143,19 +145,18 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnec
       program = ContactDetails.program[FxAppend[Stack, PlayStack]](state.contactDetails)
         .useForm(automatic[Unit, Address])
         .useForm(automatic[Unit, TelAndEmail]),
-      shortLivedStore.persistence("todo-userId") // TODO get the userId from auth
+      shortLivedStore.persistence(request.internalId)
     ){data =>
       state = state.copy(contactDetails = Some(data))
       Future.successful(Redirect(routes.JourneyController.index()))
     }
-
   }
 
   def addScheme(key: String) = runScheme(None, key)
 
   def editScheme(schemeIndex: Int, key: String) = runScheme(Some(schemeIndex), key)
 
-  def runScheme(schemeIndex: Option[Int], key: String) = Action.async { implicit request =>
+  def runScheme(schemeIndex: Option[Int], key: String) = authorisedAction.async { implicit request =>
 
     val default: Option[Scheme] = schemeIndex.map(state.schemes(_))
     implicit val keys: List[String] = key.split("/").toList
@@ -171,7 +172,7 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnec
         .useForm(automatic[Unit, Boolean])
         .useForm(automatic[Unit, Date])
         .useForm(automatic[Unit, (Date, Date)]),
-      shortLivedStore.persistence("todo-userId") // TODO get the userId from auth
+      shortLivedStore.persistence(request.internalId)
     ){data =>
       state = schemeIndex match {
         case Some(i) =>
@@ -184,7 +185,7 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnec
     }
   }
 
-  def loanDetails(schemeIndex: Int, year: Year, key: String) = Action.async { implicit request =>
+  def loanDetails(schemeIndex: Int, year: Year, key: String) = authorisedAction.async { implicit request =>
     implicit val keys: List[String] = key.split("/").toList
     import LoanDetails._
     val scheme = state.schemes(schemeIndex)
@@ -194,7 +195,7 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnec
         .useForm(automatic[Unit, Money])
         .useForm(automatic[Unit, Boolean])
         .useForm(automatic[Unit, WrittenOff]),
-      shortLivedStore.persistence("todo-userId") // TODO get the userId from auth
+      shortLivedStore.persistence(request.internalId)
     ){data =>
       val updatedScheme = scheme.copy(
         loanDetailsProvided = scheme.loanDetailsProvided + (year -> data))
@@ -205,7 +206,7 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnec
 
   implicit def renderTell: (Unit, String) => Html = {case _ => Html("")}
 
-  def aboutYou(implicit key: String) = Action.async { implicit request =>
+  def aboutYou(implicit key: String): Action[AnyContent] = authorisedAction.async { implicit request =>
     implicit val keys: List[String] = key.split("/").toList
 
     val customBool = {
@@ -233,7 +234,7 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnec
         .useForm(automatic[Unit,EmploymentStatus])
         .useForm(automatic[Unit,String])
         .useForm(automatic[Unit, Unit]),
-      shortLivedStore.persistence("todo-userId") // TODO get the userId from auth
+      shortLivedStore.persistence(request.internalId)
     ){
       _ match {
       case Left(err) => Future.successful(Redirect(routes.HelloWorld.helloWorld()))

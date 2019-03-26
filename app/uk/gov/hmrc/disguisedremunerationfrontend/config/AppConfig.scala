@@ -40,4 +40,12 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, servicesConfi
 
   val mongoSessionExpireAfter: Duration = servicesConfig.getDuration("mongodb.session.expireAfter")
   val mongoShortLivedCacheExpireAfter: Duration = servicesConfig.getDuration("mongodb.shortLivedCache.expireAfter")
+
+  //Auth related config
+  lazy val appName: String = loadConfig("appName")
+  //TODO Check if this is right url for SCP
+  private lazy val companyAuthFrontend = servicesConfig.getConfString("company-auth.url", "")
+  private lazy val companyAuthSignInPath = servicesConfig.getConfString("company-auth.sign-in-path", "")
+  lazy val drIndexPage: String = loadConfig("dr-index-page-url")
+  lazy val ggLoginUrl: String = s"$companyAuthFrontend$companyAuthSignInPath"
 }
