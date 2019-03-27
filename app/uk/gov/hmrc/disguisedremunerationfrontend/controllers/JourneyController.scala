@@ -287,12 +287,6 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnec
     Ok(views.html.main_template(title = "Check your answers before sending your details")(contents))
   }
 
-  def sendToSplunk(State: JourneyState)(implicit hc: HeaderCarrier): Unit = {
-    val auditSource = "disguised-remuneration"
-    val auditType = "disguisedRemunerationCheck"
-    auditConnector.sendExplicitAudit(auditSource, Json.toJson(state))
-  }
-
   def cyaPost = Action { implicit request =>
     confirmationForm.bindFromRequest.fold(
       formWithErrors => {
@@ -301,7 +295,7 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnec
         Ok(views.html.main_template(title = "Check your answers before sending your details")(contents))
       },
       postedForm => {
-        sendToSplunk(state)
+        auditConnector.sendExplicitAudit("disguisedRemunerationCheck", Json.toJson(state))
         Ok(Json.toJson(state))  // TODO: Need to add confirmation page
       }
     )
