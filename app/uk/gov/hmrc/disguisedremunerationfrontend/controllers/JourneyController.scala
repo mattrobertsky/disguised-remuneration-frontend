@@ -29,7 +29,7 @@ import play.api.data._
 import play.api.i18n.I18nSupport
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
-import play.twirl.api.Html
+import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
 import uk.gov.hmrc.disguisedremunerationfrontend.actions.AuthorisedAction
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
@@ -71,7 +71,7 @@ object YesNoDoNotKnow {
 class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnector: AuditConnector, shortLivedStore: ShortLivedStore, authorisedAction: AuthorisedAction, val authConnector: AuthConnector)( implicit val appConfig: AppConfig)
       extends FrontendController(mcc) with PlayInterpreter with I18nSupport with AuthorisedFunctions {
 
-  var state: JourneyState = JourneyState(schemes = List(
+  var _state: JourneyState = JourneyState(schemes = List(
     Scheme(
       name="Cavalier Finance WanglePlus Account",
       dotasReferenceNumber=None,
@@ -100,6 +100,12 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnec
     )
   ))
 
+  def getState = Future.successful(_state)
+  def setState(in: JourneyState): Future[Unit] = {
+    _state = in
+    Future.successful(())
+  }
+
   def messages( request: Request[AnyContent] ): ltbs.uniform.web.Messages =
     convertMessages(messagesApi.preferred(request))
 
@@ -111,7 +117,10 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnec
   override lazy val parse = super[FrontendController].parse
 
   def index: Action[AnyContent] = authorisedAction.async { implicit request =>
-      Future.successful(Ok(views.html.main_template(title = "Send your loan charge details")(views.html.index(state))))
+
+    getState.map { state =>
+      Ok(views.html.main_template(title = "Send your loan charge details")(views.html.index(state)))
+    }
   }
 
   def contactDetails(implicit key: String) = authorisedAction.async { implicit request =>
@@ -141,14 +150,17 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnec
         implicitly[HtmlField[String]].render(key, values, errors, messages)
     }
 
-    runWeb(
-      program = ContactDetails.program[FxAppend[Stack, PlayStack]](state.contactDetails)
-        .useForm(automatic[Unit, Address])
-        .useForm(automatic[Unit, TelAndEmail]),
-      shortLivedStore.persistence(request.internalId)
-    ){data =>
-      state = state.copy(contactDetails = Some(data))
-      Future.successful(Redirect(routes.JourneyController.index()))
+    getState.flatMap { state=>
+      runWeb(
+        program = ContactDetails.program[FxAppend[Stack, PlayStack]](state.contactDetails)
+          .useForm(automatic[Unit, Address])
+          .useForm(automatic[Unit, TelAndEmail]),
+        shortLivedStore.persistence(request.internalId)
+      ){data =>
+        setState(state.copy(contactDetails = Some(data))) map { _ =>
+          Redirect(routes.JourneyController.index())
+        }
+      }
     }
   }
 
@@ -158,55 +170,66 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnec
 
   def runScheme(schemeIndex: Option[Int], key: String) = authorisedAction.async { implicit request =>
 
-    val default: Option[Scheme] = schemeIndex.map(state.schemes(_))
     implicit val keys: List[String] = key.split("/").toList
     import AssetsFrontend.optionHtml
     import Scheme._
-    runWeb(
-      program = Scheme.program[FxAppend[Stack, PlayStack]](default)
-        .useForm(automatic[Unit, String])
-        .useForm(automatic[Unit, Option[String]])
-        .useForm(automatic[Unit, Option[Employer]])
-        .useForm(automatic[Unit, TaxSettlement])
-        .useForm(automatic[Unit,YesNoDoNotKnow])
-        .useForm(automatic[Unit, Boolean])
-        .useForm(automatic[Unit, Date])
-        .useForm(automatic[Unit, (Date, Date)]),
-      shortLivedStore.persistence(request.internalId)
-    ){data =>
-      state = schemeIndex match {
-        case Some(i) =>
-          val updatedScheme = data.copy(loanDetailsProvided = default.fold(Map.empty[Year, LoanDetails])(_.loanDetailsProvided))
-          state.copy(schemes = state.schemes.patch(i, Seq(updatedScheme), 1))
-        case None    =>
-          state.copy(schemes = data :: state.schemes)
+
+    getState.flatMap { state =>
+      val default: Option[Scheme] = schemeIndex.map(state.schemes(_))
+      runWeb(
+        program = Scheme.program[FxAppend[Stack, PlayStack]](default)
+          .useForm(automatic[Unit, String])
+          .useForm(automatic[Unit, Option[String]])
+          .useForm(automatic[Unit, Option[Employer]])
+          .useForm(automatic[Unit, TaxSettlement])
+          .useForm(automatic[Unit,YesNoDoNotKnow])
+          .useForm(automatic[Unit, Boolean])
+          .useForm(automatic[Unit, Date])
+          .useForm(automatic[Unit, (Date, Date)]),
+        shortLivedStore.persistence(request.internalId)
+      ){data =>
+        setState(schemeIndex match {
+          case Some(i) =>
+            val updatedScheme = data.copy(loanDetailsProvided = default.fold(Map.empty[Year, LoanDetails])(_.loanDetailsProvided))
+            state.copy(schemes = state.schemes.patch(i, Seq(updatedScheme), 1))
+          case None    =>
+            state.copy(schemes = data :: state.schemes)
+        }).map { _ =>
+          Redirect(routes.JourneyController.index())
+        }
       }
-      Future.successful(Redirect(routes.JourneyController.index()))
     }
   }
 
   def loanDetails(schemeIndex: Int, year: Year, key: String) = authorisedAction.async { implicit request =>
     implicit val keys: List[String] = key.split("/").toList
     import LoanDetails._
-    val scheme = state.schemes(schemeIndex)
-    val existing = scheme.loanDetails(year)
-    runWeb(
-      program = LoanDetails.program[FxAppend[Stack, PlayStack]](existing)
-        .useForm(automatic[Unit, Money])
-        .useForm(automatic[Unit, Boolean])
-        .useForm(automatic[Unit, WrittenOff]),
-      shortLivedStore.persistence(request.internalId)
-    ){data =>
-      val updatedScheme = scheme.copy(
-        loanDetailsProvided = scheme.loanDetailsProvided + (year -> data))
-      state = state.copy(schemes = state.schemes.patch(schemeIndex, Seq(updatedScheme), 1))
-      Future.successful(Redirect(routes.JourneyController.index()))
+
+    getState.flatMap { state =>
+      val scheme = state.schemes(schemeIndex)
+      val existing = scheme.loanDetails(year)
+      runWeb(
+        program = LoanDetails.program[FxAppend[Stack, PlayStack]](existing)
+          .useForm(automatic[Unit, Money])
+          .useForm(automatic[Unit, Boolean])
+          .useForm(automatic[Unit, WrittenOff]),
+        shortLivedStore.persistence(request.internalId)
+      ){data =>
+        val updatedScheme = scheme.copy(
+          loanDetailsProvided = scheme.loanDetailsProvided + (year -> data))
+        setState(state.copy(
+          schemes = state.schemes.patch(schemeIndex, Seq(updatedScheme), 1)
+        )).map { _ =>
+          Redirect(routes.JourneyController.index())
+        }
+      }
     }
   }
 
   implicit def renderTell: (Unit, String) => Html = {case _ => Html("")}
 
-  def aboutYou(implicit key: String): Action[AnyContent] = authorisedAction.async { implicit request =>
+  def aboutYou(implicit key: String): Action[AnyContent] = authorisedAction.async {
+    implicit request =>
     implicit val keys: List[String] = key.split("/").toList
 
     val customBool = {
@@ -224,24 +247,27 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnec
     }
 
     import AboutYou._
-    runWeb(
-      program = AboutYou.program[FxAppend[Stack, PlayStack]](state.aboutYou)
-        .useFormMap{
-          case List("aboutyou-completedby") => customBool
-          case _ => automatic[Unit,Boolean]
+    getState.flatMap { state =>
+      runWeb(
+        program = AboutYou.program[FxAppend[Stack, PlayStack]](state.aboutYou)
+          .useFormMap{
+            case List("aboutyou-completedby") => customBool
+            case _ => automatic[Unit,Boolean]
+          }
+          .useForm(automatic[Unit, Either[Nino,Utr]])
+          .useForm(automatic[Unit,EmploymentStatus])
+          .useForm(automatic[Unit,String])
+          .useForm(automatic[Unit, Unit]),
+        shortLivedStore.persistence(request.internalId)
+      ){
+        _ match {
+          case Left(err) => Future.successful(Redirect(routes.HelloWorld.helloWorld()))
+          //throw new RuntimeException("logout")
+          case Right(data: Option[AboutYou]) =>
+            setState(state.copy(aboutYou = Some(data))) map { _ =>
+              Redirect(routes.JourneyController.index())
+            }
         }
-        .useForm(automatic[Unit, Either[Nino,Utr]])
-        .useForm(automatic[Unit,EmploymentStatus])
-        .useForm(automatic[Unit,String])
-        .useForm(automatic[Unit, Unit]),
-      shortLivedStore.persistence(request.internalId)
-    ){
-      _ match {
-      case Left(err) => Future.successful(Redirect(routes.HelloWorld.helloWorld()))
-                        //throw new RuntimeException("logout")
-      case Right(data: Option[AboutYou]) =>
-        state = state.copy(aboutYou = Some(data))
-        Future.successful(Redirect(routes.JourneyController.index()))
       }
     }
   }
@@ -252,58 +278,77 @@ class JourneyController @Inject()(mcc: MessagesControllerComponents, auditConnec
 
   val usersNameFromGG = "Joe Bloggs"
 
-  def blocksFormState: List[(String,List[(String,Html)])] = state match {
-    case JourneyState(Some(aboutYou), schemes, Some(contactDetails)) =>
-      (
-        "Personal Details" -> List(
-          "Name" -> Html(usersNameFromGG),
-          "Filling in form for self" -> Html(if(aboutYou.isEmpty) "Yes" else "No"),
-          "Address" -> Html(contactDetails.address.lines.mkString("<br />")),
-          "Contact Details" -> Html{
-            import contactDetails.telephoneAndEmail._
-            List(
-              telephone.map{x => "Telephone: " + x},
-              email.map{x => "Email address: " + x}
-            ).flatten.mkString("<br />")
-          }
-        )
-      ) :: schemes.map { scheme =>
-        import scheme._
-        ("Scheme: " + name) -> List(
-          "Dates you received loans" -> Html(""),
-          "Disclosure of Tax Avoidance Schemes (DOTAS) number" -> Html(dotasReferenceNumber.fold("n/a"){identity}),
-          "HMRC case reference number" -> Html(caseReferenceNumber.fold("n/a"){identity}),
-          "Employment status" -> Html(caseReferenceNumber.fold("n/a"){_ => "Employed"}),
-          "Loan recipient" -> Html(if(loanRecipient) "Yes" else "No"),
-          "Tax or National Insurance paid or agreed to pay" -> Html(settlement.fold("None"){x => f"&pound;${x.amount}%,d"})
-        )
-      }
-    case _ => Nil
-  }
+  def blocksFromState(state: JourneyState): List[(String,List[(String,Html)])] =
+    state match {
+      case JourneyState(Some(aboutYou), schemes, Some(contactDetails)) =>
+        (
+          "Personal Details" -> List(
+            "Name" -> HtmlFormat.escape(usersNameFromGG),
+            "Filling in form for self" -> HtmlFormat.escape(if(aboutYou.isEmpty) "Yes" else "No"),
+            "Address" -> HtmlFormat.escape(contactDetails.address.lines.mkString("<br />")),
+            "Contact Details" -> Html{
+              import contactDetails.telephoneAndEmail._
+              List(
+                telephone.map{x => "Telephone: " + x},
+                email.map{x => "Email address: " + x}
+              ).flatten.mkString("<br />")
+            }
+          )
+        ) :: schemes.map { scheme =>
+          import scheme._
+          ("Scheme: " + name) -> List(
+            "Dates you received loans" -> Html(""),
+            "Disclosure of Tax Avoidance Schemes (DOTAS) number" ->
+              HtmlFormat.escape(dotasReferenceNumber.fold("n/a"){identity}),
+            "HMRC case reference number" ->
+              HtmlFormat.escape(caseReferenceNumber.fold("n/a"){identity}),
+            "Employment status" ->
+              HtmlFormat.escape(caseReferenceNumber.fold("n/a"){_ => "Employed"}),
+            "Loan recipient" ->
+              HtmlFormat.escape(if(loanRecipient) "Yes" else "No"),
+            "Tax or National Insurance paid or agreed to pay" ->
+              Html(settlement.fold("None"){x => f"&pound;${x.amount}%,d"})
+          )
+        }
+      case _ => Nil
+    }
 
-  def cya = Action { implicit request =>
+  def cya = Action.async { implicit request =>
     implicit val m: Messages = messages(request)
-    val contents = views.html.cya(usersNameFromGG, blocksFormState, confirmationForm)
-    Ok(views.html.main_template(title = "Check your answers before sending your details")(contents))
+
+    getState.map { state=>
+      val contents = views.html.cya(
+        usersNameFromGG,
+        blocksFromState(state),
+        confirmationForm
+      )
+
+      Ok(views.html.main_template(title =
+        "Check your answers before sending your details")(contents)
+      )
+    }
   }
 
-  def sendToSplunk(State: JourneyState)(implicit hc: HeaderCarrier): Unit = {
+  def sendToSplunk(state: JourneyState)(implicit hc: HeaderCarrier): Unit = {
     val auditSource = "disguised-remuneration"
     val auditType = "disguisedRemunerationCheck"
     auditConnector.sendExplicitAudit(auditSource, Json.toJson(state))
   }
 
-  def cyaPost = Action { implicit request =>
-    confirmationForm.bindFromRequest.fold(
-      formWithErrors => {
-        implicit val m: Messages = messages(request)
-        val contents = views.html.cya(usersNameFromGG, blocksFormState, formWithErrors)
-        Ok(views.html.main_template(title = "Check your answers before sending your details")(contents))
-      },
-      postedForm => {
-        sendToSplunk(state)
-        Ok(Json.toJson(state))  // TODO: Need to add confirmation page
-      }
-    )
+  def cyaPost = Action.async { implicit request =>
+
+    getState.map { state =>
+      confirmationForm.bindFromRequest.fold(
+        formWithErrors => {
+          implicit val m: Messages = messages(request)
+          val contents = views.html.cya(usersNameFromGG, blocksFromState(state), formWithErrors)
+          Ok(views.html.main_template(title = "Check your answers before sending your details")(contents))
+        },
+        postedForm => {
+          sendToSplunk(state)
+          Ok(Json.toJson(state))  // TODO: Need to add confirmation page
+        }
+      )
+    }
   }
 }
