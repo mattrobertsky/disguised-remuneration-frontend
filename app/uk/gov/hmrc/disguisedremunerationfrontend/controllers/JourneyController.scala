@@ -16,6 +16,9 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
 import cats.implicits._
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import javax.inject.{Inject, Singleton}
@@ -348,16 +351,16 @@ class JourneyController @Inject()(
       blocksFormState,
       confirmationForm
     )
-
+    println("form cya")
     Ok(views.html.main_template(
       title = "Check your answers before sending your details"
     )(contents))
   }
 
   def cyaPost = Action { implicit request =>
+    implicit val m: UniformMessages[Html] = messages(request)
     confirmationForm.bindFromRequest.fold(
       formWithErrors => {
-        implicit val m: UniformMessages[Html] = messages(request)
         val contents =
           views.html.cya(usersNameFromGG, blocksFormState, formWithErrors)
         Ok(views.html.main_template(
@@ -366,7 +369,8 @@ class JourneyController @Inject()(
       },
       postedForm => {
         auditConnector.sendExplicitAudit("disguisedRemunerationCheck", Json.toJson(state))
-        Ok(Json.toJson(state))  // TODO: Need to add confirmation page
+        val contents = views.html.confirmation(getDateTime())
+        Ok(views.html.main_template(title = "Loan charge details received")(contents))
       }
     )
   }

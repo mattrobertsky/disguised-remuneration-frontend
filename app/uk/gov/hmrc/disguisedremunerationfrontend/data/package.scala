@@ -16,6 +16,9 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend
 
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
 package object data {
   type Nino = String
   type Utr = String
@@ -41,5 +44,13 @@ package object data {
       java.time.LocalDate.of(year, 4, 6),
       java.time.LocalDate.of(year+1, 4, 5)
     )
+  }
+
+  def getDateTime(): String = {
+    val now = LocalDateTime.now()
+    val dateFormat = DateTimeFormatter.ofPattern("dd MMM yyyy")
+    val timeFormat = DateTimeFormatter.ofPattern("h:mm a")
+    val dateTime = s"${now.format(dateFormat)} at ${now.format(timeFormat)}"
+    dateTime
   }
 }
