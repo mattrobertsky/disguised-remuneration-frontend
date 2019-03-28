@@ -16,7 +16,7 @@
 
 @import cats.implicits._
 
-@(key: String, items: List[(Html, Option[Html], Option[Html])], min: Int, max: Int, messages: ltbs.uniform.web.Messages)
+@(key: String, items: List[(Html, Option[Html], Option[Html])], min: Int, max: Int, messages: UniformMessages[Html])
 
 @if(items.nonEmpty) {
 <table class="table">

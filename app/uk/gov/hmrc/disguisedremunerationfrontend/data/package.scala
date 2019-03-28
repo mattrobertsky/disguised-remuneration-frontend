@@ -35,4 +35,11 @@ package object data {
         date.getYear
     }
   }
+
+  implicit class IntToFinancialYear(year: Int) {
+    def toFinancialYear: (Date,Date) = (
+      java.time.LocalDate.of(year, 4, 6),
+      java.time.LocalDate.of(year+1, 4, 5)
+    )
+  }
 }

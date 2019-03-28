@@ -16,7 +16,7 @@
 
 @import cats.implicits._
 
-@(key: String, values: Input, errors: ErrorTree, messages: ltbs.uniform.web.Messages)
+@(key: String, values: Input, errors: ErrorTree, messages: UniformMessages[Html])
 
 @path=@{key.split("[.]").filter(_.nonEmpty).tail}
 

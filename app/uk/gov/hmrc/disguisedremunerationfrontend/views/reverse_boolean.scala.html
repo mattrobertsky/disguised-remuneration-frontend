@@ -15,7 +15,7 @@
  *@
 
 @import uniform._
-@(key: String, options: Seq[String], existing: Option[String], messages: ltbs.uniform.web.Messages, conditional: PartialFunction[String,Html] = PartialFunction.empty )
+@(key: String, options: Seq[String], existing: Option[String], messages: UniformMessages[Html], conditional: PartialFunction[String,Html] = PartialFunction.empty )
 
 @keyNoDots=@{key.replace(".","-")}
 <h2>Reverse Boolean</h2>
@@ -26,7 +26,7 @@
         <label class="govuk-label govuk-radios__label govuk-label--s" for="@keyNoDots-@num">
         @messages(s"$key.$opt")
         </label>
-        @messages(s"$key.$opt.hint").map { hint =>
+        @messages.get(s"$key.$opt.hint").map { hint =>
             <span id="@keyNoDots-@opt-item-hint" class="govuk-hint govuk-checkboxes__hint">
             @hint
             </span>

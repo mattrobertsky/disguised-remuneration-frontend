@@ -1,12 +1,8 @@
 # microservice specific routes
 
-GET        /hello-world             uk.gov.hmrc.disguisedremunerationfrontend.controllers.HelloWorld.helloWorld
-
 GET        /                        uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.index
 
 GET        /sign-in                 uk.gov.hmrc.disguisedremunerationfrontend.controllers.AuthenticationController.signIn()
-
-GET        /audit                   uk.gov.hmrc.disguisedremunerationfrontend.controllers.SplunkController.acceptAndSend
 
 GET        /about-you/              uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutYou(id = "")
 GET        /about-you/:id           uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutYou(id: String)

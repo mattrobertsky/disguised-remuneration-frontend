@@ -16,7 +16,7 @@
 
 @import uniform._
 @import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
-@(state: uk.gov.hmrc.disguisedremunerationfrontend.data.JourneyState)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+@(state: uk.gov.hmrc.disguisedremunerationfrontend.data.JourneyState)(implicit request: Request[_], messages: UniformMessages[Html], appConfig: AppConfig)
 
 @tasklist(
     messages("landing.details.title") -> Right(List(
@@ -30,7 +30,7 @@
                     """
                                   |These are sometimes called 'disguised remuneration schemes'.
                                   |<br><br>
-                                  |<li><a href="scheme/new/" class="govuk-link">Add, change or remove a loan arrangement</a></li>
+                                  |<li><a href="scheme/new/scheme-name" class="govuk-link">Add, change or remove a loan arrangement</a></li>
                                 """.stripMargin
                 )
             }
@@ -38,7 +38,7 @@
             Right(state.schemes.zipWithIndex.map{ case (scheme, schemeIndex) =>
                 (scheme.name, Some(s"scheme/$schemeIndex/scheme-name"), None, true)
             } :+
-                (("Add another remuneration scheme", Some("scheme/new/"), None, false)))
+                (("Add another remuneration scheme", Some("scheme/new/scheme-name"), None, false)))
 	}
     },
     messages("landing.loan.taxyear.heading") -> {
@@ -49,7 +49,7 @@
 	}.sortBy(_._1)
 
 	if (details.isEmpty) Left {
-	    Html("""You need to <a href="scheme/" class="govuk-link">add a remuneration scheme</a> before you can add loan details.""")
+	    Html("""You need to <a href="scheme/new/scheme-name" class="govuk-link">add a remuneration scheme</a> before you can add loan details.""")
         } else Right(details)
                         },
                         messages("landing.checkdetails.heading") ->
@@ -58,6 +58,6 @@
                               ("Check your answers and send your details", Some("submit"), None , false)
                             ))
                           } else {
-                            Left{ Html(messages("landing.sendanswers.link")) }
+                            Left{ messages("landing.sendanswers.link") }
                           }}
                       )

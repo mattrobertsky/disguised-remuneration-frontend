@@ -40,12 +40,16 @@ object LoanDetails {
     : _uniformAsk[Money,?]
     : _uniformAsk[Boolean,?]
     : _uniformAsk[WrittenOff,?]
-  ](default: Option[LoanDetails] = None): Eff[R, LoanDetails] = {
-    println(default)
+  ](year: Int, default: Option[LoanDetails] = None): Eff[R, LoanDetails] = {
+    val (startDate, endDate) = year.toFinancialYear
     (
       ask[Money]("details-amount")
-        .defaultOpt(default.map(_.amount)).in[R],
-
+        .defaultOpt(default.map(_.amount))
+        .withCustomContentAndArgs(
+          // replace details-amount.heading with
+          // details-amount.heading.range and apply the arguments
+          ("details-amount.heading",("details-amount.heading.range", List(startDate, endDate)))
+        ).in[R],
       ask[Boolean]("details-hmrc-approved")
         .defaultOpt(default.map(_.hmrcApproved)).in[R],
 

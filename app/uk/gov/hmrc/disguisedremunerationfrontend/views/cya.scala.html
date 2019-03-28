@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@(usersName: String, blocks: List[(String,List[(String,Html)])], form: Form[Boolean])(implicit messages: ltbs.uniform.web.Messages, request: Request[AnyContent])
+@(usersName: String, blocks: List[(Html,List[(Html,Html)])], form: Form[Boolean])(implicit messages: UniformMessages[Html], request: Request[AnyContent])
 
 <a href="/disguised-remuneration/" class="govuk-link link-back">@messages(List(s"back-to-service-page","back"))</a>
 
@@ -28,12 +28,12 @@
 </p>
 
 @for((blockTitle, items) <- blocks) {
-    <h2 class="govuk-heading-m">@messages(blockTitle)</h2>
+    <h2 class="govuk-heading-m">@blockTitle</h2>
 
     <dl class="app-check-your-answers app-check-your-answers--short">
         @for((title, value) <- items) {
                 <div class="app-check-your-answers__contents">
-                <dt class="app-check-your-answers__question">@messages(title)</dt>
+                <dt class="app-check-your-answers__question">@title</dt>
                 <dd class="app-check-your-answers__answer">@value</dd>
                 </div>
         }

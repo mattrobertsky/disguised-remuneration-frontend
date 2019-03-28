@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@(items: (String, Either[Html,List[(String, Option[String],Option[String],Boolean)]])*)(implicit messages: Messages)
+@(items: (Html, Either[Html,List[(String, Option[String],Option[String],Boolean)]])*)(implicit messages: UniformMessages[Html])
 <div class="govuk-width-container">
 
   <a href="javascript:history.back();" class="govuk-link link-back">Back</a>

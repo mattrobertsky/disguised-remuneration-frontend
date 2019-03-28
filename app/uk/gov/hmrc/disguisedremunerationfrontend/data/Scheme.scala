@@ -23,7 +23,6 @@ import org.atnos.eff.{Eff, Fx}
 import uk.gov.hmrc.disguisedremunerationfrontend.controllers.{EmploymentStatus, YesNoDoNotKnow}
 import cats.implicits._
 
-
 case class Scheme(
   name: String,
   dotasReferenceNumber: Option[String],
@@ -37,7 +36,9 @@ case class Scheme(
   loanDetailsProvided: Map[Year, LoanDetails] = Map.empty
 ) {
   lazy val loanDetails: Map[Year, Option[LoanDetails]] = {
-    val years = schemeStart.financialYear to schemeStopped.getOrElse(LocalDate.now).financialYear
+    val cutoffDate = LocalDate.of(1999,5,1).financialYear
+    val start = Math.max(schemeStart.financialYear, cutoffDate)
+    val years = start to schemeStopped.getOrElse(LocalDate.now).financialYear
     Map( years.map{ y =>
       y -> loanDetailsProvided.get(y)
     }:_*)
@@ -50,7 +51,6 @@ object Scheme {
   lazy val caseRefRegex = """^[a-zA-Z0-9-]*$"""
   lazy val payeRegex = """^\d{3}/[A-Za-z]{2}\d{3}$"""
   lazy val maxNameLength = 50
-
 
   val earliestDate = LocalDate.parse("1900-01-01")
 
@@ -144,14 +144,6 @@ object Scheme {
                                   )
 
       dateRange             <-  getSchemeDateRange
-      stillUsingScheme      <-  ask[Boolean]("scheme-stillusing")
-      stillUsingYes         <-  ask[Date]("scheme-stillusingyes")
-                                  .validating(s"The date you started using the scheme must after $earliestDate", isInRange(_))
-                                  .validating("The date you started using the scheme must be in the past", _.isBefore(LocalDate.now()))
-                                  .in[R] when stillUsingScheme
-      stillUsingNo          <-  ask[(Date, Date)]("scheme-stillusingno")
-                                  .validating("The date you stopped using the scheme must be the same as or after the date you started using the scheme", startBeforeEnd _)
-                                  .in[R] when !stillUsingScheme
       employer              <-  ask[Option[Employer]]("scheme-employee")
                                     .validating(
                                       "Enter the employer's name",
@@ -224,16 +216,9 @@ object Scheme {
         case DoNotKnow => Some("Do not know")
       }
 
-      val(startDate, stopDate): (Option[LocalDate], Option[LocalDate]) =
-                                  if (stillUsingScheme)
-                                      (stillUsingYes, None)
-                                  else
-                                    stillUsingNo.map(period => (Some(period._1), Some(period._2)))
-                                      .getOrElse((None,None))
-
       val scheme = Scheme(
         name = schemeName,
-        dotasReferenceNumber = Some("dotas1"),
+        dotasReferenceNumber = dotas,
         caseReferenceNumber = schemeReferenceNumber,
         schemeStart = dateRange._1,
         schemeStopped = dateRange._2,
