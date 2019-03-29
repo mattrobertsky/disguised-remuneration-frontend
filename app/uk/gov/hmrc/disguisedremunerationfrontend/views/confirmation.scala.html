@@ -1,0 +1,60 @@
+@*
+ * Copyright 2019 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@(dateTime: String)(implicit messages: UniformMessages[Html], request: Request[AnyContent])
+
+<a href="/disguised-remuneration/" class="govuk-link link-back">@messages(List(s"back-to-service-page","back"))</a>
+
+    <form action="index" method="get" class="form">
+        <div class="govuk-panel govuk-panel--confirmation">
+            <h1 class="govuk-panel__title">
+                Loan charge details received
+            </h1>
+            <div class="govuk-panel__body">
+                We received the details you sent on @dateTime
+            </div>
+
+        </div>
+
+    </form>
+    <br>
+    <h2 class="govuk-heading-m">What happens next</h2>
+
+    <p>We will check the details you sent against the information we hold. This might include, for example, any details from employers or Self Assessment returns.</p>
+
+    <p>We will contact you if we need you to provide more information.</p>
+
+    <p>If you need to add to or change the details you sent, fill in this form again and resend your details.</p>
+
+
+    <h2 class="govuk-heading-m">What you need to do next</h2>
+
+    <p>You need to include your outstanding loan amounts in your Self Assessment tax return.</p>
+
+    <p>Make sure you have sent these details to any employers you had disguised remuneration loan arrangements with.</p>
+
+    <p><a target="_blank" class="govuk-link" href="https://www.gov.uk/guidance/report-and-account-for-your-disguised-remuneration-loan-charge">Check the guidance</a> to find out what you need to do.</p>
+
+    <h2 class="govuk-heading-m">If you need help</h2>
+
+    <p>If you need help using this service, use the 'get help with this page' link at the bottom of the page.</p>
+
+    <p><a href="#">Print or save this page</a></p>
+
+    <p><a href="#">What do you think of this service?</a> (takes 30 seconds)</p>
+
+
+

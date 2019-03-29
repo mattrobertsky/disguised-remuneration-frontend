@@ -18,6 +18,21 @@
 
 <a href="/disguised-remuneration/" class="govuk-link link-back">@messages(List(s"back-to-service-page","back"))</a>
 
+@if(form.errors.nonEmpty) {
+<div class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+
+  <h2 class="error-summary__title" id="error-summary-title">
+    There is a problem
+  </h2>
+  <div class="error-summary__body">
+    <ul class="list error-summary__list">
+      <li>You must confirm that the information you have supplied is true and correct
+      </li>
+    </ul>
+  </div>
+</div>
+}
+
 <div class="govuk-grid-column-two-thirds">
 <h1 class="govuk-heading-xl">Check your answers before sending your details</h1>
 
@@ -64,7 +79,7 @@
             <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
                 <div class="govuk-checkboxes">
                     <div class="govuk-checkboxes__item">
-                        <input class="govuk-checkboxes__input" id="declaration" name="declaration" type="checkbox" value="accept">
+                        <input class="govuk-checkboxes__input" id="declaration" name="confirm" type="checkbox" value="true">
                         <label class="govuk-label govuk-checkboxes__label" for="declaration">
                             I,
                             @usersName, confirm that, to the best of my knowledge, the information given is true and correct.
@@ -78,6 +93,3 @@
 </div>
 
 </div>
-
-
-
