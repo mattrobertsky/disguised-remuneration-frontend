@@ -351,7 +351,7 @@ class JourneyController @Inject()(
       blocksFormState,
       confirmationForm
     )
-    println("form cya")
+
     Ok(views.html.main_template(
       title = "Check your answers before sending your details"
     )(contents))
@@ -363,7 +363,7 @@ class JourneyController @Inject()(
       formWithErrors => {
         val contents =
           views.html.cya(usersNameFromGG, blocksFormState, formWithErrors)
-        Ok(views.html.main_template(
+        BadRequest(views.html.main_template(
           title = "Check your answers before sending your details"
         )(contents))
       },
