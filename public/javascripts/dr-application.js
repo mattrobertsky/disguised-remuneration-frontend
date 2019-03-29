@@ -6,6 +6,7 @@
 $(document).ready(function () {
     // Turn off jQuery animation
     jQuery.fx.off = true;
+    $(".radios__item").addClass('multiple-choice');
 
     // Where .multiple-choice uses the data-target attribute
     // to toggle hidden content
@@ -13,7 +14,6 @@ $(document).ready(function () {
 
     showHideContentFoo.init();
 
-    $(".govuk-radios__item").addClass('multiple-choice');
     $(".govuk-radios__item_nino").addClass('multiple-choice');
     $(".govuk-radios__item_utr").addClass('multiple-choice');
     $('input[type=radio][name=aboutyou-identity]').change(function() {
