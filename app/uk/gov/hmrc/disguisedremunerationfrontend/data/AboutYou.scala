@@ -98,7 +98,6 @@ object AboutYou {
                           .defaultOpt(default.flatMap(_.flatMap(_.actingFor)))
                           .in[R] when !id.isEmpty
         } yield {
-          println(s"id: $id")
           if (notRequiredToComplete)
             Left(NoNeedToComplete)
           else

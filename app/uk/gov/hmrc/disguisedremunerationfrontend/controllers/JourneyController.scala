@@ -372,26 +372,22 @@ class JourneyController @Inject()(
     }
   }
 
-  def sendToSplunk(state: JourneyState)(implicit hc: HeaderCarrier): Unit = {
-    val auditType = "disguisedRemunerationCheck"
-    auditConnector.sendExplicitAudit(auditType, Json.toJson(state))
-  }
 
   def cyaPost: Action[AnyContent] = authorisedAction.async { implicit request =>
-
+    implicit val m: UniformMessages[Html] = messages(request)
     getState.map { state =>
       confirmationForm.bindFromRequest.fold(
         formWithErrors => {
-          implicit val m: UniformMessages[Html] = messages(request)
           val contents =
             views.html.cya(usersNameFromGG, blocksFromState(state), formWithErrors)
-          Ok(views.html.main_template(
+          BadRequest(views.html.main_template(
             title = "Check your answers before sending your details"
           )(contents))
         },
         postedForm => {
-          sendToSplunk(state)
-          Ok(Json.toJson(state))  // TODO: Need to add confirmation page
+          auditConnector.sendExplicitAudit("disguisedRemunerationCheck", Json.toJson(state))
+          val contents = views.html.confirmation(getDateTime())
+          Ok(views.html.main_template(title = "Loan charge details received")(contents))
         }
       )
     }
