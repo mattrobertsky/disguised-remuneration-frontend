@@ -37,13 +37,11 @@ trait ShortLivedStore {
 }
 
 @Singleton
-class ShortLivedStoreImpl @Inject() (mongo: ReactiveMongoComponent)(implicit appConfig: AppConfig, ec: ExecutionContext) extends ShortLivedStore {
+class ShortLivedStoreImpl @Inject() (mongo: ReactiveMongoComponent)(implicit appConfig: AppConfig, ec: ExecutionContext) extends ShortLivedStore with Store {
 
-  private val expireAfterSeconds = appConfig.mongoShortLivedCacheExpireAfter.toSeconds
-
-  private val cacheRepository = new CacheMongoRepository("shortLivedCache", expireAfterSeconds)(mongo.mongoConnector.db, ec)
-
-  private val cacheRepositoryKey = "save4later"
+  val expireAfterSeconds: Long = appConfig.mongoShortLivedStoreExpireAfter.toSeconds
+  val cacheRepository: CacheMongoRepository = new CacheMongoRepository("shortLivedCache", expireAfterSeconds)(mongo.mongoConnector.db, ec)
+  val cacheRepositoryKey: String = "save4later"
 
   def persistence(userId: String): Persistence = new Persistence {
 
@@ -55,7 +53,7 @@ class ShortLivedStoreImpl @Inject() (mongo: ReactiveMongoComponent)(implicit app
         mapFormatter.reads(json).map{ _.map { case (k,v) => (k.split("/").toList, v)} }
     }
 
-    // TODO - remove the foo, look at implicitly[Monoid[DB]].empty
+    // TODO - look at implicitly[Monoid[DB]].empty
     override def dataGet: Future[DB] = {
       val x: OptionT[Future, DB] = for {
         a <- OptionT(cacheRepository.findById(userId))

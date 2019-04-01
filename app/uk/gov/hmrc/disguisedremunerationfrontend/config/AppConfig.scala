@@ -38,8 +38,9 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, servicesConfi
   lazy val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
   lazy val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
 
-  val mongoSessionExpireAfter: Duration = servicesConfig.getDuration("mongodb.session.expireAfter")
-  val mongoShortLivedCacheExpireAfter: Duration = servicesConfig.getDuration("mongodb.shortLivedCache.expireAfter")
+//  val mongoSessionExpireAfter: Duration = servicesConfig.getDuration("mongodb.session.expireAfter")
+  val mongoShortLivedStoreExpireAfter: Duration = servicesConfig.getDuration("mongodb.shortLivedCache.expireAfter")
+  val mongoJourneyStoreExpireAfter: Duration = servicesConfig.getDuration("mongodb.journeyStore.expireAfter")
 
   //Auth related config
   lazy val appName: String = loadConfig("appName")
