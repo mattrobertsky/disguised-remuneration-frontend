@@ -123,7 +123,6 @@ object Scheme {
                                   }})
                                   .validating(
                                     "Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers",
-//                                  case name => println(s"DOTAS LENGTH = ${name.toString}"); name.entryName.length() == 8  // Need to get actual value!
                                     yn  => true
                                   )
       schemeReferenceNumber <-  ask[Option[String]]("scheme-refnumber")
@@ -138,7 +137,7 @@ object Scheme {
                                   .validating(
                                     "HMRC case reference number must only include letters a to z, numbers and hyphens",
                                     _ match {
-                                      case Some(ref) => println(s"*REF: $ref"); ref.matches(caseRefRegex)
+                                      case Some(ref) => ref.matches(caseRefRegex)
                                       case _ => true
                                     }
                                   )
@@ -148,7 +147,7 @@ object Scheme {
                                     .validating(
                                       "Enter the employer's name",
                                       _ match {
-                                        case Some(employer) =>  println(employer); !employer.name.isEmpty
+                                        case Some(employer) => !employer.name.isEmpty
                                         case _ => true
                                       }
                                     )
