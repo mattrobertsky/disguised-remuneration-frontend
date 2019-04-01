@@ -20,7 +20,7 @@ import play.api.mvc._
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
 import javax.inject.{Inject, Singleton}
-
+import play.api.Logger
 import play.api.i18n.I18nSupport
 import play.api.mvc.Results.Redirect
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
@@ -42,9 +42,11 @@ class AuthorisedAction @Inject()(mcc: MessagesControllerComponents, val authConn
     authorised(AuthProviders(GovernmentGateway)).retrieve(internalId) {
       id =>
         val internalId = id.getOrElse(throw new RuntimeException("No internal ID for user"))
+        Logger.info(s"authorised internal id - $internalId")
         Future.successful(Right(AuthorisedRequest(internalId, request)))
     } recover {
       case _: NoActiveSession =>
+        Logger.info(s"Recover - no active session")
         Left(
           Redirect(
             uk.gov.hmrc.disguisedremunerationfrontend.controllers.routes.AuthenticationController

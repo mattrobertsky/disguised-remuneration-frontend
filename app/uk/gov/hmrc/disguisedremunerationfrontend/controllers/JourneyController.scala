@@ -25,6 +25,7 @@ import ltbs.uniform.web.InferParser._
 import ltbs.uniform.web._
 import ltbs.uniform.web.parser._
 import org.atnos.eff._
+import play.api.Logger
 import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.I18nSupport
@@ -165,6 +166,7 @@ class JourneyController @Inject()(
           shortLivedStore.persistence(request.internalId)
         ) { data =>
           setState(state.copy(contactDetails = Some(data))) map { _ =>
+            Logger.debug("completed contact details")
             Redirect(routes.JourneyController.index())
           }
         }
@@ -210,6 +212,7 @@ class JourneyController @Inject()(
           case None    =>
             state.copy(schemes = data :: state.schemes)
         }).map { _ =>
+          Logger.debug("completed scheme")
           Redirect(routes.JourneyController.index())
         }
       }
@@ -239,6 +242,7 @@ class JourneyController @Inject()(
         setState(state.copy(
           schemes = state.schemes.patch(schemeIndex, Seq(updatedScheme), 1)
         )).map { _ =>
+          Logger.debug("completed loan details")
           Redirect(routes.JourneyController.index())
         }
       }
@@ -289,6 +293,7 @@ class JourneyController @Inject()(
             //throw new RuntimeException("logout")
             case Right(data: Option[AboutYou]) =>
               setState(state.copy(aboutYou = Some(data))) map { _ =>
+                Logger.debug("completed about you")
                 Redirect(routes.JourneyController.index())
               }
           }
@@ -365,7 +370,7 @@ class JourneyController @Inject()(
         blocksFromState(state),
         confirmationForm
       )
-
+      Logger.debug("completed check your answers")
       Ok(views.html.main_template(title =
         "Check your answers before sending your details")(contents)
       )
@@ -386,6 +391,7 @@ class JourneyController @Inject()(
         },
         postedForm => {
           auditConnector.sendExplicitAudit("disguisedRemunerationCheck", Json.toJson(state))
+          Logger.info(s"submission details sent to splunk")
           val contents = views.html.confirmation(getDateTime())
           Ok(views.html.main_template(title = "Loan charge details received")(contents))
         }
