@@ -26,7 +26,17 @@
 
 
 @serviceInfoContent = {}
-
+@scriptElem = {
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NDJKHWK"
+                height="0"
+                width="0"
+                style="display:none;visibility:hidden">
+        </iframe>
+    </noscript>
+        <!-- End Google Tag Manager (noscript) -->
+}
 @sidebar = {
     @if(sidebarLinks.isDefined) {
         @layouts.sidebar(sidebarLinks.get, Some("sidebar"))
@@ -42,5 +52,5 @@
                contentHeader = contentHeader,
                mainContent = layouts.article(mainContent),
                serviceInfoContent = serviceInfoContent,
-               scriptElem = scriptElem
+               scriptElem = Some(scriptElem)
 )
