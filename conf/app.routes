@@ -1,24 +1,25 @@
 # microservice specific routes
+
 GET        /assets/*file            controllers.Assets.versioned(path="/public", file)
 
-GET        /                        uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.index
+GET        /                         uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.index
 
-GET        /sign-in                 uk.gov.hmrc.disguisedremunerationfrontend.controllers.AuthenticationController.signIn()
+GET        /sign-in                  uk.gov.hmrc.disguisedremunerationfrontend.controllers.AuthenticationController.signIn()
 
-GET        /about-you/              uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutYou(id = "")
-GET        /about-you/:id           uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutYou(id: String)
-POST       /about-you/              uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutYou(id = "")
-POST       /about-you/:id           uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutYou(id: String)
+GET        /about-you/               uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutYou(id = "")
+GET        /about-you/:id            uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutYou(id: String)
+POST       /about-you/               uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutYou(id = "")
+POST       /about-you/:id            uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutYou(id: String)
 
-GET        /contact-details/        uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetails(id = "")
-GET        /contact-details/:id     uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetails(id: String)
-POST       /contact-details/        uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetails(id = "")
-POST       /contact-details/:id     uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetails(id: String)
+GET        /contact-details/         uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetails(id = "")
+GET        /contact-details/:id      uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetails(id: String)
+POST       /contact-details/         uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetails(id = "")
+POST       /contact-details/:id      uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetails(id: String)
 
-GET        /scheme/new/     uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id = "")
-GET        /scheme/new/:id  uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id: String)
-POST       /scheme/new/     uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id = "")
-POST       /scheme/new/:id  uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id: String)
+GET        /scheme/new/              uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id = "")
+GET        /scheme/new/:id           uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id: String)
+POST       /scheme/new/              uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id = "")
+POST       /scheme/new/:id           uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id: String)
 
 
 GET        /scheme/:schemeIndex/     uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.editScheme(schemeIndex: Int, id = "")

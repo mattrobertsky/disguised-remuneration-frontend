@@ -20,11 +20,14 @@ import play.api.mvc._
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
 import javax.inject.{Inject, Singleton}
+
 import play.api.Logger
 import play.api.i18n.I18nSupport
 import play.api.mvc.Results.Redirect
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core.retrieve.Retrievals._
+import uk.gov.hmrc.auth.core.retrieve.~
+import uk.gov.hmrc.disguisedremunerationfrontend.data.{Utr, Nino}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
 
@@ -39,11 +42,17 @@ class AuthorisedAction @Inject()(mcc: MessagesControllerComponents, val authConn
     implicit val req: Request[A] = request
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    authorised(AuthProviders(GovernmentGateway)).retrieve(internalId) {
-      id =>
+    val retrieval = internalId and nino and saUtr
+
+      authorised(AuthProviders(GovernmentGateway)).retrieve(retrieval) { case id ~ natInsNo ~ sUtr =>
         val internalId = id.getOrElse(throw new RuntimeException("No internal ID for user"))
-        Logger.info(s"authorised internal id - $internalId")
-        Future.successful(Right(AuthorisedRequest(internalId, request)))
+        val ninoOrUtr =
+          (natInsNo, sUtr) match {
+            case (Some(n), _) => Left(n)
+            case (None, Some(u)) => Right(u)
+            case (_) => Left("No UTR or Nino found on enrolments")
+          }
+        Future.successful(Right(AuthorisedRequest(internalId, ninoOrUtr, request)))
     } recover {
       case _: NoActiveSession =>
         Logger.info(s"Recover - no active session")
@@ -57,5 +66,5 @@ class AuthorisedAction @Inject()(mcc: MessagesControllerComponents, val authConn
   override def parser = mcc.parsers.anyContent
 }
 
-case class AuthorisedRequest[A](internalId: String, request: Request[A])
+case class AuthorisedRequest[A](internalId: String, ninoOrUtr: Either[Nino, Utr], request: Request[A])
     extends WrappedRequest(request)

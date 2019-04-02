@@ -292,14 +292,26 @@ class JourneyController @Inject()(
             case Left(err) => Future.successful(Ok("TODO: Some action to be taken here"))
             //throw new RuntimeException("logout")
             case Right(data: Option[AboutYou]) =>
-              setState(state.copy(aboutYou = Some(data))) map { _ =>
-                Logger.debug("completed about you")
-                Redirect(routes.JourneyController.index())
+              if(data.isEmpty) {
+                setState(
+                  JourneyState(
+                    aboutYou =
+                      Some(Some(AboutYou(completedBySelf = true, alive = true, Some(request.ninoOrUtr), None, None, None)))
+                  )
+                ) map { _ =>
+                  Logger.debug("completed about you for themselves with enrolments")
+                  Redirect(routes.JourneyController.index())
+                }
+              } else {
+                setState(state.copy(aboutYou = Some(data))) map { _ =>
+                  Logger.debug("completed about you for someone else without enrolments")
+                  Redirect(routes.JourneyController.index())
               }
+            }
           }
         }
       }
-  }
+    }
 
   val confirmationForm = Form(single(
     "confirm" -> boolean.verifying("error.cya.confirmation-needed", identity(_))
