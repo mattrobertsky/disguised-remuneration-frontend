@@ -1,5 +1,5 @@
 # microservice specific routes
-GET        /assets/*file            controllers.Assets.at(path="/public", file)
+GET        /assets/*file            controllers.Assets.versioned(path="/public", file)
 
 GET        /                        uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.index
 
