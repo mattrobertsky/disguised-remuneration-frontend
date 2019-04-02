@@ -101,10 +101,10 @@
 }
 
 @linksElement = {
-    <link rel="stylesheet" type="text/css" href='@routes.Assets.at("stylesheets/disguised-remuneration-frontend.css")'>
-    <link rel="stylesheet" type="text/css" href='@routes.Assets.at("stylesheets/print.css")' media="print">
-    <script defer src='@routes.Assets.at("javascripts/dr-application.js")'></script>
-    <script defer src='@routes.Assets.at("javascripts/show-hide-content2.js")'></script>
+    <link rel="stylesheet"  href='@routes.Assets.versioned("stylesheets/disguised-remuneration-frontend.css")'/>
+    <link rel="stylesheet"  href='@routes.Assets.versioned("stylesheets/print.css")' media="print"/>
+    <script defer src='@routes.Assets.versioned("javascripts/dr-application.js")'></script>
+    <script defer src='@routes.Assets.versioned("javascripts/show-hide-content2.js")'></script>
 }
 
 @hmrcGovUkTemplate(Some(title), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links()), true)(content)
