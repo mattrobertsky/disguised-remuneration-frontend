@@ -7,7 +7,7 @@ common.save-back-later=Save and come back later
 landing.heading=Send your loan charge details
 landing.info=Fill in each section as best you can. You can save your answers and come back later to finish.
 landing.details.title=Enter your details
-landing.loan.arrangement.heading=Tell us about loan arrangements you used, which were designed to avoid tax and National Insurance
+landing.loan.arrangement.heading=Tell us about loan arrangements you used
 landing.loan.arrangement.info=These are sometimes called 'disguised remuneration schemes'.
 landing.loan.taxyear.heading=Enter loan details by tax year
 landing.checkdetails.heading=Check and send your details
@@ -23,15 +23,15 @@ aboutyou-identity.Left=The person''s National Insurance number
 aboutyou-identity.Left.a.heading=This will be on their National Insurance card, benefit letter, payslip or P60. For example, 'QQ 12 34 56 C'
 aboutyou-identity.Left.a.label=Enter their National Insurance number
 aboutyou-identity.Right=The person''s Self Assessment Unique Taxpayer Reference (UTR)
-aboutyou-identity.Right.b.heading=This is the 10 numbers like 12345 67890. It will be on tax returns and other letters about Self Assessment. It may be called 'reference', 'UTR' or 'official use'. <a target=_blank href="https://www.gov.uk/find-lost-utr-number">Find a lost UTR (opens in a new window or tab)</a>.
+aboutyou-identity.Right.b.heading=This is the 10 numbers like 12345 67890<br>It will be on tax returns and other letters about Self Assessment. It may be called 'reference', 'UTR' or 'official use'. <a target=_blank href="https://www.gov.uk/find-lost-utr-number">Find a lost UTR (opens in a new window or tab)</a>.
 aboutyou-identity.Right.label=Enter their Self Assessment UTR
-aboutyou-employmentstatus.heading=Was the deceased person employed or self-employed when they had a loan?
+aboutyou-employmentstatus.heading=Was the deceased person employed or self-employed when they had the loan?
 aboutyou-employmentstatus.Employed=Employed
 aboutyou-employmentstatus.SelfEmployed=Self-employed
 aboutyou-employmentstatus.Both=Both employed and self-employed
 aboutyou-deceasedbefore.heading=Did the deceased person die on or before 5 April 2019?
 aboutyou-noloancharge.heading=You do not need to send any loan charge details
-aboutyou-noloancharge.hint=<p>Based on your answers, you do not need to send any loan charge details.<ul class="govuk-list govuk-list--bullet"><li>was employed when they had the loan</li><li>has died on or before 5 April 2019</li>
+aboutyou-noloancharge.hint=<strong><p>Based on your answers, you do not need to send any loan charge details.<br><br>This is because you told us the deceased person:<br><ul class="govuk-list govuk-list--bullet"><li>was employed when they had the loan</li><li>has died on or before 5 April 2019</li><br><br>If this is not right, you need to <a class="govuk-link" href="/disguised-remuneration/">go back and change your answers<a/>.</strong>
 aboutyou-noloancharge.p2=This is because you told us the deceased person:
 aboutyou-noloancharge.p3=was employed when they had the loan
 aboutyou-noloancharge.p4=has died on or before 5 April 2019
@@ -44,7 +44,7 @@ aboutyou-confirmation.FALSE=No - I need to start over again
 #Contact details
 contactdetails-address.heading=What is your address?
 contactdetails-address.hint=We will only use these details to contact you about your case.
-contactdetails-address.line1.heading=Building and street
+contactdetails-address.line1.heading=Building or street
 contactdetails-address.line2.heading=
 contactdetails-address.town.heading=Town or city
 contactdetails-address.county.heading=County
@@ -54,30 +54,37 @@ contactdetails-telehoneemail.telephone.heading=UK telephone number (optional)
 contactdetails-telehoneemail.email.heading=Email address (optional)
 
 #Scheme
-scheme-name.heading=What is the name of this scheme?
+scheme-name.heading=Enter a name for this scheme
+scheme-name.hint=If you do not know the scheme's name, you can enter any name here.
 scheme-dotas.heading=Do you have a Disclosure of Tax Avoidance Schemes (DOTAS) number for this scheme?
-scheme-dotas.Yes.dotas.heading=Enter the DOTAS number For example, 12345678
+scheme-dotas.Yes.dotas.heading=Enter the DOTAS number
+scheme-dotas.Yes.dotas.hint=For example, 12345678
 scheme-dotas.Yes=Yes
 scheme-dotas.No=No
 scheme-dotas.DoNotKnow=Do not know
-scheme-dotas.true.hint=For example, 12345678
-scheme-refnumber.heading=Do you have a HMRC case reference number for this scheme?
-#scheme-refnumber.true.heading=Enter the HMRC case reference number
-scheme-refnumber.true.hint=This usually begins with ‘CFS’ or ‘CFSS’.
-scheme-stillusing.heading=Are you still using the scheme?
-scheme-stillusingyes.heading=When did you start using the scheme?
-scheme-stillusingno.heading=Dates when you used the scheme
-scheme-stillusingno._1.heading=Start date
-scheme-stillusingno._2.heading=End date
+#scheme-dotas.true.hint=For example, 12345678
+scheme-refnumber.heading=Do you have an HMRC case reference number for this scheme?
+scheme-refnumber.Yes.inner.heading=Enter the HMRC case reference number
+scheme-refnumber.Yes.inner.hint=This usually begins with ‘CFS’ or ‘CFSS’.
+scheme-stillusing.heading=Are you still receiving loan payments through the scheme?
+scheme-stillusingyes.heading=When did you first receive a loan from the scheme?
+scheme-stillusingyes.hint=If you do not know the exact date, enter an estimated date.<br><br>For example, 31 3 2015
+
+scheme-stillusingno.heading=Dates when you received loans from the scheme
+scheme-stillusingno._1.heading=Date you received your first loan from the scheme
+scheme-stillusingno._1.hint=For example, 31 3 2015
+
+scheme-stillusingno._2.heading=Date you received your last loan from the scheme
+scheme-stillusingno._2.hint=For example, 31 3 2015
 scheme-dates.p1=If you do not know the exact date, enter an estimated date.
 scheme-dates.start=Start date
 scheme-dates.end=End date
 scheme-dates.hint=For example, 31 3 2015
 scheme-employee.heading=Were you an employee while you were using the scheme?
-scheme-employee.inner.name.heading=Your employer's name
+scheme-employee.inner.name.heading=Your employer''s name
 scheme-employee.inner.paye.heading=Employer PAYE reference (optional)
 scheme-employee.inner.paye.heading.hint=This is a 3 digit tax office number, a forward slash, and a tax office employer reference, like '123/AB456. It may be called 'Employer PAYE Reference' or 'PAYE reference'. It will be on your P60.
-scheme-employee.hint=If you were a director and an employee of your own company, answer 'Yes'.
+scheme-employee.hint=If you were a director and an employee of your own company, answer ''Yes''.
 scheme-employername=Your employer’s name
 scheme-dates.employerpayeref=Employer PAYE reference (optional)
 scheme-dates.employerpayeref.hint=This is a 3 digit tax office number, a forward slash, and a tax office employer reference, like 123/AB456. It may be called ‘Employer PAYE reference’ or ‘PAYE reference’. It will be on your P60.
@@ -87,9 +94,9 @@ scheme-recipient.outer.TRUE=No
 scheme-recipient.outer.FALSE=Yes
 scheme-recipientname=Enter the name of who the loan was made to
 scheme-agreedpayment.heading=Has anyone paid, or agreed with us to pay, any tax or National Insurance owed for this scheme?
-scheme-agreedpayment.p1=If you made payments in response to an Accelerated Payments Notice (APN), do not include these.
+scheme-agreedpayment.hint=If you made payments in response to an Accelerated Payments Notice (APN), do not include these.
 scheme-settlementstatus.heading=How much tax and National Insurance have you paid, or agreed with us to pay, for this scheme?
-scheme-settlementstatus.amount.heading=Amount paid
+scheme-settlementstatus.amount.heading=Enter the total amount.
 scheme-settlementstatus.dateOfSettlement.heading=Date paid
 # scheme validation
 

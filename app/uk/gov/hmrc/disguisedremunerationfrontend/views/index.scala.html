@@ -21,7 +21,7 @@
 @tasklist(
     messages("landing.details.title") -> Right(List(
         ("About you", Some("about-you/aboutyou-completedby"), None, state.aboutYou.isDefined),
-        ("Contact details", Some("contact-details/contactdetails-address"), None, state.contactDetails.isDefined)
+        ("Your contact details", Some("contact-details/contactdetails-address"), None, state.contactDetails.isDefined)
     )),
     messages("landing.loan.arrangement.heading") -> {
         if (state.schemes.isEmpty) {
@@ -49,7 +49,7 @@
 	}.sortBy(_._1)
 
 	if (details.isEmpty) Left {
-	    Html("""You need to <a href="scheme/new/scheme-name" class="govuk-link">add a remuneration scheme</a> before you can add loan details.""")
+	    Html("""You need to <a href="scheme/new/scheme-name" class="govuk-link">add a remuneration scheme</a> before you can add loan details by tax year.""")
         } else Right(details)
                         },
                         messages("landing.checkdetails.heading") ->
