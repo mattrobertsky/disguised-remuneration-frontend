@@ -1,8 +1,6 @@
 # Add all the application routes to the app.routes file
-->         /disguised-remuneration/              app.Routes
+->         /disguised-remuneration              app.Routes
 ->         /                                    health.Routes
 ->     	   /template                            template.Routes
 
 GET        /admin/metrics                       com.kenshoo.play.metrics.MetricsController.metrics
-
-GET        /assets/*file                        @controllers.Assets.versioned(path="/public", file: Asset)
