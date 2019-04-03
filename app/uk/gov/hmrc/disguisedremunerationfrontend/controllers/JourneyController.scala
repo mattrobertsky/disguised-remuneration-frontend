@@ -97,6 +97,11 @@ class JourneyController @Inject()(
   def messages(request: Request[AnyContent]): UniformMessages[Html] =
     convertMessages(messagesApi.preferred(request)) |+| UniformMessages.bestGuess.map(HtmlFormat.escape)
 
+  def timeOut: Action[AnyContent] = Action { implicit request =>
+    implicit val msg: UniformMessages[Html] = messages(request)
+    Ok(uk.gov.hmrc.disguisedremunerationfrontend.views.html.time_out()).withNewSession
+  }
+
   def renderForm(
     key: List[String],
     errors: ErrorTree,
@@ -232,8 +237,8 @@ class JourneyController @Inject()(
       val existing = scheme.loanDetails(year)
       runWeb(
         program = LoanDetails.program[FxAppend[Stack, PlayStack]](year, existing)
-          .useForm(automatic[Unit, Money])
           .useForm(automatic[Unit, Boolean])
+          .useForm(automatic[Unit, Money])
           .useForm(automatic[Unit, WrittenOff]),
         shortLivedStore.persistence(request.internalId)
       ){data =>

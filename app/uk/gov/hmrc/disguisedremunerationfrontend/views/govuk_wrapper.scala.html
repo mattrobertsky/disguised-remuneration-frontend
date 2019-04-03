@@ -57,7 +57,11 @@
             @*ga('send', 'pageview', { 'anonymizeIp': true });*@
     @*</script>*@
 }
-@headerNavLinks = {}
+@headerNavLinks = {
+    <a href="@uk.gov.hmrc.disguisedremunerationfrontend.controllers.routes.AuthenticationController.signOut()">
+        @Messages("common.sign-out")
+    </a>
+}
 
 @insideHeader = {
     @uiLayouts.header_nav(
@@ -81,9 +85,22 @@
 @footerTop = {}
 @footerLinks = {}
 
+@betaBanner = {
+    <div class="phase-banner" style="text-align: left">
+        <p>
+            <strong class="phase-tag">@Messages("vatcheck.common.beta")</strong>
+            <span>
+                @Messages("common.alpha-info.p1")
+                <a href="@appConfig.betaFeedbackUrlAuth">@Messages("common.alpha-info.link")</a>
+                @Messages("common.alpha-info.p2")
+            </span>
+        </p>
+    </div>
+}
+
 @serviceInfo = {
     @uiLayouts.serviceInfo(
-      betaBanner = HtmlFormat.empty,
+      betaBanner = betaBanner,
       includeGridWrapper = false,
       serviceInfoContent = Some(serviceInfoContent))
 }

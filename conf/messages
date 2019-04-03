@@ -2,6 +2,11 @@
 common.back=Back
 common.save-continue=Save and continue
 common.save-back-later=Save and come back later
+common.sign-out=Sign out
+common.sign-in=Sign in
+common.alpha-info.p1=This is a new service – your 
+common.alpha-info.link=feedback
+common.alpha-info.p2= will help us to improve it.
 
 #Landing Page
 landing.heading=Send your loan charge details
@@ -123,3 +128,7 @@ hmrc-case-reference-number=HMRC case reference number
 employment-status=Employment status
 loan-recipient=Loan recipient
 tax-or-national-insurance-paid-or-agreed-to-pay=Tax or National Insurance paid or agreed to pay
+
+# time out
+time-out.title=For your security, we signed you out
+time-out.save=We have saved your answers

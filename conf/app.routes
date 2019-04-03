@@ -5,6 +5,9 @@ GET        /assets/*file            controllers.Assets.versioned(path="/public",
 GET        /                         uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.index
 
 GET        /sign-in                  uk.gov.hmrc.disguisedremunerationfrontend.controllers.AuthenticationController.signIn()
+GET        /sign-out                 uk.gov.hmrc.disguisedremunerationfrontend.controllers.AuthenticationController.signOut()
+GET        /time-in                  uk.gov.hmrc.disguisedremunerationfrontend.controllers.AuthenticationController.timeIn(referrer)
+GET        /time-out                 uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.timeOut()
 
 GET        /about-you/               uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutYou(id = "")
 GET        /about-you/:id            uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutYou(id: String)
