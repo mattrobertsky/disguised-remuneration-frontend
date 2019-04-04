@@ -16,18 +16,27 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+
 
 class AuthenticationController @Inject()(mcc: MessagesControllerComponents)
                               (implicit appConfig: AppConfig)
   extends FrontendController(mcc) with I18nSupport {
 
   def signIn = Action { implicit request =>
-    Redirect(appConfig.ggLoginUrl, Map("continue" -> Seq(appConfig.drIndexPage), "origin" -> Seq(appConfig.appName)))
+    Redirect(appConfig.ggLoginUrl, Map("continue" -> Seq(appConfig.dnumIndexPage), "origin" -> Seq(appConfig.appName)))
+  }
+
+  def signOut = Action { implicit request =>
+    Redirect(appConfig.signOutDnumUrl).withNewSession
+  }
+
+  def timeIn(referrer: String): Action[AnyContent] = Action { implicit request =>
+    Redirect(appConfig.ggLoginUrl, Map("continue" -> Seq(referrer), "origin" -> Seq(appConfig.appName)))
   }
 }

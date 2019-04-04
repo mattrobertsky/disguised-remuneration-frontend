@@ -30,7 +30,7 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, servicesConfi
   private def loadConfig(key: String) = runModeConfiguration.getString(key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
 
   private val contactHost = runModeConfiguration.getString(s"contact-frontend.host").getOrElse("")
-  private val contactFormServiceIdentifier = "MyService"
+  private val contactFormServiceIdentifier = loadConfig("appName")
 
   lazy val assetsPrefix = loadConfig(s"assets.url") + loadConfig(s"assets.version")
   lazy val analyticsToken = loadConfig(s"google-analytics.token")
@@ -47,6 +47,13 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, servicesConfi
   //TODO Check if this is right url for SCP
   private lazy val companyAuthFrontend = servicesConfig.getConfString("company-auth.url", "")
   private lazy val companyAuthSignInPath = servicesConfig.getConfString("company-auth.sign-in-path", "")
-  lazy val drIndexPage: String = loadConfig("dr-index-page-url")
+  private lazy val companyAuthSignOutPath = servicesConfig.getConfString("company-auth.sign-out-path", "")
   lazy val ggLoginUrl: String = s"$companyAuthFrontend$companyAuthSignInPath"
+
+  lazy val feedbackSurveyUrl: String = loadConfig("microservice.services.feedback-survey.url")
+  lazy val signOutDnumUrl: String = s"$companyAuthFrontend$companyAuthSignOutPath?continue=$feedbackSurveyUrl"
+  lazy val betaFeedbackUrlAuth = s"$contactHost/contact/beta-feedback?service=$contactFormServiceIdentifier"
+  lazy val betaFeedbackUrlNoAuth = s"$contactHost/contact/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
+
+  lazy val dnumIndexPage: String = loadConfig("dnum-index-page-url")
 }

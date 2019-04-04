@@ -17,8 +17,8 @@
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
 case class LoanDetails(
-  amount: Money,
   hmrcApproved: Boolean,
+  amount: Money,
   genuinelyRepaid: Money,
   writtenOff: Option[WrittenOff]
 )
@@ -30,19 +30,21 @@ import ltbs.uniform._
 object LoanDetails {
 
   type Stack = Fx3[
-    UniformAsk[Money,?],
     UniformAsk[Boolean,?],
+    UniformAsk[Money,?],
     UniformAsk[WrittenOff,?]
   ]
 
   def program[R
     : _uniformCore
-    : _uniformAsk[Money,?]
     : _uniformAsk[Boolean,?]
+    : _uniformAsk[Money,?]
     : _uniformAsk[WrittenOff,?]
   ](year: Int, default: Option[LoanDetails] = None): Eff[R, LoanDetails] = {
     val (startDate, endDate) = year.toFinancialYear
     (
+      ask[Boolean]("details-hmrc-approved")
+        .defaultOpt(default.map(_.hmrcApproved)).in[R],
       ask[Money]("details-amount")
         .defaultOpt(default.map(_.amount))
         .withCustomContentAndArgs(
@@ -50,9 +52,6 @@ object LoanDetails {
           // details-amount.heading.range and apply the arguments
           ("details-amount.heading",("details-amount.heading.range", List(startDate, endDate)))
         ).in[R],
-      ask[Boolean]("details-hmrc-approved")
-        .defaultOpt(default.map(_.hmrcApproved)).in[R],
-
       ask[Money]("details-genuinely-repaid-amount")
         .defaultOpt(default.map(_.genuinelyRepaid)).in[R] emptyUnless
         ask[Boolean]("details-genuinely-repaid")
