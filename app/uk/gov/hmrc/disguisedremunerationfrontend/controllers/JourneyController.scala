@@ -19,7 +19,6 @@ package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 import cats.implicits._
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import javax.inject.{Inject, Singleton}
-
 import ltbs.uniform._
 import ltbs.uniform.interpreters.playframework._
 import ltbs.uniform.web.InferParser._
@@ -33,6 +32,7 @@ import play.api.i18n.I18nSupport
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
 import play.twirl.api.{Html, HtmlFormat}
+import uk.gov.hmrc.auth.core.retrieve.Name
 import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
 import uk.gov.hmrc.disguisedremunerationfrontend.actions.{AuthorisedAction, AuthorisedRequest}
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
@@ -46,7 +46,6 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
 import scala.concurrent.ExecutionContext
-
 import scala.concurrent.Future
 
 sealed abstract class EmploymentStatus extends EnumEntry
@@ -93,6 +92,10 @@ class JourneyController @Inject()(
   def getState(implicit request: AuthorisedRequest[AnyContent]): Future[JourneyState] =
     journeyStateStore.getState(request.internalId)
 
+  def username(implicit  request: AuthorisedRequest[AnyContent]): String = {
+    s"${request.name.name.getOrElse("")} ${request.name.lastName.getOrElse("")}"
+  }
+
   def setState(in: JourneyState)(implicit request: AuthorisedRequest[AnyContent]): Future[Unit] =
     journeyStateStore.storeState(request.internalId, in)
 
@@ -126,7 +129,6 @@ class JourneyController @Inject()(
   override lazy val parse = super[FrontendController].parse
 
   def index: Action[AnyContent] = authorisedAction.async { implicit request =>
-
     getState.map { state =>
       implicit val msg: UniformMessages[Html] = messages(request)
       Ok(views.html.main_template(title = "Send your loan charge details")(views.html.index(state)))
@@ -326,12 +328,12 @@ class JourneyController @Inject()(
 
 
   // TODO - do we need to get the username, it isn't part of the Journey state but is displayed on the cya page
-  val usersNameFromGG = ""
+//  val usersNameFromGG = ""
 
   def blocksFromState(
     state: JourneyState
   )(
-    implicit request: Request[AnyContent]
+    implicit request: AuthorisedRequest[AnyContent]
   ): List[(Html,List[(Html,Html)])] = {
     def msg(in: String): Html = messages(request)(in)
     import HtmlFormat.escape
@@ -340,7 +342,7 @@ class JourneyController @Inject()(
         val h: (Html,List[(Html,Html)]) =
           msg("personal-details") -> List(
             msg("name") ->
-              escape(usersNameFromGG),
+              escape(username),
             msg("filling-in-form-for-self") ->
               msg(if(aboutYou.isEmpty) "TRUE" else "FALSE"),
             msg("address") ->
@@ -385,7 +387,7 @@ class JourneyController @Inject()(
     implicit val m: UniformMessages[Html] = messages(request)
     getState.map { state =>
       val contents = views.html.cya(
-        usersNameFromGG,
+        username,
         blocksFromState(state),
         confirmationForm
       )
@@ -403,7 +405,7 @@ class JourneyController @Inject()(
       confirmationForm.bindFromRequest.fold(
         formWithErrors => {
           val contents =
-            views.html.cya(usersNameFromGG, blocksFromState(state), formWithErrors)
+            views.html.cya(username, blocksFromState(state), formWithErrors)
           BadRequest(views.html.main_template(
             title = "Check your answers before sending your details"
           )(contents))
