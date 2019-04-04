@@ -57,9 +57,7 @@ class AuthorisedAction @Inject()(mcc: MessagesControllerComponents, val authConn
       case _: NoActiveSession =>
         Logger.info(s"Recover - no active session")
         Left(
-          Redirect(
-            uk.gov.hmrc.disguisedremunerationfrontend.controllers.routes.AuthenticationController
-              .signIn()))
+          Redirect(uk.gov.hmrc.disguisedremunerationfrontend.controllers.routes.AuthenticationController.signIn()))
     }
   }
 
