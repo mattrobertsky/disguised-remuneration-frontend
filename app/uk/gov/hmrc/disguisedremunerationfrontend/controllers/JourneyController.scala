@@ -19,6 +19,7 @@ package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 import cats.implicits._
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import javax.inject.{Inject, Singleton}
+
 import ltbs.uniform._
 import ltbs.uniform.interpreters.playframework._
 import ltbs.uniform.web.InferParser._
@@ -44,7 +45,8 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
+
 import scala.concurrent.Future
 
 sealed abstract class EmploymentStatus extends EnumEntry
@@ -82,7 +84,7 @@ class JourneyController @Inject()(
   journeyStateStore: JourneyStateStore,
   val authConnector: AuthConnector
 )(
-  implicit val appConfig: AppConfig
+  implicit val appConfig: AppConfig, ec: ExecutionContext
 ) extends FrontendController(mcc)
     with PlayInterpreter
     with I18nSupport
@@ -97,10 +99,10 @@ class JourneyController @Inject()(
   def messages(request: Request[AnyContent]): UniformMessages[Html] =
     convertMessages(messagesApi.preferred(request)) |+| UniformMessages.bestGuess.map(HtmlFormat.escape)
 
-  def timeOut: Action[AnyContent] = Action { implicit request =>
-    implicit val msg: UniformMessages[Html] = messages(request)
-    Ok(uk.gov.hmrc.disguisedremunerationfrontend.views.html.time_out()).withNewSession
-  }
+//  def timeOut: Action[AnyContent] = Action { implicit request =>
+//    implicit val msg: UniformMessages[Html] = messages(request)
+//    Ok(uk.gov.hmrc.disguisedremunerationfrontend.views.html.time_out()).withNewSession
+//  }
 
   def renderForm(
     key: List[String],
@@ -324,7 +326,7 @@ class JourneyController @Inject()(
 
 
   // TODO - do we need to get the username, it isn't part of the Journey state but is displayed on the cya page
-  val usersNameFromGG = "Joe Bloggs"
+  val usersNameFromGG = ""
 
   def blocksFromState(
     state: JourneyState
@@ -335,7 +337,7 @@ class JourneyController @Inject()(
     import HtmlFormat.escape
     state match {
       case JourneyState(Some(aboutYou), schemes, Some(contactDetails)) =>
-        val h: (Html,List[(Html,Html)]) = (
+        val h: (Html,List[(Html,Html)]) =
           msg("personal-details") -> List(
             msg("name") ->
               escape(usersNameFromGG),
@@ -355,7 +357,7 @@ class JourneyController @Inject()(
               }.intercalate(Html("<br />"))
             }
           )
-          )
+
 
         val t: List[(Html,List[(Html,Html)])] = schemes.map { scheme =>
           import scheme._

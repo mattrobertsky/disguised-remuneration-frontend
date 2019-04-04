@@ -7,7 +7,8 @@ GET        /                         uk.gov.hmrc.disguisedremunerationfrontend.c
 GET        /sign-in                  uk.gov.hmrc.disguisedremunerationfrontend.controllers.AuthenticationController.signIn()
 GET        /sign-out                 uk.gov.hmrc.disguisedremunerationfrontend.controllers.AuthenticationController.signOut()
 GET        /time-in                  uk.gov.hmrc.disguisedremunerationfrontend.controllers.AuthenticationController.timeIn(referrer)
-GET        /time-out                 uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.timeOut()
+# re-implement
+#GET        /time-out                 uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.timeOut()
 
 GET        /about-you/               uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutYou(id = "")
 GET        /about-you/:id            uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutYou(id: String)
