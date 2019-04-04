@@ -107,11 +107,11 @@ scheme-settlementstatus.dateOfSettlement.heading=Date paid
 
 details-amount.heading=What was the total loan amount paid from START to END?
 details-amount.heading.range=What was the total loan amount paid from {0} to {1}?
-details-hmrc-approved.heading=[Was this loan approved by HMRC?]
+details-hmrc-approved.heading=Was this loan approved by HMRC?
 details-genuinely-repaid-amount.heading=How much of the loan did you repay?
 details-genuinely-repaid.heading=Have you made any repayments for the loans received between 6 April 2011 to 5 April 2012?
-details-written-off-amount.heading=[How much of the loan was written off?]
-details-written-off.heading=[Was any of the loan written off during this period?]
+details-written-off-amount.heading=How much of the loan was written off?
+details-written-off.heading=Was any of the loan written off during this period?
 
 TRUE=Yes
 FALSE=No
