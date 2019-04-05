@@ -17,7 +17,6 @@
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
 case class LoanDetails(
-  year: Int,
   hmrcApproved: Boolean,
   amount: Money,
   genuinelyRepaid: Money,
@@ -65,4 +64,5 @@ object LoanDetails {
 
     ).mapN(LoanDetails.apply)
   }
+
 }

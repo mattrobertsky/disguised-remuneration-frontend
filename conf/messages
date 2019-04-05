@@ -8,6 +8,9 @@ common.alpha-info.p1=This is a new service – your
 common.alpha-info.link=feedback
 common.alpha-info.p2= will help us to improve it.
 
+common.title=Send your loan charge details - GOV.UK
+common.title.short=Send your loan charge details
+
 #Landing Page
 landing.heading=Send your loan charge details
 landing.info=Fill in each section as best you can. You can save your answers and come back later to finish.
@@ -133,6 +136,10 @@ tax-or-national-insurance-paid-or-agreed-to-pay=Tax or National Insurance paid o
 time-out.title=For your security, we signed you out
 time-out.save=We have saved your answers
 
+# cya
+cya.title=Check your answers before sending your details
+confirm.title=Loan charge details received
+
 # Error messages
 
 # About you
@@ -160,3 +167,4 @@ scheme-name.char-limit=Scheme name must be 100 characters or less
 scheme-name.invalid-name=Scheme name must only include letters a to z, numbers, apostrophes, ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
 scheme-dotas.char-limit=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
 scheme-dotasdotas-required=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
+
