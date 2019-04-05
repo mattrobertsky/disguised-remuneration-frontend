@@ -455,6 +455,8 @@ fieldset__legend--s {
     padding-left: 33px;
     margin-top: 0px;
     border-left: 4px solid #bfc1c3;
+    float: left;
+    width: 100%;
 }
 
 .hint {
@@ -926,8 +928,6 @@ input[type="checkbox" i] {
     padding: 10px 0;
 }
 
-    user agent stylesheet
-
 
 .warning-text__assistive {
     position: absolute !important;
@@ -947,4 +947,10 @@ strong, b {
 }
 .radios__conditional--hidden {
     display: none;
+}
+
+/* Confirmation Page */
+.govuk-box-highlight span {
+    display: block;
+    font-weight: normal;
 }
