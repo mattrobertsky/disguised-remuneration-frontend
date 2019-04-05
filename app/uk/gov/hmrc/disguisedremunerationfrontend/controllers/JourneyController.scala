@@ -19,7 +19,6 @@ package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 import cats.implicits._
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import javax.inject.{Inject, Singleton}
-
 import ltbs.uniform._
 import ltbs.uniform.interpreters.playframework._
 import ltbs.uniform.web.InferParser._
@@ -33,6 +32,7 @@ import play.api.i18n.I18nSupport
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
 import play.twirl.api.{Html, HtmlFormat}
+import uk.gov.hmrc.auth.core.retrieve.Name
 import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
 import uk.gov.hmrc.disguisedremunerationfrontend.actions.{AuthorisedAction, AuthorisedRequest}
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
@@ -46,7 +46,6 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
 import scala.concurrent.ExecutionContext
-
 import scala.concurrent.Future
 
 sealed abstract class EmploymentStatus extends EnumEntry
@@ -96,6 +95,21 @@ class JourneyController @Inject()(
   def setState(in: JourneyState)(implicit request: AuthorisedRequest[AnyContent]): Future[Unit] =
     journeyStateStore.storeState(request.internalId, in)
 
+  /**
+    * This clears both the journeyState and the shortLivedStore AKA save4later
+    * @param request
+    * @return
+    */
+  def clearState(implicit request: AuthorisedRequest[AnyContent]): Future[Unit] = {
+    shortLivedStore.clearPersistence(request.internalId)
+    journeyStateStore.clear(request.internalId)
+  }
+
+  def username(implicit  request: AuthorisedRequest[AnyContent]): String = {
+    s"${request.name.name.getOrElse("")} ${request.name.lastName.getOrElse("")}"
+  }
+
+
   def messages(request: Request[AnyContent]): UniformMessages[Html] =
     convertMessages(messagesApi.preferred(request)) |+| UniformMessages.bestGuess.map(HtmlFormat.escape)
 
@@ -126,7 +140,6 @@ class JourneyController @Inject()(
   override lazy val parse = super[FrontendController].parse
 
   def index: Action[AnyContent] = authorisedAction.async { implicit request =>
-
     getState.map { state =>
       implicit val msg: UniformMessages[Html] = messages(request)
       Ok(views.html.main_template(title = s"${msg("common.title")}")(views.html.index(state)))
@@ -296,8 +309,10 @@ class JourneyController @Inject()(
           shortLivedStore.persistence(request.internalId)
         ) {
           _ match {
-            case Left(err) => Future.successful(Ok("TODO: Some action to be taken here"))
-            //throw new RuntimeException("logout")
+            case Left(err) => {
+              clearState
+              Future.successful(Redirect(routes.AuthenticationController.signOut()))
+            }
             case Right(data: Option[AboutYou]) =>
               if(data.isEmpty) {
                 setState(
@@ -324,14 +339,10 @@ class JourneyController @Inject()(
     "confirm" -> boolean.verifying("error.cya.confirmation-needed", identity(_))
   ))
 
-
-  // TODO - do we need to get the username, it isn't part of the Journey state but is displayed on the cya page
-  val usersNameFromGG = ""
-
   def blocksFromState(
     state: JourneyState
   )(
-    implicit request: Request[AnyContent]
+    implicit request: AuthorisedRequest[AnyContent]
   ): List[(Html,List[(Html,Html)])] = {
     def msg(in: String): Html = messages(request)(in)
     import HtmlFormat.escape
@@ -340,7 +351,7 @@ class JourneyController @Inject()(
         val h: (Html,List[(Html,Html)]) =
           msg("personal-details") -> List(
             msg("name") ->
-              escape(usersNameFromGG),
+              escape(username),
             msg("filling-in-form-for-self") ->
               msg(if(aboutYou.isEmpty) "TRUE" else "FALSE"),
             msg("address") ->
@@ -385,7 +396,7 @@ class JourneyController @Inject()(
     implicit val m: UniformMessages[Html] = messages(request)
     getState.map { state =>
       val contents = views.html.cya(
-        usersNameFromGG,
+        username,
         blocksFromState(state),
         confirmationForm
       )
@@ -403,13 +414,17 @@ class JourneyController @Inject()(
       confirmationForm.bindFromRequest.fold(
         formWithErrors => {
           val contents =
-            views.html.cya(usersNameFromGG, blocksFromState(state), formWithErrors)
+            views.html.cya(username, blocksFromState(state), formWithErrors)
           BadRequest(views.html.main_template(
             title = s"${m("cya.title")} - ${m("common.title")}"
           )(contents))
         },
         postedForm => {
-          auditConnector.sendExplicitAudit("disguisedRemunerationCheck", Json.toJson(state))
+          auditConnector.sendExplicitAudit(
+            "disguisedRemunerationCheck",
+            Json.toJson(AuditWrapper(username,state))(AuditWrapper.auditWrapperFormatter)
+          )
+          clearState
           Logger.info(s"submission details sent to splunk")
           val contents = views.html.confirmation(getDateTime())
           Ok(views.html.main_template(
@@ -419,4 +434,13 @@ class JourneyController @Inject()(
       )
     }
   }
+
+  case class AuditWrapper(
+    submitterName: String,
+    data: JourneyState
+  )
+  case object AuditWrapper {
+    implicit val auditWrapperFormatter = Json.format[AuditWrapper]
+  }
+
 }

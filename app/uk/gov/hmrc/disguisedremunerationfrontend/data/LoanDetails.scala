@@ -71,16 +71,17 @@ object LoanDetails {
             ).in[R],
 
       ask[WrittenOff]("details-written-off-amount")
-        .defaultOpt(default.flatMap(_.writtenOff)).in[R] when
+        .defaultOpt(default.flatMap(_.writtenOff))
+        .withCustomContentAndArgs(
+          ("details-written-off-amount.heading",
+            ("details-written-off-amount.heading.range",
+              List(startDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")),
+                endDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")))
+            ))
+        ).in[R] when
         ask[Boolean]("details-written-off")
-        .defaultOpt(default.map(_.writtenOff.isDefined))
-            .withCustomContentAndArgs(
-            ("details-written-off.heading",
-              ("details-written-off.heading.range",
-                List(startDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")),
-                  endDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")))
-              ))
-            ).in[R]
+        .defaultOpt(default.map(_.writtenOff.isDefined)).in[R]
+
     ).mapN(LoanDetails.apply)
   }
 
