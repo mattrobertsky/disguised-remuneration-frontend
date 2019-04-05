@@ -65,7 +65,7 @@
 
 @insideHeader = {
     @uiLayouts.header_nav(
-      navTitle = Some(title),
+      navTitle = Some(Messages("common.title.short")),
       navTitleLink = None,
       showBetaLink = false,
       navLinks = Some(headerNavLinks))
@@ -123,9 +123,6 @@
       getHelpForm = getHelpForm,
       sidebar = sidebar)
 }
-<hidden>
-    @routes.Assets.versioned("stylesheets/disguised-remuneration-frontend.css")
-</hidden>
 
 @linksElement = {
     <link rel="stylesheet"  href='@routes.Assets.versioned("stylesheets/disguised-remuneration-frontend.css")'/>

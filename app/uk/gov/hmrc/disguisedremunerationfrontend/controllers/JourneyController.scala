@@ -134,7 +134,7 @@ class JourneyController @Inject()(
       breadcrumbs
     )(messagesIn, request)
     implicit val msg: UniformMessages[Html] = messages(request)
-    views.html.main_template(title = "Send your loan charge details")(content)
+    views.html.main_template(title = s"${messagesIn(key.mkString("-")+".heading")} - ${messagesIn("common.title")}")(content)
   }
 
   override lazy val parse = super[FrontendController].parse
@@ -142,7 +142,7 @@ class JourneyController @Inject()(
   def index: Action[AnyContent] = authorisedAction.async { implicit request =>
     getState.map { state =>
       implicit val msg: UniformMessages[Html] = messages(request)
-      Ok(views.html.main_template(title = "Send your loan charge details")(views.html.index(state)))
+      Ok(views.html.main_template(title = s"${msg("common.title")}")(views.html.index(state)))
     }
   }
 
@@ -404,7 +404,7 @@ class JourneyController @Inject()(
       )
       Logger.debug("completed check your answers")
       Ok(views.html.main_template(title =
-        "Check your answers before sending your details")(contents)
+        s"${m("cya.title")} - ${m("common.title")}")(contents)
       )
     }
   }
@@ -418,7 +418,7 @@ class JourneyController @Inject()(
           val contents =
             views.html.cya(username, blocksFromState(state), formWithErrors)
           BadRequest(views.html.main_template(
-            title = "Check your answers before sending your details"
+            title = s"${m("cya.title")} - ${m("common.title")}"
           )(contents))
         },
         postedForm => {
@@ -429,7 +429,9 @@ class JourneyController @Inject()(
           clearState
           Logger.info(s"submission details sent to splunk")
           val contents = views.html.confirmation(getDateTime())
-          Ok(views.html.main_template(title = "Loan charge details received")(contents))
+          Ok(views.html.main_template(
+            title = s"${m("confirm.title")} - ${m("common.title")}")
+          (contents))
         }
       )
     }

@@ -19,15 +19,15 @@
 @(key: String, errors: Any, content: Html, breadcrumbs: List[String] = Nil)(implicit messages: UniformMessages[Html], request: Request[AnyContent])
 
         @for(back <- breadcrumbs.lastOption) {
-            <a href="@back" class="govuk-back-link">@messages(List(s"back-to-$back","back"))</a>
+            <a href="@back" class="govuk link-back">@messages(List(s"back-to-$back","back"))</a>
         }
 
         @if(breadcrumbs.isEmpty){
-            <a href="/disguised-remuneration/" class="govuk-back-link">@messages(List(s"back-to-service-page","back"))</a>
+            <a href="/disguised-remuneration/" class="govuk link-back">@messages(List(s"back-to-service-page","back"))</a>
         }
 	    
         @helper.form(action = play.api.mvc.Call("post", key)) {
             @helper.CSRF.formField
             @content
-            <button type="submit" class="govuk-button">Save and Continue</button>
+            <button type="submit" class="govuk-button">@messages("common.save-continue")</button>
         }
