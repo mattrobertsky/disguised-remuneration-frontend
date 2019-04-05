@@ -365,7 +365,7 @@ class JourneyController @Inject()(
               import contactDetails.telephoneAndEmail._
               List(
                 telephone.map{x => ("telephone", x)},
-                email.map{x => ("email-address", x)}
+                email.map{x => ("Email address", x)}
               ).flatten.map{ case (l,r) =>
                 msg(l) |+| Html(": ") |+| escape(r)
               }.intercalate(Html("<br />"))
