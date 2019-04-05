@@ -33,6 +33,7 @@ import cats.implicits._
 trait ShortLivedStore {
 
   def persistence(id: String): Persistence
+  def clearPersistence(id: String): Future[Unit]
 
 }
 
@@ -68,5 +69,7 @@ class ShortLivedStoreImpl @Inject() (mongo: ReactiveMongoComponent)(implicit app
 
   }
 
+  override def clearPersistence(id: String): Future[Unit] =
+    cacheRepository.removeById(id).map(_ => (()))
 }
 

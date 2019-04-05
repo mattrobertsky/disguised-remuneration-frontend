@@ -56,5 +56,6 @@ class JourneyStateStoreImpl @Inject() (mongo: ReactiveMongoComponent)(implicit a
   override def storeState(userId: String, journeyState: JourneyState): Future[Unit] =
     cacheRepository.createOrUpdate(userId, cacheRepositoryKey, Json.toJson(journeyState)).map(_=>(()))
 
-  override def clear(userId: String): Future[Unit] = ???
+  override def clear(userId: String): Future[Unit] =
+    cacheRepository.removeById(userId).map(_=>(()))
 }
