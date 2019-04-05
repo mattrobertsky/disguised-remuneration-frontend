@@ -92,12 +92,23 @@ class JourneyController @Inject()(
   def getState(implicit request: AuthorisedRequest[AnyContent]): Future[JourneyState] =
     journeyStateStore.getState(request.internalId)
 
+  def setState(in: JourneyState)(implicit request: AuthorisedRequest[AnyContent]): Future[Unit] =
+    journeyStateStore.storeState(request.internalId, in)
+
+  /**
+    * This clears both the journeyState and the shortLivedStore AKA save4later
+    * @param request
+    * @return
+    */
+  def clearState(implicit request: AuthorisedRequest[AnyContent]): Future[Unit] = {
+    shortLivedStore.clearPersistence(request.internalId)
+    journeyStateStore.clear(request.internalId)
+  }
+
   def username(implicit  request: AuthorisedRequest[AnyContent]): String = {
     s"${request.name.name.getOrElse("")} ${request.name.lastName.getOrElse("")}"
   }
 
-  def setState(in: JourneyState)(implicit request: AuthorisedRequest[AnyContent]): Future[Unit] =
-    journeyStateStore.storeState(request.internalId, in)
 
   def messages(request: Request[AnyContent]): UniformMessages[Html] =
     convertMessages(messagesApi.preferred(request)) |+| UniformMessages.bestGuess.map(HtmlFormat.escape)
@@ -411,7 +422,11 @@ class JourneyController @Inject()(
           )(contents))
         },
         postedForm => {
-          auditConnector.sendExplicitAudit("disguisedRemunerationCheck", Json.toJson(state))
+          auditConnector.sendExplicitAudit(
+            "disguisedRemunerationCheck",
+            Json.toJson(AuditWrapper(username,state))(AuditWrapper.auditWrapperFormatter)
+          )
+          clearState
           Logger.info(s"submission details sent to splunk")
           val contents = views.html.confirmation(getDateTime())
           Ok(views.html.main_template(title = "Loan charge details received")(contents))
