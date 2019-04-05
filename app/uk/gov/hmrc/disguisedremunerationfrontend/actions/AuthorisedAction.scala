@@ -51,7 +51,7 @@ class AuthorisedAction @Inject()(mcc: MessagesControllerComponents, val authConn
           (natInsNo, sUtr) match {
             case (Some(n), _) => Left(n)
             case (None, Some(u)) => Right(u)
-            case (_) => Left("No UTR or Nino found on enrolments")
+            case (_) => Left("")
           }
         Future.successful(Right(AuthorisedRequest(internalId, ninoOrUtr, request, name)))
     } recover {

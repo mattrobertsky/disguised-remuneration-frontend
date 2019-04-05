@@ -31,13 +31,15 @@
         aria-describedby="@keyNoDots-@num-item-hint" @if(existing.exists(_ == opt)){ checked } @if(conditional.isDefinedAt(opt)) {aria-controls="ting" aria-expanded="true"}>
       <label class="label radios__label form-label" for="@keyNoDots-@num">
         @messages.decompose(s"$key.$opt")
+
       </label>
-      @messages.get(s"$key.$opt.hint").map { hint => 
+      @messages.get(s"$key.$opt.hint").map { hint =>
         <span id="@keyNoDots-@opt-item-hint" class="hint checkboxes__hint">
           @hint
         </span>
       }
     </div>
+
 
     @if(conditional.isDefinedAt(opt)) { 
       <div id="conditional-@keyNoDots-@opt" class="conditional-@keyNoDots @if(existing.exists(_ == opt)){radios__conditional} else {radios__conditional--hidden}" aria-hidden="false">

@@ -17,6 +17,5 @@
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
 case class TaxSettlement(
-  amount: Money,
-  dateOfSettlement: Date
+  amount: Money
 )

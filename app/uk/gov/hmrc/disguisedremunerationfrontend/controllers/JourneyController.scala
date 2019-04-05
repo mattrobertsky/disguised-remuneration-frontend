@@ -223,7 +223,7 @@ class JourneyController @Inject()(
           .useForm(automatic[Unit, Option[String]])
           .useForm(automatic[Unit, Option[Employer]])
           .useForm(automatic[Unit, TaxSettlement])
-          .useForm(automatic[Unit,YesNoDoNotKnow])
+          .useForm(automatic[Unit, YesNoDoNotKnow])
           .useForm(automatic[Unit, Boolean])
           .useForm(automatic[Unit, Date])
           .useForm(automatic[Unit, (Date, Date)]),
@@ -366,7 +366,7 @@ class JourneyController @Inject()(
               import contactDetails.telephoneAndEmail._
               List(
                 telephone.map{x => ("telephone", x)},
-                email.map{x => ("email-address", x)}
+                email.map{x => ("Email address", x)}
               ).flatten.map{ case (l,r) =>
                 msg(l) |+| Html(": ") |+| escape(r)
               }.intercalate(Html("<br />"))
