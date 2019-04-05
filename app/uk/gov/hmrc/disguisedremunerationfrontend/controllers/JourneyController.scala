@@ -48,6 +48,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
+import scala.collection.immutable
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
@@ -346,13 +347,13 @@ class JourneyController @Inject()(
     state: JourneyState
   )(
     implicit request: AuthorisedRequest[AnyContent]
-  ): List[(Html,List[(Html,Html)])] = {
+  ): List[(Html, (List[(Html, Html)], Option[(Html, List[String])]))] = {
     def msg(in: String): Html = messages(request)(in)
     import HtmlFormat.escape
     state match {
       case JourneyState(Some(aboutYou), schemes, Some(contactDetails)) =>
-        val h: (Html,List[(Html,Html)]) =
-          msg("personal-details") -> List(
+        val h: (Html, (List[(Html, Html)], Option[(Html, List[String])])) =
+          (msg("personal-details"),(List(
             msg("name") ->
               escape(username),
             msg("filling-in-form-for-self") ->
@@ -370,13 +371,12 @@ class JourneyController @Inject()(
                 msg(l) |+| Html(": ") |+| escape(r)
               }.intercalate(Html("<br />"))
             }
-          )
+          ), Option.empty ))
 
-
-        val t: List[(Html,List[(Html,Html)])] = schemes.map { scheme =>
+        val t: List[(Html, (List[(Html, Html)], Option[(Html, List[String])]))] = schemes.map { scheme =>
           import scheme._
           val dateFormat = DateTimeFormatter.ofPattern("d MMMM YYYY")
-          (msg("scheme") |+| escape(s" $name")) -> List(
+          ((msg("scheme") |+| escape(s" $name")), (List(
             msg("dates-you-received-loans") ->
               Html(s"${scheme.schemeStart.format(dateFormat)} to ${scheme.schemeStopped.getOrElse(LocalDate.now).format(dateFormat)}"),
             msg("disclosure-of-tax-avoidance-schemes-dotas-number") ->
@@ -390,7 +390,9 @@ class JourneyController @Inject()(
               msg(if(loanRecipient) "TRUE" else "FALSE"),
             msg("tax-or-national-insurance-paid-or-agreed-to-pay") ->
               settlement.fold(msg("none")){x => Html(f"&pound;${x.amount}%,d")}
-          )
+          ), Some(Html(s"Loan details for $name") -> scheme.loanDetails.map({case(k,v) => k.toString::v.fold(List.empty[String])(ld => ld.toListString)}).toList.flatten)
+
+          ))
         }
         h :: t
       case _ => Nil
