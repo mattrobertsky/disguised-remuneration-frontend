@@ -16,6 +16,9 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
 import cats.implicits._
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import javax.inject.{Inject, Singleton}
@@ -372,15 +375,17 @@ class JourneyController @Inject()(
 
         val t: List[(Html,List[(Html,Html)])] = schemes.map { scheme =>
           import scheme._
-          (msg("scheme") |+| escape(name)) -> List(
-            msg("dates-you-received-loans") -> Html(""),
+          val dateFormat = DateTimeFormatter.ofPattern("d MMMM YYYY")
+          (msg("scheme") |+| escape(s" $name")) -> List(
+            msg("dates-you-received-loans") ->
+              Html(s"${scheme.schemeStart.format(dateFormat)} to ${scheme.schemeStopped.getOrElse(LocalDate.now).format(dateFormat)}"),
             msg("disclosure-of-tax-avoidance-schemes-dotas-number") ->
               dotasReferenceNumber.fold(msg("not-applicable"))(escape),
             msg("hmrc-case-reference-number") ->
-              caseReferenceNumber.fold(msg("not-applicable")){escape},
+              caseReferenceNumber.fold(msg("FALSE")){escape},
             msg("employment-status") ->
-              caseReferenceNumber
-                .fold(msg("not-applicable")){_ => msg("Employed")},
+              employee
+                .fold(msg("FALSE")){_ => msg("Employed")},
             msg("loan-recipient") ->
               msg(if(loanRecipient) "TRUE" else "FALSE"),
             msg("tax-or-national-insurance-paid-or-agreed-to-pay") ->
