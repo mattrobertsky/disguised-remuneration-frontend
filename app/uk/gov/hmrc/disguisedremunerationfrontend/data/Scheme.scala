@@ -22,6 +22,7 @@ import ltbs.uniform._
 import org.atnos.eff.{Eff, Fx}
 import uk.gov.hmrc.disguisedremunerationfrontend.controllers.{EmploymentStatus, YesNoDoNotKnow}
 import cats.implicits._
+import uk.gov.hmrc.disguisedremunerationfrontend.controllers.YesNoDoNotKnow.Yes
 
 case class Scheme(
   name: String,
@@ -51,6 +52,7 @@ object Scheme {
   lazy val caseRefRegex = """^[a-zA-Z0-9-]*$"""
   lazy val payeRegex = """^\d{3}/[A-Za-z]{2}\d{3}$"""
   lazy val maxNameLength = 50
+  lazy val dotaRegex = "[0-9]{8}"
 
   val earliestDate = LocalDate.parse("1900-01-01")
 
@@ -103,18 +105,15 @@ object Scheme {
     for {
       schemeName            <-  ask[String]("scheme-name")
                                     .defaultOpt(default.map{_.name})
-                                    .validating(
-                                      "Enter the name of the scheme",
-                                      name => !name.isEmpty
-                                    )
                                   .validating(
-                                    "Scheme name must be 100 characters or less",
+                                    "char-limit",
                                     name => name.length < 100
                                   )
                                   .validating(
-                                    "Scheme name must only include letters a to z, numbers, apostrophes, ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces",
+                                    "invalid-name",
                                     name => name.matches(nameRegex)
                                   )
+      //TODO error messages aren't working, need an implicit def like enumeratumHtml
       dotasNumber           <-  ask[YesNoDoNotKnow]("scheme-dotas")
                                   .defaultOpt(default.map{_.dotasReferenceNumber match {
                                     case Some(msg)       => YesNoDoNotKnow.Yes(msg)
@@ -122,21 +121,24 @@ object Scheme {
                                     case Some("unknown") => YesNoDoNotKnow.DoNotKnow
                                   }})
                                   .validating(
-                                    "Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers",
-                                    yn  => true
+                                    "char-limit",
+                                    {
+                                      case x: Yes => x.dotas.matches(dotaRegex)
+                                      case _ => true
+                                    }
                                   )
       schemeReferenceNumber <-  ask[Option[String]]("scheme-refnumber")
                                   .defaultOpt(default.map{_.caseReferenceNumber})
                                   .validating(
                                     "HMRC case reference number must be 10 characters or less",
-                                    _ match {
+                                    {
                                       case Some(ref) => ref.length() <= 10
                                       case _ => true
                                     }
                                   )
                                   .validating(
                                     "HMRC case reference number must only include letters a to z, numbers and hyphens",
-                                    _ match {
+                                    {
                                       case Some(ref) => ref.matches(caseRefRegex)
                                       case _ => true
                                     }

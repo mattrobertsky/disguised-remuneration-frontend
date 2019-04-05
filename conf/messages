@@ -60,7 +60,7 @@ contactdetails-telehoneemail.email.heading=Email address (optional)
 
 #Scheme
 scheme-name.heading=Enter a name for this scheme
-scheme-name.hint=If you do not know the scheme's name, you can enter any name here.
+scheme-name.hint=If you do not know the scheme’s name, you can enter any name here.
 scheme-dotas.heading=Do you have a Disclosure of Tax Avoidance Schemes (DOTAS) number for this scheme?
 scheme-dotas.Yes.dotas.heading=Enter the DOTAS number
 scheme-dotas.Yes.dotas.hint=For example, 12345678
@@ -86,10 +86,10 @@ scheme-dates.start=Start date
 scheme-dates.end=End date
 scheme-dates.hint=For example, 31 3 2015
 scheme-employee.heading=Were you an employee while you were using the scheme?
-scheme-employee.inner.name.heading=Your employer''s name
+scheme-employee.inner.name.heading=Your employer’s name
 scheme-employee.inner.paye.heading=Employer PAYE reference (optional)
 scheme-employee.inner.paye.heading.hint=This is a 3 digit tax office number, a forward slash, and a tax office employer reference, like '123/AB456. It may be called 'Employer PAYE Reference' or 'PAYE reference'. It will be on your P60.
-scheme-employee.hint=If you were a director and an employee of your own company, answer ''Yes''.
+scheme-employee.hint=If you were a director and an employee of your own company, answer ‘Yes’.
 scheme-employername=Your employer’s name
 scheme-dates.employerpayeref=Employer PAYE reference (optional)
 scheme-dates.employerpayeref.hint=This is a 3 digit tax office number, a forward slash, and a tax office employer reference, like 123/AB456. It may be called ‘Employer PAYE reference’ or ‘PAYE reference’. It will be on your P60.
@@ -107,17 +107,17 @@ scheme-settlementstatus.dateOfSettlement.heading=Date paid
 
 details-amount.heading=What was the total loan amount paid from START to END?
 details-amount.heading.range=What was the total loan amount paid from {0} to {1}?
-details-hmrc-approved.heading=Was this loan approved by HMRC?
+details-hmrc-approved.heading=Is this loan an approved fixed-term loan MAKE ME INTO AND ENUM
 details-genuinely-repaid-amount.heading=How much of the loan did you repay?
-details-genuinely-repaid.heading=Have you made any repayments for the loans received between 6 April 2011 to 5 April 2012?
+details-genuinely-repaid.heading=Have you made any repayments for the loans received between 6 April 2011 to 5 April 2012 MAKE ME A DYNAMIC DATE?
 details-written-off-amount.heading=How much of the loan was written off?
-details-written-off.heading=Was any of the loan written off during this period?
+details-written-off.heading=Was any of Has the lender written off any of the loan made from START DATE to END DATE?
 
 TRUE=Yes
 FALSE=No
 back=Back
 
-personal-details=Personal Details
+personal-details=Personal details
 name=Name
 filling-in-form-for-self=Filling in form for self
 address=Address
@@ -132,3 +132,31 @@ tax-or-national-insurance-paid-or-agreed-to-pay=Tax or National Insurance paid o
 # time out
 time-out.title=For your security, we signed you out
 time-out.save=We have saved your answers
+
+# Error messages
+
+# About you
+there.is.a.problem=There is a problem
+aboutyou-completedby.required=Select yes if you are filling in this form for yourself
+aboutyou-personalive.required=Select yes if the person you are acting for is alive
+aboutyou-employmentstatus.required=Select if the deceased person was employed, self-employed, or both employed \
+  and self-employed
+aboutyou-deceasedbefore.required=Select yes if the deceased person died on or before 5 April 2019
+aboutyou-identity.required=BLAHHHHHH
+aboutyou-identitya.required=Enter the person's National Insurance number
+aboutyou-identityb.required=Enter the person's Self Assessment Unique Taxpayer Reference (UTR)
+aboutyou-identity.nino-format=Enter the person's National Insurance number in the correct format
+aboutyou-identity.utr-format=Enter the person's Self Assessment Unique Taxpayer Reference (UTR) in the correct format
+aboutyou-confirmation.required=Enter the full name of the person you are acting for
+
+# contact details
+contactdetails-addressline1.required=Enter the building or street of your address
+contactdetails-addresstown.required=Enter the town or city of your address
+contactdetails-addresspostcode.required=Enter the postcode of your address
+
+#scheme
+scheme-name.required=Enter the name of the scheme
+scheme-name.char-limit=Scheme name must be 100 characters or less
+scheme-name.invalid-name=Scheme name must only include letters a to z, numbers, apostrophes, ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
+scheme-dotas.char-limit=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
+scheme-dotasdotas-required=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers

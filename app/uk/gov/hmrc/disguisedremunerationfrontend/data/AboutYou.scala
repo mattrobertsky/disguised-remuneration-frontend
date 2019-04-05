@@ -80,14 +80,14 @@ object AboutYou {
           id <- ask[Either[Nino,Utr]]("aboutyou-identity")
                   .defaultOpt(default.flatMap(_.flatMap(_.identification)))
                   .validating(
-                    "Enter the person's National Insurance number in the correct format",
+                    "nino-format",
                     _ match {
                       case Left(nino) => nino.matches(regExNino)
                       case _ => true
                     }
                   )
                   .validating(
-                    "Enter the person's Self Assessment Unique Taxpayer Reference (UTR)",
+                    "utr-format",
                     _ match {
                       case Left(nino) => true
                       case Right(utr) => utr.matches(regExUTR)
