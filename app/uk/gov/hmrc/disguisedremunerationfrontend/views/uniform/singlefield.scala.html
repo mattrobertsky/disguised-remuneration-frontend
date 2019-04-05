@@ -28,11 +28,6 @@
         @messages(s"$key.heading")
       </h1>
     </legend>
-    @messages.get(s"$key.hint").map { hint => 
-      <span id="@key-hint" class="hint">
-        @hint
-      </span>
-    }
     @content
   </fieldset>
 </div>
