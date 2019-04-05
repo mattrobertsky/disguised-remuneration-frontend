@@ -33,7 +33,6 @@
             id="@{(key :: path).mkString(".")}"
             data-focuses="@{(key :: path).mkString(".")}">
             @messages.decompose((key :: path).mkString("") ++ "." ++ errormsg)
-            <p>@(key :: path). @errormsg</p>
         </a>
       </li>
       }
