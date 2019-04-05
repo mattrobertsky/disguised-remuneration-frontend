@@ -419,4 +419,13 @@ class JourneyController @Inject()(
       )
     }
   }
+
+  case class AuditWrapper(
+    submitterName: String,
+    data: JourneyState
+  )
+  case object AuditWrapper {
+    implicit val auditWrapperFormatter = Json.format[AuditWrapper]
+  }
+
 }
