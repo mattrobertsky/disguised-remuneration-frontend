@@ -667,6 +667,7 @@ li {
 .date-input__item {
     display: inline-block;
     margin-bottom: 0;
+    margin-right: 15px;
 }
 
 .date-input__label {
@@ -688,7 +689,7 @@ li {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-weight: 400;
-    font-size: 16px;
+    font-size: 19px;
     line-height: 1.25;
     box-sizing: border-box;
     width: 100%;
