@@ -309,8 +309,10 @@ class JourneyController @Inject()(
           shortLivedStore.persistence(request.internalId)
         ) {
           _ match {
-            case Left(err) => Future.successful(Ok("TODO: Some action to be taken here"))
-            //throw new RuntimeException("logout")
+            case Left(err) => {
+              clearState
+              Future.successful(Redirect(routes.AuthenticationController.signOut()))
+            }
             case Right(data: Option[AboutYou]) =>
               if(data.isEmpty) {
                 setState(
