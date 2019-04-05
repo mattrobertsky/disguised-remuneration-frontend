@@ -206,7 +206,7 @@ class JourneyController @Inject()(
           .useForm(automatic[Unit, Option[String]])
           .useForm(automatic[Unit, Option[Employer]])
           .useForm(automatic[Unit, TaxSettlement])
-          .useForm(automatic[Unit,YesNoDoNotKnow])
+          .useForm(automatic[Unit, YesNoDoNotKnow])
           .useForm(automatic[Unit, Boolean])
           .useForm(automatic[Unit, Date])
           .useForm(automatic[Unit, (Date, Date)]),

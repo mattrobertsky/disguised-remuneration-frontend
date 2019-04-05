@@ -57,8 +57,10 @@ object Scheme {
   val earliestDate = LocalDate.parse("1900-01-01")
 
   def isInRange(d: LocalDate) = d.isAfter(earliestDate) && d.isBefore(LocalDate.now())
+  def isAfterEarliestDate(d: LocalDate) = d.isAfter(earliestDate)
 
   def startBeforeEnd(dates: (LocalDate, LocalDate)): Boolean = (dates._1, dates._2) match {
+      //TODO Error throws on same day
     case (start, end) if (isInRange(start) && isInRange(end) && start.isBefore(end)) => true
     case _ => false
   }
@@ -92,12 +94,12 @@ object Scheme {
         case true => {
           ask[Date]("scheme-stillusingyes")
           .defaultOpt(default.map{_.schemeStart})
-          .validating(s"The date you started using the scheme must after $earliestDate", isInRange(_))
-          .validating("The date you started using the scheme must be in the past", _.isBefore(LocalDate.now()))
+          .validating(s"date-far-past", isAfterEarliestDate(_))
+          .validating("date-in-future", _.isBefore(LocalDate.now()))
             .in[R] }.map{(_, none[Date])}
         case false => ask[(Date, Date)]("scheme-stillusingno")
           .defaultOpt(default.map{x => (x.schemeStart, x.schemeStopped.get)})
-          .validating("The date you stopped using the scheme must be the same as or after the date you started using the scheme", startBeforeEnd _)
+          .validating("scheme-stillusingno.same-or-after", startBeforeEnd _)
           .in[R].map{ case (k,v) => (k,v.some) }
       }
 
@@ -131,14 +133,14 @@ object Scheme {
                                   .defaultOpt(default.map{_.caseReferenceNumber})
                                   .validating(
                                     "HMRC case reference number must be 10 characters or less",
-                                    {
+                                    _ match {
                                       case Some(ref) => ref.length() <= 10
                                       case _ => true
                                     }
                                   )
                                   .validating(
                                     "HMRC case reference number must only include letters a to z, numbers and hyphens",
-                                    {
+                                    _ match {
                                       case Some(ref) => ref.matches(caseRefRegex)
                                       case _ => true
                                     }

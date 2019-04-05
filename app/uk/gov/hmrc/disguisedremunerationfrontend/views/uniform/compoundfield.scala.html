@@ -28,6 +28,7 @@
   @errors.atPath(path.drop(1):_*).filter(_ != "").map { error =>
     <span id="@key-error" class="error-message">
       @messages(List(s"$key.$error", error))
+        <br>@key. @error dwdwwd
     </span>
   }
   @messages.get(s"$key.hint").map { hint =>

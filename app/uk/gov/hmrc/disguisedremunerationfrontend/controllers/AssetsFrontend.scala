@@ -102,8 +102,9 @@ object AssetsFrontend extends InferForm {
   }
 
   implicit def optionHtml[A](implicit inner: HtmlField[A]) = new HtmlField[Option[A]] {
-    def render(key: String, values: Input, errors: ErrorTree, messages: UniformMessages[Html]) = 
+    def render(key: String, values: Input, errors: ErrorTree, messages: UniformMessages[Html]) = {
       html.option(key, values, errors, messages, inner.render _)
+    }
   }
 
   implicit def enumeratumHtml[A <: EnumEntry](implicit enum: Enum[A]) = new HtmlField[A] {
