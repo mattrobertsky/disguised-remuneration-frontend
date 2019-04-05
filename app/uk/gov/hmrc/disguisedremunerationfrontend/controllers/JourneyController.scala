@@ -337,10 +337,6 @@ class JourneyController @Inject()(
     "confirm" -> boolean.verifying("error.cya.confirmation-needed", identity(_))
   ))
 
-
-  // TODO - do we need to get the username, it isn't part of the Journey state but is displayed on the cya page
-//  val usersNameFromGG = ""
-
   def blocksFromState(
     state: JourneyState
   )(
