@@ -81,14 +81,14 @@ object AboutYou {
                   .defaultOpt(default.flatMap(_.flatMap(_.identification)))
                   .validating(
                     "nino-format",
-                    _ match {
+                    {
                       case Left(nino) => nino.matches(regExNino)
                       case _ => true
                     }
                   )
                   .validating(
                     "utr-format",
-                    _ match {
+                    {
                       case Left(nino) => true
                       case Right(utr) => utr.matches(regExUTR)
                     }

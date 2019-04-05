@@ -54,14 +54,14 @@ object Scheme {
   lazy val maxNameLength = 50
   lazy val dotaRegex = "[0-9]{8}"
 
-  val earliestDate = LocalDate.parse("1900-01-01")
+  val earliestDate: Date = LocalDate.parse("1900-01-01")
 
-  def isInRange(d: LocalDate) = d.isAfter(earliestDate) && d.isBefore(LocalDate.now())
-  def isAfterEarliestDate(d: LocalDate) = d.isAfter(earliestDate)
+  def isInRange(d: LocalDate): Boolean = d.isAfter(earliestDate) && d.isBefore(LocalDate.now())
+  def isAfterEarliestDate(d: LocalDate): Boolean = d.isAfter(earliestDate)
 
   def startBeforeEnd(dates: (LocalDate, LocalDate)): Boolean = (dates._1, dates._2) match {
       //TODO Error throws on same day
-    case (start, end) if (isInRange(start) && isInRange(end) && start.isBefore(end)) => true
+    case (start, end) if isInRange(start) && isInRange(end) && start.isBefore(end) => true
     case _ => false
   }
 
@@ -133,14 +133,14 @@ object Scheme {
                                   .defaultOpt(default.map{_.caseReferenceNumber})
                                   .validating(
                                     "HMRC case reference number must be 10 characters or less",
-                                    _ match {
+                                    {
                                       case Some(ref) => ref.length() <= 10
                                       case _ => true
                                     }
                                   )
                                   .validating(
                                     "HMRC case reference number must only include letters a to z, numbers and hyphens",
-                                    _ match {
+                                    {
                                       case Some(ref) => ref.matches(caseRefRegex)
                                       case _ => true
                                     }
@@ -149,54 +149,33 @@ object Scheme {
       dateRange             <-  getSchemeDateRange
       employer              <-  ask[Option[Employer]]("scheme-employee")
                                     .validating(
-                                      "Enter the employer's name",
-                                      _ match {
-                                        case Some(employer) => !employer.name.isEmpty
-                                        case _ => true
-                                      }
-                                    )
-                                    .validating(
-                                      "Employer's name must be 50 characters or less",
-                                      _ match {
+                                      "char-limit",
+                                      {
                                         case Some(employer) => employer.name.length <= maxNameLength
                                         case _ => true
                                       }
                                     )
                                     .validating(
-                                      "Employer's name must only include letters a to z, numbers, apostrophes, ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces",
-                                      _ match {
-                                        case Some(employer) =>  employer.name.matches(nameRegex)
-                                        case _ => true
-                                      }
-                                    )
-                                    .validating(
-                                      "Enter the employer PAYE reference in the correct format",
-                                      _ match {
-                                        case Some(employer) =>  employer.paye.matches(payeRegex)
+                                      "name-format",
+                                      {
+                                        case Some(employer) => employer.name.matches(nameRegex)
                                         case _ => true
                                       }
                                     )
                                     .in[R]
       recipient             <-  ask[Option[String]]("scheme-recipient")
                                 .defaultOpt(default.map{_.loanRecipientName})
-				.validating(
-                                    "Enter the name of who the loan was made out to",
-                                    _ match {
-                                      case Some(name) =>  !name.isEmpty()
+                                  .validating(
+                                    "char-limit",
+                                    {
+                                      case Some(name) => name.length <= 50
                                       case _ => true
                                     }
                                   )
                                   .validating(
-                                    "Name of who the loan was made out to must be 50 characters or less",
-                                    _ match {
-                                      case Some(name) =>  name.length <= 50
-                                      case _ => true
-                                    }
-                                  )
-                                  .validating(
-                                    "Name of who the loan was made out to must only include letters a to z, numbers, apostrophes, ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces",
-                                    _ match {
-                                      case Some(name) =>  name.matches(nameRegex)
+                                    "name-format",
+                                    {
+                                      case Some(name) => name.matches(nameRegex)
                                       case _ => true
                                     }
                                   )
@@ -205,12 +184,8 @@ object Scheme {
                                   .defaultOpt(default.map{_.settlement.isDefined}).in[R]
 
       settlementStatus      <-  ask[TaxSettlement]("scheme-settlementstatus")
-                                  .validating(
-                                     "Enter how much tax and National Insurance you have paid, or agreed with us to pay",
-                                     settlement => settlement.amount > 0
-                                  )
-				  .defaultOpt(default.flatMap{_.settlement})
-                                  .in[R] when taxNIPaid
+                                  .defaultOpt(default.flatMap{_.settlement})
+                                                          .in[R] when taxNIPaid
     } yield {
       import YesNoDoNotKnow._
       val dotas = dotasNumber match {

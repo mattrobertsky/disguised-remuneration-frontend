@@ -73,7 +73,7 @@ scheme-dotas.DoNotKnow=Do not know
 #scheme-dotas.true.hint=For example, 12345678
 scheme-refnumber.heading=Do you have an HMRC case reference number for this scheme?
 scheme-refnumber.inner.string.heading=Enter the HMRC case reference number
-scheme-refnumber.inner.string.hint=A reference number 'usually' begins CFS or CFSS followed by a sequential number, \
+scheme-refnumber.inner.string.hint=A reference number ‘usually’ begins CFS or CFSS followed by a sequential number, \
   which could range from CFS1 or CSF100000.
 
 scheme-stillusing.heading=Are you still receiving loan payments through the scheme?
@@ -100,6 +100,7 @@ scheme-dates.employerpayeref=Employer PAYE reference (optional)
 scheme-dates.employerpayeref.hint=This is a 3 digit tax office number, a forward slash, and a tax office employer reference, like 123/AB456. It may be called ‘Employer PAYE reference’ or ‘PAYE reference’. It will be on your P60.
 scheme-fixedterm.heading=Is this loan an approved fixed-term loan?
 scheme-recipient.heading=Was the loan made to you?
+scheme-recipient.inner.string.heading=Enter the name of who the loan was made to 
 scheme-recipient.outer.TRUE=No
 scheme-recipient.outer.FALSE=Yes
 scheme-recipientname=Enter the name of who the loan was made to
@@ -112,11 +113,18 @@ scheme-settlementstatus.dateOfSettlement.heading=Date paid
 
 details-amount.heading=What was the total loan amount paid from START to END?
 details-amount.heading.range=What was the total loan amount paid from {0} to {1}?
-details-hmrc-approved.heading=Is this loan an approved fixed-term loan MAKE ME INTO AND ENUM
+
+details-hmrc-approved.heading=Is this loan an approved fixed-term loan?
 details-genuinely-repaid-amount.heading=How much of the loan did you repay?
-details-genuinely-repaid.heading=Have you made any repayments for the loans received between 6 April 2011 to 5 April 2012 MAKE ME A DYNAMIC DATE?
+details-genuinely-repaid-amount.intro=Do not include any types of repayment that we disregard. \
+  <a href='https://www.gov.uk/guidance/report-and-account-for-your-disguised-remuneration-loan-charge' target='_blank'>\
+  Find out which repayments are disregarded \
+  (opens in a new window or tab).</a>
+details-genuinely-repaid.heading=Have you made any repayments for the loans received between START to END?
+details-genuinely-repaid.heading.range=Have you made any repayments for the loans received between {0} to {1}?
 details-written-off-amount.heading=How much of the loan was written off?
-details-written-off.heading=Was any of Has the lender written off any of the loan made from START DATE to END DATE?
+details-written-off.heading=Has the lender written off any of the loan made from START DATE to END DATE?
+details-written-off.heading.range=Has the lender written off any of the loan made from {0} to {1}
 
 TRUE=Yes
 FALSE=No
@@ -151,11 +159,13 @@ aboutyou-personalive.required=Select yes if the person you are acting for is ali
 aboutyou-employmentstatus.required=Select if the deceased person was employed, self-employed, or both employed \
   and self-employed
 aboutyou-deceasedbefore.required=Select yes if the deceased person died on or before 5 April 2019
-aboutyou-identity.required=BLAHHHHHH
-aboutyou-identitya.required=Enter the person's National Insurance number
-aboutyou-identityb.required=Enter the person's Self Assessment Unique Taxpayer Reference (UTR)
-aboutyou-identity.nino-format=Enter the person's National Insurance number in the correct format
-aboutyou-identity.utr-format=Enter the person's Self Assessment Unique Taxpayer Reference (UTR) in the correct format
+#aboutyou-identity.required=BLAHHHHHH
+aboutyou-identitya.required=Enter the person’s National Insurance number
+aboutyou-identity.Left.a.required=Enter the person’s National Insurance number
+aboutyou-identityb.required=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR)
+aboutyou-identity.Right.b.required=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR)
+aboutyou-identity.nino-format=Enter the person’s National Insurance number in the correct format
+aboutyou-identity.utr-format=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR) in the correct format
 aboutyou-confirmation.required=Enter the full name of the person you are acting for
 
 # contact details
@@ -190,5 +200,34 @@ scheme-stillusingno_2.same-or-after=The date you stopped using the scheme must b
 scheme-stillusingno.same-or-after=The date you stopped using the scheme must be the same as or after the date you started using the scheme
 
 scheme-employeeouter.required=Select yes if you were an employee while you were using the scheme
-scheme-employeenameinner.required=Enter the employer's name
+scheme-employeenameinner.required=Enter the employer’s name
 scheme-employeepayeinner.required=Enter the PAYE reference
+scheme-employeeinner.char-limit=Employer's name must be 50 characters or less
+scheme-employee.char-limit=Employer's name must be 50 characters or less
+scheme-employee.name-format=Employer's name must only include letters a to z, numbers, apostrophes, \
+  ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
+scheme-recipientouter.required=Select yes if the loan was made to you
+scheme-recipientinner.required=Enter the name of who the load was made out to
+scheme-recipient.char-limit=Name of who the loan was made out to must be 50 characters or less
+scheme-recipient.name-format=Name of who the loan was made out to must only include letters a to z, numbers, \
+  apostrophes, ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
+scheme-agreedpayment.required=Select yes if you have paid, or agreed with us to pay, any tax or National Insurance \
+  owed for this scheme
+scheme-settlementstatusyeardateOfSettlement.required=Enter how much tax and National Insurance you have paid, \
+  or agreed with us to pay
+scheme-settlementstatusamount.nonnumericformat=Total loan amount must be an amount of money, like 123.45 or 150
+
+# loan details
+details-hmrc-approved.required=Select yes if the loan was an approved fixed-term loan
+details-amount.required=Enter the the total loan amount paid
+details-amount.nonnumericformat=Amount you have repaid must be an amount of money, like 123.45 or 150
+details-genuinely-repaid.required=Select yes if you have you made any repayments
+details-genuinely-repaid-amount.required=Enter how much of the loan you have repaid in actual repayments
+details-genuinely-repaid-amount.nonnumericformat=Amount you have repaid must be an amount of money, like 123.45 or 150
+details-written-off.required=Select yes if the lender has written off any of the loan
+details-written-off-amounttaxPaid.required=Enter the amount that the lender has written off of the loan
+details-written-off-amounttaxPaid.nonnumericformat=Amount of tax or National Insurance paid on the written-off loan \
+  must be an amount of money, like 123.45 or 150
+details-written-off-amountamount.required=Enter the amount of tax or National Insurance paid on the written-off loan
+details-written-off-amountamount.nonnumericformat=Amount of tax or National Insurance paid on the written-off loan\
+   must be an amount of money, like 123.45 or 150

@@ -40,7 +40,7 @@ class SchemeSpec  extends WordSpec with Matchers {
 
   val date: LocalDate = java.time.LocalDate.now.minusDays(1) // TODO validation message is wrong here, make now to see
   val employee = Employer("bob", "123/ab123")
-  val taxSettlement = TaxSettlement(100, date)
+  val taxSettlement = TaxSettlement(100)
   val scheme = Scheme("a", "b".some, "c".some, Scheme.earliestDate, date.some, employee.some, loanRecipient = true, "d".some, taxSettlement.some)
   val yesNoList: List[YesNoDoNotKnow] = List(Yes("y"), No, DoNotKnow)
 
