@@ -42,7 +42,7 @@
     form again.
 </p>
 
-@for((blockTitle, (items, foo)) <- blocks) {
+@for((blockTitle, (items, loanDetails)) <- blocks) {
     <h2 class="govuk-heading-m">@blockTitle</h2>
 
     <dl class="app-check-your-answers app-check-your-answers--short">
@@ -54,7 +54,7 @@
         }
     </dl>
 
-    @foo.map { f =>
+    @loanDetails.map { f =>
         <h3 class="govuk-heading-s">@f._1</h3>
         <table class="govuk-table loans-table">
             <caption class="govuk-table__caption"></caption>
