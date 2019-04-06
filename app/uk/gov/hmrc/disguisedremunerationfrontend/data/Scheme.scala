@@ -24,8 +24,6 @@ import uk.gov.hmrc.disguisedremunerationfrontend.controllers.{EmploymentStatus, 
 import cats.implicits._
 import uk.gov.hmrc.disguisedremunerationfrontend.controllers.YesNoDoNotKnow.Yes
 
-import scala.util.Try
-
 case class Scheme(
   name: String,
   dotasReferenceNumber: Option[String],
