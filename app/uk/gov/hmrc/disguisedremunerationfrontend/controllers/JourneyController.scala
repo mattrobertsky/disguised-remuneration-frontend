@@ -389,7 +389,7 @@ class JourneyController @Inject()(
             msg("loan-recipient") ->
               msg(if(loanRecipient) "TRUE" else "FALSE"),
             msg("tax-or-national-insurance-paid-or-agreed-to-pay") ->
-              settlement.fold(msg("none")){x => Html(f"&pound;${x.amount}%,d")}
+              settlement.fold(msg("none")){x => Html(f"&pound;${x.amount.toInt}%,d")}
           ), Some(Html(s"Loan details for $name") -> scheme.loanDetails.map({case(k,v) => k.toString::v.fold(List.empty[String])(ld => ld.toListString)}).toList.flatten)
 
           ))
