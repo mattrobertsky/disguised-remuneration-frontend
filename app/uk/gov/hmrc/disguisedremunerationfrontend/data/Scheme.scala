@@ -53,6 +53,7 @@ object Scheme {
   lazy val payeRegex = """^\d{3}/[A-Za-z]{2}\d{3}$"""
   lazy val maxNameLength = 50
   lazy val dotaRegex = "[0-9]{8}"
+  lazy val yearRegex = "[0-9]{4}"
 
   val earliestDate: Date = LocalDate.parse("1900-01-01")
 
@@ -94,11 +95,20 @@ object Scheme {
         case true => {
           ask[Date]("scheme-stillusingyes")
           .defaultOpt(default.map{_.schemeStart})
+              .validating("year-incorrect", {case x => x.getYear.toString.matches(yearRegex)})
           .validating(s"date-far-past", isAfterEarliestDate(_))
           .validating("date-in-future", _.isBefore(LocalDate.now()))
             .in[R] }.map{(_, none[Date])}
         case false => ask[(Date, Date)]("scheme-stillusingno")
           .defaultOpt(default.map{x => (x.schemeStart, x.schemeStopped.get)})
+          .validating(
+            "year-incorrect",
+            {
+              case x => x._1.getYear.toString.matches(yearRegex)
+              case x => x._2.getYear.toString.matches(yearRegex)
+              case _ => true
+            }
+          )
           .validating("scheme-stillusingno.same-or-after", startBeforeEnd _)
           .in[R].map{ case (k,v) => (k,v.some) }
       }
