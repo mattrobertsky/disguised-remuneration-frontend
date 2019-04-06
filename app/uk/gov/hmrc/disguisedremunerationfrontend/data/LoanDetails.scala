@@ -22,7 +22,12 @@ case class LoanDetails(
   amount: Money,
   genuinelyRepaid: Money,
   writtenOff: Option[WrittenOff]
-)
+) {
+  // TODO move this to a pimp
+  def toListString = {
+    List(amount.toString, genuinelyRepaid.toString, writtenOff.fold("")(wo=>wo.amount.toString), writtenOff.fold("")(wo=>wo.taxPaid.toString))
+  }
+}
 
 import java.time.format.DateTimeFormatter
 
@@ -33,16 +38,16 @@ import ltbs.uniform._
 object LoanDetails {
 
   type Stack = Fx3[
-    UniformAsk[Boolean,?],
-    UniformAsk[Money,?],
-    UniformAsk[WrittenOff,?]
-  ]
+    UniformAsk[Boolean, ?],
+    UniformAsk[Money, ?],
+    UniformAsk[WrittenOff, ?]
+    ]
 
   def program[R
-    : _uniformCore
-    : _uniformAsk[Boolean,?]
-    : _uniformAsk[Money,?]
-    : _uniformAsk[WrittenOff,?]
+  : _uniformCore
+  : _uniformAsk[Boolean, ?]
+  : _uniformAsk[Money, ?]
+  : _uniformAsk[WrittenOff, ?]
   ](year: Int, default: Option[LoanDetails] = None): Eff[R, LoanDetails] = {
     val (startDate, endDate) = year.toFinancialYear
     for {
@@ -82,5 +87,5 @@ object LoanDetails {
       LoanDetails(year, approved, amount, repaid, writtenOff)
     }
   }
-
 }
+
