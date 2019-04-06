@@ -224,18 +224,36 @@ scheme-agreedpayment.required=Select yes if you have paid, or agreed with us to 
 scheme-settlementstatusyeardateOfSettlement.required=Enter how much tax and National Insurance you have paid, \
   or agreed with us to pay
 scheme-settlementstatusamount.nonnumericformat=Total loan amount must be an amount of money, like 123.45 or 150
+scheme-settlementstatusamount.required =Total loan amount must be an amount of money, like 123.45 or 150
+scheme-settlementstatus.amount-format=Total loan amount must be an amount of money, like 123.45 or 150
+scheme-settlementstatus.amount.amount-format=Total loan amount must be an amount of money, like 123.45 or 150
 
 # loan details
 details-hmrc-approved.required=Select yes if the loan was an approved fixed-term loan
 details-amount.required=Enter the the total loan amount paid
 details-amount.nonnumericformat=Amount you have repaid must be an amount of money, like 123.45 or 150
+details-amount.format=Total loan amount must be an amount of money, like 123.45 or 150
 details-genuinely-repaid.required=Select yes if you have you made any repayments
 details-genuinely-repaid-amount.required=Enter how much of the loan you have repaid in actual repayments
 details-genuinely-repaid-amount.nonnumericformat=Amount you have repaid must be an amount of money, like 123.45 or 150
+details-genuinely-repaid-amount.format=Amount you have repaid must be an amount of money, like 123.45 or 150
 details-written-off.required=Select yes if the lender has written off any of the loan
-details-written-off-amounttaxPaid.required=Enter the amount that the lender has written off of the loan
+details-written-off-amounttaxPaid.required=Enter the amount of tax or National Insurance paid on the written-off loan
 details-written-off-amounttaxPaid.nonnumericformat=Amount of tax or National Insurance paid on the written-off loan \
   must be an amount of money, like 123.45 or 150
-details-written-off-amountamount.required=Enter the amount of tax or National Insurance paid on the written-off loan
-details-written-off-amountamount.nonnumericformat=Amount of tax or National Insurance paid on the written-off loan\
-   must be an amount of money, like 123.45 or 150
+details-written-off-amountamount.required=Enter the amount that the lender has written off of the loan
+details-written-off-amountamount.nonnumericformat=Amount of loan written off must be an amount of money, \
+  like 123.45 or 150
+
+
+details-written-off-amount.amount-format=Amount of loan written off must be an amount of money, \
+  like 123.45 or 150
+details-written-off-amount.amount.amount-format=Amount of loan written off must be an amount of money, \
+  like 123.45 or 150
+details-written-off-amount.taxPaid.amount-format=
+
+details-written-off-amount.tax-format=Amount of tax or National Insurance paid on the written-off loan \
+  must be an amount of money, like 123.45 or 150
+details-written-off-amount.amount.tax-format=
+details-written-off-amount.taxPaid.tax-format=Amount of tax or National Insurance paid on the written-off loan \
+  must be an amount of money, like 123.45 or 150

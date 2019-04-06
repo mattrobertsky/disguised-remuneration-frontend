@@ -23,7 +23,7 @@ package object data {
   type Nino = String
   type Utr = String
   type Paye = String
-  type Money = Int
+  type Money = String
   type Date = java.time.LocalDate
   type Year = Int
   type EndJourney = String

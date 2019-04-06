@@ -34,6 +34,7 @@ import java.time.format.DateTimeFormatter
 import cats.implicits._
 import org.atnos.eff._
 import ltbs.uniform._
+import uk.gov.hmrc.disguisedremunerationfrontend.data.Scheme.MoneyRegex
 
 object LoanDetails {
 
@@ -54,6 +55,10 @@ object LoanDetails {
       approved <- ask[Boolean]("details-hmrc-approved").defaultOpt(default.map(_.hmrcApproved)).in[R]
       amount <- ask[Money]("details-amount")
         .defaultOpt(default.map(_.amount))
+        .validating(
+          "format",
+          x => x.matches(MoneyRegex)
+        )
         .withCustomContentAndArgs(
           ("details-amount.heading",
             ("details-amount.heading.range",
@@ -62,7 +67,11 @@ object LoanDetails {
             ))
         ).in[R]
       repaid <-  ask[Money]("details-genuinely-repaid-amount")
-        .defaultOpt(default.map(_.genuinelyRepaid)).in[R] emptyUnless
+        .defaultOpt(default.map(_.genuinelyRepaid))
+        .validating(
+          "format",
+          x => x.matches(MoneyRegex)
+        ).in[R] emptyUnless
         ask[Boolean]("details-genuinely-repaid")
           .defaultOpt(default.map(_.genuinelyRepaid != 0))
           .withCustomContentAndArgs(
@@ -73,7 +82,24 @@ object LoanDetails {
               ))
           ).in[R]
       writtenOff <- ask[WrittenOff]("details-written-off-amount")
-        .defaultOpt(default.flatMap(_.writtenOff)).in[R] when
+        .defaultOpt(default.flatMap(_.writtenOff))
+        //TODO Need a feature to validate both together, right now it is sequential
+//          .validating(
+//            "both-format",
+//            {
+//              case WrittenOff(amount, tax) => amount.matches(MoneyRegex) && tax.matches(MoneyRegex)
+//              case _ => true
+//            }
+//          )
+        .validating(
+          "amount-format",
+            x => x.amount.matches(MoneyRegex)
+        )
+        .validating(
+          "tax-format",
+           x => x.taxPaid.matches(MoneyRegex)
+        )
+        .in[R] when
         ask[Boolean]("details-written-off")
           .defaultOpt(default.map(_.writtenOff.isDefined))
           .withCustomContentAndArgs(

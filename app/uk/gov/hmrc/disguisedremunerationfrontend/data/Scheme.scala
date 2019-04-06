@@ -54,6 +54,7 @@ object Scheme {
   lazy val maxNameLength = 50
   lazy val dotaRegex = "[0-9]{8}"
   lazy val yearRegex = "[0-9]{4}"
+  lazy val MoneyRegex = """(\d*[.]?\d{1,2})"""
 
   val earliestDate: Date = LocalDate.parse("1900-01-01")
 
@@ -105,7 +106,7 @@ object Scheme {
             "year-incorrect",
             {
               case x => x._1.getYear.toString.matches(yearRegex)
-              case x => x._2.getYear.toString.matches(yearRegex)
+              case y => y._2.getYear.toString.matches(yearRegex)
               case _ => true
             }
           )
@@ -201,8 +202,12 @@ object Scheme {
                                   .defaultOpt(default.map{_.settlement.isDefined}).in[R]
 
       settlementStatus      <-  ask[TaxSettlement]("scheme-settlementstatus")
-                                  .defaultOpt(default.flatMap{_.settlement})
-                                                          .in[R] when taxNIPaid
+                                  .defaultOpt(
+                                    default.flatMap{_.settlement}
+                                  ).validating(
+                                    "amount-format",
+                                     x => x.amount.matches(MoneyRegex)
+                                  ).in[R] when taxNIPaid
     } yield {
       import YesNoDoNotKnow._
       val dotas = dotasNumber match {
