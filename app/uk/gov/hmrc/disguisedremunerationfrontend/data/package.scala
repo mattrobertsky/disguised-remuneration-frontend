@@ -48,7 +48,7 @@ package object data {
 
   def getDateTime(): String = {
     val now = LocalDateTime.now()
-    val dateFormat = DateTimeFormatter.ofPattern("dd MMM yyyy")
+    val dateFormat = DateTimeFormatter.ofPattern("d MMMM yyyy")
     val timeFormat = DateTimeFormatter.ofPattern("h:mm a")
     val dateTime = s"${now.format(dateFormat)} at ${now.format(timeFormat)}"
     dateTime

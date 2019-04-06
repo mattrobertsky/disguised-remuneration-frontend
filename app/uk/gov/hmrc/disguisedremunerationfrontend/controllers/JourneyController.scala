@@ -433,7 +433,7 @@ class JourneyController @Inject()(
           )
           clearState
           Logger.info(s"submission details sent to splunk")
-          val contents = views.html.confirmation(getDateTime())
+          val contents = views.html.confirmation(getDateTime().)
           Ok(views.html.main_template(
             title = s"${m("confirm.title")} - ${m("common.title")}")
           (contents))
