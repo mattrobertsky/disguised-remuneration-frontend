@@ -173,13 +173,6 @@ object Scheme {
                                         case _ => true
                                       }
                                     )
-                                    .validating(
-                                      "paye-format",
-                                      {
-                                        case Some(employer) => employer.paye.matches(payeRegex)
-                                        case _ => true
-                                      }
-                                    )
                                     .in[R]
       recipient             <-  ask[Option[String]]("scheme-recipient")
                                 .defaultOpt(default.map{_.loanRecipientName})
