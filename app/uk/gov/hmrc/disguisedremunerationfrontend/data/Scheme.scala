@@ -156,7 +156,6 @@ object Scheme {
                                       case _ => true
                                     }
                                   )
-
       dateRange             <-  getSchemeDateRange
       employer              <-  ask[Option[Employer]]("scheme-employee")
                                     .validating(
