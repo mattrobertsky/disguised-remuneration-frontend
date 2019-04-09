@@ -30,7 +30,13 @@ case class AboutYou(
   deceasedBefore: Option[Boolean] = None,
   employmentStatus: Option[EmploymentStatus] = None,
   actingFor: Option[String] = None
-)
+) {
+
+  def nino: Option[Nino] = identification match {
+    case Some(Left(n)) => Some(n)
+    case _ => None
+  }
+}
 
 case class NotRequiredToComplete(
   p1: String = "<p>Based on your answers, you do not need to send any loan charge details.</p>",
@@ -73,9 +79,9 @@ object AboutYou {
             case (None, None) =>
               for {
                 nino <- ask[Nino]("aboutyou-nino")
-                  .defaultOpt(default.flatMap(_.map(_.identification))).in[R]
+                  .defaultOpt(default.flatMap(_.flatMap(_.nino))).in[R]
               } yield {
-                Right(Some(AboutYou(true, true, nino, None, None, None)))
+                Right(Some(AboutYou(true, true, Some(Left(nino)), None, None, None)))
               }
             case _ =>
               Eff.pure[R, Either[Error, Option[AboutYou]]](Right(None))
