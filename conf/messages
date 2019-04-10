@@ -41,11 +41,12 @@ aboutyou-employmentstatus.SelfEmployed=Self-employed
 aboutyou-employmentstatus.Both=Both employed and self-employed
 aboutyou-deceasedbefore.heading=Did the deceased person die on or before 5 April 2019?
 aboutyou-noloancharge.heading=You do not need to send any loan charge details
-aboutyou-noloancharge.hint=<strong><p>Based on your answers, you do not need to send any loan charge details.<br><br>This is because you told us the deceased person:<br><ul class="govuk-list govuk-list--bullet"><li>was employed when they had the loan</li><li>has died on or before 5 April 2019</li><br><br>If this is not right, you need to <a class="govuk-link" href="/disguised-remuneration/">go back and change your answers<a/>.</strong>
-aboutyou-noloancharge.p2=This is because you told us the deceased person:
-aboutyou-noloancharge.p3=was employed when they had the loan
-aboutyou-noloancharge.p4=has died on or before 5 April 2019
-aboutyou-noloancharge.p5=If this is not right, you need to <a class="govuk-link" href="/">go back and change your answers<a/>.
+aboutyou-noloancharge.intro=Based on your answers, you do not need to send any loan charge details.
+aboutyou-noloancharge.intro.1=This is because you told us the deceased person:
+aboutyou-noloancharge.list=was employed when they had the loan
+aboutyou-noloancharge.list.1=has died on or before 5 April 2019
+aboutyou-noloancharge.outro=If this is not right, you need to <a class="govuk-link" href="/">go back and change your answers<a/>.
+aboutyou-noloancharge.save-continue=Finish and sign out
 #aboutyou-confirmation.heading=Is this the person you are acting for?
 aboutyou-confirmation.heading=What is the full name of the person you are acting for?
 aboutyou-confirmation.TRUE=Yes - this is the correct person

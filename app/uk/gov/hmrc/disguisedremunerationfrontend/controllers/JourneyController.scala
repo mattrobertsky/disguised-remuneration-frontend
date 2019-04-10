@@ -120,7 +120,7 @@ class JourneyController @Inject()(
 
   def messages(request: Request[AnyContent]): UniformMessages[Html] =
     convertMessages(messagesApi.preferred(request)) |+| UniformMessages.bestGuess.map(HtmlFormat.escape)
-
+  
 //  def timeOut: Action[AnyContent] = Action { implicit request =>
 //    implicit val msg: UniformMessages[Html] = messages(request)
 //    Ok(uk.gov.hmrc.disguisedremunerationfrontend.views.html.time_out()).withNewSession
