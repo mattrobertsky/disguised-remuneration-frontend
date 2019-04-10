@@ -47,12 +47,6 @@ class AuthorisedAction @Inject()(mcc: MessagesControllerComponents, val authConn
 
       authorised(AuthProviders(GovernmentGateway)).retrieve(retrieval) { case id ~ natInsNo ~ sUtr ~ name =>
         val internalId = id.getOrElse(throw new RuntimeException("No internal ID for user"))
-//        val ninoOrUtr =
-//          (natInsNo, sUtr) match {
-//            case (Some(n), _) => Left(n)
-//            case (None, Some(u)) => Right(u)
-//            case (_) => Left("nino and utr not found")
-//          }
         Future.successful(Right(AuthorisedRequest(internalId, natInsNo, sUtr, request, name)))
     } recover {
       case _: NoActiveSession =>

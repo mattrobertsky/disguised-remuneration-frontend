@@ -21,6 +21,6 @@ case class JourneyState(
                          schemes: List[Scheme] = Nil,
                          contactDetails: Option[ContactDetails] = None
                        ) {
-  def readyToSubmit = aboutYou.isDefined && contactDetails.isDefined && schemes.nonEmpty
-  //&& detailsStatus.forall(_._3.isDefined)
+  def readyToSubmit = aboutYou.isDefined && contactDetails.isDefined && schemes.nonEmpty &&
+  schemes.forall(_.readyToSubmit)
 }

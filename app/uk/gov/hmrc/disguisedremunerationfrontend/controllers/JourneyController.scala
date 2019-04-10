@@ -305,7 +305,7 @@ class JourneyController @Inject()(
       import AboutYou._
       getState.flatMap { state =>
         runWeb(
-          program = AboutYou.program[FxAppend[Stack, PlayStack]](state.aboutYou, request)
+          program = AboutYou.program[FxAppend[Stack, PlayStack]](state.aboutYou, request.nino, request.utr)
             .useFormMap {
               case List("aboutyou-completedby") => customBool
               case _ => automatic[Unit, Boolean]
@@ -322,21 +322,9 @@ class JourneyController @Inject()(
               Future.successful(Redirect(routes.AuthenticationController.signOut()))
             }
             case Right(data: Option[AboutYou]) =>
-//              if(data.isEmpty) {
-//                setState(
-//                  JourneyState(
-//                    aboutYou =
-//                      Some(Some(AboutYou(completedBySelf = true, alive = true, Some(request.ninoOrUtr), None, None, None)))
-//                  )
-//                ) map { _ =>
-//                  Logger.debug("completed about you for themselves with enrolments")
-//                  Redirect(routes.JourneyController.index())
-//                }
-//              } else {
                 setState(state.copy(aboutYou = Some(data))) map { _ =>
                   Logger.debug("completed about you for someone else without enrolments")
                   Redirect(routes.JourneyController.index())
-//              }
             }
           }
         }
@@ -435,6 +423,7 @@ class JourneyController @Inject()(
             "disguisedRemunerationCheck",
             Json.toJson(AuditWrapper(username,state))(AuditWrapper.auditWrapperFormatter)
           )
+          println(Json.toJson(AuditWrapper(username,state))(AuditWrapper.auditWrapperFormatter))
           clearState
           Logger.info(s"submission details sent to splunk")
           val contents = views.html.confirmation(getDateTime())

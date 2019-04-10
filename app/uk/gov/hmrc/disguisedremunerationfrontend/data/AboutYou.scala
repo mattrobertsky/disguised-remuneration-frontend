@@ -32,7 +32,7 @@ case class AboutYou(
   actingFor: Option[String] = None
 ) {
 
-  def nino: Option[Nino] = identification match {
+  private def nino: Option[Nino] = identification match {
     case Some(Left(n)) => Some(n)
     case _ => None
   }
@@ -69,19 +69,24 @@ object AboutYou {
       : _uniformAsk[Either[Nino,Utr],?]
       : _uniformAsk[EmploymentStatus,?]
       : _uniformAsk[Unit,?]
-  ](default: Option[Option[AboutYou]], request: AuthorisedRequest[AnyContent]): Eff[R, Either[Error,Option[AboutYou]]] =
+  ](default: Option[Option[AboutYou]], nino: Option[Nino], utr: Option[Utr]): Eff[R, Either[Error,Option[AboutYou]]] =
     for {
       completedBy <- ask[Boolean]("aboutyou-completedby")
                        .defaultOpt(default.map(_.isDefined))
       ret <- completedBy match {
         case false =>
-          (request.nino, request.utr) match {
+          (nino, utr) match {
             case (None, None) =>
               for {
                 nino <- ask[Nino]("aboutyou-nino")
-                  .defaultOpt(default.flatMap(_.flatMap(_.nino))).in[R]
+                  .defaultOpt(default.flatMap(_.flatMap(_.nino)))
+                  .validating(
+                    "format",
+                    x => x.toUpperCase.replaceAll("\\s","").matches(regExNino)
+                  )
+                  .in[R]
               } yield {
-                Right(Some(AboutYou(true, true, Some(Left(nino)), None, None, None)))
+                Right(Some(AboutYou(completedBySelf = true, alive = true, Some(Left(nino)), None, None, None)))
               }
             case _ =>
               Eff.pure[R, Either[Error, Option[AboutYou]]](Right(None))

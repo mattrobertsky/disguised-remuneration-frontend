@@ -25,7 +25,12 @@ import ltbs.uniform._
 import interpreters.logictable._
 import cats.implicits._
 import play.api.libs.json.Json
+import play.api.mvc.{AnyContent, Request}
+import play.api.test.FakeRequest
+import play.mvc.Http.RequestHeader
+import uk.gov.hmrc.auth.core.retrieve.Name
 import uk.gov.hmrc.disguisedremunerationfrontend.Path
+import uk.gov.hmrc.disguisedremunerationfrontend.actions.AuthorisedRequest
 
 class AboutYouSpec extends WordSpec with Matchers {
 
@@ -36,12 +41,12 @@ class AboutYouSpec extends WordSpec with Matchers {
   val invalidNino = "nino"
   val validUTR = "1234567890"
   val invalidUTR = "utr"
+//  val request: AnyContent = AuthorisedRequest("id", Some(validNino), None, Request(RequestHeader(), "a"), Name(Some("Joe"), Some("Bloggs")))
 
   "'About You' journey" should {
 
     "have a deceased date if and only if a person is not alive" in {
-
-      val allJourneys = program[FxAppend[Stack, LogicTableStack]](None)
+      val allJourneys = program[FxAppend[Stack, LogicTableStack]](None, Some(validNino), None)
         .evalState(UniformCore())
         .giveExamples{
           case "aboutyou-completedby" => List(true, false)
@@ -86,7 +91,7 @@ class AboutYouSpec extends WordSpec with Matchers {
 
     "not need to complete if they were dead" in {
 
-      val allJourneys = program[FxAppend[Stack, LogicTableStack]](None)
+      val allJourneys = program[FxAppend[Stack, LogicTableStack]](None, Some(validNino), None)
         .evalState(UniformCore())
         .giveExamples{
           case "aboutyou-completedby" => List(true, false)
