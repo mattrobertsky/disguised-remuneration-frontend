@@ -25,6 +25,8 @@ landing.sendanswers.link=Check your answers and send your details
 aboutyou-completedby.heading=Are you filling in this form for yourself?
 aboutyou-completedby.FALSE=Yes, for myself
 aboutyou-completedby.TRUE=No, for someone else
+aboutyou-nino.heading=What is your National Insurance number?
+aboutyou-nino.hint=It’s on your National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’.
 aboutyou-personalive.heading=Is the person you are acting for alive?
 aboutyou-identity.heading=How do you want to confirm the identity of the person you are acting for?
 aboutyou-identity.Left=The person''s National Insurance number
@@ -159,6 +161,8 @@ confirm.title=Loan charge details received
 # About you
 there.is.a.problem=There is a problem
 aboutyou-completedby.required=Select yes if you are filling in this form for yourself
+aboutyou-nino.required=Enter the person’s National Insurance number
+aboutyou-nino.format=Enter the person’s National Insurance number in the correct format
 aboutyou-personalive.required=Select yes if the person you are acting for is alive
 aboutyou-employmentstatus.required=Select if the deceased person was employed, self-employed, or both employed \
   and self-employed

@@ -47,7 +47,6 @@
 		((s"${scheme.name} $year", Some(s"scheme/$schemeIndex/details/$year/details-amount"), None, optDetails.isDefined))
 	    }
 	}.sortBy(_._1)
-
 	if (details.isEmpty) Left {
 	    Html("""You need to <a href="scheme/new/scheme-name" class="govuk-link">add a remuneration scheme</a> before you can add loan details by tax year.""")
         } else Right(details)

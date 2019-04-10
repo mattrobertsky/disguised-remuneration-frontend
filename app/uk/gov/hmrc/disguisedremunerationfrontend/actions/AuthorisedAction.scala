@@ -47,13 +47,7 @@ class AuthorisedAction @Inject()(mcc: MessagesControllerComponents, val authConn
 
       authorised(AuthProviders(GovernmentGateway)).retrieve(retrieval) { case id ~ natInsNo ~ sUtr ~ name =>
         val internalId = id.getOrElse(throw new RuntimeException("No internal ID for user"))
-        val ninoOrUtr =
-          (natInsNo, sUtr) match {
-            case (Some(n), _) => Left(n)
-            case (None, Some(u)) => Right(u)
-            case (_) => Left("")
-          }
-        Future.successful(Right(AuthorisedRequest(internalId, ninoOrUtr, request, name)))
+        Future.successful(Right(AuthorisedRequest(internalId, natInsNo, sUtr, request, name)))
     } recover {
       case _: NoActiveSession =>
         Logger.info(s"Recover - no active session")
@@ -65,5 +59,5 @@ class AuthorisedAction @Inject()(mcc: MessagesControllerComponents, val authConn
   override def parser = mcc.parsers.anyContent
 }
 
-case class AuthorisedRequest[A](internalId: String, ninoOrUtr: Either[Nino, Utr], request: Request[A], name: Name)
+case class AuthorisedRequest[A](internalId: String, nino: Option[Nino], utr: Option[Utr], request: Request[A], name: Name)
     extends WrappedRequest(request)

@@ -40,8 +40,7 @@ class AboutYouSpec extends WordSpec with Matchers {
   "'About You' journey" should {
 
     "have a deceased date if and only if a person is not alive" in {
-
-      val allJourneys = program[FxAppend[Stack, LogicTableStack]](None)
+      val allJourneys = program[FxAppend[Stack, LogicTableStack]](None, Some(validNino), None)
         .evalState(UniformCore())
         .giveExamples{
           case "aboutyou-completedby" => List(true, false)
@@ -86,7 +85,7 @@ class AboutYouSpec extends WordSpec with Matchers {
 
     "not need to complete if they were dead" in {
 
-      val allJourneys = program[FxAppend[Stack, LogicTableStack]](None)
+      val allJourneys = program[FxAppend[Stack, LogicTableStack]](None, Some(validNino), None)
         .evalState(UniformCore())
         .giveExamples{
           case "aboutyou-completedby" => List(true, false)

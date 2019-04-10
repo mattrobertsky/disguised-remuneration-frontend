@@ -28,7 +28,13 @@ case class AboutYou(
   deceasedBefore: Option[Boolean] = None,
   employmentStatus: Option[EmploymentStatus] = None,
   actingFor: Option[String] = None
-)
+) {
+
+  private def nino: Option[Nino] = identification match {
+    case Some(Left(n)) => Some(n)
+    case _ => None
+  }
+}
 
 case class NotRequiredToComplete(
   p1: String = "<p>Based on your answers, you do not need to send any loan charge details.</p>",
@@ -61,12 +67,28 @@ object AboutYou {
       : _uniformAsk[Either[Nino,Utr],?]
       : _uniformAsk[EmploymentStatus,?]
       : _uniformAsk[Unit,?]
-  ](default: Option[Option[AboutYou]]): Eff[R, Either[Error,Option[AboutYou]]] =
+  ](default: Option[Option[AboutYou]], nino: Option[Nino], utr: Option[Utr]): Eff[R, Either[Error,Option[AboutYou]]] =
     for {
       completedBy <- ask[Boolean]("aboutyou-completedby")
                        .defaultOpt(default.map(_.isDefined))
       ret <- completedBy match {
-        case false => Eff.pure[R,Either[Error,Option[AboutYou]]](Right(None))
+        case false =>
+          (nino, utr) match {
+            case (None, None) =>
+              for {
+                nino <- ask[Nino]("aboutyou-nino")
+                  .defaultOpt(default.flatMap(_.flatMap(_.nino)))
+                  .validating(
+                    "format",
+                    x => x.toUpperCase.replaceAll("\\s","").matches(regExNino)
+                  )
+                  .in[R]
+              } yield {
+                Right(Some(AboutYou(completedBySelf = true, alive = true, Some(Left(nino)), None, None, None)))
+              }
+            case _ =>
+              Eff.pure[R, Either[Error, Option[AboutYou]]](Right(None))
+          }
         case true => for {
           alive   <- ask[Boolean]("aboutyou-personalive")
                        .defaultOpt(default.flatMap(_.map(_.alive)))

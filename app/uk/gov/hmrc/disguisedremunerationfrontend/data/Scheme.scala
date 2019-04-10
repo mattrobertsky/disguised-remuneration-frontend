@@ -44,6 +44,8 @@ case class Scheme(
       y -> loanDetailsProvided.get(y)
     }:_*)
   }
+
+  def readyToSubmit: Boolean = loanDetails.toList.forall(_._2.isDefined)
 }
 
 object Scheme {
