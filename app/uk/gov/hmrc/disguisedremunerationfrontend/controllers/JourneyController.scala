@@ -423,7 +423,6 @@ class JourneyController @Inject()(
             "disguisedRemunerationCheck",
             Json.toJson(AuditWrapper(username,state))(AuditWrapper.auditWrapperFormatter)
           )
-          println(Json.toJson(AuditWrapper(username,state))(AuditWrapper.auditWrapperFormatter))
           clearState
           Logger.info(s"submission details sent to splunk")
           val contents = views.html.confirmation(getDateTime())

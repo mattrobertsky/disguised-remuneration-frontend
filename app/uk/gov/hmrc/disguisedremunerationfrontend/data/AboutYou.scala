@@ -19,8 +19,6 @@ package uk.gov.hmrc.disguisedremunerationfrontend.data
 
 import ltbs.uniform._
 import org.atnos.eff._
-import play.api.mvc.AnyContent
-import uk.gov.hmrc.disguisedremunerationfrontend.actions.AuthorisedRequest
 import uk.gov.hmrc.disguisedremunerationfrontend.controllers.EmploymentStatus
 
 case class AboutYou(
@@ -101,23 +99,23 @@ object AboutYou {
                                   .in[R] when employmentStatus == Some(EmploymentStatus.Employed)
           notRequiredToComplete = deceasedBefore == Some(true)
           _ <- tell[Unit]("aboutyou-noloancharge")("_").in[R] when notRequiredToComplete
-            id <- ask[Either[Nino,Utr]]("aboutyou-identity")
-                    .defaultOpt(default.flatMap(_.flatMap(_.identification)))
-                    .validating(
-                      "nino-format",
-                      {
-                        case Left(nino) => nino.matches(regExNino)
-                        case _ => true
-                      }
-                    )
-                    .validating(
-                      "utr-format",
-                      {
-                        case Left(nino) => true
-                        case Right(utr) => utr.matches(regExUTR)
-                      }
-                    )
-                    .in[R] when (!notRequiredToComplete)
+          id <- ask[Either[Nino,Utr]]("aboutyou-identity")
+                  .defaultOpt(default.flatMap(_.flatMap(_.identification)))
+                  .validating(
+                    "nino-format",
+                    {
+                      case Left(nino) => nino.matches(regExNino)
+                      case _ => true
+                    }
+                  )
+                  .validating(
+                    "utr-format",
+                    {
+                      case Left(nino) => true
+                      case Right(utr) => utr.matches(regExUTR)
+                    }
+                  )
+                  .in[R] when (!notRequiredToComplete)
           personName <- ask[String]("aboutyou-confirmation")
                           .defaultOpt(default.flatMap(_.flatMap(_.actingFor)))
                           .in[R] when !id.isEmpty

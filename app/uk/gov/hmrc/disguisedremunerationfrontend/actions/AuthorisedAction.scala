@@ -59,5 +59,5 @@ class AuthorisedAction @Inject()(mcc: MessagesControllerComponents, val authConn
   override def parser = mcc.parsers.anyContent
 }
 
-case class AuthorisedRequest[A](internalId: String, nino: Option[Nino], utr: Option[String], request: Request[A], name: Name)
+case class AuthorisedRequest[A](internalId: String, nino: Option[Nino], utr: Option[Utr], request: Request[A], name: Name)
     extends WrappedRequest(request)
