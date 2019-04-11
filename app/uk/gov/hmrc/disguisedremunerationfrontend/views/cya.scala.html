@@ -20,82 +20,71 @@
 
 @if(form.errors.nonEmpty) {
 <div class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+    <h2 class="error-summary__title" id="error-summary-title">
+        @messages("there.is.a.problem")
+    </h2>
 
-  <h2 class="error-summary__title" id="error-summary-title">
-    There is a problem
-  </h2>
-  <div class="error-summary__body">
-    <ul class="list error-summary__list">
-      <li>You must confirm that the information you have supplied is true and correct
-      </li>
-    </ul>
-  </div>
+    <div class="error-summary__body">
+        <ul class="list error-summary__list">
+            <li>@messages("confirm.info")</li>
+        </ul>
+    </div>
 </div>
 }
 
 <div class="govuk-grid-column-two-thirds">
-<h1 class="govuk-heading-xl">Check your answers before sending your details</h1>
+    <h1 class="govuk-heading-xl">@messages("cya.title")</h1>
+    <p class="govuk-body">@messages("cya.p1")</p>
 
-<p class="govuk-body">
-    Make sure you check your answers before you send them. If you need
-    to add or change any details later, you will need to fill in this
-    form again.
-</p>
+    @for((blockTitle, (items, loanDetails)) <- blocks) {
+        <h2 class="govuk-heading-m">@blockTitle</h2>
 
-@for((blockTitle, (items, loanDetails)) <- blocks) {
-    <h2 class="govuk-heading-m">@blockTitle</h2>
+        <dl class="app-check-your-answers app-check-your-answers--short">
+            @for((title, value) <- items) {
+                    <div class="app-check-your-answers__contents">
+                    <dt class="app-check-your-answers__question">@title</dt>
+                    <dd class="app-check-your-answers__answer">@value</dd>
+                    </div>
+            }
+        </dl>
 
-    <dl class="app-check-your-answers app-check-your-answers--short">
-        @for((title, value) <- items) {
-                <div class="app-check-your-answers__contents">
-                <dt class="app-check-your-answers__question">@title</dt>
-                <dd class="app-check-your-answers__answer">@value</dd>
-                </div>
+        @loanDetails.map { f =>
+            <h3 class="govuk-heading-s">@f._1</h3>
+            <table class="govuk-table loans-table">
+                <caption class="govuk-table__caption"></caption>
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.tax-year")</th>
+                        <th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.amount")</th>
+                        <th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.repaid")</th>
+                        <th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.written-off")</th>
+                        <th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.tax-paid")</th>
+                        <th class="govuk-table__header" scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    <tr>
+                        @for(n <- f._2) {
+                            <th class="govuk-table__header" scope="col">@n</th>
+                        }
+                    </tr>
+                </tbody>
+            </table>
         }
-    </dl>
-
-    @loanDetails.map { f =>
-        <h3 class="govuk-heading-s">@f._1</h3>
-        <table class="govuk-table loans-table">
-            <caption class="govuk-table__caption"></caption>
-            <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">Tax year</th>
-                    <th class="govuk-table__header" scope="col">Amount</th>
-                    <th class="govuk-table__header" scope="col">Repaid</th>
-                    <th class="govuk-table__header" scope="col">Written off</th>
-                    <th class="govuk-table__header" scope="col">Tax paid</th>
-                    <th class="govuk-table__header" scope="col"></th>
-                </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-                <tr>
-                    @for(n <- f._2) {
-                        <th class="govuk-table__header" scope="col">@n</th>
-                    }
-                </tr>
-            </tbody>
-        </table>
     }
-}
 
-<div class="subsection">
-    <a href="javascript:window.print()" class="govuk-body">Print or save this page</a>
-</div>
+    <div class="subsection">
+        <a href="javascript:window.print()" class="govuk-body">@messages("common.print-save")</a>
+    </div>
 
-<p>
-    By submitting your answers, you confirm that, to the best of your
-    knowledge, the information you have provided is correct and
-    complete.
-</p>
+    <p>@messages("cya.p2")</p>
 
 <div class="subsection">
     <div class="notice">
         <i class="icon icon-important">
-            <span class="visually-hidden">Warning</span>
+            <span class="visually-hidden">@messages("common.warning.title")</span>
         </i>
-        <strong class="bold-small">
-            You could be prosecuted if you deliberately give untrue or misleading information.
+        <strong class="bold-small">@messages("cya.warning.body")</strong>
     </div>
 </div>
 
@@ -107,12 +96,12 @@
                 <div class="multiple-choice">
                     <input id="declaration" name="confirm" type="checkbox" value="true">
                     <label for="declaration">
-                        I @usersName confirm that, to the best of my knowledge, the information given is true and correct.
+                        @messages("cya.declaration.p1") @usersName @messages("cya.declaration.p2")
                     </label>
                 </div>
             </fieldset>
         </div>
-        <button type="submit" class="govuk-button">Accept and send details</button>
+        <button type="submit" class="govuk-button">@messages("cya.submit")</button>
     }
 </div>
 
