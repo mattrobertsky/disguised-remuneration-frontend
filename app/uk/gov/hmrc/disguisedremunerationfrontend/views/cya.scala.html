@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@(usersName: String, blocks: List[(Html,(List[(Html,Html)], Option[(Html, List[String])]))], form: Form[Boolean])(implicit messages: UniformMessages[Html], request: Request[AnyContent])
+@(usersName: String, blocks: List[(Html,(List[(Html,Html)], Option[(Html, Map[String, List[String]])]))], form: Form[Boolean])(implicit messages: UniformMessages[Html], request: Request[AnyContent])
 
 <a href="/disguised-remuneration/" class="govuk-link link-back">@messages(List(s"back-to-service-page","back"))</a>
 
@@ -69,11 +69,21 @@
                 </tr>
             </thead>
             <tbody class="govuk-table__body">
+
+            @f._2.map{ ld =>
+                @for(n <- ld._2) {
                 <tr>
-                    @for(n <- f._2) {
-                        <th class="govuk-table__header" scope="col">@n</th>
-                    }
+                }
+                    <th class="govuk-table__header" scope="col">@ld._1</th>
+                @for(n <- ld._2) {
+                    <th class="govuk-table__header" scope="col">£@n</th>
+                }
+                @for(n <- ld._2) {
                 </tr>
+                }
+
+            }
+
             </tbody>
         </table>
     }
