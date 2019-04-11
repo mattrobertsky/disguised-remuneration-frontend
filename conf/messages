@@ -7,6 +7,8 @@ common.sign-in=Sign in
 common.alpha-info.p1=This is a new service – your 
 common.alpha-info.link=feedback
 common.alpha-info.p2= will help us to improve it.
+common.print-save=Print or save this page
+common.warning.title=Warning
 
 common.title=Send your loan charge details - GOV.UK
 common.title.short=Send your loan charge details
@@ -153,11 +155,23 @@ time-out.save=We have saved your answers
 # cya
 cya.title=Check your answers before sending your details
 confirm.title=Loan charge details received
+cya.p1=Make sure you check your answers before you send them. If you need to add or change any details later, you will need to fill in this form again.
+cya.p2=By submitting your answers, you confirm that, to the best of your knowledge, the information you have provided is correct and complete.
+cya.loandetails.header.tax-year=Tax year
+cya.loandetails.header.amount=Amount
+cya.loandetails.header.repaid=Repaid
+cya.loandetails.header.written-off=Written off
+cya.loandetails.header.tax-paid=Tax paid
+cya.warning.body=You could be prosecuted if you deliberately give untrue or misleading information.
+cya.declaration.p1=I
+cya.declaration.p2=confirm that, to the best of my knowledge, the information given is true and correct.
+cya.submit=Accept and send details
 
 # Error messages
+there.is.a.problem=There is a problem
+confirm.info=You must confirm that the information you have supplied is true and correct
 
 # About you
-there.is.a.problem=There is a problem
 aboutyou-completedby.required=Select yes if you are filling in this form for yourself
 aboutyou-personalive.required=Select yes if the person you are acting for is alive
 aboutyou-employmentstatus.required=Select if the deceased person was employed, self-employed, or both employed \
