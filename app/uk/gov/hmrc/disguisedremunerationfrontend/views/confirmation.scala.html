@@ -19,40 +19,40 @@
     <form action="index" method="get" class="form">
         <div class="govuk-box-highlight">
             <h1 class="heading-xlarge">
-                Loan charge details received
+                @messages("confirmation.heading")
             </h1>
             <span class="heading-large">
-                We received the details you sent on @dateTime
+                @messages("confirmation.detail") @dateTime
             </span>
 
         </div>
 
     </form>
     <br>
-    <h2 class="govuk-heading-m">What happens next</h2>
+    <h2 class="govuk-heading-m">@messages("confirmation.h2")</h2>
 
-    <p>We will check the details you sent against the information we hold. This might include, for example, any details from employers or Self Assessment returns.</p>
+    <p>@messages("confirmation.p1")</p>
 
-    <p>We will contact you if we need you to provide more information.</p>
+    <p>@messages("confirmation.p2")</p>
 
-    <p>If you need to add to or change the details you sent, fill in this form again and resend your details.</p>
+    <p>@messages("confirmation.p3")</p>
 
 
-    <h2 class="govuk-heading-m">What you need to do next</h2>
+    <h2 class="govuk-heading-m">@messages("confirmation.h3")</h2>
 
-    <p>You need to include your outstanding loan amounts in your Self Assessment tax return.</p>
+    <p>@messages("confirmation.p4")</p>
 
-    <p>Make sure you have sent these details to any employers you had disguised remuneration loan arrangements with.</p>
+    <p>@messages("confirmation.p5")</p>
 
-    <p><a target="_blank" class="govuk-link" href="https://www.gov.uk/guidance/report-and-account-for-your-disguised-remuneration-loan-charge">Check the guidance</a> to find out what you need to do.</p>
+    <p>@messages("confirmation.p6", "https://www.gov.uk/guidance/report-and-account-for-your-disguised-remuneration-loan-charge")</p>
 
-    <h2 class="govuk-heading-m">If you need help</h2>
+    <h2 class="govuk-heading-m">@messages("confirmation.h4")</h2>
 
-    <p>If you need help using this service, use the 'get help with this page' link at the bottom of the page.</p>
+    <p>@messages("confirmation.p7")</p>
 
-    <p><a href="javascript:window.print()">Print or save this page</a></p>
+    <p><a href="javascript:window.print()">@messages("common.print-save")</a></p>
 
-    <p><a href="@uk.gov.hmrc.disguisedremunerationfrontend.controllers.routes.AuthenticationController.signOut()">What do you think of this service?</a> (takes 30 seconds)</p>
+    <p>@messages("confirmation.p8", uk.gov.hmrc.disguisedremunerationfrontend.controllers.routes.AuthenticationController.signOut())</p>
 
 
 
