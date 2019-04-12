@@ -297,3 +297,18 @@ details-written-off-amount.tax-format=Amount of tax or National Insurance paid o
 details-written-off-amount.amount.tax-format=
 details-written-off-amount.taxPaid.tax-format=Amount of tax or National Insurance paid on the written-off loan \
   must be an amount of money, like 123.45 or 150
+
+# Confirmation
+confirmation.heading=Loan charge details received
+confirmation.detail=We received the details you sent on
+confirmation.h2=What happens next
+confirmation.p1=We will check the details you sent against the information we hold. This might include, for example, any details from employers or Self Assessment returns.
+confirmation.p2=We will contact you if we need you to provide more information.
+confirmation.p3=If you need to add to or change the details you sent, fill in this form again and resend your details.
+confirmation.h3=What you need to do next
+confirmation.p4=You need to include your outstanding loan amounts in your Self Assessment tax return.
+confirmation.p5=Make sure you have sent these details to any employers you had disguised remuneration loan arrangements with.
+confirmation.p6=<a href={0} target="_blank">Check the guidance</a> to find out what you need to do.
+confirmation.h4=If you need help
+confirmation.p7=If you need help using this service, use the ‘get help with this page’ link at the bottom of the page.
+confirmation.p8=<a href={0}>What do you think of this service?</a> (takes 30 seconds)
