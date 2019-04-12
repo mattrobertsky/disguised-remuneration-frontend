@@ -463,7 +463,7 @@ class JourneyController @Inject()(
     year: Year,
     hmrcApproved: Boolean,
     amount: Money,
-    genuinelyRepaid: Money,
+    genuinelyRepaid: Option[Money],
     writtenOff: Option[WrittenOff],
     data: JourneyState
   )
