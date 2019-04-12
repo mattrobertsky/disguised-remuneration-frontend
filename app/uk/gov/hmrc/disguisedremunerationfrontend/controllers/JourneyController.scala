@@ -32,7 +32,7 @@ import play.api.Logger
 import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.I18nSupport
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.auth.core.retrieve.Name
@@ -40,7 +40,7 @@ import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
 import uk.gov.hmrc.disguisedremunerationfrontend.actions.{AuthorisedAction, AuthorisedRequest}
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
 import uk.gov.hmrc.disguisedremunerationfrontend.controllers.AssetsFrontend.{optionHtml => _, _}
-import uk.gov.hmrc.disguisedremunerationfrontend.data.JsonConversion._
+import uk.gov.hmrc.disguisedremunerationfrontend.data.JsonConversion.journeyStateFormat
 import uk.gov.hmrc.disguisedremunerationfrontend.data.{Date, Nino, Utr, _}
 import uk.gov.hmrc.disguisedremunerationfrontend.repo.{JourneyStateStore, ShortLivedStore}
 import uk.gov.hmrc.disguisedremunerationfrontend.views
@@ -49,6 +49,7 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
 import scala.collection.immutable
+import scala.collection.immutable.ListMap
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
@@ -419,10 +420,27 @@ class JourneyController @Inject()(
           )(contents))
         },
         postedForm => {
-          auditConnector.sendExplicitAudit(
-            "disguisedRemunerationCheck",
-            Json.toJson(AuditWrapper(username,state))(AuditWrapper.auditWrapperFormatter)
-          )
+
+          for {
+            schemes <- state.schemes
+            loanDetails <- schemes.loanDetailsProvided.toSeq.sortBy(_._1)
+          } yield {
+            auditConnector.sendExplicitAudit(
+              "disguisedRemunerationCheck",
+              Json.toJson(
+                AuditWrapper(
+                  username,
+                  loanDetails._1,
+                  loanDetails._2.hmrcApproved,
+                  loanDetails._2.amount,
+                  loanDetails._2.genuinelyRepaid,
+                  loanDetails._2.writtenOff,
+                  state
+                )
+              )
+            )
+          }
+
           clearState
           Logger.info(s"submission details sent to splunk")
           val contents = views.html.confirmation(getDateTime())
@@ -436,10 +454,16 @@ class JourneyController @Inject()(
 
   case class AuditWrapper(
     submitterName: String,
+    year: Year,
+    hmrcApproved: Boolean,
+    amount: Money,
+    genuinelyRepaid: Money,
+    writtenOff: Option[WrittenOff],
     data: JourneyState
   )
   case object AuditWrapper {
-    implicit val auditWrapperFormatter = Json.format[AuditWrapper]
+    implicit val writtenOffFormatter: OFormat[WrittenOff] = Json.format[WrittenOff]
+    implicit val auditWrapperFormatter: OFormat[AuditWrapper] = Json.format[AuditWrapper]
   }
 
 }
