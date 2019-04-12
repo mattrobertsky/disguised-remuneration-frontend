@@ -262,6 +262,7 @@ class JourneyController @Inject()(
         program = LoanDetails.program[FxAppend[Stack, PlayStack]](year, existing)
           .useForm(automatic[Unit, Boolean])
           .useForm(automatic[Unit, Money])
+          .useForm(automatic[Unit, Option[Money]])
           .useForm(automatic[Unit, WrittenOff]),
         shortLivedStore.persistence(request.internalId)
       ){data =>

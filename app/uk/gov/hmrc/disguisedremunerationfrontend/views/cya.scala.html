@@ -70,7 +70,7 @@
                 }
                     <th class="govuk-table__header" scope="col">@ld._1</th>
                 @for(n <- ld._2) {
-                    <th class="govuk-table__header" scope="col">£@n</th>
+                    <th class="govuk-table__header" scope="col">@n</th>
                 }
                 @for(n <- ld._2) {
                 </tr>
@@ -80,6 +80,7 @@
 
             </tbody>
         </table>
+        }
     }
 
     <div class="subsection">
@@ -96,7 +97,6 @@
         <strong class="bold-small">@messages("cya.warning.body")</strong>
     </div>
 </div>
-    }
 
     <div>
     @helper.form(action = play.api.mvc.Call("post", "submit")) {
