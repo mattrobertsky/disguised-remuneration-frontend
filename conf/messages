@@ -78,8 +78,8 @@ scheme-dotas.DoNotKnow=Do not know
 #scheme-dotas.true.hint=For example, 12345678
 scheme-refnumber.heading=Do you have an HMRC case reference number for this scheme?
 scheme-refnumber.inner.string.heading=Enter the HMRC case reference number
-scheme-refnumber.inner.string.hint=A reference number ‘usually’ begins CFS or CFSS followed by a sequential number, \
-  which could range from CFS1 or CSF100000.
+scheme-refnumber.inner.string.hint=A reference number usually begins ‘CFS’ or ‘CFSS’ followed by a sequential number, \
+  which could range from ‘CFS1’ or ‘CSF100000’.
 
 scheme-stillusing.heading=Are you still receiving loan payments through the scheme?
 scheme-stillusingyes.heading=When did you first receive a loan from the scheme?
