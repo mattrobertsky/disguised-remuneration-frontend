@@ -49,6 +49,7 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
 import scala.collection.immutable
+import scala.collection.immutable.ListMap
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
@@ -420,10 +421,9 @@ class JourneyController @Inject()(
         },
         postedForm => {
 
-
           for {
             schemes <- state.schemes
-            loanDetails <- schemes.loanDetailsProvided
+            loanDetails <- schemes.loanDetailsProvided.toSeq.sortBy(_._1)
           } yield {
             auditConnector.sendExplicitAudit(
               "disguisedRemunerationCheck",
@@ -434,16 +434,13 @@ class JourneyController @Inject()(
                   loanDetails._2.hmrcApproved,
                   loanDetails._2.amount,
                   loanDetails._2.genuinelyRepaid,
+                  loanDetails._2.writtenOff,
                   state
                 )
               )
             )
           }
 
-//          auditConnector.sendExplicitAudit(
-//            "disguisedRemunerationCheck",
-//            Json.toJson(AuditWrapper(username,state, state.schemes.map(_.loanDetails)))(AuditWrapper.auditWrapperFormatter)
-//          )
           clearState
           Logger.info(s"submission details sent to splunk")
           val contents = views.html.confirmation(getDateTime())
@@ -461,10 +458,11 @@ class JourneyController @Inject()(
     hmrcApproved: Boolean,
     amount: Money,
     genuinelyRepaid: Money,
+    writtenOff: Option[WrittenOff],
     data: JourneyState
   )
   case object AuditWrapper {
+    implicit val writtenOffFormatter: OFormat[WrittenOff] = Json.format[WrittenOff]
     implicit val auditWrapperFormatter: OFormat[AuditWrapper] = Json.format[AuditWrapper]
   }
 
-}
