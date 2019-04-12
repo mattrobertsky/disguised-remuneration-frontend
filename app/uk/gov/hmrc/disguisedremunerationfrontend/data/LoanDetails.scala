@@ -20,12 +20,17 @@ case class LoanDetails(
   year: Int,
   hmrcApproved: Boolean,
   amount: Money,
-  genuinelyRepaid: Money,
+  genuinelyRepaid: Option[Money],
   writtenOff: Option[WrittenOff]
 ) {
   // TODO move this to a pimp
   def toListString = {
-    List(amount.toString, genuinelyRepaid.toString, writtenOff.fold("")(wo=>wo.amount.toString), writtenOff.fold("")(wo=>wo.taxPaid.toString))
+    List(
+      "£" ++ amount.toString,
+      genuinelyRepaid.fold("£" ++ "0")(gr => "£" ++ gr.toString),
+      writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.amount.toString),
+      writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.taxPaid.toString)
+    )
   }
 }
 
@@ -38,9 +43,10 @@ import uk.gov.hmrc.disguisedremunerationfrontend.data.Scheme.MoneyRegex
 
 object LoanDetails {
 
-  type Stack = Fx3[
+  type Stack = Fx.fx4[
     UniformAsk[Boolean, ?],
     UniformAsk[Money, ?],
+    UniformAsk[Option[Money], ?],
     UniformAsk[WrittenOff, ?]
     ]
 
@@ -48,6 +54,7 @@ object LoanDetails {
   : _uniformCore
   : _uniformAsk[Boolean, ?]
   : _uniformAsk[Money, ?]
+  : _uniformAsk[Option[Money], ?]
   : _uniformAsk[WrittenOff, ?]
   ](year: Int, default: Option[LoanDetails] = None): Eff[R, LoanDetails] = {
     val (startDate, endDate) = year.toFinancialYear
@@ -67,11 +74,11 @@ object LoanDetails {
             ))
         ).in[R]
       repaid <-  ask[Money]("details-genuinely-repaid-amount")
-        .defaultOpt(default.map(_.genuinelyRepaid))
+        .defaultOpt(default.flatMap(_.genuinelyRepaid))
         .validating(
           "format",
           x => x.matches(MoneyRegex)
-        ).in[R] emptyUnless
+        ).in[R] when
         ask[Boolean]("details-genuinely-repaid")
           .defaultOpt(default.map(_.genuinelyRepaid != 0))
           .withCustomContentAndArgs(

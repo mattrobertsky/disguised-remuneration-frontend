@@ -46,33 +46,29 @@ object ContactDetails {
       address <- ask[Address]("contactdetails-address")
         .defaultOpt(default.map(_.address))
         .validating(
-          "Enter the building or street of your address",
-          address => !address.line1.isEmpty()
-        )
-        .validating(
-          "Building or street must be 40 characters or less",
+          "street-limit",
           address =>  address.line1.length <= 40
         )
         .validating(
-          "Building or street must only include letters a to z, numbers, apostrophes, ampersands, commas, hyphens, full stops, forward slashes and spaces",
+          "street-format",
           address => address.line1.matches(nameRegex)
         )
       telAndEmail <- ask[TelAndEmail]("contactdetails-telehoneemail")
         .defaultOpt(default.map(_.telephoneAndEmail))
         .validating(
-          "Telephone number must be 24 characters or less",
+          "phone-limit",
           contact =>  contact.telephone.fold(true)(_.length <= 24)
         )
         .validating(
-          "Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 0808 157 0192",
+          "phone-format",
           contact => contact.telephone.fold(true)(_.matches(telephoneRegex))
         )
         .validating(
-          "Email address must be 256 characters or less",
+          "email-limit",
           contact => contact.email.fold(true)(_.length <= 256)
         )
         .validating(
-          "Email address must only contain letters a to z, numbers, full stops, hyphens, underscores and @ signs",
+          "email-format",
           contact => contact.email.fold(true)(_.matches(emailRegex))
         )
     } yield {

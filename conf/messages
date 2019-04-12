@@ -193,8 +193,29 @@ aboutyou-confirmation.required=Enter the full name of the person you are acting 
 
 # contact details
 contactdetails-addressline1.required=Enter the building or street of your address
+contactdetails-address.street-limit=Building or street must be 40 characters or less
+contactdetails-address.street-format=Building or street must only include letters a to z, numbers, apostrophes, \
+  ampersands, commas, hyphens, full stops, forward slashes and spaces
+contactdetails-address.line1.street-format=Building or street must only include letters a to z, numbers, apostrophes, \
+  ampersands, commas, hyphens, full stops, forward slashes and spaces
+contactdetails-address.line2.street-format=
+contactdetails-address.town.street-format=
+contactdetails-address.county.street-format=
+contactdetails-address.postcode.street-format=
 contactdetails-addresstown.required=Enter the town or city of your address
 contactdetails-addresspostcode.required=Enter the postcode of your address
+contactdetails-telehoneemail.phone-limit=Telephone number must be 24 characters or less
+contactdetails-telehoneemail.telephone.phone-limit=Telephone number must be 24 characters or less
+contactdetails-telehoneemail.email.phone-limit=
+contactdetails-telehoneemail.phone-format=Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 0808 157 0192
+contactdetails-telehoneemail.telephone.phone-format=Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 0808 157 0192
+contactdetails-telehoneemail.email.phone-format=
+contactdetails-telehoneemail.email-limit=Email address must be 256 characters or less
+contactdetails-telehoneemail.email.email-limit=Email address must be 256 characters or less
+contactdetails-telehoneemail.telephone.email-limit=
+contactdetails-telehoneemail.email-format=Email address must only contain letters a to z, numbers, full stops, hyphens, underscores and @ signs
+contactdetails-telehoneemail.email.email-format=Email address must only contain letters a to z, numbers, full stops, hyphens, underscores and @ signs
+contactdetails-telehoneemail.telephone.email-format=
 
 #scheme
 scheme-name.required=Enter the name of the scheme

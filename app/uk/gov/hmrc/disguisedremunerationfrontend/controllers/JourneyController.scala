@@ -263,6 +263,7 @@ class JourneyController @Inject()(
         program = LoanDetails.program[FxAppend[Stack, PlayStack]](year, existing)
           .useForm(automatic[Unit, Boolean])
           .useForm(automatic[Unit, Money])
+          .useForm(automatic[Unit, Option[Money]])
           .useForm(automatic[Unit, WrittenOff]),
         shortLivedStore.persistence(request.internalId)
       ){data =>
@@ -340,12 +341,12 @@ class JourneyController @Inject()(
     state: JourneyState
   )(
     implicit request: AuthorisedRequest[AnyContent]
-  ): List[(Html, (List[(Html, Html)], Option[(Html, List[String])]))] = {
+  ): List[(Html, (List[(Html, Html)], Option[(Html, Map[String, List[String]])]))] = {
     def msg(in: String): Html = messages(request)(in)
     import HtmlFormat.escape
     state match {
       case JourneyState(Some(aboutYou), schemes, Some(contactDetails)) =>
-        val h: (Html, (List[(Html, Html)], Option[(Html, List[String])])) =
+        val h: (Html, (List[(Html, Html)], Option[(Html, Map[String, List[String]])])) =
           (msg("personal-details"),(List(
             msg("name") ->
               escape(username),
@@ -366,7 +367,7 @@ class JourneyController @Inject()(
             }
           ), Option.empty ))
 
-        val t: List[(Html, (List[(Html, Html)], Option[(Html, List[String])]))] = schemes.map { scheme =>
+        val t: List[(Html, (List[(Html, Html)], Option[(Html, Map[String, List[String]])]))] = schemes.map { scheme =>
           import scheme._
           val dateFormat = DateTimeFormatter.ofPattern("d MMMM YYYY")
           ((msg("scheme") |+| escape(s" $name")), (List(
@@ -383,8 +384,13 @@ class JourneyController @Inject()(
               msg(if(loanRecipient) "TRUE" else "FALSE"),
             msg("tax-or-national-insurance-paid-or-agreed-to-pay") ->
               settlement.fold(msg("none")){x => Html(s"£${x.amount}")}
-          ), Some(Html(s"Loan details for $name") -> scheme.loanDetails.map({case(k,v) => k.toString::v.fold(List.empty[String])(ld => ld.toListString)}).toList.flatten)
-
+          ), Some(Html(s"Loan details for $name") ->
+              scheme.loanDetails.flatMap(
+                {
+                  case(k,v) => Map(k.toString -> v.fold(List.empty[String])(ld => ld.toListString))
+                }
+              )
+            )
           ))
         }
         h :: t
