@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend
 
-import java.time.LocalDateTime
+import java.time.{LocalDateTime, ZoneId}
 import java.time.format.DateTimeFormatter
 
 package object data {
@@ -47,10 +47,10 @@ package object data {
   }
 
   def getDateTime(): String = {
-    val now = LocalDateTime.now()
+    val now = LocalDateTime.now(ZoneId.of("Europe/London"))
     val dateFormat = DateTimeFormatter.ofPattern("d MMMM yyyy")
-    val timeFormat = DateTimeFormatter.ofPattern("h:mm a")
-    val dateTime = s"${now.format(dateFormat)} at ${now.format(timeFormat)}"
+    val timeFormat = DateTimeFormatter.ofPattern("h:mma")
+    val dateTime = s"${now.format(dateFormat)} at ${now.format(timeFormat).toLowerCase}"
     dateTime
   }
 }
