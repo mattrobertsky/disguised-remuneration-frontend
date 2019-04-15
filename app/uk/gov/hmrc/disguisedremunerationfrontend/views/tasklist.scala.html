@@ -57,11 +57,11 @@
                     @if(done) {
                         <strong class="govuk-tag app-task-list__task-completed"
                         id="eligibility-completed"
-                        >DONE</strong>
+                        >@messages("common.done")</strong>
                     } else {
                         <strong class="govuk-tag app-task-list__task-completed incomplete"
                         id="eligibility-completed"
-                        >TO DO</strong>
+                        >@messages("common.todo")</strong>
                     }
 
                 </li>
