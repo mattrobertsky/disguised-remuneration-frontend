@@ -447,10 +447,8 @@ class JourneyController @Inject()(
   }
 
   def makeAudit(id: String, username: String, state: JourneyState)(implicit request: AuthorisedRequest[AnyContent]) = {
-
     // the audit for TXM
     auditConnector.sendExplicitAudit("disguisedRemunerationCheck", Json.toJson(AuditWrapper(username, state)))
-
     // the audit for RIS
     for {
       scheme <- state.schemes
@@ -483,6 +481,4 @@ class JourneyController @Inject()(
       )
     }
   }
-
-
 }
