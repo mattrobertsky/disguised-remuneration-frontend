@@ -37,49 +37,53 @@
     <p class="govuk-body">@messages("cya.p1")</p>
 
     @for((blockTitle, (items, loanDetails)) <- blocks) {
-        <h2 class="govuk-heading-m">@blockTitle</h2>
+        <div class="subsection--wide">
+            <h2 class="govuk-heading-m">@blockTitle</h2>
 
-        <dl class="app-check-your-answers app-check-your-answers--short">
-            @for((title, value) <- items) {
-                    <div class="app-check-your-answers__contents">
-                    <dt class="app-check-your-answers__question">@title</dt>
-                    <dd class="app-check-your-answers__answer">@value</dd>
+            <dl class="govuk-check-your-answers cya-questions-short">
+                @for((title, value) <- items) {
+                    <div>
+                        <dt class="cya-question">@title</dt>
+                        <dd class="cya-answer">@value</dd>
                     </div>
-            }
-        </dl>
-
-    @loanDetails.map { f =>
-        <h3 class="govuk-heading-s">@f._1</h3>
-        <table class="govuk-table loans-table">
-            <caption class="govuk-table__caption"></caption>
-            <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.tax-year")</th>
-                    <th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.amount")</th>
-                    <th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.repaid")</th>
-                    <th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.written-off")</th>
-                    <th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.tax-paid")</th>
-                    <th class="govuk-table__header" scope="col"></th>
-                </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-
-            @f._2.map{ ld =>
-                @for(n <- ld._2) {
-                <tr>
                 }
-                    <th class="govuk-table__header" scope="col">@ld._1</th>
-                @for(n <- ld._2) {
-                    <th class="govuk-table__header" scope="col">@n</th>
-                }
-                @for(n <- ld._2) {
-                </tr>
-                }
+            </dl>
+        </div>
 
-            }
+        @loanDetails.map { case (heading,data) =>
+        <div class="subsection--wide">
+            <h3 class="govuk-heading-s">@heading</h3>
+            <table class="govuk-table loans-table">
+                <caption class="govuk-table__caption"></caption>
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.tax-year")</th>
+                        <th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.amount")</th>
+                        <th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.repaid")</th>
+                        <th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.written-off")</th>
+                        <th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.tax-paid")</th>
+                        <th class="govuk-table__header" scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                @data.map{ case (taxyear, values) =>
+                    @for(n <- values) {
+                        <tr>
+                    }
 
-            </tbody>
-        </table>
+                    <td scope="col">@taxyear</td>
+
+                    @for(n <- values) {
+                        <td scope="col">@n</td>
+                    }
+
+                    @for(n <- values) {
+                        </tr>
+                    }
+                }
+                </tbody>
+            </table>
+        </div>
         }
     }
 
