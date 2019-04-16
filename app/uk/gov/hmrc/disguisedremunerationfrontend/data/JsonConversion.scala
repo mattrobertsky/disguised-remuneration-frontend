@@ -89,4 +89,31 @@ object JsonConversion {
         (JsPath \ "contactDetails").formatNullable[ContactDetails]
     )(JourneyState.apply, unlift(JourneyState.unapply))
   }
+
+  case class FlatState(
+    submissionId: String,
+    username: String,
+    aboutYou: Option[Option[AboutYou]],
+    schemeName: String,
+    dotasReferenceNumber: Option[String],
+    caseReferenceNumber: Option[String],
+    schemeStart: Date,
+    schemeStopped: Option[Date],
+    employee: Option[Employer],
+    loanRecipient: Boolean,
+    loanRecipientName: Option[String],
+    settlement: Option[TaxSettlement],
+    year: Int,
+    hmrcApproved: Boolean,
+    amount: Money,
+    genuinelyRepaid: Option[Money],
+    writtenOff: Option[WrittenOff],
+    contactDetails: Option[ContactDetails]
+  )
+  case object FlatState {
+    implicit val format = Json.format[FlatState]
+  }
+
+
+
 }

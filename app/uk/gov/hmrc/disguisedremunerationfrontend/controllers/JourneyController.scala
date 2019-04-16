@@ -40,7 +40,7 @@ import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
 import uk.gov.hmrc.disguisedremunerationfrontend.actions.{AuthorisedAction, AuthorisedRequest}
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
 import uk.gov.hmrc.disguisedremunerationfrontend.controllers.AssetsFrontend.{optionHtml => _, _}
-import uk.gov.hmrc.disguisedremunerationfrontend.data.JsonConversion.journeyStateFormat
+import uk.gov.hmrc.disguisedremunerationfrontend.data.JsonConversion.{FlatState, journeyStateFormat}
 import uk.gov.hmrc.disguisedremunerationfrontend.data.{Date, Nino, Utr, _}
 import uk.gov.hmrc.disguisedremunerationfrontend.repo.{JourneyStateStore, ShortLivedStore}
 import uk.gov.hmrc.disguisedremunerationfrontend.views
@@ -351,7 +351,7 @@ class JourneyController @Inject()(
             msg("name") ->
               escape(username),
             msg("filling-in-form-for-self") ->
-              msg(if(aboutYou.isEmpty) "TRUE" else "FALSE"),
+              msg(aboutYou.fold("FALSE")(x => if(x.completedBySelf) "TRUE" else "FALSE")),
             msg("address") ->
               contactDetails.address.lines.
                 map(escape).
@@ -413,7 +413,6 @@ class JourneyController @Inject()(
     }
   }
 
-
   def cyaPost: Action[AnyContent] = authorisedAction.async { implicit request =>
     implicit val m: UniformMessages[Html] = messages(request)
     getState.map { state =>
@@ -427,26 +426,7 @@ class JourneyController @Inject()(
         },
         postedForm => {
 
-          for {
-            schemes <- state.schemes
-            loanDetails <- schemes.loanDetailsProvided.toSeq.sortBy(_._1)
-          } yield {
-            auditConnector.sendExplicitAudit(
-              "disguisedRemunerationCheck",
-              Json.toJson(
-                AuditWrapper(
-                  username,
-                  loanDetails._1,
-                  loanDetails._2.hmrcApproved,
-                  loanDetails._2.amount,
-                  loanDetails._2.genuinelyRepaid,
-                  loanDetails._2.writtenOff,
-                  state
-                )
-              )
-            )
-          }
-
+          makeAudit(java.util.UUID.randomUUID().toString, username, state)
           clearState
           Logger.info(s"submission details sent to splunk")
           val contents = views.html.confirmation(getDateTime())
@@ -460,16 +440,45 @@ class JourneyController @Inject()(
 
   case class AuditWrapper(
     submitterName: String,
-    year: Year,
-    hmrcApproved: Boolean,
-    amount: Money,
-    genuinelyRepaid: Option[Money],
-    writtenOff: Option[WrittenOff],
     data: JourneyState
   )
   case object AuditWrapper {
-    implicit val writtenOffFormatter: OFormat[WrittenOff] = Json.format[WrittenOff]
     implicit val auditWrapperFormatter: OFormat[AuditWrapper] = Json.format[AuditWrapper]
   }
 
+  def makeAudit(id: String, username: String, state: JourneyState)(implicit request: AuthorisedRequest[AnyContent]) = {
+    // the audit for TXM
+    auditConnector.sendExplicitAudit("disguisedRemunerationCheck", Json.toJson(AuditWrapper(username, state)))
+    // the audit for RIS
+    for {
+      scheme <- state.schemes
+      loanDetails <- scheme.loanDetailsProvided.toSeq.sortBy(_._1)
+    } yield {
+      auditConnector.sendExplicitAudit(
+        "disguisedRemunerationRis",
+        Json.toJson(
+          FlatState(
+            id,
+            username,
+            state.aboutYou,
+            scheme.name,
+            scheme.dotasReferenceNumber,
+            scheme.caseReferenceNumber,
+            scheme.schemeStart,
+            scheme.schemeStopped,
+            scheme.employee,
+            scheme.loanRecipient,
+            scheme.loanRecipientName,
+            scheme.settlement,
+            loanDetails._2.year,
+            loanDetails._2.hmrcApproved,
+            loanDetails._2.amount,
+            loanDetails._2.genuinelyRepaid,
+            loanDetails._2.writtenOff,
+            state.contactDetails
+          )
+        )
+      )
+    }
+  }
 }
