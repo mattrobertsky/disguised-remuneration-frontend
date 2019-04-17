@@ -88,30 +88,48 @@ object JsonConversion {
       (JsPath \ "contactDetails").formatNullable[ContactDetails]
   )(JourneyState.apply, unlift(JourneyState.unapply))
 
-  case class FlatState(
-    submissionId: String,
-    username: String,
-    aboutYou: Option[AboutYou],
-    schemeName: String,
-    dotasReferenceNumber: Option[String],
-    caseReferenceNumber: Option[String],
-    schemeStart: Date,
-    schemeStopped: Option[Date],
-    employee: Option[Employer],
-    loanRecipient: Boolean,
-    loanRecipientName: Option[String],
-    settlement: Option[TaxSettlement],
-    year: Int,
-    hmrcApproved: Boolean,
-    amount: Money,
-    genuinelyRepaid: Option[Money],
-    writtenOff: Option[WrittenOff],
-    contactDetails: Option[ContactDetails],
-    submissionDate: java.time.LocalDateTime = java.time.LocalDateTime.now
-  )
+  import cats.implicits._
 
-  case object FlatState {
-    implicit val format = Json.format[FlatState]
+  def flatState(id: String, username: String, state: JourneyState): List[JsValue] = for {
+    scheme <- state.schemes
+    (year,detail) <- scheme.loanDetails.collect { case (year, Some(o)) => (year,o)}
+  } yield {
+
+    Json.obj (
+      "time" -> java.time.OffsetDateTime.now,
+      "detail.caseReferenceNumber" -> scheme.caseReferenceNumber,
+      "detail.dotasReferenceNumber" -> scheme.dotasReferenceNumber,
+      "detail.year" -> year,
+      "detail.aboutYou.actingFor" -> state.aboutYou.collect { case a: AboutAnother => a.actingFor},
+      "detail.aboutYou.alive" -> state.aboutYou.collect { case a: AboutAnother => a.alive},
+      "detail.aboutYou.completedBySelf" -> state.aboutYou.map{_.completedBySelf},
+      "detail.aboutYou.deceasedBefore" -> state.aboutYou.collect { case a: AboutAnother => a.deceasedBefore},
+      "detail.aboutYou.employmentStatus" -> state.aboutYou.collect { case a: AboutAnother => a.employmentStatus},
+      "detail.aboutYou.identification.utr" -> state.aboutYou.flatMap{_.identification.right.toOption},
+      "detail.aboutYou.identification.nino" -> state.aboutYou.flatMap{_.identification.left.toOption},
+      "detail.amount" -> detail.amount,
+      "detail.contactDetails.address.county" -> state.contactDetails.map{_.address.county},
+      "detail.contactDetails.address.line1" -> state.contactDetails.map{_.address.line1},
+      "detail.contactDetails.address.line2" -> state.contactDetails.map{_.address.line2},
+      "detail.contactDetails.address.postcode" -> state.contactDetails.map{_.address.postcode},
+      "detail.contactDetails.address.town" -> state.contactDetails.map{_.address.town},
+      "detail.contactDetails.telephoneAndEmail.email" -> state.contactDetails.flatMap{_.telephoneAndEmail.email},
+      "detail.contactDetails.telephoneAndEmail.telephone" -> state.contactDetails.flatMap{_.telephoneAndEmail.telephone},
+      "detail.employee.name" -> scheme.employee.map{_.name},
+      "detail.employee.paye" -> scheme.employee.map{_.paye},
+      "detail.genuinelyRepaid" -> detail.genuinelyRepaid,
+      "detail.hmrcApproved" -> detail.hmrcApproved,
+      "detail.loanRecipient" -> scheme.loanRecipient,
+      "detail.loanRecipientName" -> scheme.loanRecipientName,
+      "detail.schemeName" -> scheme.name,
+      "detail.schemeStart" -> scheme.schemeStart,
+      "detail.schemeStopped" -> scheme.schemeStopped,
+      "detail.settlement.amount" -> scheme.settlement.map{_.amount},
+      "detail.submissionId" -> id,
+      "detail.username" -> username,
+      "detail.writtenOff.amount" -> detail.writtenOff.map{_.amount},
+      "detail.writtenOff.taxPaid" -> detail.writtenOff.map{_.taxPaid}
+    )
   }
 
 }

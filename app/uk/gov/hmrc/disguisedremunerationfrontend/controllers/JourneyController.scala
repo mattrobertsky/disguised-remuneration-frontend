@@ -22,10 +22,9 @@ import java.time.format.DateTimeFormatter
 import cats.implicits._
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import javax.inject.{Inject, Singleton}
-import ltbs.uniform._
+import ltbs.uniform._, web._
 import ltbs.uniform.interpreters.playframework._
 import ltbs.uniform.web.InferParser._
-import ltbs.uniform.web._
 import ltbs.uniform.web.parser._
 import org.atnos.eff._
 import play.api.Logger
@@ -40,8 +39,8 @@ import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
 import uk.gov.hmrc.disguisedremunerationfrontend.actions.{AuthorisedAction, AuthorisedRequest}
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
 import uk.gov.hmrc.disguisedremunerationfrontend.controllers.AssetsFrontend.{optionHtml => _, _}
-import uk.gov.hmrc.disguisedremunerationfrontend.data.JsonConversion.{FlatState, journeyStateFormat}
-import uk.gov.hmrc.disguisedremunerationfrontend.data.{Date, Nino, Utr, _}
+import uk.gov.hmrc.disguisedremunerationfrontend.data.JsonConversion._
+import uk.gov.hmrc.disguisedremunerationfrontend.data._
 import uk.gov.hmrc.disguisedremunerationfrontend.repo.{JourneyStateStore, ShortLivedStore}
 import uk.gov.hmrc.disguisedremunerationfrontend.views
 import uk.gov.hmrc.http.HeaderCarrier
@@ -450,34 +449,11 @@ class JourneyController @Inject()(
     // the audit for TXM
     auditConnector.sendExplicitAudit("disguisedRemunerationCheck", Json.toJson(AuditWrapper(username, state)))
     // the audit for RIS
-    for {
-      scheme <- state.schemes
-      loanDetails <- scheme.loanDetailsProvided.toSeq.sortBy(_._1)
-    } yield {
-
-      val flatState = Json.toJson(FlatState(
-            id,
-            username,
-            state.aboutYou,
-            scheme.name,
-            scheme.dotasReferenceNumber,
-            scheme.caseReferenceNumber,
-            scheme.schemeStart,
-            scheme.schemeStopped,
-            scheme.employee,
-            scheme.loanRecipient,
-            scheme.loanRecipientName,
-            scheme.settlement,
-            loanDetails._2.year,
-            loanDetails._2.hmrcApproved,
-            loanDetails._2.amount,
-            loanDetails._2.genuinelyRepaid,
-            loanDetails._2.writtenOff,
-            state.contactDetails
-      ))
+    flatState(id, username, state).map { s => 
+      println(s)
       auditConnector.sendExplicitAudit(
         "disguisedRemunerationRis",
-        flatState
+        s
       )
     }
   }

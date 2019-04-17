@@ -66,7 +66,7 @@ class AboutYouSpec extends WordSpec with Matchers {
               s"  VALIDATION ERROR: $validationErrorMessage"
             case Right(Left(error: AboutYou.Error)) =>
               s"  OUTPUT ERROR: $error"
-            case Right(Right(Some(aboutYou@AboutYou(_,alive,_,deceasedOn,_,_)))) =>
+            case Right(Right(aboutYou@AboutAnother(alive,_,deceasedOn,_,_))) =>
               // n.b. these foos test the implicit conversions
               // TODO do some assertions on converting too and from json (see sdil)
 //              val foo = Json.toJson[AboutYou](aboutYou)
@@ -75,7 +75,7 @@ class AboutYouSpec extends WordSpec with Matchers {
 //              val barfoo = Json.toJson[Option[Option[AboutYou]]](None)
               alive shouldBe (deceasedOn.isEmpty)
               s"  SUCCESS: $aboutYou"
-            case Right(Right(None)) =>
+            case Right(Right(as: AboutSelf)) =>
               s"  SUCCESS: {none}"
           })
           println()
@@ -88,7 +88,7 @@ class AboutYouSpec extends WordSpec with Matchers {
       val allJourneys = program[FxAppend[Stack, LogicTableStack]](None, Some(validNino), None)
         .evalState(UniformCore())
         .giveExamples{
-          case "aboutyou-completedby" => List(true, false)
+          case "aboutyou-completedby" => List(true)
           case "aboutyou-personalive" => List(false)
           case "aboutyou-deceasedbefore" => List(true)
         }
@@ -109,7 +109,7 @@ class AboutYouSpec extends WordSpec with Matchers {
           println(outcome match {
             case Right(Left(NoNeedToComplete)) =>
               s"  SUCCESS: no need to complete"
-            case Right(Right(None)) =>
+            case Right(Right(AboutSelf(""))) =>
               s"  SUCCESS: {none}"
             case _ => 1 shouldBe 2
           })
