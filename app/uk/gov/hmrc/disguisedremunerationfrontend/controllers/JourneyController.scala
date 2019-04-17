@@ -323,7 +323,7 @@ class JourneyController @Inject()(
               clearState
               Future.successful(Redirect(routes.AuthenticationController.signOut()))
             }
-            case Right(data: Option[AboutYou]) =>
+            case Right(data: AboutYou) =>
                 setState(state.copy(aboutYou = Some(data))) map { _ =>
                   Logger.debug("completed about you for someone else without enrolments")
                   Redirect(routes.JourneyController.index())
@@ -351,7 +351,7 @@ class JourneyController @Inject()(
             msg("name") ->
               escape(username),
             msg("filling-in-form-for-self") ->
-              msg(aboutYou.fold("FALSE")(x => if(x.completedBySelf) "TRUE" else "FALSE")),
+              msg(if(aboutYou.completedBySelf) "TRUE" else "FALSE"),
             msg("address") ->
               contactDetails.address.lines.
                 map(escape).
@@ -454,10 +454,8 @@ class JourneyController @Inject()(
       scheme <- state.schemes
       loanDetails <- scheme.loanDetailsProvided.toSeq.sortBy(_._1)
     } yield {
-      auditConnector.sendExplicitAudit(
-        "disguisedRemunerationRis",
-        Json.toJson(
-          FlatState(
+
+      val flatState = Json.toJson(FlatState(
             id,
             username,
             state.aboutYou,
@@ -476,8 +474,10 @@ class JourneyController @Inject()(
             loanDetails._2.genuinelyRepaid,
             loanDetails._2.writtenOff,
             state.contactDetails
-          )
-        )
+      ))
+      auditConnector.sendExplicitAudit(
+        "disguisedRemunerationRis",
+        flatState
       )
     }
   }
