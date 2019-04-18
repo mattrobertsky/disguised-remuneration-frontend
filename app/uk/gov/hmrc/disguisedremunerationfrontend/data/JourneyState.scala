@@ -17,10 +17,13 @@
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
 case class JourneyState(
-                         aboutYou: Option[Option[AboutYou]] = None,
-                         schemes: List[Scheme] = Nil,
-                         contactDetails: Option[ContactDetails] = None
-                       ) {
-  def readyToSubmit = aboutYou.isDefined && contactDetails.isDefined && schemes.nonEmpty &&
-  schemes.forall(_.readyToSubmit)
+  aboutYou: Option[AboutYou] = None,
+  schemes: List[Scheme] = Nil,
+  contactDetails: Option[ContactDetails] = None
+) {
+  def readyToSubmit =
+    aboutYou.isDefined &&
+    contactDetails.isDefined &&
+    schemes.nonEmpty &&
+    schemes.forall(_.readyToSubmit)
 }

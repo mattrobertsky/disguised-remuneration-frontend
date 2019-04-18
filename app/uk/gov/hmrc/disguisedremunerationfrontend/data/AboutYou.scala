@@ -20,20 +20,28 @@ package uk.gov.hmrc.disguisedremunerationfrontend.data
 import ltbs.uniform._
 import org.atnos.eff._
 import uk.gov.hmrc.disguisedremunerationfrontend.controllers.EmploymentStatus
+import cats.implicits._
 
-case class AboutYou(
-  completedBySelf: Boolean,
+sealed trait AboutYou {
+  def identification: Either[Nino, Utr]
+  def completedBySelf: Boolean 
+}
+
+case class AboutSelf (
+  nino: String
+) extends AboutYou {
+  def identification: Either[Nino, Utr] = Left(nino)
+  def completedBySelf: Boolean = true  
+}
+
+case class AboutAnother (
   alive: Boolean,
-  identification: Option[Either[Nino, Utr]] = None,
-  deceasedBefore: Option[Boolean] = None,
+  identification: Either[Nino, Utr],
+  deceasedBefore: Option[Boolean],
   employmentStatus: Option[EmploymentStatus] = None,
   actingFor: Option[String] = None
-) {
-
-  private def nino: Option[Nino] = identification match {
-    case Some(Left(n)) => Some(n)
-    case _ => None
-  }
+) extends AboutYou {
+  def completedBySelf: Boolean = false
 }
 
 object AboutYou {
@@ -60,65 +68,66 @@ object AboutYou {
       : _uniformAsk[Either[Nino,Utr],?]
       : _uniformAsk[EmploymentStatus,?]
       : _uniformAsk[Unit,?]
-  ](default: Option[Option[AboutYou]], nino: Option[Nino], utr: Option[Utr]): Eff[R, Either[Error,Option[AboutYou]]] =
-    for {
-      completedBy <- ask[Boolean]("aboutyou-completedby")
-                       .defaultOpt(default.map(_.isDefined))
-      ret <- completedBy match {
-        case false =>
-          (nino, utr) match {
-            case (None, None) =>
-              for {
-                nino <- ask[Nino]("aboutyou-nino")
-                  .defaultOpt(default.flatMap(_.flatMap(_.nino)))
-                  .validating(
-                    "format",
-                    x => x.toUpperCase.replaceAll("\\s","").matches(regExNino)
-                  )
-                  .in[R]
-              } yield {
-                Right(Some(AboutYou(completedBySelf = true, alive = true, Some(Left(nino)), None, None, None)))
-              }
-            case _ =>
-              Eff.pure[R, Either[Error, Option[AboutYou]]](Right(None))
-          }
-        case true => for {
-          alive   <- ask[Boolean]("aboutyou-personalive")
-                       .defaultOpt(default.flatMap(_.map(_.alive)))
-          employmentStatus  <- ask[EmploymentStatus]("aboutyou-employmentstatus")
-                                 .defaultOpt(default.flatMap(_.flatMap(_.employmentStatus))).in[R] when !alive
-          deceasedBefore  <- ask[Boolean]("aboutyou-deceasedbefore")
-                                  .defaultOpt(default.flatMap(_.flatMap(_.deceasedBefore)))
-                                  .in[R] when employmentStatus == Some(EmploymentStatus.Employed)
-          notRequiredToComplete = deceasedBefore == Some(true)
-          _ <- tell[Unit]("aboutyou-noloancharge")("_").in[R] when notRequiredToComplete
-          id <- ask[Either[Nino,Utr]]("aboutyou-identity")
-                  .defaultOpt(default.flatMap(_.flatMap(_.identification)))
-                  .validating(
-                    "nino-format",
-                    {
-                      case Left(nino) => nino.matches(regExNino)
-                      case _ => true
-                    }
-                  )
-                  .validating(
-                    "utr-format",
-                    {
-                      case Left(nino) => true
-                      case Right(utr) => utr.matches(regExUTR)
-                    }
-                  )
-                  .in[R] when (!notRequiredToComplete)
-          personName <- ask[String]("aboutyou-confirmation")
-                          .defaultOpt(default.flatMap(_.flatMap(_.actingFor)))
-                          .in[R] when !id.isEmpty
-        } yield {
-          if (notRequiredToComplete)
-            Left(NoNeedToComplete)
-          else
-            Right(Some(AboutYou(false, alive, id, deceasedBefore, employmentStatus, personName)))
-        }
-      }
-  } yield (ret)
+  ](default: Option[AboutYou], nino: Option[Nino], utr: Option[Utr]): Eff[R, Either[Error,AboutYou]] = {
 
+    def aboutAnotherProgram(localDefault: Option[AboutAnother]): Eff[R, Either[Error,AboutYou]] =
+      for {
+        alive            <- ask[Boolean]("aboutyou-personalive")
+                              .defaultOpt(localDefault.map(_.alive))
+        employmentStatus <- ask[EmploymentStatus]("aboutyou-employmentstatus")
+                              .defaultOpt(localDefault.flatMap(_.employmentStatus))
+                              .in[R] when !alive
+        deceasedBefore   <- ask[Boolean]("aboutyou-deceasedbefore")
+                              .defaultOpt(localDefault.flatMap(_.deceasedBefore))
+                              .in[R] when employmentStatus == Some(EmploymentStatus.Employed)
+        r                <- if (deceasedBefore == Some(true)) { 
+          tell[Unit]("aboutyou-noloancharge")(()).in[R] >> Eff.pure(Left(NoNeedToComplete))
+        } else {
+          for {
+            id <- ask[Either[Nino,Utr]]("aboutyou-identity")
+              .defaultOpt(localDefault.map(_.identification))
+              .validating(
+                "nino-format", {
+                  case Left(nino) => nino.matches(regExNino)
+                  case _ => true
+                }
+              ).validating(
+                "utr-format",
+                {
+                  case Left(nino) => true
+                  case Right(utr) => utr.matches(regExUTR)
+                }
+              )
+              .in[R]
+            personName <- ask[String]("aboutyou-confirmation")
+            .defaultOpt(localDefault.flatMap(_.actingFor))
+            .in[R] when !id.isEmpty
+          } yield Right(AboutAnother(
+            alive,
+            id,
+            deceasedBefore,
+            employmentStatus,
+            personName
+          ))
+        }
+      } yield r
+
+    def aboutSelfProgram(default: Option[AboutSelf]): Eff[R, Either[Error,AboutYou]] = {
+      val i: Eff[R, String] = nino match {
+        case Some(n) => Eff.pure(n)
+        case None    => ask[Nino]("aboutyou-nino").defaultOpt(default.map{_.nino})
+      }
+      i.map{x => AboutSelf(x).asRight[Error]}
+    }
+
+    ask[Boolean]("aboutyou-completedby")
+      .defaultOpt(default.map{_.isInstanceOf[AboutAnother]}) >>= {
+        if (_) aboutAnotherProgram(
+          default.collect{case x: AboutAnother => x}
+        ) else aboutSelfProgram(
+          default.collect{case x: AboutSelf => x}
+        )
+      }
+
+  }
 }

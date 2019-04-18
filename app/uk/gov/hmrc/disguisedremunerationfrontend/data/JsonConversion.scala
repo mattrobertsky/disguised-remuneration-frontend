@@ -28,6 +28,24 @@ object JsonConversion {
   implicit private[data] lazy val loanDetailsFormatter = Json.format[LoanDetails]
   implicit private[data] lazy val taxSettlementFormatter = Json.format[TaxSettlement]
 
+  implicit val formatAboutYou: Format[AboutYou] = {
+    implicit val fself = Json.format[AboutSelf]
+    implicit lazy val ef = eitherFormatter[Nino,Utr]("nino", "utr")    
+    implicit val fanother = Json.format[AboutAnother]    
+    val feither = eitherFormatter[AboutSelf, AboutAnother]("aboutSelf", "aboutAnother")
+    new Format[AboutYou] {
+      def reads(json: JsValue): JsResult[AboutYou] = feither.reads(json).map{
+        case Left(l) => l
+        case Right(r) => r
+      }
+
+      def writes(o: AboutYou): JsValue = feither.writes(o match {
+        case l: AboutSelf => Left(l)
+        case r: AboutAnother => Right(r)
+      })
+    }
+  }
+
   implicit private[data] def intMapFormatter[A: Format] = new Format[Map[Int,A]] {
     // TODO: Error handling
     def reads(json: JsValue): JsResult[Map[Int,A]] = {
@@ -64,36 +82,16 @@ object JsonConversion {
     }
   }
 
-  implicit private[data] def formatAboutYouOptionOption = new Format[Option[AboutYou]] {
-
-    implicit lazy val ef = eitherFormatter[Nino,Utr]("nino", "utr")
-    lazy val innerF = Json.format[AboutYou]
-
-    def reads(json: JsValue): JsResult[Option[AboutYou]] = json match {
-      case JsString("completedBySelf") => JsSuccess(None)
-      case x => innerF.reads(x).map{Some(_)}
-    }
-
-    def writes(o: Option[AboutYou]): JsValue = o match {
-      case None => JsString("completedBySelf")
-      case Some(obj) => innerF.writes(obj)
-    }
-  }
-
-
-  implicit def journeyStateFormat: Format[JourneyState] = {
-
-    (
-      (JsPath \ "aboutYou").formatNullable[Option[AboutYou]] and
-        (JsPath \ "schemes").format[List[Scheme]] and
-        (JsPath \ "contactDetails").formatNullable[ContactDetails]
-    )(JourneyState.apply, unlift(JourneyState.unapply))
-  }
+  implicit def journeyStateFormat: Format[JourneyState] = (
+    (JsPath \ "aboutYou").formatNullable[AboutYou] and
+      (JsPath \ "schemes").format[List[Scheme]] and
+      (JsPath \ "contactDetails").formatNullable[ContactDetails]
+  )(JourneyState.apply, unlift(JourneyState.unapply))
 
   case class FlatState(
     submissionId: String,
     username: String,
-    aboutYou: Option[Option[AboutYou]],
+    aboutYou: Option[AboutYou],
     schemeName: String,
     dotasReferenceNumber: Option[String],
     caseReferenceNumber: Option[String],
@@ -108,12 +106,12 @@ object JsonConversion {
     amount: Money,
     genuinelyRepaid: Option[Money],
     writtenOff: Option[WrittenOff],
-    contactDetails: Option[ContactDetails]
+    contactDetails: Option[ContactDetails],
+    submissionDate: java.time.LocalDateTime = java.time.LocalDateTime.now
   )
+
   case object FlatState {
     implicit val format = Json.format[FlatState]
   }
-
-
 
 }
