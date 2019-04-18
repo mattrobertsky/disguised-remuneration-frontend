@@ -39,7 +39,7 @@ case class AboutAnother (
   identification: Either[Nino, Utr],
   deceasedBefore: Option[Boolean],
   employmentStatus: Option[EmploymentStatus] = None,
-  actingFor: Option[String] = None
+  actingFor: String
 ) extends AboutYou {
   def completedBySelf: Boolean = false
 }
@@ -100,8 +100,8 @@ object AboutYou {
               )
               .in[R]
             personName <- ask[String]("aboutyou-confirmation")
-            .defaultOpt(localDefault.flatMap(_.actingFor))
-            .in[R] when !id.isEmpty
+            .defaultOpt(localDefault.map(_.actingFor))
+            .in[R]
           } yield Right(AboutAnother(
             alive,
             id,
