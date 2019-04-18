@@ -71,6 +71,11 @@ object ContactDetails {
           "email-format",
           contact => contact.email.fold(true)(_.matches(emailRegex))
         )
+        .validating(
+          "email-or-phone-number-needed",
+          {case TelAndEmail(None,None) => false; case _ => true}
+        )
+      
     } yield {
       ContactDetails(address, telAndEmail)
     }
