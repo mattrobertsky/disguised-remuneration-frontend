@@ -16,16 +16,12 @@
 
 @(items: (Html, Either[Html,List[(String, Option[String],Option[String],Boolean)]])*)(implicit messages: UniformMessages[Html])
 <div class="govuk-width-container">
-
 <main class="govuk-main-wrapper govuk-main-wrapper--l" id="main-content" role="main">
-
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-        <p>
-        <p>
-    <h1 class="govuk-heading-xl">
+    <h1 class="heading-xlarge">
         @messages("landing.heading")
     </h1>
 
@@ -68,7 +64,7 @@
             }
         </ul>
     </li>
-}
+    }
 </ol>
 
  </div>
