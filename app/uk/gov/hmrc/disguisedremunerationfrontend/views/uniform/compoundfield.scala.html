@@ -21,11 +21,12 @@
 @path=@{key.split("[.]").filter(_.nonEmpty).tail}
 @fieldErrors=@{errors.atPath(path:_*)}
 
-<div class="form-group @if(errors.definedAtPath(path.drop(1):_*)) {form-group--error}">
+<div class="form-group @if(errors.definedAtPath(path:_*)) {form-group-error}">
   <label class="label" for="@key">
     @messages(s"$key.heading")
   </label>
-  @errors.atPath(path.drop(1):_*).filter(_ != "").map { error =>
+
+  @errors.atPath(path:_*).filter(_ != "").map { error =>
     <span id="@key-error" class="error-message">
       @messages(List(s"$key.$error", error))
     </span>
