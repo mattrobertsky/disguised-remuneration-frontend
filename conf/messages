@@ -320,3 +320,5 @@ tasklist.caption=Caption
 tasklist.item=Item
 tasklist.delete=Delete
 tasklist.edit=Edit
+
+contactdetails-telehoneemail.email-or-phone-number-needed=A valid email address or telephone number is required
