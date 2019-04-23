@@ -260,7 +260,7 @@ class JourneyController @Inject()(
       val scheme = state.schemes(schemeIndex)
       val existing = scheme.loanDetails(year)
       runWeb(
-        program = LoanDetails.program[FxAppend[Stack, PlayStack]](year, existing)
+        program = LoanDetails.program[FxAppend[Stack, PlayStack]](year, scheme, existing)
           .useForm(automatic[Unit, Boolean])
           .useForm(automatic[Unit, Money])
           .useForm(automatic[Unit, Option[Money]])

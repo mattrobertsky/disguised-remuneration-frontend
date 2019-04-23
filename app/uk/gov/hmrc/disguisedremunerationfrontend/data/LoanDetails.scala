@@ -56,10 +56,19 @@ object LoanDetails {
   : _uniformAsk[Money, ?]
   : _uniformAsk[Option[Money], ?]
   : _uniformAsk[WrittenOff, ?]
-  ](year: Int, default: Option[LoanDetails] = None): Eff[R, LoanDetails] = {
+  ](year: Int, scheme: Scheme, default: Option[LoanDetails] = None): Eff[R, LoanDetails] = {
     val (startDate, endDate) = year.toFinancialYear
     for {
-      approved <- ask[Boolean]("details-hmrc-approved").defaultOpt(default.map(_.hmrcApproved)).in[R]
+      approved <- ask[Boolean]("details-hmrc-approved")
+        .defaultOpt(default.map(_.hmrcApproved)
+        )
+          .withCustomContentAndArgs(
+            ("details-hmrc-approved.heading.hint",
+              ("details-hmrc-approved.heading.hint.custom",
+                List(scheme.name)
+              )
+            )
+          ).in[R]
       amount <- ask[Money]("details-amount")
         .defaultOpt(default.map(_.amount))
         .validating(
@@ -72,12 +81,26 @@ object LoanDetails {
             List(startDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")),
               endDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")))
             ))
+        )
+        .withCustomContentAndArgs(
+          ("details-amount.heading.hint",
+            ("details-amount.heading.hint.custom",
+              List(scheme.name)
+            )
+          )
         ).in[R]
       repaid <-  ask[Money]("details-genuinely-repaid-amount")
         .defaultOpt(default.flatMap(_.genuinelyRepaid))
         .validating(
           "format",
           x => x.matches(MoneyRegex)
+        )
+        .withCustomContentAndArgs(
+          ("details-genuinely-repaid-amount.heading.hint",
+            ("details-genuinely-repaid-amount.heading.hint.custom",
+              List(scheme.name)
+            )
+          )
         ).in[R] when
         ask[Boolean]("details-genuinely-repaid")
           .defaultOpt(default.map(_.genuinelyRepaid != 0))
@@ -87,6 +110,13 @@ object LoanDetails {
                 List(startDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")),
                   endDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")))
               ))
+          )
+          .withCustomContentAndArgs(
+            ("details-genuinely-repaid.heading.hint",
+              ("details-genuinely-repaid.heading.hint.custom",
+                List(scheme.name)
+              )
+            )
           ).in[R]
       writtenOff <- ask[WrittenOff]("details-written-off-amount")
         .defaultOpt(default.flatMap(_.writtenOff))
@@ -106,7 +136,13 @@ object LoanDetails {
           "tax-format",
            x => x.taxPaid.matches(MoneyRegex)
         )
-        .in[R] when
+        .withCustomContentAndArgs(
+          ("details-written-off-amount.heading.hint",
+            ("details-written-off-amount.heading.hint.custom",
+              List(scheme.name)
+            )
+          )
+        ).in[R] when
         ask[Boolean]("details-written-off")
           .defaultOpt(default.map(_.writtenOff.isDefined))
           .withCustomContentAndArgs(
@@ -115,6 +151,13 @@ object LoanDetails {
                 List(startDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")),
                   endDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")))
               ))
+          )
+          .withCustomContentAndArgs(
+            ("details-written-off.heading.hint",
+              ("details-written-off.heading.hint.custom",
+                List(scheme.name)
+              )
+            )
           ).in[R]
     } yield {
       LoanDetails(year, approved, amount, repaid, writtenOff)

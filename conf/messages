@@ -119,20 +119,35 @@ scheme-settlementstatus.amount.heading=Enter the total amount.
 scheme-settlementstatus.dateOfSettlement.heading=Date paid
 # scheme validation
 
+details-hmrc-approved.heading=Is this loan an approved fixed-term loan?
+details-hmrc-approved.heading.hint=
+details-hmrc-approved.heading.hint.custom=Scheme: {0}
+
 details-amount.heading=What was the total loan amount paid from START to END?
 details-amount.heading.range=What was the total loan amount paid from {0} to {1}?
+details-amount.heading.hint=
+details-amount.heading.hint.custom=Scheme: {0}
 
-details-hmrc-approved.heading=Is this loan an approved fixed-term loan?
 details-genuinely-repaid-amount.heading=How much of the loan did you repay?
 details-genuinely-repaid-amount.intro=Do not include any types of repayment that we disregard. \
   <a href='https://www.gov.uk/guidance/report-and-account-for-your-disguised-remuneration-loan-charge' target='_blank'>\
   Find out which repayments are disregarded \
   (opens in a new window or tab).</a>
+details-genuinely-repaid-amount.heading.hint=
+details-genuinely-repaid-amount.heading.hint.custom=Scheme: {0}
+
 details-genuinely-repaid.heading=Have you made any repayments for the loans received between START to END?
 details-genuinely-repaid.heading.range=Have you made any repayments for the loans received between {0} to {1}?
+details-genuinely-repaid.heading.hint=
+details-genuinely-repaid.heading.hint.custom=Scheme: {0}
+
 details-written-off-amount.heading=How much of the loan was written off?
+details-written-off-amount.heading.hint=
+details-written-off-amount.heading.hint.custom=Scheme: {0}
 details-written-off.heading=Has the lender written off any of the loan made from START DATE to END DATE?
 details-written-off.heading.range=Has the lender written off any of the loan made from {0} to {1}
+details-written-off.heading.hint=
+details-written-off.heading.hint.custom=Scheme: {0}
 
 TRUE=Yes
 FALSE=No
