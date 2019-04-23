@@ -543,6 +543,8 @@ fieldset__legend--s {
     outline-offset: 0
 }
 
+
+
 .app-task-list {
     list-style-type: none;
     padding-left: 0;
@@ -571,6 +573,12 @@ ol {
     line-height: 30px;
 }
 
+.app-task-list__section-number {
+    display: table-cell;
+    min-width: 30px;
+    padding-right: 0;
+}
+
 .app-task-list__items {
     font-family: "nta", Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -579,6 +587,7 @@ ol {
     font-size: 19px;
     line-height: 25px;
     margin-bottom: 40px;
+    padding-left: 30px !important;
     list-style: none;
     padding-left: 0;
 }
