@@ -387,7 +387,6 @@ fieldset__legend--s {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-weight: 400;
-    /* font-size: 16px; */
     font-size: 1rem;
     line-height: 1.25;
     display: block;
@@ -404,7 +403,6 @@ fieldset__legend--s {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-weight: 400;
-    /* font-size: 16px; */
     font-size: 1rem;
     line-height: 1.25;
     display: block;
@@ -444,7 +442,6 @@ fieldset__legend--s {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-weight: 400;
-    font-size: 19px;
     line-height: 1.31579;
     line-height: 1.25;
     color: #0b0c0c;
@@ -459,7 +456,6 @@ fieldset__legend--s {
     margin-top: 0px;
     border-left: 4px solid #bfc1c3;
     float: left;
-    width: 100%;
 }
 
 .hint {
@@ -544,13 +540,18 @@ fieldset__legend--s {
 }
 
 
+@media (min-width: 40.0625em) {
+    .app-task-list {
+        min-width: 550px;
+    }
+}
+
 
 .app-task-list {
     list-style-type: none;
     padding-left: 0;
     margin-top: 0;
     margin-bottom: 0;
-    min-width: 550px;
 }
 
 ol {
@@ -569,14 +570,25 @@ ol {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-weight: 700;
-    font-size: 24px;
+    font-size: 18px;
     line-height: 30px;
+}
+
+@media (min-width: 40.0625em) {
+    .app-task-list__section {
+        font-size: 24px;
+    }
 }
 
 .app-task-list__section-number {
     display: table-cell;
-    min-width: 30px;
-    padding-right: 0;
+}
+
+@media (min-width: 40.0625em) {
+    .app-task-list__section-number {
+        min-width: 30px;
+        padding-right: 0;
+    }
 }
 
 .app-task-list__items {
@@ -587,9 +599,14 @@ ol {
     font-size: 19px;
     line-height: 25px;
     margin-bottom: 40px;
-    padding-left: 30px !important;
     list-style: none;
     padding-left: 0;
+}
+
+@media (min-width: 40.0625em) {
+    .app-task-list__items {
+        padding-left: 30px;
+    }
 }
 
 .app-task-list__item {
@@ -603,6 +620,18 @@ ol {
     border-top: 1px solid #bfc1c3;
 }
 
+.app-task-list__task-name {
+    display: block;
+}
+
+@media (min-width: 28.125em) {
+    .app-task-list__task-name {
+        float: left;
+        width: 75%;
+    }
+}
+
+
 li {
     display: list-item;
     text-align: -webkit-match-parent;
@@ -615,15 +644,15 @@ li {
 }
 
 .app-task-list__task-completed {
-    float: right;
     color : #ffffff;
+    display: inline-block;
     font-weight:700;
-    font-size : 16px;
+    font-size : 14px;
     line-height: 20px;
-    margin-top: 0;
-    margin-bottom: 0;
     background-color: #005ea5;
     outline-width:1.53846px;
+    margin-top: 10px;
+    margin-bottom: 5px;
     padding-bottom: 1px;
     padding-left: 8px;
     padding-right: 8px;
@@ -631,22 +660,23 @@ li {
     letter-spacing:1px;
 }
 
-.incomplete {
-    float: right;
-    color : #000000;
-    font-weight:700;
-    line-height: 20px;
-    font-size : 16px;
-    margin-top: 0;
-    margin-bottom: 0;
-    background-color: rgba(255, 191, 71, 0.75);
-    outline-width:1.53846px;
-    padding-bottom: 1px;
-    padding-left: 8px;
-    padding-right: 8px;
-    padding-top: 4px;
-    letter-spacing:1px;
+@media (min-width: 28.125em) {
+    .app-task-list__task-completed {
+        float: right;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}
 
+@media (min-width: 40.0625em) {
+    .app-task-list__task-completed {
+        font-size : 16px;
+    }
+}
+
+.incomplete {
+    color : #000000;
+    background-color: rgba(255, 191, 71, 0.75);
 }
 
 .tag {
