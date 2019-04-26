@@ -631,7 +631,6 @@ ol {
     }
 }
 
-
 li {
     display: list-item;
     text-align: -webkit-match-parent;
@@ -672,6 +671,10 @@ li {
     .app-task-list__task-completed {
         font-size : 16px;
     }
+}
+
+.add-scheme {
+    padding-bottom: 10px;
 }
 
 .incomplete {
