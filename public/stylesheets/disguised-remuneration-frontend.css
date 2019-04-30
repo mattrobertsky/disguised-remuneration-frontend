@@ -463,11 +463,17 @@ fieldset__legend--s {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-weight: 400;
-    font-size: 19px;
+    font-size: 16px;
     line-height: 1.25;
     display: block;
     margin-bottom: 15px;
     color: #6f777b;
+}
+
+@media (min-width: 641px) {
+    .hint {
+        font-size: 19px;
+    }
 }
 
 .details {
