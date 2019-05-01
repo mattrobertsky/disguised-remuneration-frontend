@@ -225,7 +225,7 @@ class JourneyController @Inject()(
   ) = authorisedAction.async {
     implicit request =>
 
-      implicit val keys: List[Paye] = key.split("/").toList
+      implicit val keys: List[String] = key.split("/").toList
       import AssetsFrontend.optionHtml
       import Scheme._
 
