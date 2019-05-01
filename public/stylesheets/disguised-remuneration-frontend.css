@@ -696,44 +696,6 @@ li {
     color: #000;
 }
 
-.date-input__input {
-    margin-bottom: 0;
-    border-bottom-style : solid;
-    border-top-style : solid;
-    border-left-style : solid;
-    border-right-style : solid;
-    border-left-width : 1.99519px;
-    border-right-width : 1.99519px;
-    height : 40px;
-}
-
-.input--width-2 {
-    max-width: 51.1998px
-}
-
-.input--width-4 {
-    max-width: 85.333px;
-}
-
-.date-input__item {
-    display: inline-block;
-    margin-bottom: 0;
-    margin-right: 15px;
-}
-
-.date-input__label {
-    display: block;
-}
-
-.date-input__input {
-    margin-bottom: 0;
-}
-
-.date-input:after {
-    content: "";
-    display: block;
-    clear: both;
-}
 
 .input {
     font-family: "nta", Arial, sans-serif;

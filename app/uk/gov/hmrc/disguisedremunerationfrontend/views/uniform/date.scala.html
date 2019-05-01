@@ -20,21 +20,21 @@
 
 @path=@{key.split("[.]").filter(_.nonEmpty).tail}
 
-<div class="date-input" id="@key">
+<div class="date-input form-date" id="@key">
   @for(field <- List("day","month","year")) {
-    <div class="date-input__item">
-      <div class="form-group">
-        <label class="label date-input__label" for="@key-@field">
-          @messages(List(s"$key.$field",field))
-        </label>
-        <input
-	  class="input date-input__input input--width-@if(field=="year"){4}else{2}"
-	  id="@key-@field"
-	  name="@key.@field"
-	  type="number"
-	  pattern="[0-9]*"
-	  value="@{values.atPath({path :+ field}:_*)}" />
-      </div>
+    <div class="form-group@if(field=="year"){ form-group-year}">
+      <label class="form-label" for="@key-@field">
+        @messages(List(s"$key.$field",field))
+      </label>
+      <input
+        class="form-control@if(field=="year"){ input--xsmall}else{ input--xxsmall}"
+        id="@key-@field"
+        name="@key.@field"
+        type="number"
+        pattern="[0-9]*"
+        value="@{values.atPath({path :+ field}:_*)}"
+      />
     </div>
+
   }
 </div>
