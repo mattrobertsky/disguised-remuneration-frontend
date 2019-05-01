@@ -155,6 +155,34 @@ class JourneyController @Inject()(
     }
   }
 
+
+  // tell uniform to not use the nested fields with radio buttons
+  // for an Option[String], instead treat an empty string as None
+  val optStringParser = new DataParser[Option[String]] {
+
+    import cats.implicits._
+
+    def bind(in: Input): Either[ErrorTree, Option[String]] = in.value match {
+      case Nil => Tree("required").asLeft
+      case empty :: Nil if empty.trim == "" => none[String].asRight
+      case s :: Nil => Some(s).asRight
+      case _ => Tree("badValue").asLeft
+    }
+
+    def unbind(a: Option[String]): Input = Tree(List(a.getOrElse("")))
+  }
+
+  // tell uniform to use the same renderer for an Option[String] as
+  // is used for a String field
+  val optStringHtml = new HtmlField[Option[String]] {
+    def render(
+      key: String,
+      values: Input,
+      errors: ErrorTree,
+      messages: UniformMessages[Html]
+    ) = implicitly[HtmlField[String]].render(key, values, errors, messages)
+  }
+
   def contactDetails(implicit key: String): Action[AnyContent] =
     authorisedAction.async { implicit request =>
       implicit val keys: List[String] = key.split("/").toList
@@ -162,30 +190,11 @@ class JourneyController @Inject()(
 
       // tell uniform to not use the nested fields with radio buttons
       // for an Option[String], instead treat an empty string as None
-      implicit val optStringParser = new DataParser[Option[String]] {
-
-        import cats.implicits._
-
-        def bind(in: Input): Either[ErrorTree, Option[String]] = in.value match {
-          case Nil => Tree("required").asLeft
-          case empty :: Nil if empty.trim == "" => none[String].asRight
-          case s :: Nil => Some(s).asRight
-          case _ => Tree("badValue").asLeft
-        }
-
-        def unbind(a: Option[String]): Input = Tree(List(a.getOrElse("")))
-      }
+      implicit val optStringParserImplicit = optStringParser
 
       // tell uniform to use the same renderer for an Option[String] as
       // is used for a String field
-      implicit val optStringHtml = new HtmlField[Option[String]] {
-        def render(
-          key: String,
-          values: Input,
-          errors: ErrorTree,
-          messages: UniformMessages[Html]
-        ) = implicitly[HtmlField[String]].render(key, values, errors, messages)
-      }
+      implicit val optStringHtmlImplicit = optStringHtml
 
       getState.flatMap { state =>
         runWeb(
@@ -216,36 +225,42 @@ class JourneyController @Inject()(
   ) = authorisedAction.async {
     implicit request =>
 
-    implicit val keys: List[String] = key.split("/").toList
-    import AssetsFrontend.optionHtml
-    import Scheme._
+      implicit val keys: List[String] = key.split("/").toList
+      import AssetsFrontend.optionHtml
+      import Scheme._
 
-    getState.flatMap { state =>
-      val default: Option[Scheme] = schemeIndex.map(state.schemes(_))
-      runWeb(
-        program = Scheme.program[FxAppend[Stack, PlayStack]](default)
-          .useForm(automatic[Unit, String])
-          .useForm(automatic[Unit, Option[String]])
-          .useForm(automatic[Unit, Option[Employer]])
-          .useForm(automatic[Unit, TaxSettlement])
-          .useForm(automatic[Unit, YesNoDoNotKnow])
-          .useForm(automatic[Unit, Boolean])
-          .useForm(automatic[Unit, Date])
-          .useForm(automatic[Unit, (Date, Date)]),
-        shortLivedStore.persistence(request.internalId)
-      ){data =>
-        setState(schemeIndex match {
-          case Some(i) =>
-            val updatedScheme = data.copy(loanDetailsProvided = default.fold(Map.empty[Year, LoanDetails])(_.loanDetailsProvided))
-            state.copy(schemes = state.schemes.patch(i, Seq(updatedScheme), 1))
-          case None    =>
-            state.copy(schemes = data :: state.schemes)
-        }).map { _ =>
-          Logger.debug("completed scheme")
-          Redirect(routes.JourneyController.index())
+      getState.flatMap { state =>
+        val default: Option[Scheme] = schemeIndex.map(state.schemes(_))
+        runWeb(
+          program = Scheme.program[FxAppend[Stack, PlayStack]](default)
+            .useForm(automatic[Unit, String])
+            .useForm(automatic[Unit, Option[String]])
+            .useForm(automatic[Unit, Option[Employer]]({
+              implicit val dp: DataParser[Option[String]] = optStringParser
+              implicitly[DataParser[Option[Employer]]]
+            }, {
+              implicit val hf: HtmlField[Option[String]] = optStringHtml
+              implicitly[HtmlForm[Option[Employer]]]
+            }, implicitly))
+            .useForm(automatic[Unit, TaxSettlement])
+            .useForm(automatic[Unit, YesNoDoNotKnow])
+            .useForm(automatic[Unit, Boolean])
+            .useForm(automatic[Unit, Date])
+            .useForm(automatic[Unit, (Date, Date)]),
+          shortLivedStore.persistence(request.internalId)
+        ) { data =>
+          setState(schemeIndex match {
+            case Some(i) =>
+              val updatedScheme = data.copy(loanDetailsProvided = default.fold(Map.empty[Year, LoanDetails])(_.loanDetailsProvided))
+              state.copy(schemes = state.schemes.patch(i, Seq(updatedScheme), 1))
+            case None =>
+              state.copy(schemes = data :: state.schemes)
+          }).map { _ =>
+            Logger.debug("completed scheme")
+            Redirect(routes.JourneyController.index())
+          }
         }
       }
-    }
   }
 
   def loanDetails(
