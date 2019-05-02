@@ -87,7 +87,8 @@ scheme-refnumber.inner.string.hint=This usually begins with ‘CFS’ or ‘CFSS
 
 scheme-stillusing.heading=Are you still receiving loan payments through the scheme?
 scheme-stillusingyes.heading=When did you first receive a loan from the scheme?
-scheme-stillusingyes.hint=If you do not know the exact date, enter an estimated date.<br><br>For example, 31 3 2015
+scheme-stillusingyes.intro=If you do not know the exact date, enter an estimated date.
+scheme-stillusingyes.hint=For example, 31 3 2015
 
 scheme-stillusingno.heading=Dates when you received loans from the scheme
 scheme-stillusingno._1.heading=Date you received your first loan from the scheme
