@@ -68,8 +68,8 @@ contactdetails-address.town.heading=Town or city
 contactdetails-address.county.heading=County
 contactdetails-address.postcode.heading=Postcode
 contactdetails-telehoneemail.heading=What are your contact details?
-contactdetails-telehoneemail.telephone.heading=UK telephone number (optional)
-contactdetails-telehoneemail.email.heading=Email address (optional)
+contactdetails-telehoneemail.telephone.heading=UK telephone number
+contactdetails-telehoneemail.email.heading=Email address
 
 #Scheme
 scheme-name.heading=Enter a name for this scheme
