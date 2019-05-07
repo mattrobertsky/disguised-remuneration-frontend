@@ -146,7 +146,7 @@ details-written-off-amount.heading=How much of the loan was written off?
 details-written-off-amount.heading.hint=
 details-written-off-amount.heading.hint.custom=Scheme: {0}
 details-written-off.heading=Has the lender written off any of the loan made from START DATE to END DATE?
-details-written-off.heading.range=Has the lender written off any of the loan made from {0} to {1}
+details-written-off.heading.range=Has the lender written off any of the loan made from {0} to {1}?
 details-written-off.heading.hint=
 details-written-off.heading.hint.custom=Scheme: {0}
 
