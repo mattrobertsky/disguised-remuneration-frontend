@@ -267,6 +267,7 @@ scheme-stillusingno._2.year-incorrect=The year you stopped using the scheme must
 
 scheme-employeeouter.required=Select yes if you were an employee while you were using the scheme
 scheme-employeenameinner.required=Enter the employer’s name
+scheme-employee.inner.name.required=Enter the employer’s name
 scheme-employeepayeinner.required=Enter the PAYE reference
 scheme-employeepayeinner.paye-format=Enter the employer PAYE reference in the correct format
 scheme-employeeinner.char-limit=Employer's name must be 50 characters or less
