@@ -38,15 +38,17 @@
                 @messages(s"$key.heading")
             </h1>
         </legend>
-        @messages.get(s"$key.hint").map { hint =>
-            <span id="@key-hint" class="hint">
-                @hint
-            </span>
-        }
+
         @for(msg <- messages.list(s"$key.intro")) {
             <p class="govuk-body">
                 @msg
             </p>
+        }
+
+        @messages.get(s"$key.hint").map { hint =>
+          <span id="@key-hint" class="hint">
+          @hint
+          </span>
         }
         @messages.get(s"$key.list").map { list =>
         <ul class="list list-bullet">
