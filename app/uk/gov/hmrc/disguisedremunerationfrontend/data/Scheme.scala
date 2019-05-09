@@ -103,7 +103,7 @@ object Scheme {
           .validating("date-in-future", _.isBefore(LocalDate.now()))
             .in[R] }.map{(_, none[Date])}
         case false => ask[(Date, Date)]("scheme-stillusingno")
-          .defaultOpt(default.map{x => (x.schemeStart, x.schemeStopped.get)})
+          .defaultOpt(default.flatMap{x => x.schemeStopped.map{stop => (x.schemeStart, stop)}})
           .validating(
             "year-incorrect",
             {
