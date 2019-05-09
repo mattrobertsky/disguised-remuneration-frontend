@@ -234,7 +234,13 @@ class JourneyController @Inject()(
         runWeb(
           program = Scheme.program[FxAppend[Stack, PlayStack]](default)
             .useForm(automatic[Unit, String])
-            .useForm(automatic[Unit, Option[String]])
+            .useFormMap{
+              case List("scheme-recipient") => {
+                implicit val rev: HtmlField[Option[String]] = optionReversed[String]
+                automatic[Unit, Option[String]](implicitly, implicitly, implicitly)
+              }
+              case _ => automatic[Unit, Option[String]]
+            }
             .useForm(automatic[Unit, Option[Employer]]({
               implicit val dp: DataParser[Option[String]] = optStringParser
               implicitly[DataParser[Option[Employer]]]
