@@ -35,7 +35,6 @@ import play.api.i18n.I18nSupport
 import play.api.libs.json.{Json, OFormat}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
 import play.twirl.api.{Html, HtmlFormat}
-import uk.gov.hmrc.auth.core.retrieve.Name
 import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
 import uk.gov.hmrc.disguisedremunerationfrontend.actions.{AuthorisedAction, AuthorisedRequest}
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
@@ -44,14 +43,21 @@ import uk.gov.hmrc.disguisedremunerationfrontend.data.JsonConversion.{FlatState,
 import uk.gov.hmrc.disguisedremunerationfrontend.data.{Date, Nino, Utr, _}
 import uk.gov.hmrc.disguisedremunerationfrontend.repo.{JourneyStateStore, ShortLivedStore}
 import uk.gov.hmrc.disguisedremunerationfrontend.views
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
-import scala.collection.immutable
-import scala.collection.immutable.ListMap
-import scala.concurrent.ExecutionContext
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
+
+sealed abstract class YesNoUnknown extends EnumEntry
+object YesNoUnknown
+  extends Enum[YesNoUnknown]
+    with PlayJsonEnum[YesNoUnknown]
+{
+  val values = findValues
+  case object Yes      extends YesNoUnknown
+  case object No       extends YesNoUnknown
+  case object Unknown  extends YesNoUnknown
+}
 
 sealed abstract class EmploymentStatus extends EnumEntry
 object EmploymentStatus
@@ -71,8 +77,6 @@ sealed trait YesNoDoNotKnow
 
 object YesNoDoNotKnow {
   case class Yes(dotas: String) extends YesNoDoNotKnow
-
-
   val No = y.No
   object y {
     case object No extends YesNoDoNotKnow
@@ -81,6 +85,24 @@ object YesNoDoNotKnow {
   object z {
     case object DoNotKnow extends YesNoDoNotKnow
   }
+
+  val defaultNo = "No"
+  val defaultDoNotKnow = "Do not know"
+
+  def parse(optString: Option[String]): YesNoDoNotKnow =
+    optString match {
+      case Some(YesNoDoNotKnow.defaultDoNotKnow) => YesNoDoNotKnow.DoNotKnow
+      case Some(YesNoDoNotKnow.defaultNo) => YesNoDoNotKnow.No
+      case None            => YesNoDoNotKnow.No
+      case Some(msg)       => YesNoDoNotKnow.Yes(msg)
+    }
+
+  def toOptString(yesNoDoNotKnow: YesNoDoNotKnow): Option[String] =
+    yesNoDoNotKnow match {
+      case Yes(msg) => Some(msg)
+      case No => Some(defaultNo)
+      case DoNotKnow => Some(defaultDoNotKnow)
+    }
 }
 
 @Singleton
@@ -276,6 +298,7 @@ class JourneyController @Inject()(
       val existing = scheme.loanDetails(year)
       runWeb(
         program = LoanDetails.program[FxAppend[Stack, PlayStack]](year, scheme, existing)
+          .useForm(automatic[Unit, YesNoUnknown])
           .useForm(automatic[Unit, Boolean])
           .useForm(automatic[Unit, Money])
           .useForm(automatic[Unit, Option[Money]])

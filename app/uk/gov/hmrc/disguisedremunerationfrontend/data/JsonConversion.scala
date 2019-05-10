@@ -18,6 +18,7 @@ package uk.gov.hmrc.disguisedremunerationfrontend.data
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
+import uk.gov.hmrc.disguisedremunerationfrontend.controllers.YesNoUnknown
 
 object JsonConversion {
   implicit private[data] lazy val employerFormatter = Json.format[Employer]
@@ -102,7 +103,7 @@ object JsonConversion {
     loanRecipientName: Option[String],
     settlement: Option[TaxSettlement],
     year: Int,
-    hmrcApproved: Boolean,
+    hmrcApproved: YesNoUnknown,
     amount: Money,
     genuinelyRepaid: Option[Money],
     writtenOff: Option[WrittenOff],

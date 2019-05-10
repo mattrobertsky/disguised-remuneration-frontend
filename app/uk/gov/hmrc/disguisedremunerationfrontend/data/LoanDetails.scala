@@ -16,9 +16,16 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
+import java.time.format.DateTimeFormatter
+
+import ltbs.uniform._
+import org.atnos.eff._
+import uk.gov.hmrc.disguisedremunerationfrontend.controllers.YesNoUnknown
+import uk.gov.hmrc.disguisedremunerationfrontend.data.Scheme.MoneyRegex
+
 case class LoanDetails(
   year: Int,
-  hmrcApproved: Boolean,
+  hmrcApproved: YesNoUnknown,
   amount: Money,
   genuinelyRepaid: Option[Money],
   writtenOff: Option[WrittenOff]
@@ -34,16 +41,10 @@ case class LoanDetails(
   }
 }
 
-import java.time.format.DateTimeFormatter
-
-import cats.implicits._
-import org.atnos.eff._
-import ltbs.uniform._
-import uk.gov.hmrc.disguisedremunerationfrontend.data.Scheme.MoneyRegex
-
 object LoanDetails {
 
-  type Stack = Fx.fx4[
+  type Stack = Fx.fx5[
+    UniformAsk[YesNoUnknown, ?],
     UniformAsk[Boolean, ?],
     UniformAsk[Money, ?],
     UniformAsk[Option[Money], ?],
@@ -52,6 +53,7 @@ object LoanDetails {
 
   def program[R
   : _uniformCore
+  : _uniformAsk[YesNoUnknown, ?]
   : _uniformAsk[Boolean, ?]
   : _uniformAsk[Money, ?]
   : _uniformAsk[Option[Money], ?]
@@ -59,10 +61,9 @@ object LoanDetails {
   ](year: Int, scheme: Scheme, default: Option[LoanDetails] = None): Eff[R, LoanDetails] = {
     val (startDate, endDate) = year.toFinancialYear
     for {
-      approved <- ask[Boolean]("details-hmrc-approved")
-        .defaultOpt(default.map(_.hmrcApproved)
-        )
-          .withCustomContentAndArgs(
+      approved <- ask[YesNoUnknown]("details-hmrc-approved")
+        .defaultOpt(default.map(_.hmrcApproved))
+        .withCustomContentAndArgs(
             ("details-hmrc-approved.heading.hint",
               ("details-hmrc-approved.heading.hint.custom",
                 List(scheme.name)
