@@ -286,6 +286,7 @@ scheme-settlementstatusyeardateOfSettlement.required=Enter how much tax and Nati
   or agreed with us to pay
 scheme-settlementstatusamount.nonnumericformat=Total loan amount must be an amount of money, like 123.45 or 150
 scheme-settlementstatusamount.required =Total loan amount must be an amount of money, like 123.45 or 150
+scheme-settlementstatus.amount.required=Total loan amount must be an amount of money, like 123.45 or 150
 scheme-settlementstatus.amount-format=Total loan amount must be an amount of money, like 123.45 or 150
 scheme-settlementstatus.amount.amount-format=Total loan amount must be an amount of money, like 123.45 or 150
 
