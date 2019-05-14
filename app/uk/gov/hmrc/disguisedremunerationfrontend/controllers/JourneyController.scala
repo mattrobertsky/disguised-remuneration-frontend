@@ -35,7 +35,6 @@ import play.api.i18n.I18nSupport
 import play.api.libs.json.{Json, OFormat}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
 import play.twirl.api.{Html, HtmlFormat}
-import uk.gov.hmrc.auth.core.retrieve.Name
 import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
 import uk.gov.hmrc.disguisedremunerationfrontend.actions.{AuthorisedAction, AuthorisedRequest}
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
@@ -44,14 +43,10 @@ import uk.gov.hmrc.disguisedremunerationfrontend.data.JsonConversion.{FlatState,
 import uk.gov.hmrc.disguisedremunerationfrontend.data.{Date, Nino, Utr, _}
 import uk.gov.hmrc.disguisedremunerationfrontend.repo.{JourneyStateStore, ShortLivedStore}
 import uk.gov.hmrc.disguisedremunerationfrontend.views
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
-import scala.collection.immutable
-import scala.collection.immutable.ListMap
-import scala.concurrent.ExecutionContext
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 sealed abstract class EmploymentStatus extends EnumEntry
 object EmploymentStatus
@@ -64,6 +59,17 @@ object EmploymentStatus
   case object Both          extends EmploymentStatus
 }
 
+sealed abstract class YesNoUnknown extends EnumEntry
+object YesNoUnknown
+  extends Enum[YesNoUnknown]
+    with PlayJsonEnum[YesNoUnknown]
+{
+  val values = findValues
+  case object Yes      extends YesNoUnknown
+  case object No       extends YesNoUnknown
+  case object Unknown  extends YesNoUnknown
+}
+
 // unable to move to data package!
 // knownDirectSubclasses of YesNoDoNotKnow observed before subclass
 // Yes registered
@@ -71,8 +77,6 @@ sealed trait YesNoDoNotKnow
 
 object YesNoDoNotKnow {
   case class Yes(dotas: String) extends YesNoDoNotKnow
-
-
   val No = y.No
   object y {
     case object No extends YesNoDoNotKnow
@@ -81,7 +85,25 @@ object YesNoDoNotKnow {
   object z {
     case object DoNotKnow extends YesNoDoNotKnow
   }
+
+  def apply(optString: Option[String]): YesNoDoNotKnow = {
+    val u: String = YesNoUnknown.Unknown.entryName
+    val n: String = YesNoUnknown.No.entryName
+    optString match {
+      case Some(`u`) => YesNoDoNotKnow.DoNotKnow
+      case Some(`n`) => YesNoDoNotKnow.No
+      case Some(msg) => YesNoDoNotKnow.Yes(msg)
+    }
+  }
+
+  def unapply(yesNoDoNotKnow: YesNoDoNotKnow): Option[String] =
+    yesNoDoNotKnow match {
+      case DoNotKnow => Some(YesNoUnknown.Unknown.toString)
+      case No => Some(YesNoUnknown.No.toString)
+      case Yes(msg) => Some(msg)
+    }
 }
+
 
 @Singleton
 class JourneyController @Inject()(
@@ -282,6 +304,7 @@ class JourneyController @Inject()(
       val existing = scheme.loanDetails(year)
       runWeb(
         program = LoanDetails.program[FxAppend[Stack, PlayStack]](year, scheme, existing)
+          .useForm(automatic[Unit, YesNoUnknown])
           .useForm(automatic[Unit, Boolean])
           .useForm(automatic[Unit, Money])
           .useForm(automatic[Unit, Option[Money]])
@@ -395,7 +418,7 @@ class JourneyController @Inject()(
             msg("dates-you-received-loans") ->
               Html(s"${scheme.schemeStart.format(dateFormat)} to ${scheme.schemeStopped.getOrElse(LocalDate.now).format(dateFormat)}"),
             msg("disclosure-of-tax-avoidance-schemes-dotas-number") ->
-              dotasReferenceNumber.fold(msg("not-applicable"))(escape),
+              dotasReferenceNumber.fold(msg("not-applicable"))(m => msg(s"disclosure-of-tax-avoidance-schemes-dotas-number.$m")),
             msg("hmrc-case-reference-number") ->
               caseReferenceNumber.fold(msg("FALSE")){escape},
             msg("employment-status") ->

@@ -43,7 +43,7 @@
     messages("landing.loan.taxyear.heading") -> {
 	val details = state.schemes.zipWithIndex.flatMap{ case (scheme,schemeIndex) =>
 	    scheme.loanDetails.map { case (year, optDetails) =>
-		((s"${scheme.name} $year to ${year + 1}", Some(s"scheme/$schemeIndex/details/$year/details-amount"), None, optDetails.isDefined))
+		((s"${scheme.name} $year to ${year + 1}", Some(s"scheme/$schemeIndex/details/$year/details-hmrc-approved"), None, optDetails.isDefined))
 	    }
 	}.sortBy(_._1)
 	if (details.isEmpty) Left {

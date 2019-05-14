@@ -130,11 +130,7 @@ object Scheme {
                                   )
       //TODO error messages aren't working, need an implicit def like enumeratumHtml
       dotasNumber           <-  ask[YesNoDoNotKnow]("scheme-dotas")
-                                  .defaultOpt(default.map{_.dotasReferenceNumber match {
-                                    case Some(msg)       => YesNoDoNotKnow.Yes(msg)
-                                    case None            => YesNoDoNotKnow.No
-                                    case Some("unknown") => YesNoDoNotKnow.DoNotKnow
-                                  }})
+                                  .defaultOpt(default.map{x => YesNoDoNotKnow(x.dotasReferenceNumber)})
                                   .validating(
                                     "char-limit",
                                     {
@@ -203,16 +199,10 @@ object Scheme {
                                      x => x.amount.matches(MoneyRegex)
                                   ).in[R] when taxNIPaid
     } yield {
-      import YesNoDoNotKnow._
-      val dotas = dotasNumber match {
-        case Yes(ref) => Some(ref)
-        case No => Some("No")
-        case DoNotKnow => Some("Do not know")
-      }
 
       val scheme = Scheme(
         name = schemeName,
-        dotasReferenceNumber = dotas,
+        dotasReferenceNumber = YesNoDoNotKnow.unapply(dotasNumber),
         caseReferenceNumber = schemeReferenceNumber,
         schemeStart = dateRange._1,
         schemeStopped = dateRange._2,
