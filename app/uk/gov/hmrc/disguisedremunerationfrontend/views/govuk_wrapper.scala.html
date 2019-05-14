@@ -106,6 +106,7 @@
 }
 
 @mainContentHeader = {
+
     @if(contentHeader.isDefined) {
         @uiLayouts.main_content_header(contentHeader = contentHeader.get)
     }
@@ -133,3 +134,12 @@
 }
 
 @hmrcGovUkTemplate(Some(title), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links()), true)(content)
+
+@isWelsh = @{
+    if(ufMessagesToPlayMessages.lang.code == "cy"){
+        true
+    }
+    else {
+        false
+    }
+}
