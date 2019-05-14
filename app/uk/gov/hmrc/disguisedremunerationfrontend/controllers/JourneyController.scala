@@ -412,7 +412,7 @@ class JourneyController @Inject()(
             msg("dates-you-received-loans") ->
               Html(s"${scheme.schemeStart.format(dateFormat)} to ${scheme.schemeStopped.getOrElse(LocalDate.now).format(dateFormat)}"),
             msg("disclosure-of-tax-avoidance-schemes-dotas-number") ->
-              dotasReferenceNumber.fold(msg("not-applicable"))(escape),
+              dotasReferenceNumber.fold(msg("not-applicable"))(m => msg(s"disclosure-of-tax-avoidance-schemes-dotas-number.$m")),
             msg("hmrc-case-reference-number") ->
               caseReferenceNumber.fold(msg("FALSE")){escape},
             msg("employment-status") ->
