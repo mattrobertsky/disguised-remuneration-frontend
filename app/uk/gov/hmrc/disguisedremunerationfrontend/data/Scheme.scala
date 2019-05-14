@@ -130,7 +130,7 @@ object Scheme {
                                   )
       //TODO error messages aren't working, need an implicit def like enumeratumHtml
       dotasNumber           <-  ask[YesNoDoNotKnow]("scheme-dotas")
-                                  .defaultOpt(default.map{x => YesNoDoNotKnow.parse(x.dotasReferenceNumber)})
+                                  .defaultOpt(default.map{x => YesNoDoNotKnow(x.dotasReferenceNumber)})
                                   .validating(
                                     "char-limit",
                                     {
@@ -202,7 +202,7 @@ object Scheme {
 
       val scheme = Scheme(
         name = schemeName,
-        dotasReferenceNumber = YesNoDoNotKnow.toOptString(dotasNumber),
+        dotasReferenceNumber = YesNoDoNotKnow.unapply(dotasNumber),
         caseReferenceNumber = schemeReferenceNumber,
         schemeStart = dateRange._1,
         schemeStopped = dateRange._2,

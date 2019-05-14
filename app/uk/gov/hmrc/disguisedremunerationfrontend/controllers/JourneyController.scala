@@ -48,17 +48,6 @@ import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
 import scala.concurrent.{ExecutionContext, Future}
 
-sealed abstract class YesNoUnknown extends EnumEntry
-object YesNoUnknown
-  extends Enum[YesNoUnknown]
-    with PlayJsonEnum[YesNoUnknown]
-{
-  val values = findValues
-  case object Yes      extends YesNoUnknown
-  case object No       extends YesNoUnknown
-  case object Unknown  extends YesNoUnknown
-}
-
 sealed abstract class EmploymentStatus extends EnumEntry
 object EmploymentStatus
     extends Enum[EmploymentStatus]
@@ -68,6 +57,17 @@ object EmploymentStatus
   case object Employed      extends EmploymentStatus
   case object SelfEmployed  extends EmploymentStatus
   case object Both          extends EmploymentStatus
+}
+
+sealed abstract class YesNoUnknown extends EnumEntry
+object YesNoUnknown
+  extends Enum[YesNoUnknown]
+    with PlayJsonEnum[YesNoUnknown]
+{
+  val values = findValues
+  case object Yes      extends YesNoUnknown
+  case object No       extends YesNoUnknown
+  case object Unknown  extends YesNoUnknown
 }
 
 // unable to move to data package!
@@ -86,24 +86,24 @@ object YesNoDoNotKnow {
     case object DoNotKnow extends YesNoDoNotKnow
   }
 
-  val defaultNo = "No"
-  val defaultDoNotKnow = "Do not know"
-
-  def parse(optString: Option[String]): YesNoDoNotKnow =
+  def apply(optString: Option[String]): YesNoDoNotKnow = {
+    val u: String = YesNoUnknown.Unknown.entryName
+    val n: String = YesNoUnknown.No.entryName
     optString match {
-      case Some(YesNoDoNotKnow.defaultDoNotKnow) => YesNoDoNotKnow.DoNotKnow
-      case Some(YesNoDoNotKnow.defaultNo) => YesNoDoNotKnow.No
-      case None            => YesNoDoNotKnow.No
-      case Some(msg)       => YesNoDoNotKnow.Yes(msg)
+      case Some(`u`) => YesNoDoNotKnow.DoNotKnow
+      case Some(`n`) => YesNoDoNotKnow.No
+      case Some(msg) => YesNoDoNotKnow.Yes(msg)
     }
+  }
 
-  def toOptString(yesNoDoNotKnow: YesNoDoNotKnow): Option[String] =
+  def unapply(yesNoDoNotKnow: YesNoDoNotKnow): Option[String] =
     yesNoDoNotKnow match {
+      case DoNotKnow => Some(YesNoUnknown.Unknown.toString)
+      case No => Some(YesNoUnknown.No.toString)
       case Yes(msg) => Some(msg)
-      case No => Some(defaultNo)
-      case DoNotKnow => Some(defaultDoNotKnow)
     }
 }
+
 
 @Singleton
 class JourneyController @Inject()(

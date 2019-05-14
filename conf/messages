@@ -124,6 +124,7 @@ scheme-settlementstatus.dateOfSettlement.heading=Date paid
 details-hmrc-approved.heading=Is this loan an approved fixed-term loan?
 details-hmrc-approved.heading.hint=
 details-hmrc-approved.heading.hint.custom=Scheme: {0}
+details-hmrc-approved.Unknown=Do not know
 
 details-amount.heading=What was the total loan amount paid from START to END?
 details-amount.heading.range=What was the total loan amount paid from {0} to {1}?
