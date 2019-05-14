@@ -445,15 +445,19 @@ class JourneyController @Inject()(
   def cya: Action[AnyContent] = authorisedAction.async { implicit request =>
     implicit val m: UniformMessages[Html] = messages(request)
     getState.map { state =>
-      val contents = views.html.cya(
-        username,
-        blocksFromState(state),
-        confirmationForm
-      )
-      Logger.debug("completed check your answers")
-      Ok(views.html.main_template(title =
-        s"${m("cya.title")} - ${m("common.title")}")(contents)
-      )
+      if (!state.readyToSubmit) {
+        Ok(views.html.main_template(title = s"${m("common.title")}")(views.html.index(state)))
+      } else {
+        val contents = views.html.cya(
+          username,
+          blocksFromState(state),
+          confirmationForm
+        )
+        Logger.debug("completed check your answers")
+        Ok(views.html.main_template(title =
+          s"${m("cya.title")} - ${m("common.title")}")(contents)
+        )
+      }
     }
   }
 
