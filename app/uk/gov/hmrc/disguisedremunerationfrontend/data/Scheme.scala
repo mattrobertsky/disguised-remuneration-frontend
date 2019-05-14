@@ -156,6 +156,7 @@ object Scheme {
                                   )
       dateRange             <-  getSchemeDateRange
       employer              <-  ask[Option[Employer]]("scheme-employee")
+                                    .defaultOpt(default.map{x => x.employee})
                                     .validating(
                                       "char-limit",
                                       {
