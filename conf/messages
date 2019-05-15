@@ -92,6 +92,7 @@ scheme-stillusingyes.intro=If you do not know the exact date, enter an estimated
 scheme-stillusingyes.hint=For example, 31 3 2015
 
 scheme-stillusingno.heading=Dates when you received loans from the scheme
+scheme-stillusingno.intro=If you do not know the exact date, enter an estimated date.
 scheme-stillusingno._1.heading=Date you received your first loan from the scheme
 scheme-stillusingno._1.hint=For example, 31 3 2015
 
