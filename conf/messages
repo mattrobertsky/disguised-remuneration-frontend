@@ -75,6 +75,7 @@ contactdetails-telehoneemail.email.heading=Email address
 scheme-name.heading=Enter a name for this scheme
 scheme-name.hint=If you do not know the scheme’s name, you can enter any name here.
 scheme-dotas.heading=Do you have a Disclosure of Tax Avoidance Schemes (DOTAS) number for this scheme?
+scheme-dotas.intro=You can get the DOTAS number from the promoter of the scheme - they are required to tell you.
 scheme-dotas.Yes.dotas.heading=Enter the DOTAS number
 scheme-dotas.Yes.dotas.hint=For example, 12345678
 scheme-dotas.Yes=Yes
