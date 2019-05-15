@@ -19,7 +19,8 @@ package uk.gov.hmrc.disguisedremunerationfrontend.repo
 import cats.data.OptionT
 import cats.implicits._
 import com.google.inject.{ImplementedBy, Inject, Singleton}
-import play.api.libs.json.Json
+import play.api.Logger
+import play.api.libs.json._
 import play.modules.reactivemongo.ReactiveMongoComponent
 import uk.gov.hmrc.cache.repository.CacheMongoRepository
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
@@ -27,6 +28,7 @@ import uk.gov.hmrc.disguisedremunerationfrontend.data.JourneyState
 import uk.gov.hmrc.disguisedremunerationfrontend.data.JsonConversion._
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Success, Try}
 
 @ImplementedBy(classOf[JourneyStateStoreImpl])
 trait JourneyStateStore {
@@ -38,18 +40,29 @@ trait JourneyStateStore {
 }
 
 @Singleton
-class JourneyStateStoreImpl @Inject() (mongo: ReactiveMongoComponent)(implicit appConfig: AppConfig, ec: ExecutionContext) extends JourneyStateStore with Store {
+class JourneyStateStoreImpl @Inject() (
+  mongo: ReactiveMongoComponent
+)(implicit appConfig: AppConfig, ec: ExecutionContext) extends JourneyStateStore with Store {
 
   override val expireAfterSeconds: Long = appConfig.mongoJourneyStoreExpireAfter.toSeconds
-  override val cacheRepository: CacheMongoRepository = new CacheMongoRepository("journeyStateStore", expireAfterSeconds)(mongo.mongoConnector.db, ec)
+  override val cacheRepository: CacheMongoRepository =
+    new CacheMongoRepository("journeyStateStore", expireAfterSeconds)(mongo.mongoConnector.db, ec)
   override val cacheRepositoryKey: String = "journeyState"
 
+  // TODO try EitherT
   override def getState(userId: String): Future[JourneyState] = {
     val x: OptionT[Future, JourneyState] = for {
       a <- OptionT(cacheRepository.findById(userId))
       b <- OptionT.fromOption[Future](a.data)
-    } yield (b \ cacheRepositoryKey).as[JourneyState]
-
+    } yield {
+      Try((b \ cacheRepositoryKey).as[JourneyState]) match {
+        case Success(state) => state
+        case Failure(ex) => {
+          Logger.info(s"Problem reading JourneyState from db, ${ex.getMessage}")
+          JourneyState()
+        }
+      }
+    }
     x.getOrElse(JourneyState())
   }
 
