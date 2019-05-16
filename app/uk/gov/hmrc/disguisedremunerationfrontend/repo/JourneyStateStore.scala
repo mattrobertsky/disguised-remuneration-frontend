@@ -57,8 +57,12 @@ class JourneyStateStoreImpl @Inject() (
     } yield {
       Try((b \ cacheRepositoryKey).as[JourneyState]) match {
         case Success(state) => state
-        case Failure(ex) => {
+        case Failure(ex: JsResultException) => {
           Logger.info(s"Problem reading JourneyState from db, ${ex.getMessage}")
+          JourneyState()
+        }
+        case Failure(ex) => {
+          Logger.warn(s"Problem getting JourneyState from db, ${ex.getMessage}")
           JourneyState()
         }
       }
