@@ -16,18 +16,20 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.repo
 
-import cats.data.OptionT
+import cats.data.{EitherT, OptionT}
 import cats.implicits._
 import com.google.inject.{ImplementedBy, Inject, Singleton}
 import play.api.Logger
 import play.api.libs.json._
 import play.modules.reactivemongo.ReactiveMongoComponent
+import uk.gov.hmrc.cache.model.Cache
 import uk.gov.hmrc.cache.repository.CacheMongoRepository
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
 import uk.gov.hmrc.disguisedremunerationfrontend.data.JourneyState
 import uk.gov.hmrc.disguisedremunerationfrontend.data.JsonConversion._
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.control.NonFatal
 import scala.util.{Failure, Success, Try}
 
 @ImplementedBy(classOf[JourneyStateStoreImpl])
@@ -49,25 +51,11 @@ class JourneyStateStoreImpl @Inject() (
     new CacheMongoRepository("journeyStateStore", expireAfterSeconds)(mongo.mongoConnector.db, ec)
   override val cacheRepositoryKey: String = "journeyState"
 
-  // TODO try EitherT
   override def getState(userId: String): Future[JourneyState] = {
-    val x: OptionT[Future, JourneyState] = for {
-      a <- OptionT(cacheRepository.findById(userId))
-      b <- OptionT.fromOption[Future](a.data)
-    } yield {
-      Try((b \ cacheRepositoryKey).as[JourneyState]) match {
-        case Success(state) => state
-        case Failure(ex: JsResultException) => {
-          Logger.info(s"Problem reading JourneyState from db, ${ex.getMessage}")
-          JourneyState()
-        }
-        case Failure(ex) => {
-          Logger.warn(s"Problem getting JourneyState from db, ${ex.getMessage}")
-          JourneyState()
-        }
-      }
-    }
-    x.getOrElse(JourneyState())
+    (for {
+      cache <- EitherT.fromOptionF(cacheRepository.findById(userId), JourneyState())
+      state <- EitherT.fromEither[Future](readCacheData(cache.data.getOrElse(JsNull)))
+    } yield state).merge
   }
 
   override def storeState(userId: String, journeyState: JourneyState): Future[Unit] =
@@ -75,4 +63,19 @@ class JourneyStateStoreImpl @Inject() (
 
   override def clear(userId: String): Future[Unit] =
     cacheRepository.removeById(userId).map(_=>(()))
+
+  /*
+     Returns Either the Cache[ed] JourneyState (Right) or an empty JourneyState (Left).
+     Logs info on the underlying JsResultException for the Left.
+  */
+  private def readCacheData(jsValue: JsValue):Either[JourneyState, JourneyState] =
+    Try((jsValue \ cacheRepositoryKey).as[JourneyState]) match {
+      case Success(state) =>
+        Right(state)
+      case Failure(NonFatal(exception)) => {
+        Logger.info(s"Problem reading JourneyState from cache, ${exception.getMessage}")
+        Left(JourneyState())
+      }
+    }
+
 }
