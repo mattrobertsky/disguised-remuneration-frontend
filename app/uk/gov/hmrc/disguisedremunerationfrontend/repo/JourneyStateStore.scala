@@ -65,8 +65,9 @@ class JourneyStateStoreImpl @Inject() (
     cacheRepository.removeById(userId).map(_=>(()))
 
   /*
+     Catches problems caused by changes to the shape of the JourneyState.
      Returns Either the Cache[ed] JourneyState (Right) or an empty JourneyState (Left).
-     Logs info on the underlying JsResultException for the Left.
+     Logs info on the underlying [JsResult]Exception for the Left.
   */
   private def readCacheData(jsValue: JsValue):Either[JourneyState, JourneyState] =
     Try((jsValue \ cacheRepositoryKey).as[JourneyState]) match {
