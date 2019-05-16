@@ -17,13 +17,15 @@
 package uk.gov.hmrc.disguisedremunerationfrontend.views
 
 import ltbs.uniform._
-import play.api.i18n.{Messages,Lang}
+import play.api.i18n.{Lang, Messages}
+import play.api.mvc.RequestHeader
 import play.twirl.api.Html
+import uk.gov.hmrc.play.language.LanguageUtils
 
 object AdaptMessages {
 
-  implicit def ufMessagesToPlayMessages(implicit ufMessages: UniformMessages[Html]): Messages = new Messages {
-    def lang: Lang = ???
+  implicit def ufMessagesToPlayMessages(implicit ufMessages: UniformMessages[Html], request: RequestHeader): Messages = new Messages {
+    def lang: Lang = LanguageUtils.getCurrentLang
     def apply(key: String, args: Any*): String = ufMessages.apply(key, args:_*).toString
     def apply(keys: Seq[String], args: Any*): String = ufMessages.apply(keys.toList, args:_*).toString
     def translate(key: String, args: Seq[Any]): Option[String] = ufMessages.get(key, args:_*).map{_.toString}
