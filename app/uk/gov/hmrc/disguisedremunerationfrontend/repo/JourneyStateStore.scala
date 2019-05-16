@@ -16,13 +16,12 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.repo
 
-import cats.data.{EitherT, OptionT}
+import cats.data.EitherT
 import cats.implicits._
 import com.google.inject.{ImplementedBy, Inject, Singleton}
 import play.api.Logger
 import play.api.libs.json._
 import play.modules.reactivemongo.ReactiveMongoComponent
-import uk.gov.hmrc.cache.model.Cache
 import uk.gov.hmrc.cache.repository.CacheMongoRepository
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
 import uk.gov.hmrc.disguisedremunerationfrontend.data.JourneyState
