@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.repo
 
-import cats.data.EitherT
+import cats.data.OptionT
 import cats.implicits._
 import com.google.inject.{ImplementedBy, Inject, Singleton}
 import play.api.Logger
@@ -51,10 +51,19 @@ class JourneyStateStoreImpl @Inject() (
   override val cacheRepositoryKey: String = "journeyState"
 
   override def getState(userId: String): Future[JourneyState] = {
-    (for {
-      cache <- EitherT.fromOptionF(cacheRepository.findById(userId), JourneyState())
-      state <- EitherT.fromEither[Future](readCacheData(cache.data.getOrElse(JsNull)))
-    } yield state).merge
+    val x: OptionT[Future, JourneyState] = for {
+      a <- OptionT(cacheRepository.findById(userId))
+      b <- OptionT.fromOption[Future](a.data)
+    } yield {
+      Try((b \ cacheRepositoryKey).as[JourneyState]) match {
+        case Success(state) => state
+        case Failure(NonFatal(ex)) => {
+          Logger.info(s"Problem reading JourneyState from db, ${ex.getMessage}")
+          JourneyState()
+        }
+      }
+    }
+    x.getOrElse{JourneyState()}
   }
 
   override def storeState(userId: String, journeyState: JourneyState): Future[Unit] =
@@ -62,20 +71,5 @@ class JourneyStateStoreImpl @Inject() (
 
   override def clear(userId: String): Future[Unit] =
     cacheRepository.removeById(userId).map(_=>(()))
-
-  /*
-     Catches problems caused by changes to the shape of the JourneyState.
-     Returns Either the Cache[ed] JourneyState (Right) or an empty JourneyState (Left).
-     Logs info on the underlying [JsResult]Exception for the Left.
-  */
-  private def readCacheData(jsValue: JsValue):Either[JourneyState, JourneyState] =
-    Try((jsValue \ cacheRepositoryKey).as[JourneyState]) match {
-      case Success(state) =>
-        Right(state)
-      case Failure(NonFatal(exception)) => {
-        Logger.info(s"Problem reading JourneyState from cache, ${exception.getMessage}")
-        Left(JourneyState())
-      }
-    }
 
 }
