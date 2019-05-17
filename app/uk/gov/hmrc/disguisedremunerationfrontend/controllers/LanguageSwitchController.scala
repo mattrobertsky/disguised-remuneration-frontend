@@ -38,8 +38,9 @@ class LanguageSwitchController @Inject()(
       if (enabled) languageMap.getOrElse(language, LanguageUtils.getCurrentLang)
       else Lang("en")
     val redirectURL = request.headers.get(REFERER).getOrElse(fallbackURL)
-
-    Redirect(redirectURL).withLang(Lang.apply(lang.code)).flashing(LanguageUtils.FlashWithSwitchIndicator)
+    Redirect(redirectURL)
+      .withLang(Lang.apply(lang.code))
+      .flashing(LanguageUtils.FlashWithSwitchIndicator)
   }
 
   def fallbackURL: String = routes.JourneyController.index().url

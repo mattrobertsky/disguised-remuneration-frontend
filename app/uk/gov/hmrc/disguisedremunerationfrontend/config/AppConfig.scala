@@ -59,6 +59,6 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, servicesConfi
 
   lazy val dnumIndexPage: String = loadConfig("dnum-index-page-url")
 
-  lazy val languageTranslationEnabled: Boolean =
-    runModeConfiguration.get[Boolean]("microservice.services.features.welsh-translation")
+  lazy val languageTranslationEnabled: Boolean = true
+//    runModeConfiguration.get[Boolean]("microservice.services.features.welsh-translation")
 }

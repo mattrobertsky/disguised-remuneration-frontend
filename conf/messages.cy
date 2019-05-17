@@ -2,7 +2,7 @@
 common.back=Back
 common.save-continue=Save and continue
 common.save-back-later=Save and come back later
-common.sign-out=Sign out WELSH
+common.sign-out=Sign out
 common.sign-in=Sign in
 common.alpha-info.p1=This is a new service – your 
 common.alpha-info.link=feedback
