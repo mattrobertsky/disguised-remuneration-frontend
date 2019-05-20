@@ -301,9 +301,15 @@ details .address.progressive-reveal {
 }
 
 .fieldset__heading {
-    font-size: 48px;
+    font-size: 32px;
     margin-bottom: 10px;
     margin-top : 20px;
+}
+
+@media (min-width: 641px) {
+    .fieldset__heading {
+        font-size: 48px;
+    }
 }
 
 .fieldset__heading--no-span {
@@ -883,11 +889,17 @@ strong, b {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-weight: 400;
-    font-size: 27px;
+    font-size: 20px;
     display: block;
     margin-bottom: 0px;
     margin-top: 4%;
     color: #6f777b;
+}
+
+@media (min-width: 641px) {
+    .govuk-caption-xl {
+        font-size: 27px;
+    }
 }
 
 /* Confirmation Page */
