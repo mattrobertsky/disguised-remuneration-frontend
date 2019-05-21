@@ -35,11 +35,11 @@ aboutyou-nino.hint=It’s on your National Insurance card, benefit letter, paysl
 aboutyou-personalive.heading=Is the person you are acting for alive?
 aboutyou-identity.heading=How do you want to confirm the identity of the person you are acting for?
 aboutyou-identity.Left=The person’s National Insurance number
-aboutyou-identity.Left.hint=This will be on their National Insurance card, benefit letter, payslip or P60. For example, 'QQ 12 34 56 C'
+aboutyou-identity.Left.hint=This will be on their National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’
 aboutyou-identity.Left.a.heading=Enter their National Insurance number
 aboutyou-identity.Left.a.label=Enter their National Insurance number
 aboutyou-identity.Right=The person’s Self Assessment Unique Taxpayer Reference (UTR)
-aboutyou-identity.Right.hint=This is the 10 numbers like 12345 67890<br>It will be on tax returns and other letters about Self Assessment. It may be called 'reference', 'UTR' or 'official use'. <a target=_blank href="https://www.gov.uk/find-lost-utr-number">Find a lost UTR (opens in a new window or tab)</a>.
+aboutyou-identity.Right.hint=This is 10 numbers like 12345 67890. It will be on tax returns and other letters about Self Assessment. It may be called ‘reference’, ‘UTR’ or ‘official use’. <a target=_blank href="https://www.gov.uk/find-lost-utr-number">Find a lost UTR (opens in a new window or tab)</a>.
 aboutyou-identity.Right.b.heading=Enter their Self Assessment UTR
 aboutyou-identity.Right.label=Enter their Self Assessment UTR
 aboutyou-employmentstatus.heading=Was the deceased person employed or self-employed when they had the loan?
