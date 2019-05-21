@@ -23,14 +23,21 @@ landing.details.title=Nadwch eich manylion
 landing.loan.arrangement.heading=Rhoi gwybod i ni am drefniadau benthyca a ddefnyddioch
 landing.loan.arrangement.info=Weithiau caiff y rhain eu galw’n ‘gynlluniau tâl cuddiedig’.
 landing.loan.taxyear.heading=Enter loan details by tax year TODO
+landing.loan.taxyear.info1=You need TODO
+landing.loan.taxyear.info2=add a remuneration scheme TODO
+landing.loan.taxyear.info3=before you can add loan details by tax year. TODO
 landing.checkdetails.heading=Gwiriwch eich manylion a’u hanfon
 landing.sendanswers.link=You can check your answers once you have entered your loan details by tax year. TODO
+landing.aboutyou.link=About you TODO
+landing.contactdetails.link=Your contact details TODO
+landing.loanarrangement.info=These are sometimes called ‘disguised remuneration schemes’. TODO
+landing.loanarrangement.link=Add, change or remove a loan arrangement TODO
 
 #Amdanoch chi
 aboutyou-completedby.heading=Ydych chi’n llenwi’r ffurflen hon i chi’ch hun?
 aboutyou-completedby.FALSE=Ydw, i fi fy hun
 aboutyou-completedby.TRUE=Nac ydw, i rywun arall
-aboutyou-nino.heading=What is your Rhif Yswiriant Gwladol? TODO
+aboutyou-nino.heading=What is your National Insurance number? TODO
 aboutyou-nino.hint=It’s on your National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’. TODO
 aboutyou-personalive.heading=Ydy’r person rydych yn gweithredu ar ei ran yn fyw?
 aboutyou-identity.heading=Sut hoffech gadarnhau pwy yw’r person rydych yn gweithredu ar ei ran?
@@ -56,8 +63,8 @@ aboutyou-noloancharge.outro=Os nad yw hyn yn gywir, mae angen i chi <a class="go
 aboutyou-noloancharge.save-continue=Gorffen ac allgofnodi
 #aboutyou-confirmation.heading=Is this the person you are acting for? TODO
 aboutyou-confirmation.heading=Beth yw enw llawn y person rydych yn gweithredu ar ei ran?
-aboutyou-confirmation.TRUE=Iawn - this is the correct person TODO
-aboutyou-confirmation.FALSE=Na - I need to start over again TODO
+aboutyou-confirmation.TRUE=Yes - this is the correct person TODO
+aboutyou-confirmation.FALSE=No - I need to start over again TODO
 
 #Contact details
 contactdetails-address.heading=Beth yw’ch cyfeiriad?
@@ -75,11 +82,11 @@ contactdetails-telehoneemail.email.heading=Cyfeiriad e-bost
 scheme-name.heading=Nodwch enw ar gyfer y cynllun hwn
 scheme-name.hint=Os nad ydych yn gwybod enw’r cynllun, gallwch nodi unrhyw enw yma.
 scheme-dotas.heading=Oes gennych rif Datgelu Cynlluniau Arbed Treth (DOTAS) ar gyfer y cynllun hwn?
-scheme-dotas.Iawn.dotas.heading=Nadwch y rhif DOTAS
-scheme-dotas.Iawn.dotas.hint=Er enghraifft, 12345678
-scheme-dotas.Iawn=Iawn
-scheme-dotas.Na=Na
-scheme-dotas.DoNatKnow=Ddim yn gwybod
+scheme-dotas.Yes.dotas.heading=Nadwch y rhif DOTAS
+scheme-dotas.Yes.dotas.hint=Er enghraifft, 12345678
+scheme-dotas.Yes=Iawn
+scheme-dotas.No=Na
+scheme-dotas.DoNotKnow=Ddim yn gwybod
 #scheme-dotas.true.hint=Er enghraifft, 12345678
 scheme-refnumber.heading=Do you have an Cyfeirnod achos CThEM for this scheme?
 scheme-refnumber.inner.string.heading=Nodwch gyfeirnod achos CThEM
@@ -206,7 +213,7 @@ aboutyou-deceasedbefore.required=Dewiswch Iawn os bu farw’r person ar neu cyn 
 aboutyou-identitya.required=Enter the person’s National Insurance number TODO
 aboutyou-identity.Left.a.required=Enter the person’s National Insurance number TODO
 aboutyou-identityb.required=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR) TODO
-aboutyou-identity.Right.b.required=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR ) TODO
+aboutyou-identity.Right.b.required=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR) TODO
 aboutyou-identity.nino-format=Enter the person’s National Insurance number in the correct format TODO
 aboutyou-identity.utr-format=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR) in the correct format TODO
 aboutyou-confirmation.required=Nodwch enw llawn y person rydych yn gweithredu ar ei ran
@@ -331,5 +338,9 @@ tasklist.caption=Caption TODO
 tasklist.item=Item TODO
 tasklist.delete=Delete TODO
 tasklist.edit=Edit TODO
+
+day=Diwrnod
+month=Mis
+year=Blwyddyn
 
 contactdetails-telehoneemail.email-or-phone-number-needed=A valid email address or telephone number is required TODO

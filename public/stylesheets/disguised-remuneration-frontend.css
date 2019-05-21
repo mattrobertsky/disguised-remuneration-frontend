@@ -300,6 +300,10 @@ details .address.progressive-reveal {
     margin-bottom: 30px;
 }
 
+.form-label {
+    padding-right: 4px;
+}
+
 .fieldset__heading {
     font-size: 48px;
     margin-bottom: 10px;
