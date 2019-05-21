@@ -42,11 +42,11 @@ aboutyou-nino.hint=It’s on your National Insurance card, benefit letter, paysl
 aboutyou-personalive.heading=Is the person you are acting for alive?
 aboutyou-identity.heading=How do you want to confirm the identity of the person you are acting for?
 aboutyou-identity.Left=The person’s National Insurance number
-aboutyou-identity.Left.hint=This will be on their National Insurance card, benefit letter, payslip or P60. For example, 'QQ 12 34 56 C'
+aboutyou-identity.Left.hint=This will be on their National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’
 aboutyou-identity.Left.a.heading=Enter their National Insurance number
 aboutyou-identity.Left.a.label=Enter their National Insurance number
 aboutyou-identity.Right=The person’s Self Assessment Unique Taxpayer Reference (UTR)
-aboutyou-identity.Right.hint=This is the 10 numbers like 12345 67890<br>It will be on tax returns and other letters about Self Assessment. It may be called 'reference', 'UTR' or 'official use'. <a target=_blank href="https://www.gov.uk/find-lost-utr-number">Find a lost UTR (opens in a new window or tab)</a>.
+aboutyou-identity.Right.hint=This is 10 numbers like 12345 67890. It will be on tax returns and other letters about Self Assessment. It may be called ‘reference’, ‘UTR’ or ‘official use’. <a target=_blank href="https://www.gov.uk/find-lost-utr-number">Find a lost UTR (opens in a new window or tab)</a>.
 aboutyou-identity.Right.b.heading=Enter their Self Assessment UTR
 aboutyou-identity.Right.label=Enter their Self Assessment UTR
 aboutyou-employmentstatus.heading=Was the deceased person employed or self-employed when they had the loan?
@@ -76,13 +76,14 @@ contactdetails-address.town.heading=Town or city
 contactdetails-address.county.heading=County
 contactdetails-address.postcode.heading=Postcode
 contactdetails-telehoneemail.heading=What are your contact details?
-contactdetails-telehoneemail.telephone.heading=UK telephone number
+contactdetails-telehoneemail.telephone.heading=Telephone number
 contactdetails-telehoneemail.email.heading=Email address
 
 #Scheme
 scheme-name.heading=Enter a name for this scheme
 scheme-name.hint=If you do not know the scheme’s name, you can enter any name here.
 scheme-dotas.heading=Do you have a Disclosure of Tax Avoidance Schemes (DOTAS) number for this scheme?
+scheme-dotas.intro=You can get the DOTAS number from the promoter of the scheme - they are required to tell you.
 scheme-dotas.Yes.dotas.heading=Enter the DOTAS number
 scheme-dotas.Yes.dotas.hint=For example, 12345678
 scheme-dotas.Yes=Yes
@@ -99,6 +100,7 @@ scheme-stillusingyes.intro=If you do not know the exact date, enter an estimated
 scheme-stillusingyes.hint=For example, 31 3 2015
 
 scheme-stillusingno.heading=Dates when you received loans from the scheme
+scheme-stillusingno.intro=If you do not know the exact date, enter an estimated date.
 scheme-stillusingno._1.heading=Date you received your first loan from the scheme
 scheme-stillusingno._1.hint=For example, 31 3 2015
 

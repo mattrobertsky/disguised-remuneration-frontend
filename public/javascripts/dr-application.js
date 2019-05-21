@@ -6,7 +6,6 @@
 $(document).ready(function () {
     // Turn off jQuery animation
     jQuery.fx.off = true;
-    $(".radios__item").addClass('multiple-choice');
 
     // Where .multiple-choice uses the data-target attribute
     // to toggle hidden content
