@@ -20,21 +20,22 @@
 
 @path=@{key.split("[.]").filter(_.nonEmpty).tail}
 
-<div class="date-input form-date" id="@key">
-  @for(field <- List("day","month","year")) {
-    <div class="form-group@if(field=="year"){ form-group-year}">
-      <label class="form-label" for="@key-@field">
-        @messages(List(s"$key.$field",field))
-      </label>
-      <input
-        class="form-control@if(field=="year"){ input--xsmall}else{ input--xxsmall}"
-        id="@key-@field"
-        name="@key.@field"
-        type="number"
-        pattern="[0-9]*"
-        value="@{values.atPath({path :+ field}:_*)}"
-      />
-    </div>
-
-  }
-</div>
+  <div class="govuk-date-input" id="@key">
+    @for(field <- List("day","month","year")) {
+      <div class="govuk-date-input__item">
+        <div class="govuk-form-group">
+          <label class="govuk-label govuk-date-input__label" for="@key-@field">
+            @messages(List(s"$key.$field",field))
+          </label>
+          <input
+            class="govuk-input govuk-date-input__input@if(field=="year"){ govuk-input--width-4}else{ govuk-input--width-2}"
+            id="@key-@field"
+            name="@key.@field"
+            type="number"
+            pattern="[0-9]*"
+            value="@{values.atPath({path :+ field}:_*)}"
+          />
+        </div>
+      </div>
+    }
+  </div>
