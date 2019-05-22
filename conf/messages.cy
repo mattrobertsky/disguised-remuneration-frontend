@@ -4,9 +4,9 @@ common.save-continue=Cadw ac yn eich blaen
 common.save-back-later=Cadw a dod yn ôl yn hwyrach
 common.sign-out=Allgofnodi
 common.sign-in=Sign in TODO
-common.alpha-info.p1=This is a new service – your TODO
-common.alpha-info.link=feedback TODO
-common.alpha-info.p2= will help us to improve it. TODO
+common.alpha-info.p1=Gwasanaeth newydd yw hwn – bydd eich
+common.alpha-info.link=adborth
+common.alpha-info.p2= yn ein helpu i’w wella.
 common.print-save=Argraffu neu gadw’r dudalen hon
 common.warning.title=Warning TODO
 
@@ -22,16 +22,16 @@ landing.info=Llenwch bob adran orau y gallwch. Gallwch gadw eich atebion a dod y
 landing.details.title=Nadwch eich manylion
 landing.loan.arrangement.heading=Rhoi gwybod i ni am drefniadau benthyca a ddefnyddioch
 landing.loan.arrangement.info=Weithiau caiff y rhain eu galw’n ‘gynlluniau tâl cuddiedig’.
-landing.loan.taxyear.heading=Enter loan details by tax year TODO
-landing.loan.taxyear.info1=You need TODO
-landing.loan.taxyear.info2=add a remuneration scheme TODO
-landing.loan.taxyear.info3=before you can add loan details by tax year. TODO
+landing.loan.taxyear.heading=Nodwch fanylion eich benthyciad fesul blwyddyn dreth
+landing.loan.taxyear.info1=Bydd angen i chi
+landing.loan.taxyear.info2=ychwanegu trefniant benthyciad
+landing.loan.taxyear.info3=cyn gallu rhoi manylion y benthyciad fesul blwyddyn dreth.
 landing.checkdetails.heading=Gwiriwch eich manylion a’u hanfon
-landing.sendanswers.link=You can check your answers once you have entered your loan details by tax year. TODO
-landing.aboutyou.link=About you TODO
-landing.contactdetails.link=Your contact details TODO
-landing.loanarrangement.info=These are sometimes called ‘disguised remuneration schemes’. TODO
-landing.loanarrangement.link=Add, change or remove a loan arrangement TODO
+landing.sendanswers.link=Gallwch wirio eich atebion ar ôl rhoi’r holl fanylion sydd eu hangen arnom.
+landing.aboutyou.link=Amdanoch chi
+landing.contactdetails.link=Eich manylion cyswllt
+landing.loanarrangement.info=Weithiau caiff y rhain eu galw’n ‘gynlluniau tâl cuddiedig’.
+landing.loanarrangement.link=Ychwanegu, newid neu ddileu trefniant benthyciad
 
 #Amdanoch chi
 aboutyou-completedby.heading=Ydych chi’n llenwi’r ffurflen hon i chi’ch hun?
@@ -68,7 +68,7 @@ aboutyou-confirmation.FALSE=No - I need to start over again TODO
 
 #Contact details
 contactdetails-address.heading=Beth yw’ch cyfeiriad?
-contactdetails-address.intro=We will only use these details to contact you about your case. TODO
+contactdetails-address.intro=Dim ond i gysylltu â chi ynglŷn â’ch achos y byddwn yn defnyddio’r manylion hyn.
 contactdetails-address.line1.heading=Adeilad neu stryd
 contactdetails-address.line2.heading=
 contactdetails-address.town.heading=Tref neu ddinas
@@ -122,7 +122,7 @@ scheme-recipient.outer.TRUE=Na
 scheme-recipient.outer.FALSE=Iawn
 scheme-recipientname=Nodwch enw’r sawl yr oedd y benthyciad yn ei enw
 scheme-agreedpayment.heading=A oes rhywun wedi talu, neu wedi cytuno â ni i dalu, unrhyw dreth neu Yswiriant Gwladol sy’n ddyledus ar gyfer y cynllun hwn?
-scheme-agreedpayment.intro=If you made payments in response to an Accelerated Payments Natice (APN), do not include these. TODO
+scheme-agreedpayment.intro=Peidiwch â chynnwys unrhyw daliadau mewn ymateb i Hysbysiad i wneud Taliad Cyflym (APN).
 scheme-settlementstatus.heading=Faint o dreth ac Yswiriant Gwladol ydych wedi’i dalu, neu wedi cytuno â ni i’w dalu, ar gyfer y cynllun hwn?
 scheme-settlementstatus.amount.heading=Nodwch y cyfanswm.
 scheme-settlementstatus.dateOfSettlement.heading=Date paid TODO
@@ -145,16 +145,16 @@ details-genuinely-repaid-amount.intro=Peidiwch â chynnwys unrhyw fathau o ad-da
 details-genuinely-repaid-amount.heading.hint=
 details-genuinely-repaid-amount.heading.hint.custom=Cynllun: {0}
 
-details-genuinely-repaid.heading=Have you made any repayments for the loans received between START to END? TODO
+details-genuinely-repaid.heading=Have you made any repayments for the loans received between START to END?
 details-genuinely-repaid.heading.range=A ydych wedi gwneud unrhyw ad-daliadau ar gyfer y benthyciadau a gawsoch rhwng {0} a {1}?
 details-genuinely-repaid.heading.hint=
 details-genuinely-repaid.heading.hint.custom=Cynllun: {0}
 
-details-written-off-amount.heading=How much of the loan was written off? TODO
+details-written-off-amount.heading=Swm y benthyciad a gafodd ei ddileu
 details-written-off-amount.heading.hint=
 details-written-off-amount.heading.hint.custom=Cynllun: {0}
 details-written-off.heading=Has the lender written off any of the loan made from START DATE to END DATE? TODO?
-details-written-off.heading.range=Has the lender written off any of the loan made from {0} to {1}?
+details-written-off.heading.range=Ydy’r benthyciwr wedi dileu unrhyw ran o’r benthyciad a wnaed o {0} i {1}?
 details-written-off.heading.hint=
 details-written-off.heading.hint.custom=Cynllun: {0}
 
@@ -170,7 +170,7 @@ contact-details=Manylion cyswllt
 
 
 
-dates-you-received-loans=Dates you received loans TODO
+dates-you-received-loans=Dyddiadau pan gawsoch fenthyciadau
 scheme=Cynllun: 
 disclosure-of-tax-avoidance-schemes-dotas-number=Rhif Datgelu Cynlluniau Arbed Treth (DOTAS)
 disclosure-of-tax-avoidance-schemes-dotas-number.Unknown=Ddim yn gwybod
@@ -204,18 +204,17 @@ confirm.info=You must confirm that the information you have supplied is true and
 
 # Amdanoch chi
 aboutyou-completedby.required=Dewiswch Iawn os ydych yn llenwi’r ffurflen hon i chi’ch hun
-aboutyou-nino.required=Enter the person’s National Insurance number TODO
-aboutyou-nino.format=Enter the person’s National Insurance number in the correct format TODO
+aboutyou-nino.required=Nodwch rif Yswiriant Gwladol y person
+aboutyou-nino.format=Nodwch rif Yswiriant Gwladol y person yn y fformat cywir
 aboutyou-personalive.required=Dewiswch ‘ydw’ os yw’r person rydych yn gweithredu ar ei ran yn fyw
 aboutyou-employmentstatus.required=Dewiswch a oedd y person a fu farw yn gyflogedig, yn hunangyflogedig, neu’n gyflogedig ac yn hunangyflogedig
 aboutyou-deceasedbefore.required=Dewiswch Iawn os bu farw’r person ar neu cyn 5 Ebrill 2019
-#aboutyou-identity.required=BLAHHHHHH
-aboutyou-identitya.required=Enter the person’s National Insurance number TODO
-aboutyou-identity.Left.a.required=Enter the person’s National Insurance number TODO
-aboutyou-identityb.required=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR) TODO
-aboutyou-identity.Right.b.required=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR) TODO
-aboutyou-identity.nino-format=Enter the person’s National Insurance number in the correct format TODO
-aboutyou-identity.utr-format=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR) in the correct format TODO
+aboutyou-identitya.required=Nodwch rif Yswiriant Gwladol y person
+aboutyou-identity.Left.a.required=Nodwch rif Yswiriant Gwladol y person
+aboutyou-identityb.required=Nodwch Gyfeirnod Unigryw Trethdalwr (UTR) y person ar gyfer Hunanasesiad
+aboutyou-identity.Right.b.required=Nodwch Gyfeirnod Unigryw Trethdalwr (UTR) y person ar gyfer Hunanasesiad
+aboutyou-identity.nino-format=Nodwch rif Yswiriant Gwladol y person yn y fformat cywir
+aboutyou-identity.utr-format=Nodwch Gyfeirnod Unigryw Trethdalwr (UTR) y person ar gyfer Hunanasesiad yn y fformat cywir
 aboutyou-confirmation.required=Nodwch enw llawn y person rydych yn gweithredu ar ei ran
 
 # contact details
@@ -256,7 +255,7 @@ scheme-stillusing.required=Dewiswch Iawn os ydych yn dal i ddefnyddio’r cynllu
 scheme-stillusingyesyear.required=Mae’n rhaid i’r dyddiad y gwnaethoch ddechrau defnyddio’r cynllun gynnwys blwyddyn
 scheme-stillusingyesmonth.required=Mae’n rhaid i’r dyddiad y gwnaethoch ddechrau defnyddio’r cynllun gynnwys mis
 scheme-stillusingyesday.required=Mae’n rhaid i’r dyddiad y gwnaethoch ddechrau defnyddio’r cynllun gynnwys diwrnod
-scheme-stillusingyes.date-far-past=The date you started using the scheme must after 1st of January 1900 TODO
+scheme-stillusingyes.date-far-past=Mae’n rhaid i’r dyddiad y gwnaethoch ddechrau defnyddio’r cynllun fod ar ôl 4 Ebrill 1999
 scheme-stillusingyes.date-in-future=Mae’n rhaid i’r dyddiad y gwnaethoch ddechrau defnyddio’r cynllun fod yn y gorffennol
 scheme-stillusingnoyear_2.required=Mae’n rhaid i’r dyddiad y gwnaethoch roi’r gorau i ddefnyddio’r cynllun gynnwys blwyddyn
 scheme-stillusingnomonth_2.required=Mae’n rhaid i’r dyddiad y gwnaethoch roi’r gorau i ddefnyddio’r cynllun gynnwys mis
@@ -271,24 +270,20 @@ scheme-stillusingno.year-incorrect=The year must be 4 numbers, like 2015 TODO
 scheme-stillusingno._1.year-incorrect=The year you started using the scheme must be 4 numbers, like 2015 TODO
 scheme-stillusingno._2.year-incorrect=The year you stopped using the scheme must be 4 numbers, like 2015 TODO
 
-scheme-employeeouter.required=Select yes if you were an employee while you were using the scheme
+scheme-employeeouter.required=Select yes if you were an employee while you were using the scheme TODO
 scheme-employeenameinner.required=Nodwch enw’r cyflogwr
 scheme-employee.inner.name.required=Nodwch enw’r cyflogwr
-scheme-employeepayeinner.required=Enter the PAYE reference
+scheme-employeepayeinner.required=Enter the PAYE reference TODO
 scheme-employeepayeinner.paye-format=Nodwch gyfeirnod TWE y cyflogwr yn y fformat cywir
-scheme-employeeinner.char-limit=Employer's name must be 50 characters or less
-scheme-employee.char-limit=Employer's name must be 50 characters or less
-scheme-employee.name-format=Employer's name must only include letters a to z, numbers, apostrophes, \
-  ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
+scheme-employeeinner.char-limit=Mae’n rhaid i enw’r cyflogwr fod yn 50 o gymeriadau neu lai
+scheme-employee.char-limit=Mae’n rhaid i enw’r cyflogwr fod yn 50 o gymeriadau neu lai
+scheme-employee.name-format=Employer's name must only include letters a to z, numbers, apostrophes, ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces TODO
 scheme-recipientouter.required=Dewiswch Iawn os mai yn eich enw chi oedd y benthyciad
-scheme-recipientinner.required=Enter the name of who the load was made out to
-scheme-recipient.char-limit=Enw of who the loan was made out to must be 50 characters or less
-scheme-recipient.name-format=Enw of who the loan was made out to must only include letters a to z, numbers, \
-  apostrophes, ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
-scheme-agreedpayment.required=Select yes if you have paid, or agreed with us to pay, any tax or National Insurance \
-  owed for this scheme
-scheme-settlementstatusyeardateOfSettlement.required=Enter how much tax and National Insurance you have paid, \
-  or agreed with us to pay
+scheme-recipientinner.required=Nodwch enw llawn y sawl y gwnaed y benthyciad yn ei enw
+scheme-recipient.char-limit=Mae’n rhaid i enw’r sawl y gwnaed y benthyciad yn ei enw fod yn 50 o gymeriadau neu lai
+scheme-recipient.name-format=Mae’n rhaid i enw’r sawl y gwnaed y benthyciad yn ei enw gynnwys llythrennau a-z, rhifau, collnodau, symbolau ampersand, comas, cysylltnodau, atalnodau llawn, blaenslaesau, cromfachau crwn a bylchau yn unig
+scheme-agreedpayment.required=Dewiswch Iawn os oes rhywun wedi talu, neu wedi cytuno â ni i dalu, unrhyw dreth neu Yswiriant Gwladol sy’n ddyledus ar gyfer y cynllun hwn
+scheme-settlementstatusyeardateOfSettlement.required=Nodwch faint o dreth ac Yswiriant Gwladol y mae rhywun wedi’u talu, neu wedi cytuno â ni i’w talu
 scheme-settlementstatusamount.nonnumericformat=Mae’n rhaid i gyfanswm y benthyciad fod yn swm o arian, megis 123.45 neu 150
 scheme-settlementstatusamount.required =Mae’n rhaid i gyfanswm y benthyciad fod yn swm o arian, megis 123.45 neu 150
 scheme-settlementstatus.amount.required=Mae’n rhaid i gyfanswm y benthyciad fod yn swm o arian, megis 123.45 neu 150
@@ -297,10 +292,10 @@ scheme-settlementstatus.amount.amount-format=Mae’n rhaid i gyfanswm y benthyci
 
 # loan details
 details-hmrc-approved.required=Dewiswch Iawn os oedd y benthyciad yn un cyfnod penodol cymeradwy
-details-amount.required=Enter the the total loan amount paid TODO
+details-amount.required=Enter the total loan amount paid TODO
 details-amount.nonnumericformat=Mae’n rhaid i’r swm rydych wedi'i ad-dalu fod yn swm o arian, megis 123.45 neu 150
 details-amount.format=Mae’n rhaid i gyfanswm y benthyciad fod yn swm o arian, megis 123.45 neu 150
-details-genuinely-repaid.required=Select yes if you have you made any repayments TODO
+details-genuinely-repaid.required=Select yes if you have made any repayments TODO
 details-genuinely-repaid-amount.required=Enter how much of the loan you have repaid in actual repayments TODO
 details-genuinely-repaid-amount.nonnumericformat=Mae’n rhaid i’r swm rydych wedi'i ad-dalu fod yn swm o arian, megis 123.45 neu 150
 details-genuinely-repaid-amount.format=Mae’n rhaid i’r swm rydych wedi'i ad-dalu fod yn swm o arian, megis 123.45 neu 150
