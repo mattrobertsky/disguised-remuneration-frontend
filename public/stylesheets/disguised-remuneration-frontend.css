@@ -911,3 +911,78 @@ strong, b {
     display: block;
     font-weight: normal;
 }
+
+/* Date pattern to mirror Design System to address longer labels (welsh translation) */
+.govuk-date-input__item {
+    display: inline-block;
+    margin-right: 20px;
+    margin-bottom: 0;
+}
+
+.govuk-form-group .govuk-form-group:last-of-type {
+    margin-bottom: 0;
+}
+
+.govuk-date-input__label {
+    display: block;
+}
+
+.govuk-label {
+    font-family: "nta",Arial,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    color: #0b0c0c;
+    display: block;
+    margin-bottom: 5px;
+}
+
+@media (min-width: 641px) {
+    .govuk-label {
+        font-size: 19px;
+        line-height: 25px;
+    }
+}
+
+.govuk-date-input__input {
+    margin-bottom: 0;
+}
+
+.govuk-input--width-2 {
+    max-width: 43px;
+}
+
+.govuk-input {
+    font-family: "nta",Arial,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 400;
+    font-size: 16px;
+    font-size: 1rem;
+    line-height: 1.25;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    height: 40px;
+    margin-top: 0;
+    padding: 5px;
+    border: 2px solid #0b0c0c;
+    border-radius: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+@media (min-width: 641px) {
+    .govuk-input {
+        font-size: 19px;
+        font-size: 1.1875rem;
+        line-height: 1.31579;
+    }
+}
+
+.govuk-input--width-4 {
+    max-width: 72px;
+}
