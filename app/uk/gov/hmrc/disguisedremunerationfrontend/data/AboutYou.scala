@@ -87,15 +87,28 @@ object AboutYou {
             id <- ask[Either[Nino,Utr]]("aboutyou-identity")
               .defaultOpt(localDefault.map(_.identification))
               .validating(
+                "nino-required", {
+                  case Left(nino) => nino.nonEmpty
+                  case _ => true
+                }
+              )
+              .validating(
                 "nino-format", {
                   case Left(nino) => nino.matches(regExNino)
                   case _ => true
                 }
-              ).validating(
+              )
+              .validating(
+                "utr-required", {
+                  case Right(utr) => utr.nonEmpty
+                  case _ => true
+                }
+              )
+              .validating(
                 "utr-format",
                 {
-                  case Left(nino) => true
                   case Right(utr) => utr.matches(regExUTR)
+                  case _ => true
                 }
               )
               .in[R]

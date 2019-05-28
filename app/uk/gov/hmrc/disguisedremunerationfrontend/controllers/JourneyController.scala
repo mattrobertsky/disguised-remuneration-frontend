@@ -38,7 +38,7 @@ import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
 import uk.gov.hmrc.disguisedremunerationfrontend.actions.{AuthorisedAction, AuthorisedRequest}
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
-import uk.gov.hmrc.disguisedremunerationfrontend.controllers.AssetsFrontend.{optionHtml => _, _}
+import uk.gov.hmrc.disguisedremunerationfrontend.controllers.AssetsFrontend.{optionHtml => _,  _}
 import uk.gov.hmrc.disguisedremunerationfrontend.data.JsonConversion.{FlatState, journeyStateFormat}
 import uk.gov.hmrc.disguisedremunerationfrontend.data.{Date, Nino, Utr, _}
 import uk.gov.hmrc.disguisedremunerationfrontend.repo.{JourneyStateStore, ShortLivedStore}
@@ -184,11 +184,13 @@ class JourneyController @Inject()(
 
     import cats.implicits._
 
-    def bind(in: Input): Either[ErrorTree, Option[String]] = in.value match {
-      case Nil => Tree("required").asLeft
-      case empty :: Nil if empty.trim == "" => none[String].asRight
-      case s :: Nil => Some(s).asRight
-      case _ => Tree("badValue").asLeft
+    def bind(in: Input): Either[ErrorTree, Option[String]] = {
+      in.value match {
+        case Nil => Tree("required.test").asLeft
+        case empty :: Nil if empty.trim == "" => none[String].asRight
+        case s :: Nil => Some(s).asRight
+        case _ => Tree("badValue").asLeft
+      }
     }
 
     def unbind(a: Option[String]): Input = Tree(List(a.getOrElse("")))
@@ -197,16 +199,20 @@ class JourneyController @Inject()(
   // tell uniform to use the same renderer for an Option[String] as
   // is used for a String field
   val optStringHtml = new HtmlField[Option[String]] {
+    import uk.gov.hmrc.disguisedremunerationfrontend.controllers.AssetsFrontend.stringHtml
     def render(
       key: String,
       values: Input,
       errors: ErrorTree,
       messages: UniformMessages[Html]
-    ) = implicitly[HtmlField[String]].render(key, values, errors, messages)
+    ) = {
+      implicitly[HtmlField[String]].render(key, values, errors, messages)
+    }
   }
 
   def contactDetails(implicit key: String): Action[AnyContent] =
     authorisedAction.async { implicit request =>
+
       implicit val keys: List[String] = key.split("/").toList
       import ContactDetails._
 
@@ -298,6 +304,7 @@ class JourneyController @Inject()(
   ) = authorisedAction.async { implicit request =>
     implicit val keys: List[String] = key.split("/").toList
     import LoanDetails._
+    import uk.gov.hmrc.disguisedremunerationfrontend.controllers.AssetsFrontend.stringHtml
 
     getState.flatMap { state =>
       val scheme = state.schemes(schemeIndex)
@@ -325,7 +332,25 @@ class JourneyController @Inject()(
 
   implicit def renderTell: (Unit, String) => Html = {case _ => Html("")}
 
-  def aboutYou(implicit key: String): Action[AnyContent] = authorisedAction.async {
+  val eitherParser = new DataParser[Either[Nino, Utr]] {
+
+    import cats.implicits._
+
+
+    def bind(in: Input): Either[ErrorTree, Either[Nino, Utr]] = {
+
+      (in.value, in.children.head._2.children.values.head.value, in.children.takeRight(1).values.head.children.values.head.value) match {
+        case (Nil, _, _ ) => Tree("requiredradio").asLeft
+        case ("Left"::Nil, a, _) => Left(a.head).asRight
+        case ("Right"::Nil, _, b) => Right(b.head).asRight
+
+      }
+    }
+
+    def unbind(a: Either[Nino, Utr]): Input = Tree(List(a.getOrElse(""))) // TODO
+  }
+
+    def aboutYou(implicit key: String): Action[AnyContent] = authorisedAction.async {
     implicit request =>
       implicit val keys: List[String] = key.split("/").toList
 
@@ -347,7 +372,6 @@ class JourneyController @Inject()(
         }
         automatic[Unit, Boolean]
       }
-
       import AboutYou._
       getState.flatMap { state =>
         runWeb(
@@ -356,9 +380,15 @@ class JourneyController @Inject()(
               case List("aboutyou-completedby") => customBool
               case _ => automatic[Unit, Boolean]
             }
-            .useForm(automatic[Unit, Either[Nino, Utr]])
+            .useForm(automatic[Unit, Either[Nino, Utr]]({
+              implicit val a = eitherParser
+              implicitly[DataParser[Either[Nino, Utr]]]
+            }, implicitly, implicitly))
             .useForm(automatic[Unit, EmploymentStatus])
-            .useForm(automatic[Unit, String])
+            .useForm(automatic[Unit, String](implicitly, {
+              import uk.gov.hmrc.disguisedremunerationfrontend.controllers.AssetsFrontend.stringHtml
+              implicitly[HtmlForm[String]]
+            }, implicitly))
             .useForm(automatic[Unit, Unit]),
           shortLivedStore.persistence(request.internalId)
         ) {
