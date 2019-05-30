@@ -3,12 +3,12 @@ common.back=Yn ôl
 common.save-continue=Cadw ac yn eich blaen
 common.save-back-later=Cadw a dod yn ôl yn hwyrach
 common.sign-out=Allgofnodi
-common.sign-in=Sign in TODO
+common.sign-in=Mewngofnodi
 common.alpha-info.p1=Gwasanaeth newydd yw hwn – bydd eich
 common.alpha-info.link=adborth
 common.alpha-info.p2= yn ein helpu i’w wella.
 common.print-save=Argraffu neu gadw’r dudalen hon
-common.warning.title=Warning TODO
+common.warning.title=Rhybudd
 
 common.title=Anfon manylion eich tâl ar fenthyciad - GOV.UK
 common.title.short=Anfon manylion eich tâl ar fenthyciad
@@ -81,6 +81,7 @@ contactdetails-telehoneemail.email.heading=Cyfeiriad e-bost
 #Scheme
 scheme-name.heading=Nodwch enw ar gyfer y cynllun hwn
 scheme-name.hint=Os nad ydych yn gwybod enw’r cynllun, gallwch nodi unrhyw enw yma.
+scheme-dotas.required=Dewiswch Iawn os oes gennych rif Datgelu Cynlluniau Arbed Treth (DOTAS)
 scheme-dotas.heading=Oes gennych rif Datgelu Cynlluniau Arbed Treth (DOTAS) ar gyfer y cynllun hwn?
 scheme-dotas.Yes.dotas.heading=Nadwch y rhif DOTAS
 scheme-dotas.Yes.dotas.hint=Er enghraifft, 12345678
@@ -133,7 +134,6 @@ details-hmrc-approved.heading.hint=
 details-hmrc-approved.heading.hint.custom=Cynllun: {0}
 details-hmrc-approved.Unknown=Ddim yn gwybod
 
-details-amount.heading=What was the total loan amount paid from START to END? TODO
 details-amount.heading.range=Beth oedd cyfanswm y benthyciad a dalwyd o {0} i {1}?
 details-amount.heading.hint=
 details-amount.heading.hint.custom=Cynllun: {0}
@@ -153,7 +153,6 @@ details-genuinely-repaid.heading.hint.custom=Cynllun: {0}
 details-written-off-amount.heading=Swm y benthyciad a gafodd ei ddileu
 details-written-off-amount.heading.hint=
 details-written-off-amount.heading.hint.custom=Cynllun: {0}
-details-written-off.heading=Has the lender written off any of the loan made from START DATE to END DATE? TODO?
 details-written-off.heading.range=Ydy’r benthyciwr wedi dileu unrhyw ran o’r benthyciad a wnaed o {0} i {1}?
 details-written-off.heading.hint=
 details-written-off.heading.hint.custom=Cynllun: {0}
@@ -181,7 +180,7 @@ tax-or-national-insurance-paid-or-agreed-to-pay=Treth neu Yswiriant Gwladol a da
 
 # time out
 time-out.title=For your security, we signed you out TODO
-time-out.save=We have saved your answers TODO
+time-out.save=Cedwir eich cynnydd am 30 diwrnod
 
 # cya
 cya.title=Gwirio’ch atebion cyn anfon eich manylion
@@ -200,7 +199,7 @@ cya.submit=Derbyn ac anfon y manylion
 
 # Error messages
 there.is.a.problem=Mae problem wedi codi
-confirm.info=You must confirm that the information you have supplied is true and correct TODO
+# confirm.info=You must confirm that the information you have supplied is true and correct
 
 # Amdanoch chi
 aboutyou-completedby.required=Dewiswch Iawn os ydych yn llenwi’r ffurflen hon i chi’ch hun
@@ -266,14 +265,14 @@ scheme-stillusingnoday_1.required=Mae’n rhaid i’r dyddiad y gwnaethoch ddech
 scheme-stillusingno_1.same-or-after=Mae’n rhaid i’r dyddiad y gwnaethoch roi’r gorau i ddefnyddio’r cynllun fod yr un fath â’r dyddiad y gwnaethoch ddechrau defnyddio’r cynllun neu ar ôl hynny
 scheme-stillusingno_2.same-or-after=Mae’n rhaid i’r dyddiad y gwnaethoch roi’r gorau i ddefnyddio’r cynllun fod yr un fath â’r dyddiad y gwnaethoch ddechrau defnyddio’r cynllun neu ar ôl hynny
 scheme-stillusingno.same-or-after=Mae’n rhaid i’r dyddiad y gwnaethoch roi’r gorau i ddefnyddio’r cynllun fod yr un fath â’r dyddiad y gwnaethoch ddechrau defnyddio’r cynllun neu ar ôl hynny
-scheme-stillusingno.year-incorrect=The year must be 4 numbers, like 2015 TODO
-scheme-stillusingno._1.year-incorrect=The year you started using the scheme must be 4 numbers, like 2015 TODO
-scheme-stillusingno._2.year-incorrect=The year you stopped using the scheme must be 4 numbers, like 2015 TODO
+scheme-stillusingno.year-incorrect=Nodwch ddyddiad go iawn
+scheme-stillusingno._1.year-incorrect=Nodwch ddyddiad go iawn
+scheme-stillusingno._2.year-incorrect=Nodwch ddyddiad go iawn
 
-scheme-employeeouter.required=Select yes if you were an employee while you were using the scheme TODO
+scheme-employeeouter.required=Dewiswch Iawn os oeddech yn gyflogai pan oeddech yn defnyddio’r cynllun
 scheme-employeenameinner.required=Nodwch enw’r cyflogwr
 scheme-employee.inner.name.required=Nodwch enw’r cyflogwr
-scheme-employeepayeinner.required=Enter the PAYE reference TODO
+#scheme-employeepayeinner.required=Enter the PAYE reference
 scheme-employeepayeinner.paye-format=Nodwch gyfeirnod TWE y cyflogwr yn y fformat cywir
 scheme-employeeinner.char-limit=Mae’n rhaid i enw’r cyflogwr fod yn 50 o gymeriadau neu lai
 scheme-employee.char-limit=Mae’n rhaid i enw’r cyflogwr fod yn 50 o gymeriadau neu lai
@@ -292,14 +291,14 @@ scheme-settlementstatus.amount.amount-format=Mae’n rhaid i gyfanswm y benthyci
 
 # loan details
 details-hmrc-approved.required=Dewiswch Iawn os oedd y benthyciad yn un cyfnod penodol cymeradwy
-details-amount.required=Enter the total loan amount paid TODO
+details-amount.required=Nodwch gyfanswm y benthyciad o {0} i {1}
 details-amount.nonnumericformat=Mae’n rhaid i’r swm rydych wedi'i ad-dalu fod yn swm o arian, megis 123.45 neu 150
 details-amount.format=Mae’n rhaid i gyfanswm y benthyciad fod yn swm o arian, megis 123.45 neu 150
-details-genuinely-repaid.required=Select yes if you have made any repayments TODO
-details-genuinely-repaid-amount.required=Enter how much of the loan you have repaid in actual repayments TODO
+details-genuinely-repaid.required=Dewiswch Iawn os ydych wedi ad-dalu rhywfaint o’r benthyciad o {0} i {1}
+details-genuinely-repaid-amount.required=Nodwch faint o’r benthyciad y gwnaethoch ei ad-dalu
 details-genuinely-repaid-amount.nonnumericformat=Mae’n rhaid i’r swm rydych wedi'i ad-dalu fod yn swm o arian, megis 123.45 neu 150
 details-genuinely-repaid-amount.format=Mae’n rhaid i’r swm rydych wedi'i ad-dalu fod yn swm o arian, megis 123.45 neu 150
-details-written-off.required=Select yes if the lender has written off any of the loan TODO
+details-written-off.required=Dewiswch Iawn os yw’r benthyciwr wedi dileu unrhyw ran o’r benthyciad a wnaed o {0} i {1}
 details-written-off-amounttaxPaid.required=Nodwch swm y dreth neu Yswiriant Gwladol a dalwyd ar y benthyciad a gafodd ei ddileu
 details-written-off-amounttaxPaid.nonnumericformat=Mae’n rhaid i swm y dreth neu Yswiriant Gwladol a dalwyd ar y benthyciad a gafodd ei ddileu fod yn swm o arian, megis 123.45 neu 150
 details-written-off-amountamount.required=Nodwch y swm y mae’r benthyciwr wedi’i ddileu o’r benthyciad
@@ -318,7 +317,7 @@ details-written-off-amount.taxPaid.tax-format=Mae’n rhaid i swm y dreth neu Ys
 confirmation.heading=Manylion tâl ar fenthyciad wedi dod i law
 confirmation.detail=Cawsom y manylion y gwnaethoch eu hanfon ar
 confirmation.h2=Yr hyn sy’n digwydd nesaf
-confirmation.p1=We will check the details you sent against the information we hold. This might include, for example, any details from employers or Self Assessment returns. TODO
+confirmation.p1=Byddwn yn gwirio’r manylion y gwnaethoch eu hanfon i weld a ydynt yn cyd-fynd â’n cofnodion.
 confirmation.p2=Byddwn yn cysylltu â chi os bydd angen rhagor o wybodaeth arnom.
 confirmation.p3=Os bydd angen i chi ychwanegu at eich manylion neu eu newid, llenwch y ffurflen hon eto ac ailanfonwch eich manylion.
 confirmation.h3=Yr hyn y mae angen i chi ei wneud nesaf
@@ -329,13 +328,13 @@ confirmation.h4=Os oes angen help arnoch
 confirmation.p7=Os oes angen help arnoch i ddefnyddio’r gwasanaeth hwn, ewch i’r cysylltiad ‘help gyda’r dudalen hon’ ar waelod y dudalen.
 confirmation.p8=<a href={0}>Beth yw’ch barn am y gwasanaeth hwn?</a> (mae’n cymryd 30 eiliad)
 
-tasklist.caption=Caption TODO
-tasklist.item=Item TODO
-tasklist.delete=Delete TODO
-tasklist.edit=Edit TODO
+tasklist.caption=Caption
+tasklist.item=Item
+tasklist.delete=Dileu
+tasklist.edit=Newid
 
 day=Diwrnod
 month=Mis
 year=Blwyddyn
 
-contactdetails-telehoneemail.email-or-phone-number-needed=A valid email address or telephone number is required TODO
+contactdetails-telehoneemail.email-or-phone-number-needed=A valid email address or telephone number is required

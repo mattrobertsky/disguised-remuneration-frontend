@@ -185,7 +185,7 @@ tax-or-national-insurance-paid-or-agreed-to-pay=Tax or National Insurance paid o
 
 # time out
 time-out.title=For your security, we signed you out
-time-out.save=We have saved your answers
+time-out.save=Your progress will saved for 30 days
 
 # cya
 cya.title=Check your answers before sending your details
@@ -253,6 +253,7 @@ contactdetails-telehoneemail.telephone.email-format=
 scheme-name.required=Enter the name of the scheme
 scheme-name.char-limit=Scheme name must be 100 characters or less
 scheme-name.invalid-name=Scheme name must only include letters a to z, numbers, apostrophes, ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
+scheme-dotas.required=Select yes if you have a Disclosure of Tax Avoidance Schemes (DOTAS) number
 scheme-dotas.char-limit=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
 scheme-dotasdotas.required=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
 scheme-dotas.Yes.dotas.required=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
@@ -274,11 +275,11 @@ scheme-stillusingnoday_1.required=The date you started using the scheme must inc
 scheme-stillusingno_1.same-or-after=The date you stopped using the scheme must be the same as or after the date you started using the scheme
 scheme-stillusingno_2.same-or-after=The date you stopped using the scheme must be the same as or after the date you started using the scheme
 scheme-stillusingno.same-or-after=The date you stopped using the scheme must be the same as or after the date you started using the scheme
-scheme-stillusingno.year-incorrect=The year must be 4 numbers, like 2015
-scheme-stillusingno._1.year-incorrect=The year you started using the scheme must be 4 numbers, like 2015
-scheme-stillusingno._2.year-incorrect=The year you stopped using the scheme must be 4 numbers, like 2015
+scheme-stillusingno.year-incorrect=Enter a real date
+scheme-stillusingno._1.year-incorrect=Enter a real date
+scheme-stillusingno._2.year-incorrect=Enter a real date
 
-scheme-employeeouter.required=Select yes if you were an employee while you were using the scheme
+scheme-employeeouter.required=Select yes if you were an employee when you were using the scheme
 scheme-employeenameinner.required=Enter the employer’s name
 scheme-employee.inner.name.required=Enter the employer’s name
 scheme-employeepayeinner.required=Enter the PAYE reference
@@ -302,14 +303,14 @@ scheme-settlementstatus.amount.amount-format=Total loan amount must be an amount
 
 # loan details
 details-hmrc-approved.required=Select yes if the loan was an approved fixed-term loan
-details-amount.required=Enter the the total loan amount paid
+details-amount.required=Enter the total loan amount from {0} to {1}
 details-amount.nonnumericformat=Amount you have repaid must be an amount of money, like 123.45 or 150
 details-amount.format=Total loan amount must be an amount of money, like 123.45 or 150
-details-genuinely-repaid.required=Select yes if you have made any repayments
-details-genuinely-repaid-amount.required=Enter how much of the loan you have repaid in actual repayments
+details-genuinely-repaid.required=Select yes if you have repaid any of the loan made from {0} to {1}
+details-genuinely-repaid-amount.required=Enter how much of the loan you repaid
 details-genuinely-repaid-amount.nonnumericformat=Amount you have repaid must be an amount of money, like 123.45 or 150
 details-genuinely-repaid-amount.format=Amount you have repaid must be an amount of money, like 123.45 or 150
-details-written-off.required=Select yes if the lender has written off any of the loan
+details-written-off.required=Select yes if the lender has written off any of the loan made from {0} to {1}        
 details-written-off-amounttaxPaid.required=Enter the amount of tax or National Insurance paid on the written-off loan
 details-written-off-amounttaxPaid.nonnumericformat=Amount of tax or National Insurance paid on the written-off loan \
   must be an amount of money, like 123.45 or 150
@@ -334,7 +335,7 @@ details-written-off-amount.taxPaid.tax-format=Amount of tax or National Insuranc
 confirmation.heading=Loan charge details received
 confirmation.detail=We received the details you sent on
 confirmation.h2=What happens next
-confirmation.p1=We will check the details you sent against the information we hold. This might include, for example, any details from employers or Self Assessment returns.
+confirmation.p1=We will check the details you sent and check if they match our records.
 confirmation.p2=We will contact you if we need you to provide more information.
 confirmation.p3=If you need to add to or change the details you sent, fill in this form again and resend your details.
 confirmation.h3=What you need to do next
@@ -347,7 +348,7 @@ confirmation.p8=<a href={0}>What do you think of this service?</a> (takes 30 sec
 
 tasklist.caption=Caption
 tasklist.item=Item
-tasklist.delete=Delete
-tasklist.edit=Edit
+tasklist.delete=Remove
+tasklist.edit=Change
 
 contactdetails-telehoneemail.email-or-phone-number-needed=A valid email address or telephone number is required
