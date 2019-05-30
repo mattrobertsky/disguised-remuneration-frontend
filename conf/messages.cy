@@ -37,8 +37,8 @@ landing.loanarrangement.link=Ychwanegu, newid neu ddileu trefniant benthyciad
 aboutyou-completedby.heading=Ydych chi’n llenwi’r ffurflen hon i chi’ch hun?
 aboutyou-completedby.FALSE=Ydw, i fi fy hun
 aboutyou-completedby.TRUE=Nac ydw, i rywun arall
-aboutyou-nino.heading=What is your National Insurance number? TODO
-aboutyou-nino.hint=It’s on your National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’. TODO
+aboutyou-nino.heading=What is your National Insurance number?
+aboutyou-nino.hint=It’s on your National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’.
 aboutyou-personalive.heading=Ydy’r person rydych yn gweithredu ar ei ran yn fyw?
 aboutyou-identity.heading=Sut hoffech gadarnhau pwy yw’r person rydych yn gweithredu ar ei ran?
 aboutyou-identity.Left=Rhif Yswiriant Gwladol y person
@@ -50,8 +50,8 @@ aboutyou-identity.Right.hint=Mae hwn yn cynnwys 10 rhif, megis 12345 67890. Bydd
 aboutyou-identity.Right.b.heading=Nadwch ei UTR Hunanasesiad
 aboutyou-identity.Right.label=Nadwch ei UTR Hunanasesiad
 aboutyou-employmentstatus.heading=Oedd y person a fu farw yn gyflogedig neu’n hunangyflogedig pan gafodd y benthyciad?
-aboutyou-employmentstatus.Cyflogedig=Cyflogedig
-aboutyou-employmentstatus.SelfCyflogedig=Hunangyflogedig
+aboutyou-employmentstatus.Employed=Cyflogedig
+aboutyou-employmentstatus.SelfEmployed=Hunangyflogedig
 aboutyou-employmentstatus.Both=Cyflogedig ac yn hunangyflogedig
 aboutyou-deceasedbefore.heading=A fu farw’r person ar 5 Ebrill 2019 neu cyn hynny?
 aboutyou-noloancharge.heading=Does dim angen i chi anfon unrhyw fanylion tâl ar fenthyciad
@@ -61,12 +61,25 @@ aboutyou-noloancharge.list=yn gyflogedig pan gafodd y benthyciad
 aboutyou-noloancharge.list.1=wedi marw ar 5 Ebrill 2019 neu cyn hynny
 aboutyou-noloancharge.outro=Os nad yw hyn yn gywir, mae angen i chi <a class="govuk-link" href="/">fynd yn ôl a newid eich atebion<a/>.
 aboutyou-noloancharge.save-continue=Gorffen ac allgofnodi
-#aboutyou-confirmation.heading=Is this the person you are acting for? TODO
+#aboutyou-confirmation.heading=Is this the person you are acting for?
 aboutyou-confirmation.heading=Beth yw enw llawn y person rydych yn gweithredu ar ei ran?
-aboutyou-confirmation.TRUE=Yes - this is the correct person TODO
-aboutyou-confirmation.FALSE=No - I need to start over again TODO
+aboutyou-confirmation.TRUE=Yes - this is the correct person
+aboutyou-confirmation.FALSE=No - I need to start over again
 
 #Contact details
+contactdetails-addressline1.required=Nodwch adeilad neu stryd eich cyfeiriad
+contactdetails-address.street-limit=Mae’n rhaid i’r adeilad neu’r stryd fod yn 40 o gymeriadau neu lai
+contactdetails-address.street-format=Mae’n rhaid i’r adeilad neu’r stryd gynnwys llythrennau a-z, rhifau, collnodau, symbolau ampersand, comas, cysylltnodau, atalnodau llawn, blaenslaesau a bylchau yn unig
+contactdetails-address.line1.street-format=Mae’n rhaid i’r adeilad neu’r stryd gynnwys llythrennau a-z, rhifau, collnodau, symbolau ampersand, comas, cysylltnodau, atalnodau llawn, blaenslaesau a bylchau yn unig
+contactdetails-address.line2.street-format=Mae’n rhaid i’r adeilad neu’r stryd gynnwys llythrennau a-z, rhifau, collnodau, symbolau ampersand, comas, cysylltnodau, atalnodau llawn, blaenslaesau a bylchau yn unig
+contactdetails-address.town.street-format=Mae’n rhaid i’r adeilad neu’r stryd gynnwys llythrennau a-z, rhifau, collnodau, symbolau ampersand, comas, cysylltnodau, atalnodau llawn, blaenslaesau a bylchau yn unig
+contactdetails-address.county.street-format=Mae’n rhaid i’r adeilad neu’r stryd gynnwys llythrennau a-z, rhifau, collnodau, symbolau ampersand, comas, cysylltnodau, atalnodau llawn, blaenslaesau a bylchau yn unig
+contactdetails-address.postcode.street-format=Mae’n rhaid i’r adeilad neu’r stryd gynnwys llythrennau a-z, rhifau, collnodau, symbolau ampersand, comas, cysylltnodau, atalnodau llawn, blaenslaesau a bylchau yn unig
+contactdetails-addresstown.required=Nodwch dref neu ddinas eich cyfeiriad
+contactdetails-addresspostcode.required=Nodwch god post eich cyfeiriad
+
+
+
 contactdetails-address.heading=Beth yw’ch cyfeiriad?
 contactdetails-address.intro=Dim ond i gysylltu â chi ynglŷn â’ch achos y byddwn yn defnyddio’r manylion hyn.
 contactdetails-address.line1.heading=Adeilad neu stryd
@@ -126,7 +139,7 @@ scheme-agreedpayment.heading=A oes rhywun wedi talu, neu wedi cytuno â ni i dal
 scheme-agreedpayment.intro=Peidiwch â chynnwys unrhyw daliadau mewn ymateb i Hysbysiad i wneud Taliad Cyflym (APN).
 scheme-settlementstatus.heading=Faint o dreth ac Yswiriant Gwladol ydych wedi’i dalu, neu wedi cytuno â ni i’w dalu, ar gyfer y cynllun hwn?
 scheme-settlementstatus.amount.heading=Nodwch y cyfanswm.
-scheme-settlementstatus.dateOfSettlement.heading=Date paid TODO
+scheme-settlementstatus.dateOfSettlement.heading=Date paid
 # scheme validation
 
 details-hmrc-approved.heading=Ydy’r benthyciad hwn yn fenthyciad cyfnod penodol cymeradwy?
@@ -179,7 +192,7 @@ loan-recipient=Derbynnydd y benthyciad
 tax-or-national-insurance-paid-or-agreed-to-pay=Treth neu Yswiriant Gwladol a dalwyd neu y cytunwyd i’w dalu
 
 # time out
-time-out.title=For your security, we signed you out TODO
+time-out.title=For your security, we signed you out
 time-out.save=Cedwir eich cynnydd am 30 diwrnod
 
 # cya
@@ -276,7 +289,7 @@ scheme-employee.inner.name.required=Nodwch enw’r cyflogwr
 scheme-employeepayeinner.paye-format=Nodwch gyfeirnod TWE y cyflogwr yn y fformat cywir
 scheme-employeeinner.char-limit=Mae’n rhaid i enw’r cyflogwr fod yn 50 o gymeriadau neu lai
 scheme-employee.char-limit=Mae’n rhaid i enw’r cyflogwr fod yn 50 o gymeriadau neu lai
-scheme-employee.name-format=Employer's name must only include letters a to z, numbers, apostrophes, ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces TODO
+scheme-employee.name-format=Employer's name must only include letters a to z, numbers, apostrophes, ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
 scheme-recipientouter.required=Dewiswch Iawn os mai yn eich enw chi oedd y benthyciad
 scheme-recipientinner.required=Nodwch enw llawn y sawl y gwnaed y benthyciad yn ei enw
 scheme-recipient.char-limit=Mae’n rhaid i enw’r sawl y gwnaed y benthyciad yn ei enw fod yn 50 o gymeriadau neu lai
