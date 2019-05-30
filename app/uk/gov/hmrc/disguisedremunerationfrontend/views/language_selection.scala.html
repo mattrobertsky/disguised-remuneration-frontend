@@ -14,16 +14,23 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
+@import uk.gov.hmrc.urls.Link
 @import uk.gov.hmrc.disguisedremunerationfrontend.views.AdaptMessages.ufMessagesToPlayMessages
-@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: UniformMessages[Html], appConfig: AppConfig)
 
-@contentHeader = {
-  <h1>@heading</h1>
+@(langMap: Map[String, Lang], langToCall: String => Call, customClass: Option[String] = None, appName: Option[String] = None)(implicit request: Request[_], messages: UniformMessages[Html])
+
+<p class="@if(customClass.isDefined) {@customClass.get}">
+
+@langMap.map { case (key: String, value: Lang) =>
+    @if(ufMessagesToPlayMessages.lang.code != value.code) {
+        @Html(s"""<a id="$key-switch" href="${langToCall(key)}" target="_self" data-sso="false">${key.capitalize}</a>""")
+    } else {
+        @key.capitalize
+    }
+
+    @if(key != langMap.last._1) {
+        @Html(" | ")
+    }
+
 }
-
-@mainContent = {
-  <p>@message</p>
-}
-
-@govuk_wrapper(appConfig = appConfig, title = pageTitle, contentHeader = Some(contentHeader), mainContent = mainContent)
+</p>

@@ -20,16 +20,16 @@
 
 @tasklist(
     messages("landing.details.title") -> Right(List(
-        ("About you", Some("about-you/aboutyou-completedby"), None, state.aboutYou.isDefined),
-        ("Your contact details", Some("contact-details/contactdetails-address"), None, state.contactDetails.isDefined)
+        (messages("landing.aboutyou.link").toString(), Some("about-you/aboutyou-completedby"), None, state.aboutYou.isDefined),
+        (messages("landing.contactdetails.link").toString(), Some("contact-details/contactdetails-address"), None, state.contactDetails.isDefined)
     )),
     messages("landing.loan.arrangement.heading") -> {
         if (state.schemes.isEmpty) {
             Left {
                 Html(
-                    """
-                                  |These are sometimes called ‘disguised remuneration schemes’.
-                                  |<li class="add-scheme divider--bottom"><a href="scheme/new/scheme-name" class="govuk-link">Add, change or remove a loan arrangement</a></li>
+                    s"""
+                                  |${messages("landing.loanarrangement.info")}
+                                  |<li class="add-scheme divider--bottom"><a href="scheme/new/scheme-name" class="govuk-link">${messages("landing.loanarrangement.link")}</a></li>
                                 """.stripMargin
                 )
             }
@@ -47,7 +47,7 @@
 	    }
 	}.sortBy(_._1)
 	if (details.isEmpty) Left {
-	    Html("""You need to <a href="scheme/new/scheme-name" class="govuk-link">add a remuneration scheme</a> before you can add loan details by tax year.""")
+	    Html(s"""${messages("landing.loan.taxyear.info1")} <a href="scheme/new/scheme-name" class="govuk-link">${messages("landing.loan.taxyear.info2")}</a> ${messages("landing.loan.taxyear.info3")}""")
         } else Right(details)
                         },
                         messages("landing.checkdetails.heading") ->

@@ -31,7 +31,7 @@ import org.atnos.eff._
 import play.api.Logger
 import play.api.data.Forms._
 import play.api.data._
-import play.api.i18n.I18nSupport
+import play.api.i18n.{I18nSupport, Messages}
 import play.api.libs.json.{Json, OFormat}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
 import play.twirl.api.{Html, HtmlFormat}
@@ -143,8 +143,8 @@ class JourneyController @Inject()(
 
   def messages(request: Request[AnyContent]): UniformMessages[Html] =
     convertMessages(messagesApi.preferred(request)) |+| UniformMessages.bestGuess.map(HtmlFormat.escape)
-  
-//  def timeOut: Action[AnyContent] = Action { implicit request =>
+
+    //  def timeOut: Action[AnyContent] = Action { implicit request =>
 //    implicit val msg: UniformMessages[Html] = messages(request)
 //    Ok(uk.gov.hmrc.disguisedremunerationfrontend.views.html.time_out()).withNewSession
 //  }

@@ -38,3 +38,5 @@ POST       /scheme/:schemeIndex/details/:year/:id	uk.gov.hmrc.disguisedremunerat
 
 GET        /submit                   uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.cya
 POST       /submit                   uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.cyaPost
+
+GET     /language/:lang       uk.gov.hmrc.disguisedremunerationfrontend.controllers.LanguageSwitchController.switchToLanguage(lang: String)

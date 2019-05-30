@@ -77,6 +77,13 @@ object LoanDetails {
           x => x.matches(MoneyRegex)
         )
         .withCustomContentAndArgs(
+          ("details-amount.required",
+            ("details-amount.required",
+              List(startDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")),
+                endDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")))
+              ))
+        )
+        .withCustomContentAndArgs(
           ("details-amount.heading",
             ("details-amount.heading.range",
             List(startDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")),
@@ -108,6 +115,13 @@ object LoanDetails {
           .withCustomContentAndArgs(
             ("details-genuinely-repaid.heading",
               ("details-genuinely-repaid.heading.range",
+                List(startDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")),
+                  endDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")))
+              ))
+          )
+          .withCustomContentAndArgs(
+            ("details-genuinely-repaid.required",
+              ("details-genuinely-repaid.required",
                 List(startDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")),
                   endDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")))
               ))
@@ -149,6 +163,13 @@ object LoanDetails {
           .withCustomContentAndArgs(
             ("details-written-off.heading",
               ("details-written-off.heading.range",
+                List(startDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")),
+                  endDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")))
+              ))
+          )
+          .withCustomContentAndArgs(
+            ("details-written-off.required",
+              ("details-written-off.required",
                 List(startDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")),
                   endDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")))
               ))

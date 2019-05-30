@@ -7,7 +7,7 @@ object AppDependencies {
 
   val compile = Seq(
 
-    "uk.gov.hmrc"             %% "govuk-template"           % "5.26.0-play-26",
+    "uk.gov.hmrc"             %% "govuk-template"           % "5.34.0-play-26",
     "uk.gov.hmrc"             %% "play-ui"                  % "7.33.0-play-26",
     "uk.gov.hmrc"             %% "bootstrap-play-26"        % "0.37.0",
     "com.beachape"            %% "enumeratum-play-json"     % "1.5.13",
@@ -15,7 +15,8 @@ object AppDependencies {
     "uk.gov.hmrc"             %% "mongo-caching"            % "6.1.0-play-26",
     "uk.gov.hmrc"             %% "play-reactivemongo"       % "6.4.0",
     "uk.gov.hmrc"             %% "simple-reactivemongo"     % "7.12.0-play-26",
-    "uk.gov.hmrc"             %% "auth-client"              % "2.20.0-play-26"
+    "uk.gov.hmrc"             %% "auth-client"              % "2.20.0-play-26",
+    "uk.gov.hmrc"             %% "play-language"            % "3.4.0"
   )
 
   val test = Seq(

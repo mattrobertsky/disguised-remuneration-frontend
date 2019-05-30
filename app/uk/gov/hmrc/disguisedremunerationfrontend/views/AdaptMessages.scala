@@ -16,14 +16,25 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.views
 
+import java.util.Locale
+
 import ltbs.uniform._
-import play.api.i18n.{Messages,Lang}
+import play.api.Play
+import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{Lang, Messages}
+import play.api.mvc.RequestHeader
 import play.twirl.api.Html
 
 object AdaptMessages {
 
-  implicit def ufMessagesToPlayMessages(implicit ufMessages: UniformMessages[Html]): Messages = new Messages {
-    def lang: Lang = ???
+  implicit def ufMessagesToPlayMessages(implicit ufMessages: UniformMessages[Html], request: RequestHeader): Messages = new Messages {
+    private val defaultLang = new Lang(Locale.ENGLISH)
+    def lang: Lang = {
+      Play.maybeApplication.map { implicit app =>
+        val maybeLangFromCookie = request.cookies.get(Play.langCookieName).flatMap(c => Lang.get(c.value))
+        maybeLangFromCookie.getOrElse(defaultLang)
+      }.getOrElse(request.acceptLanguages.headOption.getOrElse(defaultLang))
+    }
     def apply(key: String, args: Any*): String = ufMessages.apply(key, args:_*).toString
     def apply(keys: Seq[String], args: Any*): String = ufMessages.apply(keys.toList, args:_*).toString
     def translate(key: String, args: Seq[Any]): Option[String] = ufMessages.get(key, args:_*).map{_.toString}
