@@ -48,7 +48,8 @@ object AboutYou {
 
   // Move into utils
   lazy val regExUTR = """^(?:[ \t]*(?:[a-zA-Z]{3})?\d[ \t]*){10}$"""
-  lazy val regExNino = """^((?!(BG|GB|KN|NK|NT|TN|ZZ)|(D|F|I|Q|U|V)[A-Z]|[A-Z](D|F|I|O|Q|U|V))[A-Z]{2})[0-9]{6}[A-D]?$"""
+  lazy val regExNino = """^[ \t]*[A-Z,a-z]{1}[ \t]*[ \t]*[A-Z,a-z]{1}[ \t]*[0-9]{1}[ \t]*[ \t]*[0-9]{1}[ \t]*""" +
+    """[ \t]*[0-9]{1}[ \t]*[ \t]*[0-9]{1}[ \t]*[ \t]*[0-9]{1}[ \t]*[ \t]*[0-9]{1}[ \t]*[A-D,a-d]{1}[ \t]*$"""
 
   sealed trait Error
   case object NoNeedToComplete extends Error
@@ -115,7 +116,12 @@ object AboutYou {
     def aboutSelfProgram(default: Option[AboutSelf]): Eff[R, Either[Error,AboutYou]] = {
       val i: Eff[R, String] = nino match {
         case Some(n) => Eff.pure(n)
-        case None    => ask[Nino]("aboutyou-nino").defaultOpt(default.map{_.nino})
+        case None    => ask[Nino]("aboutyou-nino")
+          .defaultOpt(default.map{_.nino})
+          .validating(
+            "format",
+              ni => ni.matches(regExNino)
+          )
       }
       i.map{x => AboutSelf(x).asRight[Error]}
     }

@@ -15,13 +15,36 @@
  *@
 
 @import ltbs.uniform._
+@import cats.implicits._
 
 @(key: String, options: Seq[String], existing: Option[String], errors: ErrorTree, messages: UniformMessages[Html], conditional: PartialFunction[String,Html] = PartialFunction.empty )
 
 @keyNoDots=@{key.replace(".","-")}
 
-<div class="radios">
-  @for((opt,num) <- options.zipWithIndex) {  
+@path=@{key.split("[.]").filter(_.nonEmpty).tail}
+
+@childkey=@{errors.children.keys.headOption.getOrElse("")}
+@grandchildValue=@{errors.children.map(_._2.value).headOption.getOrElse("")}
+
+
+@errors
+    @defining(
+        errors match {
+            case Tree("required", childTree) => errors.value
+            case Tree(_, childTree) if childTree.keys.headOption === Some("outer") &&
+                    childTree.map(_._2.value === "required") => s"$grandchildValue"
+            case _ => ""
+        }
+    ) { topLevelError =>
+
+    <div class="radios @if(topLevelError.nonEmpty) {form-group-error}">
+        @if(topLevelError.nonEmpty) {
+                <span class="error-message">
+                    @messages(s"$key.$topLevelError")
+                </span>
+        }
+
+  @for((opt,num) <- options.zipWithIndex) {
     <div class="radios__item multiple-choice" data-target="@keyNoDots">
       <input
         class="radios__input"
@@ -40,10 +63,14 @@
     </div>
 
 
-    @if(conditional.isDefinedAt(opt)) { 
+@if(conditional.isDefinedAt(opt)) {
       <div id="conditional-@keyNoDots-@opt" class="conditional-@keyNoDots @if(existing.exists(_ == opt)){radios__conditional} else {radios__conditional--hidden}" aria-hidden="false">
         @conditional(opt)
       </div>
     }
   }
-</div>
+
+@if(topLevelError.nonEmpty) {
+    </div>
+    }
+}

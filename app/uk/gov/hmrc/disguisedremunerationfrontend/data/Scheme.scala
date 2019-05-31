@@ -128,7 +128,6 @@ object Scheme {
                                     "invalid-name",
                                     name => name.matches(nameRegex)
                                   )
-      //TODO error messages aren't working, need an implicit def like enumeratumHtml
       dotasNumber           <-  ask[YesNoDoNotKnow]("scheme-dotas")
                                   .defaultOpt(default.map{x => YesNoDoNotKnow(x.dotasReferenceNumber)})
                                   .validating(

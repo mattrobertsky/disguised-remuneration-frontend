@@ -30,8 +30,8 @@
       @for((path, errormsg) <- errors.flatTree) { 
       <li>
         <a href="#@{(key :: path).mkString(".")}"
-            id="@{(key :: path).mkString(".")}"
-            data-focuses="@{(key :: path).mkString(".")}">
+            id="@{(key :: path).mkString(".") ++ ".error-summary"}"
+            data-focuses="@{(key :: path).mkString(".")}@if(values.flatTree.isEmpty){-0}">
             @messages.decompose((key :: path).mkString("") ++ "." ++ errormsg)
         </a>
       </li>

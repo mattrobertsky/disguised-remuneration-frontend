@@ -214,40 +214,42 @@ aboutyou-personalive.required=Select yes if the person you are acting for is ali
 aboutyou-employmentstatus.required=Select if the deceased person was employed, self-employed, or both employed \
   and self-employed
 aboutyou-deceasedbefore.required=Select yes if the deceased person died on or before 5 April 2019
-#aboutyou-identity.required=BLAHHHHHH
+
+aboutyou-identity.required=Select if you want to enter the person's National Insurance number or Self Assessment \
+  Unique Taxpayer Reference (UTR)
 aboutyou-identitya.required=Enter the person’s National Insurance number
+aboutyou-identity.a.required=Enter the person’s National Insurance number
 aboutyou-identity.Left.a.required=Enter the person’s National Insurance number
 aboutyou-identityb.required=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR)
+aboutyou-identity.b.required=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR)
 aboutyou-identity.Right.b.required=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR)
 aboutyou-identity.nino-format=Enter the person’s National Insurance number in the correct format
+aboutyou-identity.Left.a.nino-format=Enter the person’s National Insurance number in the correct format
 aboutyou-identity.utr-format=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR) in the correct format
+aboutyou-identity.Right.b.utr-format=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR) in the correct format
 aboutyou-confirmation.required=Enter the full name of the person you are acting for
 
 # contact details
 contactdetails-addressline1.required=Enter the building or street of your address
+contactdetails-address.line1.required=Enter the building or street of your address
 contactdetails-address.street-limit=Building or street must be 40 characters or less
+contactdetails-address.line1.street-limit=Building or street must be 40 characters or less
 contactdetails-address.street-format=Building or street must only include letters a to z, numbers, apostrophes, \
   ampersands, commas, hyphens, full stops, forward slashes and spaces
 contactdetails-address.line1.street-format=Building or street must only include letters a to z, numbers, apostrophes, \
   ampersands, commas, hyphens, full stops, forward slashes and spaces
-contactdetails-address.line2.street-format=
-contactdetails-address.town.street-format=
-contactdetails-address.county.street-format=
-contactdetails-address.postcode.street-format=
 contactdetails-addresstown.required=Enter the town or city of your address
+contactdetails-address.town.required=Enter the town or city of your address
 contactdetails-addresspostcode.required=Enter the postcode of your address
+contactdetails-address.postcode.required=Enter the postcode of your address
 contactdetails-telehoneemail.phone-limit=Telephone number must be 24 characters or less
 contactdetails-telehoneemail.telephone.phone-limit=Telephone number must be 24 characters or less
-contactdetails-telehoneemail.email.phone-limit=
 contactdetails-telehoneemail.phone-format=Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 0808 157 0192
 contactdetails-telehoneemail.telephone.phone-format=Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 0808 157 0192
-contactdetails-telehoneemail.email.phone-format=
 contactdetails-telehoneemail.email-limit=Email address must be 256 characters or less
 contactdetails-telehoneemail.email.email-limit=Email address must be 256 characters or less
-contactdetails-telehoneemail.telephone.email-limit=
 contactdetails-telehoneemail.email-format=Email address must only contain letters a to z, numbers, full stops, hyphens, underscores and @ signs
 contactdetails-telehoneemail.email.email-format=Email address must only contain letters a to z, numbers, full stops, hyphens, underscores and @ signs
-contactdetails-telehoneemail.telephone.email-format=
 
 #scheme
 scheme-name.required=Enter the name of the scheme
@@ -257,8 +259,12 @@ scheme-dotas.required=Select yes if you have a Disclosure of Tax Avoidance Schem
 scheme-dotas.char-limit=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
 scheme-dotasdotas.required=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
 scheme-dotas.Yes.dotas.required=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
+scheme-dotas.Yes.dotas.char-limit=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
+scheme-dotas.dotas.required=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
 scheme-refnumberouter.required=Select yes if you have a HMRC case reference number
+scheme-refnumber.outer.required=Select yes if you have a HMRC case reference number
 scheme-refnumberinner.required=HMRC case reference number must only include letters a to z, numbers and hyphens
+scheme-refnumber.inner.required=HMRC case reference number must only include letters a to z, numbers and hyphens
 scheme-stillusing.required=Select yes if you are still using the scheme
 
 scheme-stillusingyesyear.required=The date you started using the scheme must include a year
@@ -279,7 +285,8 @@ scheme-stillusingno.year-incorrect=Enter a real date
 scheme-stillusingno._1.year-incorrect=Enter a real date
 scheme-stillusingno._2.year-incorrect=Enter a real date
 
-scheme-employeeouter.required=Select yes if you were an employee when you were using the scheme
+scheme-employeeouter.required=Select yes if you were an employee while you were using the scheme
+scheme-employee.outer.required=Select yes if you were an employee while you were using the scheme
 scheme-employeenameinner.required=Enter the employer’s name
 scheme-employee.inner.name.required=Enter the employer’s name
 scheme-employeepayeinner.required=Enter the PAYE reference
@@ -289,7 +296,9 @@ scheme-employee.char-limit=Employer's name must be 50 characters or less
 scheme-employee.name-format=Employer's name must only include letters a to z, numbers, apostrophes, \
   ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
 scheme-recipientouter.required=Select yes if the loan was made to you
-scheme-recipientinner.required=Enter the full name of who the loan was made out to
+scheme-recipient.outer.required=Select yes if the loan was made to you
+scheme-recipientinner.required=Enter the name of who the load was made out to
+scheme-recipient.inner.required=Enter the name of who the load was made out to
 scheme-recipient.char-limit=Name of who the loan was made out to must be 50 characters or less
 scheme-recipient.name-format=Name of who the loan was made out to must only include letters a to z, numbers, \
   apostrophes, ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
@@ -312,10 +321,16 @@ details-genuinely-repaid-amount.nonnumericformat=Amount you have repaid must be 
 details-genuinely-repaid-amount.format=Amount you have repaid must be an amount of money, like 123.45 or 150
 details-written-off.required=Select yes if the lender has written off any of the loan made from {0} to {1}        
 details-written-off-amounttaxPaid.required=Enter the amount of tax or National Insurance paid on the written-off loan
+details-written-off-amount.taxPaid.required=Enter the amount of tax or National Insurance paid on the written-off loan
 details-written-off-amounttaxPaid.nonnumericformat=Amount of tax or National Insurance paid on the written-off loan \
   must be an amount of money, like 123.45 or 150
+details-written-off-amount.taxPaid.nonnumericformat=Amount of tax or National Insurance paid on the written-off loan \
+  must be an amount of money, like 123.45 or 150
 details-written-off-amountamount.required=Enter the amount that the lender has written off of the loan
+details-written-off-amount.amount.required=Enter the amount that the lender has written off of the loan
 details-written-off-amountamount.nonnumericformat=Amount of loan written off must be an amount of money, \
+  like 123.45 or 150
+details-written-off-amount.amount.nonnumericformat=Amount of loan written off must be an amount of money, \
   like 123.45 or 150
 
 
@@ -352,3 +367,5 @@ tasklist.delete=Remove
 tasklist.edit=Change
 
 contactdetails-telehoneemail.email-or-phone-number-needed=A valid email address or telephone number is required
+contactdetails-telehoneemail.telephone.email-or-phone-number-needed=A valid email address or telephone number is required
+contactdetails-telehoneemail.email.email-or-phone-number-needed=A valid email address or telephone number is required

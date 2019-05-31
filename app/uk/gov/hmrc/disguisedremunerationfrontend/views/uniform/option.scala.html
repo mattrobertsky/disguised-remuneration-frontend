@@ -20,4 +20,11 @@
 
 @elements=@{if(reverse) Seq("FALSE","TRUE") else Seq("TRUE","FALSE") }
 
-@radios(s"${key}.outer", elements, values.atPath({path :+ "outer"}:_*).flatMap(_.headOption), errors, messages, {case "TRUE" => inner(s"${key}.inner", values, errors, messages)})
+@radios(
+ s"${key}.outer",
+ Seq("TRUE","FALSE"),
+ values.atPath({path :+ "outer"}:_*).flatMap(_.headOption),
+ errors,
+ messages,
+ {case "TRUE" => inner(s"${key}.inner", values, errors, messages)}
+)

@@ -30,8 +30,9 @@ case class ContactDetails(
 object ContactDetails {
 
   lazy val nameRegex = """^[a-zA-Z0-9'@,-./ ]*$"""
+  lazy val townRegex = """^[a-zA-Z0-9',-./ ]*$"""
   lazy val telephoneRegex = """^[0-9+ ]*$"""
-  lazy val emailRegex = """^[a-z0-9.-_@]*$"""
+  lazy val emailRegex = """^[a-zA-Z0-9\.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
 
   type Stack = Fx.fx2[
     UniformAsk[Address, ?],
@@ -47,7 +48,7 @@ object ContactDetails {
         .defaultOpt(default.map(_.address))
         .validating(
           "street-limit",
-          address =>  address.line1.length <= 40
+          address => address.line1.length <= 40
         )
         .validating(
           "street-format",
