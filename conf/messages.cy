@@ -87,9 +87,9 @@ contactdetails-address.line2.heading=
 contactdetails-address.town.heading=Tref neu ddinas
 contactdetails-address.county.heading=Sir
 contactdetails-address.postcode.heading=Cod post
-contactdetails-telehoneemail.heading=Beth yw’ch manylion cyswllt?
-contactdetails-telehoneemail.telephone.heading=Rhif ffôn yn y DU
-contactdetails-telehoneemail.email.heading=Cyfeiriad e-bost
+contactdetails-telephoneemail.heading=Beth yw’ch manylion cyswllt?
+contactdetails-telephoneemail.telephone.heading=Rhif ffôn yn y DU
+contactdetails-telephoneemail.email.heading=Cyfeiriad e-bost
 
 #Scheme
 scheme-name.heading=Nodwch enw ar gyfer y cynllun hwn
@@ -240,18 +240,18 @@ contactdetails-address.county.street-format=
 contactdetails-address.postcode.street-format=
 contactdetails-addresstown.required=Nodwch dref neu ddinas eich cyfeiriad
 contactdetails-addresspostcode.required=Nodwch god post eich cyfeiriad
-contactdetails-telehoneemail.phone-limit=Mae’n rhaid i’r rhif ffôn fod yn 24 o gymeriadau neu lai
-contactdetails-telehoneemail.telephone.phone-limit=Mae’n rhaid i’r rhif ffôn fod yn 24 o gymeriadau neu lai
-contactdetails-telehoneemail.email.phone-limit=Rhaid i’r cyfeiriad e-bost fod yn 256 o gymeriadau neu lai
-contactdetails-telehoneemail.phone-format=Nodwch rif ffôn fel 01632 960 001, 07700 900 982 neu +44 0808 157 0192
-contactdetails-telehoneemail.telephone.phone-format=Nodwch rif ffôn fel 01632 960 001, 07700 900 982 neu +44 0808 157 0192
-contactdetails-telehoneemail.email.phone-format=
-contactdetails-telehoneemail.email-limit=Rhaid i’r cyfeiriad e-bost fod yn 256 o gymeriadau neu lai
-contactdetails-telehoneemail.email.email-limit=Rhaid i’r cyfeiriad e-bost fod yn 256 o gymeriadau neu lai
-contactdetails-telehoneemail.telephone.email-limit=
-contactdetails-telehoneemail.email-format=Mae’n rhaid i’r cyfeiriad e-bost gynnwys llythrennau a i z, rhifau, atalnodau llawn, cysylltnodau, tanlinellau a’r symbol @ yn unig
-contactdetails-telehoneemail.email.email-format=Mae’n rhaid i’r cyfeiriad e-bost gynnwys llythrennau a i z, rhifau, atalnodau llawn, cysylltnodau, tanlinellau a’r symbol @ yn unig
-contactdetails-telehoneemail.telephone.email-format=
+contactdetails-telephoneemail.phone-limit=Mae’n rhaid i’r rhif ffôn fod yn 24 o gymeriadau neu lai
+contactdetails-telephoneemail.telephone.phone-limit=Mae’n rhaid i’r rhif ffôn fod yn 24 o gymeriadau neu lai
+contactdetails-telephoneemail.email.phone-limit=Rhaid i’r cyfeiriad e-bost fod yn 256 o gymeriadau neu lai
+contactdetails-telephoneemail.phone-format=Nodwch rif ffôn fel 01632 960 001, 07700 900 982 neu +44 0808 157 0192
+contactdetails-telephoneemail.telephone.phone-format=Nodwch rif ffôn fel 01632 960 001, 07700 900 982 neu +44 0808 157 0192
+contactdetails-telephoneemail.email.phone-format=
+contactdetails-telephoneemail.email-limit=Rhaid i’r cyfeiriad e-bost fod yn 256 o gymeriadau neu lai
+contactdetails-telephoneemail.email.email-limit=Rhaid i’r cyfeiriad e-bost fod yn 256 o gymeriadau neu lai
+contactdetails-telephoneemail.telephone.email-limit=
+contactdetails-telephoneemail.email-format=Mae’n rhaid i’r cyfeiriad e-bost gynnwys llythrennau a i z, rhifau, atalnodau llawn, cysylltnodau, tanlinellau a’r symbol @ yn unig
+contactdetails-telephoneemail.email.email-format=Mae’n rhaid i’r cyfeiriad e-bost gynnwys llythrennau a i z, rhifau, atalnodau llawn, cysylltnodau, tanlinellau a’r symbol @ yn unig
+contactdetails-telephoneemail.telephone.email-format=
 
 #scheme
 scheme-name.required=Nodwch enw’r cynllun
@@ -350,4 +350,4 @@ day=Diwrnod
 month=Mis
 year=Blwyddyn
 
-contactdetails-telehoneemail.email-or-phone-number-needed=A valid email address or telephone number is required
+contactdetails-telephoneemail.email-or-phone-number-needed=A valid email address or telephone number is required

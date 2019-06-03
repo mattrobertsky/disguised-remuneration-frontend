@@ -79,7 +79,7 @@ object ContactDetails {
           "postcode-format",
           address => address.postcode.matches(postCodeRegex)
         )
-      telAndEmail <- ask[TelAndEmail]("contactdetails-telehoneemail")
+      telAndEmail <- ask[TelAndEmail]("contactdetails-telephoneemail")
         .defaultOpt(default.map(_.telephoneAndEmail))
         .validating(
           "phone-limit",

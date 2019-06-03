@@ -75,9 +75,9 @@ contactdetails-address.line2.heading=
 contactdetails-address.town.heading=Town or city
 contactdetails-address.county.heading=County
 contactdetails-address.postcode.heading=Postcode
-contactdetails-telehoneemail.heading=What are your contact details?
-contactdetails-telehoneemail.telephone.heading=Telephone number
-contactdetails-telehoneemail.email.heading=Email address
+contactdetails-telephoneemail.heading=What are your contact details?
+contactdetails-telephoneemail.telephone.heading=Telephone number
+contactdetails-telephoneemail.email.heading=Email address
 
 #Scheme
 scheme-name.heading=Enter a name for this scheme
@@ -134,6 +134,8 @@ scheme-settlementstatus.dateOfSettlement.heading=Date paid
 details-hmrc-approved.heading=Is this loan an approved fixed-term loan?
 details-hmrc-approved.heading.hint=
 details-hmrc-approved.heading.hint.custom=Scheme: {0}
+details-hmrc-approved.TRUE=Do not know
+details-hmrc-approved.No=Do not know
 details-hmrc-approved.Unknown=Do not know
 
 details-amount.heading=What was the total loan amount paid from START to END?
@@ -253,14 +255,14 @@ contactdetails-address.postcode-limit=Postcode must be 40 characters or less
 contactdetails-address.postcode.postcode-limit=Postcode must be 40 characters or less
 contactdetails-address.postcode-format=Enter a real postcode
 contactdetails-address.postcode.postcode-format=Enter a real postcode
-contactdetails-telehoneemail.phone-limit=Telephone number must be 24 characters or less
-contactdetails-telehoneemail.telephone.phone-limit=Telephone number must be 24 characters or less
-contactdetails-telehoneemail.phone-format=Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 0808 157 0192
-contactdetails-telehoneemail.telephone.phone-format=Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 0808 157 0192
-contactdetails-telehoneemail.email-limit=Email address must be 256 characters or less
-contactdetails-telehoneemail.email.email-limit=Email address must be 256 characters or less
-contactdetails-telehoneemail.email-format=Email address must only contain letters a to z, numbers, full stops, hyphens, underscores and @ signs
-contactdetails-telehoneemail.email.email-format=Email address must only contain letters a to z, numbers, full stops, hyphens, underscores and @ signs
+contactdetails-telephoneemail.phone-limit=Telephone number must be 24 characters or less
+contactdetails-telephoneemail.telephone.phone-limit=Telephone number must be 24 characters or less
+contactdetails-telephoneemail.phone-format=Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 0808 157 0192
+contactdetails-telephoneemail.telephone.phone-format=Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 0808 157 0192
+contactdetails-telephoneemail.email-limit=Email address must be 256 characters or less
+contactdetails-telephoneemail.email.email-limit=Email address must be 256 characters or less
+contactdetails-telephoneemail.email-format=Email address must only contain letters a to z, numbers, full stops, hyphens, underscores and @ signs
+contactdetails-telephoneemail.email.email-format=Email address must only contain letters a to z, numbers, full stops, hyphens, underscores and @ signs
 
 #scheme
 scheme-name.required=Enter the name of the scheme
@@ -370,6 +372,6 @@ tasklist.item=Item
 tasklist.delete=Remove
 tasklist.edit=Change
 
-contactdetails-telehoneemail.email-or-phone-number-needed=A valid email address or telephone number is required
-contactdetails-telehoneemail.telephone.email-or-phone-number-needed=A valid email address or telephone number is required
-contactdetails-telehoneemail.email.email-or-phone-number-needed=A valid email address or telephone number is required
+contactdetails-telephoneemail.email-or-phone-number-needed=Enter an email address or a telephone number
+contactdetails-telephoneemail.telephone.email-or-phone-number-needed=Enter an email address or a telephone number
+contactdetails-telephoneemail.email.email-or-phone-number-needed=Enter an email address or a telephone number
