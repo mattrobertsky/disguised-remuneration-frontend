@@ -46,7 +46,6 @@ class AppConfig @Inject()(val runModeConfiguration: Configuration, servicesConfi
 
   //Auth related config
   lazy val appName: String = loadConfig("appName")
-  //TODO Check if this is right url for SCP
   private lazy val companyAuthFrontend = servicesConfig.getConfString("company-auth.url", "")
   private lazy val companyAuthSignInPath = servicesConfig.getConfString("company-auth.sign-in-path", "")
   private lazy val companyAuthSignOutPath = servicesConfig.getConfString("company-auth.sign-out-path", "")

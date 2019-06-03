@@ -27,7 +27,6 @@
 @grandchildValue=@{errors.children.map(_._2.value).headOption.getOrElse("")}
 
 
-@errors
     @defining(
         errors match {
             case Tree("required", childTree) => errors.value

@@ -27,7 +27,7 @@ import uk.gov.hmrc.disguisedremunerationfrontend.Path
 
 class ContactDetailsSpec extends WordSpec with Matchers {
 
-  val address = Address("a","b".some,"c","d".some,"e")
+  val address = Address("a","b".some,"c","d".some,"AA1 1AA")
   val telAndEmail = TelAndEmail("07700 900 982".some,"foo@bar.com".some) // TODO test invalid
   val details = ContactDetails(address, telAndEmail)
 

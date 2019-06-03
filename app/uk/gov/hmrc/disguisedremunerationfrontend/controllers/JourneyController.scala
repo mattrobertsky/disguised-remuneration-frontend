@@ -259,7 +259,7 @@ class JourneyController @Inject()(
             .useFormMap{
               case List("scheme-recipient") => {
                 implicit val rev: HtmlField[Option[String]] = optionReversed[String]
-                automatic[Unit, Option[String]](implicitly, implicitly, implicitly)
+                automatic[Unit, Option[String]]
               }
               case _ => automatic[Unit, Option[String]]
             }

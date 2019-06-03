@@ -50,7 +50,7 @@ case class Scheme(
 
 object Scheme {
 
-  lazy val nameRegex = """^[a-zA-Z0-9'@,-./() ]*$"""
+  lazy val nameRegex = """^[a-zA-Z0-9',-./() ]*$"""
   lazy val caseRefRegex = """^[a-zA-Z0-9-]*$"""
   lazy val payeRegex = """^\d{3}/[A-Za-z]{2}\d{3}$"""
   lazy val maxNameLength = 50
@@ -140,14 +140,14 @@ object Scheme {
       schemeReferenceNumber <-  ask[Option[String]]("scheme-refnumber")
                                   .defaultOpt(default.map{_.caseReferenceNumber})
                                   .validating(
-                                    "HMRC case reference number must be 10 characters or less",
+                                    "limit",
                                     {
                                       case Some(ref) => ref.length() <= 10
                                       case _ => true
                                     }
                                   )
                                   .validating(
-                                    "HMRC case reference number must only include letters a to z, numbers and hyphens",
+                                    "format",
                                     {
                                       case Some(ref) => ref.matches(caseRefRegex)
                                       case _ => true

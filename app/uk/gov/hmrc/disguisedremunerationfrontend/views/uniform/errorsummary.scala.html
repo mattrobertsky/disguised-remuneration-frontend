@@ -27,12 +27,12 @@
     @messages(List(s"$key.there.is.a.problem", "there.is.a.problem"))
   </h2>
     <ul class="error-summary-list">
-      @for((path, errormsg) <- errors.flatTree) { 
+      @for((path, errormsg) <- errors.flatTree.reverse) {
       <li>
         <a href="#@{(key :: path).mkString(".")}"
             id="@{(key :: path).mkString(".") ++ ".error-summary"}"
             data-focuses="@{(key :: path).mkString(".")}@if(values.flatTree.isEmpty){-0}">
-            @messages.decompose((key :: path).mkString("") ++ "." ++ errormsg)
+            @messages.decompose((key :: path).mkString(".") ++ "." ++ errormsg)
         </a>
       </li>
       }

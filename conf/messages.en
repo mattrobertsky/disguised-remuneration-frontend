@@ -204,12 +204,12 @@ cya.submit=Accept and send details
 
 # Error messages
 there.is.a.problem=There is a problem
-confirm.info=You must confirm that the information you have supplied is true and correct
+confirm.info=Select if you confirm the information given is true and correct
 
 # About you
 aboutyou-completedby.required=Select yes if you are filling in this form for yourself
-aboutyou-nino.required=Enter the person’s National Insurance number
-aboutyou-nino.format=Enter the person’s National Insurance number in the correct format
+aboutyou-nino.required=Enter your National Insurance number
+aboutyou-nino.format=Enter your National Insurance number in the correct format
 aboutyou-personalive.required=Select yes if the person you are acting for is alive
 aboutyou-employmentstatus.required=Select if the deceased person was employed, self-employed, or both employed \
   and self-employed
@@ -217,10 +217,8 @@ aboutyou-deceasedbefore.required=Select yes if the deceased person died on or be
 
 aboutyou-identity.required=Select if you want to enter the person's National Insurance number or Self Assessment \
   Unique Taxpayer Reference (UTR)
-aboutyou-identitya.required=Enter the person’s National Insurance number
 aboutyou-identity.a.required=Enter the person’s National Insurance number
 aboutyou-identity.Left.a.required=Enter the person’s National Insurance number
-aboutyou-identityb.required=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR)
 aboutyou-identity.b.required=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR)
 aboutyou-identity.Right.b.required=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR)
 aboutyou-identity.nino-format=Enter the person’s National Insurance number in the correct format
@@ -230,18 +228,31 @@ aboutyou-identity.Right.b.utr-format=Enter the person’s Self Assessment Unique
 aboutyou-confirmation.required=Enter the full name of the person you are acting for
 
 # contact details
-contactdetails-addressline1.required=Enter the building or street of your address
 contactdetails-address.line1.required=Enter the building or street of your address
-contactdetails-address.street-limit=Building or street must be 40 characters or less
+#contactdetails-address.street-limit=Building or street must be 40 characters or less
 contactdetails-address.line1.street-limit=Building or street must be 40 characters or less
 contactdetails-address.street-format=Building or street must only include letters a to z, numbers, apostrophes, \
   ampersands, commas, hyphens, full stops, forward slashes and spaces
 contactdetails-address.line1.street-format=Building or street must only include letters a to z, numbers, apostrophes, \
   ampersands, commas, hyphens, full stops, forward slashes and spaces
-contactdetails-addresstown.required=Enter the town or city of your address
 contactdetails-address.town.required=Enter the town or city of your address
-contactdetails-addresspostcode.required=Enter the postcode of your address
+contactdetails-address.town-limit=Town or city must be 40 characters or less
+contactdetails-address.town.town-limit=Town or city must be 40 characters or less
+contactdetails-address.town-format=Town or city must only include letters a to z, apostrophes, commas, hyphens, \
+  full stops and spaces
+contactdetails-address.town.town-format=Town or city must only include letters a to z, apostrophes, commas, hyphens, \
+  full stops and spaces
+contactdetails-address.county-limit=County must be 40 characters or less
+contactdetails-address.county.county-limit=County must be 40 characters or less
+contactdetails-address.county-format=County must only include letters a to z, apostrophes, commas, hyphens, \
+  full stops and spaces
+contactdetails-address.county.county-format=County must only include letters a to z, apostrophes, commas, hyphens, \
+  full stops and spaces
 contactdetails-address.postcode.required=Enter the postcode of your address
+contactdetails-address.postcode-limit=Postcode must be 40 characters or less
+contactdetails-address.postcode.postcode-limit=Postcode must be 40 characters or less
+contactdetails-address.postcode-format=Enter a real postcode
+contactdetails-address.postcode.postcode-format=Enter a real postcode
 contactdetails-telehoneemail.phone-limit=Telephone number must be 24 characters or less
 contactdetails-telehoneemail.telephone.phone-limit=Telephone number must be 24 characters or less
 contactdetails-telehoneemail.phone-format=Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 0808 157 0192
@@ -257,16 +268,18 @@ scheme-name.char-limit=Scheme name must be 100 characters or less
 scheme-name.invalid-name=Scheme name must only include letters a to z, numbers, apostrophes, ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
 scheme-dotas.required=Select yes if you have a Disclosure of Tax Avoidance Schemes (DOTAS) number
 scheme-dotas.char-limit=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
-scheme-dotasdotas.required=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
+scheme-dotas.dotas.required=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
 scheme-dotas.Yes.dotas.required=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
 scheme-dotas.Yes.dotas.char-limit=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
-scheme-dotas.dotas.required=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
-scheme-refnumberouter.required=Select yes if you have a HMRC case reference number
 scheme-refnumber.outer.required=Select yes if you have a HMRC case reference number
-scheme-refnumberinner.required=HMRC case reference number must only include letters a to z, numbers and hyphens
 scheme-refnumber.inner.required=HMRC case reference number must only include letters a to z, numbers and hyphens
-scheme-stillusing.required=Select yes if you are still using the scheme
+scheme-refnumber.limit=HMRC case reference number must be 10 characters or less
+scheme-refnumber.inner.limit=HMRC case reference number must be 10 characters or less
+scheme-refnumber.format=HMRC case reference number must only include letters a to z, numbers and hyphens
+scheme-refnumber.inner.format=HMRC case reference number must only include letters a to z, numbers and hyphens
 
+
+scheme-stillusing.required=Select yes if you are still using the scheme
 scheme-stillusingyesyear.required=The date you started using the scheme must include a year
 scheme-stillusingyesmonth.required=The date you started using the scheme must include a month
 scheme-stillusingyesday.required=The date you started using the scheme must include a day
@@ -291,24 +304,21 @@ scheme-employeenameinner.required=Enter the employer’s name
 scheme-employee.inner.name.required=Enter the employer’s name
 scheme-employeepayeinner.required=Enter the PAYE reference
 scheme-employeepayeinner.paye-format=Enter the employer PAYE reference in the correct format
-scheme-employeeinner.char-limit=Employer's name must be 50 characters or less
-scheme-employee.char-limit=Employer's name must be 50 characters or less
-scheme-employee.name-format=Employer's name must only include letters a to z, numbers, apostrophes, \
+scheme-employee.char-limit=Employer’s name must be 50 characters or less
+scheme-employee.inner.name.char-limit=Employer’s name must be 50 characters or less
+scheme-employee.name-format=Employer’s name must only include letters a to z, numbers, apostrophes, \
   ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
-scheme-recipientouter.required=Select yes if the loan was made to you
 scheme-recipient.outer.required=Select yes if the loan was made to you
-scheme-recipientinner.required=Enter the name of who the load was made out to
-scheme-recipient.inner.required=Enter the name of who the load was made out to
+scheme-recipient.inner.required=Enter the name of who the loan was made out to
+scheme-recipient.inner.char-limit=Name of who the loan was made out to must be 50 characters or less
 scheme-recipient.char-limit=Name of who the loan was made out to must be 50 characters or less
 scheme-recipient.name-format=Name of who the loan was made out to must only include letters a to z, numbers, \
   apostrophes, ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
 scheme-agreedpayment.required=Select yes if anyone has paid, or agreed with us to pay, any tax or National Insurance owed for this scheme
 scheme-settlementstatusyeardateOfSettlement.required=Enter how much tax and National Insurance anyone has paid, or agreed with us to pay
-scheme-settlementstatusamount.nonnumericformat=Total loan amount must be an amount of money, like 123.45 or 150
-scheme-settlementstatusamount.required =Total loan amount must be an amount of money, like 123.45 or 150
-scheme-settlementstatus.amount.required=Total loan amount must be an amount of money, like 123.45 or 150
-scheme-settlementstatus.amount-format=Total loan amount must be an amount of money, like 123.45 or 150
-scheme-settlementstatus.amount.amount-format=Total loan amount must be an amount of money, like 123.45 or 150
+scheme-settlementstatus.amount.required=Enter how much tax and National Insurance you have paid, or agreed with us to pay
+scheme-settlementstatus.amount-format=How much tax and National Insurance you paid, or agreed with us to pay must be an amount of money, like 123.45 or 150
+scheme-settlementstatus.amount.amount-format=How mFYouuch tax and National Insurance you paid, or agreed with us to pay must be an amount of money, like 123.45 or 150
 
 # loan details
 details-hmrc-approved.required=Select yes if the loan was an approved fixed-term loan
@@ -319,19 +329,13 @@ details-genuinely-repaid.required=Select yes if you have repaid any of the loan 
 details-genuinely-repaid-amount.required=Enter how much of the loan you repaid
 details-genuinely-repaid-amount.nonnumericformat=Amount you have repaid must be an amount of money, like 123.45 or 150
 details-genuinely-repaid-amount.format=Amount you have repaid must be an amount of money, like 123.45 or 150
-details-written-off.required=Select yes if the lender has written off any of the loan made from {0} to {1}        
-details-written-off-amounttaxPaid.required=Enter the amount of tax or National Insurance paid on the written-off loan
-details-written-off-amount.taxPaid.required=Enter the amount of tax or National Insurance paid on the written-off loan
-details-written-off-amounttaxPaid.nonnumericformat=Amount of tax or National Insurance paid on the written-off loan \
-  must be an amount of money, like 123.45 or 150
-details-written-off-amount.taxPaid.nonnumericformat=Amount of tax or National Insurance paid on the written-off loan \
-  must be an amount of money, like 123.45 or 150
-details-written-off-amountamount.required=Enter the amount that the lender has written off of the loan
+details-written-off.required=Select yes if the lender has written off any of the loan made from {0} to {1}
 details-written-off-amount.amount.required=Enter the amount that the lender has written off of the loan
-details-written-off-amountamount.nonnumericformat=Amount of loan written off must be an amount of money, \
-  like 123.45 or 150
 details-written-off-amount.amount.nonnumericformat=Amount of loan written off must be an amount of money, \
   like 123.45 or 150
+details-written-off-amount.taxPaid.required=Enter the amount of tax or National Insurance paid on the written-off loan
+details-written-off-amount.taxPaid.nonnumericformat=Amount of tax or National Insurance paid on the written-off loan \
+  must be an amount of money, like 123.45 or 150
 
 
 details-written-off-amount.amount-format=Amount of loan written off must be an amount of money, \

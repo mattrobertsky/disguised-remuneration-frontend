@@ -47,6 +47,7 @@ case class AboutAnother (
 object AboutYou {
 
   // Move into utils
+  lazy val nameRegex = """^[a-zA-Z',-. ]*$"""
   lazy val regExUTR = """^(?:[ \t]*(?:[a-zA-Z]{3})?\d[ \t]*){10}$"""
   lazy val regExNino = """^[ \t]*[A-Z,a-z]{1}[ \t]*[ \t]*[A-Z,a-z]{1}[ \t]*[0-9]{1}[ \t]*[ \t]*[0-9]{1}[ \t]*""" +
     """[ \t]*[0-9]{1}[ \t]*[ \t]*[0-9]{1}[ \t]*[ \t]*[0-9]{1}[ \t]*[ \t]*[0-9]{1}[ \t]*[A-D,a-d]{1}[ \t]*$"""

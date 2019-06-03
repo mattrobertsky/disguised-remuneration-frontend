@@ -29,10 +29,11 @@ case class ContactDetails(
 
 object ContactDetails {
 
-  lazy val nameRegex = """^[a-zA-Z0-9'@,-./ ]*$"""
-  lazy val townRegex = """^[a-zA-Z0-9',-./ ]*$"""
-  lazy val telephoneRegex = """^[0-9+ ]*$"""
+  lazy val nameRegex = """^[a-zA-Z0-9',-./ ]*$"""
+  lazy val townCountyRegex = """^[a-zA-Z0-9',-./ ]*$"""
+  lazy val telephoneRegex = """^\+?[0-9\s\(\)]{1,20}$"""
   lazy val emailRegex = """^[a-zA-Z0-9\.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
+  lazy val postCodeRegex = """([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z]))))\s?[0-9][A-Za-z]{2})"""
 
   type Stack = Fx.fx2[
     UniformAsk[Address, ?],
@@ -53,6 +54,30 @@ object ContactDetails {
         .validating(
           "street-format",
           address => address.line1.matches(nameRegex)
+        )
+        .validating(
+          "town-limit",
+          address => address.town.length <= 40
+        )
+        .validating(
+          "town-format",
+          address => address.town.matches(townCountyRegex)
+        )
+        .validating(
+          "county-limit",
+          address => address.county.getOrElse("").length <= 40
+        )
+        .validating(
+          "county-format",
+          address => address.county.getOrElse("").matches(townCountyRegex)
+        )
+        .validating(
+          "postcode-limit",
+          address => address.postcode.length <= 40
+        )
+        .validating(
+          "postcode-format",
+          address => address.postcode.matches(postCodeRegex)
         )
       telAndEmail <- ask[TelAndEmail]("contactdetails-telehoneemail")
         .defaultOpt(default.map(_.telephoneAndEmail))

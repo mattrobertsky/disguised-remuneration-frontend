@@ -20,15 +20,15 @@
 
 @if(form.errors.nonEmpty) {
 <div class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
-    <h2 class="error-summary__title" id="error-summary-title">
+    <h2 class="heading-medium error-summary-heading" id="error-summary-title">
         @messages("there.is.a.problem")
     </h2>
 
-    <div class="error-summary__body">
-        <ul class="list error-summary__list">
-            <li>@messages("confirm.info")</li>
-        </ul>
-    </div>
+    <ul class="error-summary-list">
+        <li>
+            <a href="submit-declaration" data-focuses="submit-declaration">@messages("confirm.info")</a>
+        </li>
+    </ul>
 </div>
 }
 
@@ -92,7 +92,6 @@
     </div>
 
     <p>@messages("cya.p2")</p>
-
 <div class="subsection">
     <div class="notice">
         <i class="icon icon-important">
@@ -107,12 +106,21 @@
         @helper.CSRF.formField
         <div class="form-group">
             <fieldset aria-describedby="waste-hint">
-                <div class="multiple-choice">
-                    <input id="declaration" name="confirm" type="checkbox" value="true">
-                    <label for="declaration">
-                        @messages("cya.declaration.p1") @usersName @messages("cya.declaration.p2")
-                    </label>
+                @if(form.errors.nonEmpty){
+                <div class="form-group-error">
+                    <span class="error-message">@messages(s"confirm.info")</span>
+                    }
+                    <div class="multiple-choice">
+
+                        <input id="submit-declaration" name="confirm" type="checkbox" value="true">
+
+                        <label for="submit-declaration">
+                            @messages("cya.declaration.p1") @usersName @messages("cya.declaration.p2")
+                        </label>
+                    </div>
+                @if(form.errors.nonEmpty){
                 </div>
+                }
             </fieldset>
         </div>
         <button type="submit" class="button">@messages("cya.submit")</button>

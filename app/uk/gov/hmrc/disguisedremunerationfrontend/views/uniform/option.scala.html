@@ -22,7 +22,7 @@
 
 @radios(
  s"${key}.outer",
- Seq("TRUE","FALSE"),
+ elements,
  values.atPath({path :+ "outer"}:_*).flatMap(_.headOption),
  errors,
  messages,
