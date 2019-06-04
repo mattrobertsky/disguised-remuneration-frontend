@@ -233,7 +233,7 @@ aboutyou-confirmation.required=Enter the full name of the person you are acting 
 
 # contact details
 contactdetails-address.line1.required=Enter the building or street of your address
-#contactdetails-address.street-limit=Building or street must be 40 characters or less
+contactdetails-address.street-limit=Building or street must be 40 characters or less
 contactdetails-address.line1.street-limit=Building or street must be 40 characters or less
 contactdetails-address.street-format=Building or street must only include letters a to z, numbers, apostrophes, \
   ampersands, commas, hyphens, full stops, forward slashes and spaces
