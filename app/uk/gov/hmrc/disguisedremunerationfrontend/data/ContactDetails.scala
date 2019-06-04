@@ -32,7 +32,7 @@ object ContactDetails {
   lazy val nameRegex = """^[a-zA-Z0-9',-./ ]*$"""
   lazy val townCountyRegex = """^[a-zA-Z0-9',-./ ]*$"""
   lazy val telephoneRegex = """^\+?[0-9\s\(\)]{1,20}$"""
-  lazy val emailRegex = """^[a-zA-Z0-9\.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
+  lazy val emailRegex = """^[a-zA-Z0-9\./_-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
   lazy val postCodeRegex = """([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z]))))\s?[0-9][A-Za-z]{2})"""
 
   type Stack = Fx.fx2[
