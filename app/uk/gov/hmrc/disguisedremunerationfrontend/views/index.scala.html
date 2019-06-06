@@ -37,7 +37,7 @@
             Right(state.schemes.zipWithIndex.map{ case (scheme, schemeIndex) =>
                 (scheme.name, Some(s"scheme/$schemeIndex/scheme-name"), None, true)
             } :+
-                (("Add another remuneration scheme", Some("scheme/new/scheme-name"), None, false)))
+                ((s"""${messages("landing.loan.arrangement.add-scheme")}""", Some("scheme/new/scheme-name"), None, false)))
 	}
     },
     messages("landing.loan.taxyear.heading") -> {
@@ -53,7 +53,7 @@
                         messages("landing.checkdetails.heading") ->
                           {if(state.readyToSubmit) {
                             Right(List(
-                              ("Check your answers and send your details", Some("submit"), None , false)
+                              (s"""${messages("landing.checkdetails.heading")}""", Some("submit"), None , false)
                             ))
                           } else {
                             Left{ messages("landing.sendanswers.link") }

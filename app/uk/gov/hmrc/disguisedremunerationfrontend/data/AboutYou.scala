@@ -90,7 +90,7 @@ object AboutYou {
               .defaultOpt(localDefault.map(_.identification))
               .validating(
                 "nino-format", {
-                  case Left(nino) => nino.matches(regExNino)
+                  case Left(nino) => nino.replace(" ", "").matches(regExNino)
                   case _ => true
                 }
               ).validating(
@@ -121,7 +121,7 @@ object AboutYou {
           .defaultOpt(default.map{_.nino})
           .validating(
             "format",
-              ni => ni.matches(regExNino)
+              ni => ni.replace(" ", "").matches(regExNino)
           )
       }
       i.map{x => AboutSelf(x).asRight[Error]}

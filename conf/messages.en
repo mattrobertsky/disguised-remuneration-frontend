@@ -22,6 +22,7 @@ landing.info=Fill in each section as best you can. You can save your answers and
 landing.details.title=Enter your details
 landing.loan.arrangement.heading=Tell us about loan arrangements you used
 landing.loan.arrangement.info=These are sometimes called 'disguised remuneration schemes'.
+landing.loan.arrangement.add-scheme=Add another remuneration scheme
 landing.loan.taxyear.heading=Enter your loan details by tax year
 landing.loan.taxyear.info1=You need to
 landing.loan.taxyear.info2=add a loan arrangement
@@ -126,7 +127,7 @@ scheme-recipient.outer.FALSE=Yes
 scheme-recipientname=Enter the name of who the loan was made to
 scheme-agreedpayment.heading=Has anyone paid, or agreed with us to pay, any tax or National Insurance owed for this scheme?
 scheme-agreedpayment.intro=If you made payments in response to an Accelerated Payments Notice (APN), do not include these.
-scheme-settlementstatus.heading=How much tax and National Insurance have you paid, or agreed with us to pay, for this scheme?
+scheme-settlementstatus.heading=How much tax and National Insurance has anyone paid, or agreed with us to pay, for this scheme?
 scheme-settlementstatus.amount.heading=Enter the total amount.
 scheme-settlementstatus.dateOfSettlement.heading=Date paid
 # scheme validation
@@ -157,7 +158,6 @@ details-genuinely-repaid.heading.hint=
 details-genuinely-repaid.heading.hint.custom=Scheme: {0}
 
 details-written-off-amount.heading=How much of the loan was written off?
-details-written-off-amount.heading.hint=
 details-written-off-amount.heading.hint.custom=Scheme: {0}
 details-written-off-amount.amount.heading=Amount of loan written off
 details-written-off-amount.taxPaid.heading=Tax and National Insurance paid on the written-off loan
@@ -175,7 +175,8 @@ name=Name
 filling-in-form-for-self=Filling in form for self
 address=Address
 contact-details=Contact details
-
+telephone=Telephone number
+email-address=Email Address
 
 
 dates-you-received-loans=Dates when you received loans
@@ -196,6 +197,7 @@ cya.title=Check your answers before sending your details
 confirm.title=Loan charge details received
 cya.p1=Make sure you check your answers before you send them. If you need to add or change any details later, you will need to fill in this form again.
 cya.p2=By submitting your answers, you confirm that, to the best of your knowledge, the information you have provided is correct and complete.
+cya.loandetails.h1=Loan details for {0}
 cya.loandetails.header.tax-year=Tax year
 cya.loandetails.header.amount=Amount
 cya.loandetails.header.repaid=Repaid
@@ -257,6 +259,7 @@ contactdetails-address.postcode-limit=Postcode must be 40 characters or less
 contactdetails-address.postcode.postcode-limit=Postcode must be 40 characters or less
 contactdetails-address.postcode-format=Enter a real postcode
 contactdetails-address.postcode.postcode-format=Enter a real postcode
+
 contactdetails-telephoneemail.phone-limit=Telephone number must be 24 characters or less
 contactdetails-telephoneemail.telephone.phone-limit=Telephone number must be 24 characters or less
 contactdetails-telephoneemail.phone-format=Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 0808 157 0192
@@ -265,6 +268,9 @@ contactdetails-telephoneemail.email-limit=Email address must be 256 characters o
 contactdetails-telephoneemail.email.email-limit=Email address must be 256 characters or less
 contactdetails-telephoneemail.email-format=Email address must only contain letters a to z, numbers, full stops, hyphens, underscores and @ signs
 contactdetails-telephoneemail.email.email-format=Email address must only contain letters a to z, numbers, full stops, hyphens, underscores and @ signs
+contactdetails-telephoneemail.email-or-phone-number-needed=Enter an email address or a telephone number
+contactdetails-telephoneemail.telephone.email-or-phone-number-needed=Enter an email address or a telephone number
+contactdetails-telephoneemail.email.email-or-phone-number-needed=Enter an email address or a telephone number
 
 #scheme
 scheme-name.required=Enter the name of the scheme
@@ -272,9 +278,10 @@ scheme-name.char-limit=Scheme name must be 100 characters or less
 scheme-name.invalid-name=Scheme name must only include letters a to z, numbers, apostrophes, ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
 scheme-dotas.required=Select yes if you have a Disclosure of Tax Avoidance Schemes (DOTAS) number
 scheme-dotas.char-limit=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
+scheme-dotas.Yes.dotas.char-limit=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
 scheme-dotas.dotas.required=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
 scheme-dotas.Yes.dotas.required=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
-scheme-dotas.Yes.dotas.char-limit=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
+
 scheme-refnumber.outer.required=Select yes if you have a HMRC case reference number
 scheme-refnumber.inner.required=HMRC case reference number must only include letters a to z, numbers and hyphens
 scheme-refnumber.limit=HMRC case reference number must be 10 characters or less
@@ -282,8 +289,8 @@ scheme-refnumber.inner.limit=HMRC case reference number must be 10 characters or
 scheme-refnumber.format=HMRC case reference number must only include letters a to z, numbers and hyphens
 scheme-refnumber.inner.format=HMRC case reference number must only include letters a to z, numbers and hyphens
 
-
 scheme-stillusing.required=Select yes if you are still using the scheme
+scheme-stillusingyes.badDate=Enter a real date
 scheme-stillusingyes.year.required=The date you started using the scheme must include a year
 scheme-stillusingyes.month.required=The date you started using the scheme must include a month
 scheme-stillusingyes.day.required=The date you started using the scheme must include a day
@@ -301,31 +308,32 @@ scheme-stillusingno._2.badDate=Enter a real date
 scheme-stillusingno._1.same-or-after=The date you stopped using the scheme must be the same as or after the date you started using the scheme
 scheme-stillusingno._2.same-or-after=The date you stopped using the scheme must be the same as or after the date you started using the scheme
 scheme-stillusingno.same-or-after=The date you stopped using the scheme must be the same as or after the date you started using the scheme
-scheme-stillusingno.year-incorrect=Enter a real date
-scheme-stillusingno._1.year-incorrect=Enter a real date
-scheme-stillusingno._2.year-incorrect=Enter a real date
 
-scheme-employeeouter.required=Select yes if you were an employee while you were using the scheme
 scheme-employee.outer.required=Select yes if you were an employee while you were using the scheme
-scheme-employeenameinner.required=Enter the employer’s name
+scheme-employee.name.inner.required=Enter the employer’s name
 scheme-employee.inner.name.required=Enter the employer’s name
-scheme-employeepayeinner.required=Enter the PAYE reference
-scheme-employeepayeinner.paye-format=Enter the employer PAYE reference in the correct format
+scheme-employee.paye.inner.paye-format=Enter the employer PAYE reference in the correct format
 scheme-employee.char-limit=Employer’s name must be 50 characters or less
 scheme-employee.inner.name.char-limit=Employer’s name must be 50 characters or less
 scheme-employee.name-format=Employer’s name must only include letters a to z, numbers, apostrophes, \
   ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
+scheme-employee.inner.name.name-format=Employer’s name must only include letters a to z, numbers, apostrophes, \
+  ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
+
 scheme-recipient.outer.required=Select yes if the loan was made to you
 scheme-recipient.inner.required=Enter the name of who the loan was made out to
-scheme-recipient.inner.char-limit=Name of who the loan was made out to must be 50 characters or less
 scheme-recipient.char-limit=Name of who the loan was made out to must be 50 characters or less
+scheme-recipient.inner.char-limit=Name of who the loan was made out to must be 50 characters or less
 scheme-recipient.name-format=Name of who the loan was made out to must only include letters a to z, numbers, \
   apostrophes, ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
+scheme-recipient.inner.name-format=Name of who the loan was made out to must only include letters a to z, numbers, \
+  apostrophes, ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
+
 scheme-agreedpayment.required=Select yes if anyone has paid, or agreed with us to pay, any tax or National Insurance owed for this scheme
 scheme-settlementstatusyeardateOfSettlement.required=Enter how much tax and National Insurance anyone has paid, or agreed with us to pay
-scheme-settlementstatus.amount.required=Enter how much tax and National Insurance you have paid, or agreed with us to pay
-scheme-settlementstatus.amount-format=How much tax and National Insurance you paid, or agreed with us to pay must be an amount of money, like 123.45 or 150
-scheme-settlementstatus.amount.amount-format=How much tax and National Insurance you paid, or agreed with us to pay must be an amount of money, like 123.45 or 150
+scheme-settlementstatus.amount.required=Enter how much tax and National Insurance anyone has paid, or agreed with us to pay
+scheme-settlementstatus.amount-format=Tax and National Insurance paid or agreed to be paid must be an amount of money, like 123.45 or 150
+scheme-settlementstatus.amount.amount-format=Tax and National Insurance paid or agreed to be paid must be an amount of money, like 123.45 or 150
 
 # loan details
 details-hmrc-approved.required=Select yes if the loan was an approved fixed-term loan
@@ -336,24 +344,16 @@ details-genuinely-repaid.required=Select yes if you have repaid any of the loan 
 details-genuinely-repaid-amount.required=Enter how much of the loan you repaid
 details-genuinely-repaid-amount.nonnumericformat=Amount you have repaid must be an amount of money, like 123.45 or 150
 details-genuinely-repaid-amount.format=Amount you have repaid must be an amount of money, like 123.45 or 150
+
 details-written-off.required=Select yes if the lender has written off any of the loan made from {0} to {1}
 details-written-off-amount.amount.required=Enter the amount that the lender has written off of the loan
-details-written-off-amount.amount.nonnumericformat=Amount of loan written off must be an amount of money, \
-  like 123.45 or 150
 details-written-off-amount.taxPaid.required=Enter the amount of tax or National Insurance paid on the written-off loan
-details-written-off-amount.taxPaid.nonnumericformat=Amount of tax or National Insurance paid on the written-off loan \
-  must be an amount of money, like 123.45 or 150
-
-
 details-written-off-amount.amount-format=Amount of loan written off must be an amount of money, \
   like 123.45 or 150
 details-written-off-amount.amount.amount-format=Amount of loan written off must be an amount of money, \
   like 123.45 or 150
-details-written-off-amount.taxPaid.amount-format=
-
 details-written-off-amount.tax-format=Amount of tax or National Insurance paid on the written-off loan \
   must be an amount of money, like 123.45 or 150
-details-written-off-amount.amount.tax-format=
 details-written-off-amount.taxPaid.tax-format=Amount of tax or National Insurance paid on the written-off loan \
   must be an amount of money, like 123.45 or 150
 
@@ -377,6 +377,3 @@ tasklist.item=Item
 tasklist.delete=Remove
 tasklist.edit=Change
 
-contactdetails-telephoneemail.email-or-phone-number-needed=Enter an email address or a telephone number
-contactdetails-telephoneemail.telephone.email-or-phone-number-needed=Enter an email address or a telephone number
-contactdetails-telephoneemail.email.email-or-phone-number-needed=Enter an email address or a telephone number

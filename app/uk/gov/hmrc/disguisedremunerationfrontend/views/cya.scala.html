@@ -52,7 +52,7 @@
 
         @loanDetails.map { case (heading,data) =>
         <div class="subsection--wide">
-            <h3 class="govuk-heading-s">@heading</h3>
+            <h3 class="govuk-heading-s">@messages("cya.loandetails.h1", heading.toString())</h3>
             <table class="govuk-table loans-table">
                 <caption class="govuk-table__caption"></caption>
                 <thead class="govuk-table__head">

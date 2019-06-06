@@ -404,7 +404,7 @@ class JourneyController @Inject()(
               import contactDetails.telephoneAndEmail._
               List(
                 telephone.map{x => ("telephone", x)},
-                email.map{x => ("Email address", x)}
+                email.map{x => ("email-address", x)}
               ).flatten.map{ case (l,r) =>
                 msg(l) |+| Html(": ") |+| escape(r)
               }.intercalate(Html("<br />"))
@@ -428,7 +428,7 @@ class JourneyController @Inject()(
               msg(if(loanRecipient) "TRUE" else "FALSE"),
             msg("tax-or-national-insurance-paid-or-agreed-to-pay") ->
               settlement.fold(msg("none")){x => Html(s"£${x.amount}")}
-          ), Some(Html(s"Loan details for $name") ->
+          ), Some(Html(s"$name") ->
               scheme.loanDetails.flatMap(
                 {
                   case(k,v) => Map(k.toString -> v.fold(List.empty[String])(ld => ld.toListString))
