@@ -14,60 +14,77 @@
  * limitations under the License.
  *@
 
-@(items: (Html, Either[Html,List[(String, Option[String],Option[String],Boolean)]])*)(implicit messages: UniformMessages[Html])
+@(items: (Html, Either[Html, List[(String, Option[String], Option[String], Option[Boolean])]])*)(implicit messages: UniformMessages[Html])
+
+@taskComplete = {
+    <strong class="govuk-tag app-task-list__task-completed" id="eligibility-completed">
+    @messages("common.done")
+    </strong>
+}
+
+@taskIncomplete = {
+    <strong class="govuk-tag app-task-list__task-completed incomplete" id="eligibility-completed">
+    @messages("common.todo")
+    </strong>
+}
 <div class="govuk-width-container">
-<main class="govuk-main-wrapper govuk-main-wrapper--l" id="main-content" role="main">
+    <main class="govuk-main-wrapper govuk-main-wrapper--l" id="main-content" role="main">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+                <h1 class="heading-xlarge">
+                    @messages("landing.heading")
+                </h1>
 
-    <h1 class="heading-xlarge">
-        @messages("landing.heading")
-    </h1>
+                <p class="govuk-body">@messages("landing.info")</p>
 
-    <p class="govuk-body">@messages("landing.info")</p>
+                <ol class="app-task-list">
 
-    <ol class="app-task-list">
+                @for(((title, group), index) <- items.zipWithIndex) {
 
-    @for(((title, group), index) <- items.zipWithIndex) {
+                    <li>
+                        <h2 class="app-task-list__section">
+                            <span class="app-task-list__section-number">@{
+                                index + 1
+                            }. </span>
+                            @title
+                        </h2>
+                        <ul class="app-task-list__items">
 
-    <li>
-        <h2 class="app-task-list__section">
-            <span class="app-task-list__section-number">@{index +1}.  </span>@title
-        </h2>
-        <ul class="app-task-list__items">
+                            @for(message <- group.left.toOption) {
+                                <p>@message</p>
+                            }
 
-            @for(message <- group.left.toOption) {
-                <p>@message</p>
-            }
+                            @for((subtitle, mainLink, ancilliaryLink, done) <- group.right.toOption.toList.flatten) {
+                                <li class="app-task-list__item">
+                                    @for(l <- mainLink) {
+                                        <a class="app-task-list__task-name" href="@l" aria-describedby="eligibility-completed">
+                                        }
+                                    @subtitle
+                                    @for(_ <- mainLink) { </a> }
 
-            @for((subtitle, mainLink, ancilliaryLink, done) <- group.right.toOption.toList.flatten) {
-                <li class="app-task-list__item">
-                    @for(l <- mainLink) {
-                        <a class="app-task-list__task-name" href="@l" aria-describedby="eligibility-completed">
-                        }
-                    @subtitle
-                    @for(_ <- mainLink) { </a> }
+                                    <!-- display status of section -->
+                                    @defining(
+                                        done match {
+                                            case Some(true) =>
+                                                taskComplete
 
-                    <!-- display status of section -->
-                    @if(done) {
-                        <strong class="govuk-tag app-task-list__task-completed"
-                        id="eligibility-completed"
-                        >@messages("common.done")</strong>
-                    } else {
-                        <strong class="govuk-tag app-task-list__task-completed incomplete"
-                        id="eligibility-completed"
-                        >@messages("common.todo")</strong>
-                    }
+                                            case Some(false) =>
+                                                taskIncomplete
 
-                </li>
-            }
-        </ul>
-    </li>
-    }
-</ol>
+                                            case _ => ""
+                                        }
+                                    ) { todoDoneIcon =>
+                                        @todoDoneIcon
+                                    }
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                }
+                </ol>
 
- </div>
-  </div>
+            </div>
+        </div>
     </main>
 </div>

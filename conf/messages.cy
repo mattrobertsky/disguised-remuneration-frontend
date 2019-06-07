@@ -22,7 +22,7 @@ landing.info=Llenwch bob adran orau y gallwch. Gallwch gadw eich atebion a dod y
 landing.details.title=Nadwch eich manylion
 landing.loan.arrangement.heading=Rhoi gwybod i ni am drefniadau benthyca a ddefnyddioch
 landing.loan.arrangement.info=Weithiau caiff y rhain eu galw’n ‘gynlluniau tâl cuddiedig’.
-landing.loan.arrangement.add-scheme=Add another remuneration scheme
+landing.loan.arrangement.add-scheme=Ychwanegu cynllun cydnabyddiaeth arall
 landing.loan.taxyear.heading=Nodwch fanylion eich benthyciad fesul blwyddyn dreth
 landing.loan.taxyear.info1=Bydd angen i chi
 landing.loan.taxyear.info2=ychwanegu trefniant benthyciad
@@ -136,7 +136,7 @@ scheme-recipient.outer.FALSE=Iawn
 scheme-recipientname=Nodwch enw’r sawl yr oedd y benthyciad yn ei enw
 scheme-agreedpayment.heading=A oes rhywun wedi talu, neu wedi cytuno â ni i dalu, unrhyw dreth neu Yswiriant Gwladol sy’n ddyledus ar gyfer y cynllun hwn?
 scheme-agreedpayment.intro=Peidiwch â chynnwys unrhyw daliadau mewn ymateb i Hysbysiad i wneud Taliad Cyflym (APN).
-scheme-settlementstatus.heading=Faint o dreth ac Yswiriant Gwladol ydych wedi’i dalu, neu wedi cytuno â ni i’w dalu, ar gyfer y cynllun hwn?
+scheme-settlementstatus.heading=Faint o dreth ac Yswiriant Gwladol y mae unrhyw un wedi talu, neu y cytunwyd i dalu, ar gyfer y cynllun hwn?
 scheme-settlementstatus.amount.heading=Nodwch y cyfanswm.
 scheme-settlementstatus.dateOfSettlement.heading=Date paid
 # scheme validation
@@ -267,9 +267,9 @@ contactdetails-telephoneemail.email-limit=Rhaid i’r cyfeiriad e-bost fod yn 25
 contactdetails-telephoneemail.email.email-limit=Rhaid i’r cyfeiriad e-bost fod yn 256 o gymeriadau neu lai
 contactdetails-telephoneemail.email-format=Mae’n rhaid i’r cyfeiriad e-bost gynnwys llythrennau a i z, rhifau, atalnodau llawn, cysylltnodau, tanlinellau a’r symbol @ yn unig
 contactdetails-telephoneemail.email.email-format=Mae’n rhaid i’r cyfeiriad e-bost gynnwys llythrennau a i z, rhifau, atalnodau llawn, cysylltnodau, tanlinellau a’r symbol @ yn unig
-contactdetails-telephoneemail.email-or-phone-number-needed=Enter an email address or a telephone number
-contactdetails-telephoneemail.telephone.email-or-phone-number-needed=Enter an email address or a telephone number
-contactdetails-telephoneemail.email.email-or-phone-number-needed=Enter an email address or a telephone number
+contactdetails-telephoneemail.email-or-phone-number-needed=Nodwch rif ffôn neu gyfeiriad e-bost
+contactdetails-telephoneemail.telephone.email-or-phone-number-needed=Nodwch rif ffôn neu gyfeiriad e-bost
+contactdetails-telephoneemail.email.email-or-phone-number-needed=Nodwch rif ffôn neu gyfeiriad e-bost
 
 #scheme
 scheme-name.required=Nodwch enw’r cynllun
@@ -315,10 +315,8 @@ scheme-employee.inner.name.required=Nodwch enw’r cyflogwr
 
 scheme-employee.char-limit=Mae’n rhaid i enw’r cyflogwr fod yn 50 o gymeriadau neu lai
 scheme-employee.inner.name.char-limit=Mae’n rhaid i enw’r cyflogwr fod yn 50 o gymeriadau neu lai
-scheme-employee.name-format=Employer’s name must only include letters a to z, numbers, apostrophes, \
-  ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
-scheme-employee.inner.name.name-format=Employer’s name must only include letters a to z, numbers, apostrophes, \
-  ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
+scheme-employee.name-format=Mae’n rhaid i enw’r cyflogwr gynnwys llythrennau a-z, rhifau, collnodau, symbolau ampersand, comas, cysylltnodau, atalnodau llawn, blaenslaesau, cromfachau crwn a bylchau yn unig
+scheme-employee.inner.name.name-format=Mae’n rhaid i enw’r cyflogwr gynnwys llythrennau a-z, rhifau, collnodau, symbolau ampersand, comas, cysylltnodau, atalnodau llawn, blaenslaesau, cromfachau crwn a bylchau yn unig
 
 scheme-recipient.outer.required=Dewiswch Iawn os mai yn eich enw chi oedd y benthyciad
 scheme-recipient.inner.required=Nodwch enw llawn y sawl y gwnaed y benthyciad yn ei enw
@@ -381,5 +379,3 @@ tasklist.edit=Newid
 day=Diwrnod
 month=Mis
 year=Blwyddyn
-
-contactdetails-telephoneemail.email-or-phone-number-needed=A valid email address or telephone number is required

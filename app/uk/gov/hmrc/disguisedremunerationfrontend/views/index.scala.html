@@ -20,8 +20,8 @@
 
 @tasklist(
     messages("landing.details.title") -> Right(List(
-        (messages("landing.aboutyou.link").toString(), Some("about-you/aboutyou-completedby"), None, state.aboutYou.isDefined),
-        (messages("landing.contactdetails.link").toString(), Some("contact-details/contactdetails-address"), None, state.contactDetails.isDefined)
+        (messages("landing.aboutyou.link").toString(), Some("about-you/aboutyou-completedby"), None, Some(state.aboutYou.isDefined)),
+        (messages("landing.contactdetails.link").toString(), Some("contact-details/contactdetails-address"), None, Some(state.contactDetails.isDefined))
     )),
     messages("landing.loan.arrangement.heading") -> {
         if (state.schemes.isEmpty) {
@@ -29,21 +29,28 @@
                 Html(
                     s"""
                                   |${messages("landing.loanarrangement.info")}
-                                  |<li class="add-scheme divider--bottom"><a href="scheme/new/scheme-name" class="govuk-link">${messages("landing.loanarrangement.link")}</a></li>
+                                  |<li class="add-scheme divider--bottom">
+                                  |<a href="scheme/new/scheme-name" class="govuk-link">
+                                  |${messages("landing.loanarrangement.link")}
+                                  |</a>
+                                  |<strong class="govuk-tag app-task-list__task-completed incomplete" id="eligibility-completed">
+                                  |${messages("common.todo")}
+                                  |</strong>
+                                  |</li>
                                 """.stripMargin
                 )
             }
         } else {
             Right(state.schemes.zipWithIndex.map{ case (scheme, schemeIndex) =>
-                (scheme.name, Some(s"scheme/$schemeIndex/scheme-name"), None, true)
+                (scheme.name, Some(s"scheme/$schemeIndex/scheme-name"), None, Some(true))
             } :+
-                ((s"""${messages("landing.loan.arrangement.add-scheme")}""", Some("scheme/new/scheme-name"), None, false)))
+                ((s"""${messages("landing.loan.arrangement.add-scheme")}""", Some("scheme/new/scheme-name"), None, None)))
 	}
     },
     messages("landing.loan.taxyear.heading") -> {
 	val details = state.schemes.zipWithIndex.flatMap{ case (scheme,schemeIndex) =>
 	    scheme.loanDetails.map { case (year, optDetails) =>
-		((s"${scheme.name} $year to ${year + 1}", Some(s"scheme/$schemeIndex/details/$year/details-hmrc-approved"), None, optDetails.isDefined))
+		(s"${scheme.name} $year to ${year + 1}", Some(s"scheme/$schemeIndex/details/$year/details-hmrc-approved"), None, Some(optDetails.isDefined))
 	    }
 	}.sortBy(_._1)
 	if (details.isEmpty) Left {
@@ -53,7 +60,7 @@
                         messages("landing.checkdetails.heading") ->
                           {if(state.readyToSubmit) {
                             Right(List(
-                              (s"""${messages("landing.checkdetails.heading")}""", Some("submit"), None , false)
+                              (s"""${messages("landing.checkdetails.heading")}""", Some("submit"), None , Some(false))
                             ))
                           } else {
                             Left{ messages("landing.sendanswers.link") }

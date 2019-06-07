@@ -268,9 +268,9 @@ contactdetails-telephoneemail.email-limit=Email address must be 256 characters o
 contactdetails-telephoneemail.email.email-limit=Email address must be 256 characters or less
 contactdetails-telephoneemail.email-format=Email address must only contain letters a to z, numbers, full stops, hyphens, underscores and @ signs
 contactdetails-telephoneemail.email.email-format=Email address must only contain letters a to z, numbers, full stops, hyphens, underscores and @ signs
-contactdetails-telephoneemail.email-or-phone-number-needed=Enter an email address or a telephone number
-contactdetails-telephoneemail.telephone.email-or-phone-number-needed=Enter an email address or a telephone number
-contactdetails-telephoneemail.email.email-or-phone-number-needed=Enter an email address or a telephone number
+contactdetails-telephoneemail.email-or-phone-number-needed=Enter a telephone number or an email address
+contactdetails-telephoneemail.telephone.email-or-phone-number-needed=Enter a telephone number or an email address
+contactdetails-telephoneemail.email.email-or-phone-number-needed=Enter a telephone number or an email address
 
 #scheme
 scheme-name.required=Enter the name of the scheme
