@@ -423,7 +423,7 @@ class JourneyController @Inject()(
               caseReferenceNumber.fold(msg("FALSE")){escape},
             msg("employment-status") ->
               employee
-                .fold(msg("FALSE")){_ => msg("Employed")},
+                .fold(msg("FALSE")){_ => msg("employed")},
             msg("loan-recipient") ->
               msg(if(loanRecipient) "TRUE" else "FALSE"),
             msg("tax-or-national-insurance-paid-or-agreed-to-pay") ->

@@ -185,14 +185,13 @@ contact-details=Manylion cyswllt
 telephone=Rhif ffôn
 email-address=Cyfeiriad e-bost
 
-
-
 dates-you-received-loans=Dyddiadau pan gawsoch fenthyciadau
 scheme=Cynllun: 
 disclosure-of-tax-avoidance-schemes-dotas-number=Rhif Datgelu Cynlluniau Arbed Treth (DOTAS)
 disclosure-of-tax-avoidance-schemes-dotas-number.Unknown=Ddim yn gwybod
 hmrc-case-reference-number=Cyfeirnod achos CThEM
 employment-status=Statws cyflogaeth
+employed=Cyflogedig
 loan-recipient=Derbynnydd y benthyciad
 tax-or-national-insurance-paid-or-agreed-to-pay=Treth neu Yswiriant Gwladol a dalwyd neu y cytunwyd i’w dalu
 

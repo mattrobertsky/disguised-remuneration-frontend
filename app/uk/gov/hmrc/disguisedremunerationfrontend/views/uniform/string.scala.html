@@ -20,6 +20,12 @@
 
 @path=@{key.split("[.]").filter(_.nonEmpty).tail}
 
+@currencyInput=@{
+    key === "details-amount" ||
+    key === "details-genuinely-repaid-amount" ||
+    key.contains("scheme-settlementstatus") ||
+    key.contains("details-written-off-amount")
+}
  @*TODO fix these headings*@
 @messages.get(s"$key.string.heading").map { hint =>
    <label class="label" for="@key">@messages.decompose(s"$key.string.heading")</label>
@@ -48,11 +54,16 @@
             <span class="error-message">@messages(s"$key.$errorKey")</span>
         }
     }
+    @if(currencyInput){
+        <span class="input-currency">
+    }
             <input class="form-control form-control-2-3"
                    id="@key"
                    name="@key"
                    value="@{values.atPath(path:_*)}" />
-
+    @if(currencyInput){
+        </span>
+    }
     @if(errorKey.nonEmpty) {
         @messages.get(s"$key.$errorKey").map { er =>
         </div>
