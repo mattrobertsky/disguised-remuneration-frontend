@@ -100,28 +100,25 @@
     </div>
 }
 
+@contentHeader = {
+  <div class="float--right">
+    @language_selection(Map(
+      "english" -> Lang("en"),
+      "cymraeg" -> Lang("cy")
+    ), uk.gov.hmrc.disguisedremunerationfrontend.controllers.routes.LanguageSwitchController.switchToLanguage, None)
+  </div>
+}
+
 @serviceInfo = {
     @uiLayouts.serviceInfo(
       betaBanner = betaBanner,
       includeGridWrapper = false,
-      serviceInfoContent = Some(serviceInfoContent),
+      serviceInfoContent = Some(contentHeader),
       setLang = ufMessagesToPlayMessages.lang.code
     )
 }
 
-@contentHeader = {
-
-    <div class="float--right">@language_selection(Map(
-        "english" -> Lang("en"),
-        "cymraeg" -> Lang("cy")
-    ), uk.gov.hmrc.disguisedremunerationfrontend.controllers.routes.LanguageSwitchController.switchToLanguage, None)</div>
-}
-
-
-@mainContentHeader = {
-
-    @uiLayouts.main_content_header(contentHeader = contentHeader)
-}
+@mainContentHeader = {}
 
 @getHelpForm = @{uiHelpers.reportAProblemLink(appConfig.reportAProblemPartialUrl, appConfig.reportAProblemNonJSUrl)}
 

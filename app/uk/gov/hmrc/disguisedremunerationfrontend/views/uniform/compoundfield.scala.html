@@ -23,9 +23,12 @@
 
 <div class="form-group">
     @*if(errors.definedAtPath(path:_*)) {form-group-error}"*@
-  <label class="label" for="@key">
-    @messages(s"$key.heading")
-  </label>
+
+  @if(messages(s"$key.heading").toString.nonEmpty){
+    <label class="label" for="@key">
+      @messages(s"$key.heading")
+    </label>
+  }
 
 
   @messages.get(s"$key.hint").map { hint =>

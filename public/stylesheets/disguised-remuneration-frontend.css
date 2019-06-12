@@ -612,11 +612,17 @@ ol {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-weight: 400;
-    font-size: 19px;
+    font-size: 16px;
     line-height: 25px;
     margin-bottom: 40px;
     list-style: none;
     padding-left: 0;
+}
+
+@media (min-width: 641px) {
+   .app-task-list__items {
+      font-size: 19px;
+   }
 }
 
 @media (min-width: 40.0625em) {

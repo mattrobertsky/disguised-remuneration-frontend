@@ -127,8 +127,10 @@ scheme-recipient.outer.FALSE=Yes
 scheme-recipientname=Enter the name of who the loan was made to
 scheme-agreedpayment.heading=Has anyone paid, or agreed with us to pay, any tax or National Insurance owed for this scheme?
 scheme-agreedpayment.intro=If you made payments in response to an Accelerated Payments Notice (APN), do not include these.
+
 scheme-settlementstatus.heading=How much tax and National Insurance has anyone paid, or agreed with us to pay, for this scheme?
-scheme-settlementstatus.amount.heading=Enter the total amount.
+scheme-settlementstatus.amount.heading=
+scheme-settlementstatus.amount.hint=Enter the total amount.
 scheme-settlementstatus.dateOfSettlement.heading=Date paid
 # scheme validation
 

@@ -136,8 +136,10 @@ scheme-recipient.outer.FALSE=Iawn
 scheme-recipientname=Nodwch enw’r sawl yr oedd y benthyciad yn ei enw
 scheme-agreedpayment.heading=A oes rhywun wedi talu, neu wedi cytuno â ni i dalu, unrhyw dreth neu Yswiriant Gwladol sy’n ddyledus ar gyfer y cynllun hwn?
 scheme-agreedpayment.intro=Peidiwch â chynnwys unrhyw daliadau mewn ymateb i Hysbysiad i wneud Taliad Cyflym (APN).
+
 scheme-settlementstatus.heading=Faint o dreth ac Yswiriant Gwladol y mae unrhyw un wedi talu, neu y cytunwyd i dalu, ar gyfer y cynllun hwn?
-scheme-settlementstatus.amount.heading=Nodwch y cyfanswm.
+scheme-settlementstatus.amount.heading=
+scheme-settlementstatus.amount.hint=Nodwch y cyfanswm.
 scheme-settlementstatus.dateOfSettlement.heading=Date paid
 # scheme validation
 
