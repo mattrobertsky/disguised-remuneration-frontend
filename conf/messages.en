@@ -77,6 +77,7 @@ contactdetails-address.town.heading=Town or city
 contactdetails-address.county.heading=County
 contactdetails-address.postcode.heading=Postcode
 contactdetails-telephoneemail.heading=What are your contact details?
+contactdetails-telephoneemail.intro=We will only use these details to contact you about your case.
 contactdetails-telephoneemail.telephone.heading=Telephone number
 contactdetails-telephoneemail.email.heading=Email address
 
