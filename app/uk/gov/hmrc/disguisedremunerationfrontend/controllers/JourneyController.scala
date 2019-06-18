@@ -17,7 +17,6 @@
 package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 import cats.implicits._
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
@@ -31,7 +30,7 @@ import org.atnos.eff._
 import play.api.Logger
 import play.api.data.Forms._
 import play.api.data._
-import play.api.i18n.{I18nSupport, Messages}
+import play.api.i18n.I18nSupport
 import play.api.libs.json.{Json, OFormat}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
 import play.twirl.api.{Html, HtmlFormat}
@@ -414,10 +413,9 @@ class JourneyController @Inject()(
 
         val t: List[(Html, (List[(Html, Html)], Option[(Html, Map[String, List[String]])]))] = schemes.map { scheme =>
           import scheme._
-          val dateFormat = DateTimeFormatter.ofPattern("d MMMM YYYY")
           ((msg("scheme") |+| escape(s" $name")), (List(
             msg("dates-you-received-loans") ->
-              Html(s"${scheme.schemeStart.format(dateFormat)} to ${scheme.schemeStopped.getOrElse(LocalDate.now).format(dateFormat)}"),
+              Html(s"${formatDate(scheme.schemeStart)} ${msg("language.to")} ${formatDate(scheme.schemeStopped.getOrElse(LocalDate.now))}"),
             msg("disclosure-of-tax-avoidance-schemes-dotas-number") ->
               dotasReferenceNumber.fold(msg("not-applicable"))(m => msg(s"disclosure-of-tax-avoidance-schemes-dotas-number.$m")),
             msg("hmrc-case-reference-number") ->

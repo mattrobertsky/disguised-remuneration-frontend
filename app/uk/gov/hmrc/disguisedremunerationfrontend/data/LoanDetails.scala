@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
-import java.time.format.DateTimeFormatter
 
 import ltbs.uniform._
 import org.atnos.eff._
+import play.api.i18n.Messages
 import uk.gov.hmrc.disguisedremunerationfrontend.controllers.YesNoUnknown
 import uk.gov.hmrc.disguisedremunerationfrontend.data.Scheme.MoneyRegex
 
@@ -32,7 +32,7 @@ case class LoanDetails(
   writtenOff: Option[WrittenOff]
 ) {
   // TODO move this to a pimp
-  def toListString = {
+  def toListString: List[String] = {
     List(
       "£" ++ amount.toString,
       genuinelyRepaid.fold("£" ++ "0")(gr => "£" ++ gr.toString),
@@ -59,7 +59,7 @@ object LoanDetails {
   : _uniformAsk[Money, ?]
   : _uniformAsk[Option[Money], ?]
   : _uniformAsk[WrittenOff, ?]
-  ](year: Int, scheme: Scheme, default: Option[LoanDetails] = None): Eff[R, LoanDetails] = {
+  ](year: Int, scheme: Scheme, default: Option[LoanDetails] = None)(implicit messages: Messages): Eff[R, LoanDetails] = {
     val (startDate, endDate) = year.toFinancialYear
     for {
       approved <- ask[YesNoUnknown]("details-hmrc-approved")
@@ -80,15 +80,15 @@ object LoanDetails {
         .withCustomContentAndArgs(
           ("details-amount.required",
             ("details-amount.required",
-              List(startDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")),
-                endDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")))
-              ))
+            List(formatDate(startDate),
+            formatDate(endDate))
+        ))
         )
         .withCustomContentAndArgs(
           ("details-amount.heading",
             ("details-amount.heading.range",
-            List(startDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")),
-              endDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")))
+              List(formatDate(startDate),
+                formatDate(endDate))
             ))
         )
         .withCustomContentAndArgs(
@@ -116,15 +116,15 @@ object LoanDetails {
           .withCustomContentAndArgs(
             ("details-genuinely-repaid.heading",
               ("details-genuinely-repaid.heading.range",
-                List(startDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")),
-                  endDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")))
+                List(formatDate(startDate),
+                  formatDate(endDate))
               ))
           )
           .withCustomContentAndArgs(
             ("details-genuinely-repaid.required",
               ("details-genuinely-repaid.required",
-                List(startDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")),
-                  endDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")))
+                List(formatDate(startDate),
+                  formatDate(endDate))
               ))
           )
           .withCustomContentAndArgs(
@@ -139,15 +139,15 @@ object LoanDetails {
         .withCustomContentAndArgs(
           ("details-written-off.heading",
             ("details-written-off.heading.range",
-              List(startDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")),
-                endDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")))
+              List(formatDate(startDate),
+                formatDate(endDate))
             ))
         )
         .withCustomContentAndArgs(
           ("details-written-off.required",
             ("details-written-off.required",
-              List(startDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")),
-                endDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")))
+              List(formatDate(startDate),
+                formatDate(endDate))
             ))
         )
         .withCustomContentAndArgs(

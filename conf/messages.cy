@@ -117,6 +117,7 @@ scheme-stillusingno.heading=Dyddiadau pan gawsoch fenthyciadau o’r cynllun
 scheme-stillusingno.intro=Os nad ydych yn gwybod yr union ddyddiad, nodwch amcan o’r dyddiad.
 scheme-stillusingno._1.heading=Y dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun
 scheme-stillusingno._1.hint=Er enghraifft, 31 3 2015
+scheme-stillusingno.intro=Os nad ydych yn gwybod yr union ddyddiad, nodwch amcan o’r dyddiad.
 
 scheme-stillusingno._2.heading=Y dyddiad y cawsoch eich benthyciad olaf o’r cynllun
 scheme-stillusingno._2.hint=Er enghraifft, 31 3 2015
