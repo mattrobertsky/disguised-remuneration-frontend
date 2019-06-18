@@ -23,7 +23,7 @@ import ltbs.uniform.interpreters.logictable.LogicTableStack
 import org.atnos.eff.FxAppend
 import org.scalatest.{Matchers, WordSpec}
 import uk.gov.hmrc.disguisedremunerationfrontend.data.Scheme._
-import uk.gov.hmrc.disguisedremunerationfrontend.controllers.YesNoDoNotKnow
+import uk.gov.hmrc.disguisedremunerationfrontend.controllers.{YesNoDoNotKnow, YesNoUnknown}
 import cats.implicits._
 import ltbs.uniform.{UniformCore, _}
 import org.atnos.eff.syntax.all._
@@ -41,7 +41,7 @@ class SchemeSpec  extends WordSpec with Matchers {
   val date: LocalDate = java.time.LocalDate.now.minusDays(1) // TODO validation message is wrong here, make now to see
   val employee = Employer("bob", Some("123/ab123"))
   val taxSettlement = TaxSettlement("100")
-  val scheme = Scheme("a", "b".some, "c".some, Scheme.earliestDate, date.some, employee.some, loanRecipient = true, "d".some, taxSettlement.some)
+  val scheme = Scheme("a", "b".some, "c".some, Scheme.earliestDate, date.some, employee.some, loanRecipient = true, "d".some, YesNoUnknown.Yes, taxSettlement.some)
   val yesNoList: List[YesNoDoNotKnow] = List(Yes("y"), No, DoNotKnow)
 
 
