@@ -32,7 +32,7 @@ case class LoanDetails(
   writtenOff: Option[WrittenOff]
 ) {
   // TODO move this to a pimp
-  def toListString = {
+  def toListString: List[String] = {
     List(
       "£" ++ amount.toString,
       genuinelyRepaid.fold("£" ++ "0")(gr => "£" ++ gr.toString),
@@ -40,8 +40,6 @@ case class LoanDetails(
       writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.taxPaid.toString)
     )
   }
-
-
 }
 
 object LoanDetails {
@@ -61,7 +59,7 @@ object LoanDetails {
   : _uniformAsk[Money, ?]
   : _uniformAsk[Option[Money], ?]
   : _uniformAsk[WrittenOff, ?]
-  ](year: Int, scheme: Scheme, default: Option[LoanDetails] = None)(implicit messages: Messages) = {
+  ](year: Int, scheme: Scheme, default: Option[LoanDetails] = None)(implicit messages: Messages): Eff[R, LoanDetails] = {
     val (startDate, endDate) = year.toFinancialYear
     for {
       approved <- ask[YesNoUnknown]("details-hmrc-approved")

@@ -387,7 +387,6 @@ class JourneyController @Inject()(
     implicit request: AuthorisedRequest[AnyContent]
   ): List[(Html, (List[(Html, Html)], Option[(Html, Map[String, List[String]])]))] = {
     def msg(in: String): Html = messages(request)(in)
-
     import HtmlFormat.escape
     state match {
       case JourneyState(Some(aboutYou), schemes, Some(contactDetails)) =>
