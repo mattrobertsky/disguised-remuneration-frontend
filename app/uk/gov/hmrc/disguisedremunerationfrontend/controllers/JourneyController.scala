@@ -269,6 +269,7 @@ class JourneyController @Inject()(
               implicit val hf: HtmlField[Option[String]] = optStringHtml
               implicitly[HtmlForm[Option[Employer]]]
             }, implicitly))
+            .useForm(automatic[Unit, YesNoUnknown])
             .useForm(automatic[Unit, TaxSettlement])
             .useForm(automatic[Unit, YesNoDoNotKnow])
             .useForm(automatic[Unit, Boolean])

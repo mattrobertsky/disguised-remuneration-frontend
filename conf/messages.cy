@@ -24,8 +24,10 @@ landing.loan.arrangement.heading=Rhoi gwybod i ni am drefniadau benthyca a ddefn
 landing.loan.arrangement.info=Weithiau caiff y rhain eu galw’n ‘gynlluniau tâl cuddiedig’.
 landing.loan.arrangement.add-scheme=Ychwanegu cynllun cydnabyddiaeth arall
 landing.loan.taxyear.heading=Nodwch fanylion eich benthyciad fesul blwyddyn dreth
+landing.loan.taxyear.content={0} {1} i {2}
 landing.loan.taxyear.info1=Bydd angen i chi
 landing.loan.taxyear.info2=ychwanegu trefniant benthyciad
+landing.loan.taxyear.info3=cyn gallu rhoi manylion y benthyciad fesul blwyddyn dreth.
 landing.loan.taxyear.info3=cyn gallu rhoi manylion y benthyciad fesul blwyddyn dreth.
 landing.checkdetails.heading=Gwirio’ch atebion ac anfon eich manylion
 landing.sendanswers.link=Gallwch wirio eich atebion ar ôl rhoi’r holl fanylion sydd eu hangen arnom.
@@ -112,6 +114,7 @@ scheme-stillusingyes.intro=Os nad ydych yn gwybod yr union ddyddiad, nodwch amca
 scheme-stillusingyes.hint=Er enghraifft, 31 3 2015
 
 scheme-stillusingno.heading=Dyddiadau pan gawsoch fenthyciadau o’r cynllun
+scheme-stillusingno.intro=Os nad ydych yn gwybod yr union ddyddiad, nodwch amcan o’r dyddiad.
 scheme-stillusingno._1.heading=Y dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun
 scheme-stillusingno._1.hint=Er enghraifft, 31 3 2015
 scheme-stillusingno.intro=Os nad ydych yn gwybod yr union ddyddiad, nodwch amcan o’r dyddiad.
@@ -138,7 +141,9 @@ scheme-recipient.outer.FALSE=Iawn
 scheme-recipientname=Nodwch enw’r sawl yr oedd y benthyciad yn ei enw
 scheme-agreedpayment.heading=A oes rhywun wedi talu, neu wedi cytuno â ni i dalu, unrhyw dreth neu Yswiriant Gwladol sy’n ddyledus ar gyfer y cynllun hwn?
 scheme-agreedpayment.intro=Peidiwch â chynnwys unrhyw daliadau mewn ymateb i Hysbysiad i wneud Taliad Cyflymedig (APN).
-
+scheme-agreedpayment.Yes=Iawn
+scheme-agreedpayment.No=Na
+scheme-agreedpayment.Unknown=Ddim yn gwybod
 scheme-settlementstatus.heading=Faint o dreth ac Yswiriant Gwladol y mae rhywun wedi’u talu, neu wedi cytuno â ni i’w talu, ar gyfer y cynllun hwn?
 scheme-settlementstatus.amount.heading=
 scheme-settlementstatus.amount.hint=Nodwch y cyfanswm.
@@ -148,7 +153,7 @@ scheme-settlementstatus.dateOfSettlement.heading=Date paid
 details-hmrc-approved.heading=Ydy’r benthyciad hwn yn fenthyciad cyfnod penodol cymeradwy?
 details-hmrc-approved.heading.hint=
 details-hmrc-approved.heading.hint.custom=Cynllun: {0}
-details-hmrc-approved.Yes=Lawn
+details-hmrc-approved.Yes=Iawn
 details-hmrc-approved.No=Na
 details-hmrc-approved.Unknown=Ddim yn gwybod
 
@@ -176,6 +181,9 @@ details-written-off-amount.taxPaid.heading=Treth ac Yswiriant Gwladol a dalwyd a
 details-written-off.heading.range=Ydy’r benthyciwr wedi dileu unrhyw ran o’r benthyciad a wnaed o {0} i {1}?
 details-written-off.heading.hint=
 details-written-off.heading.hint.custom=Cynllun: {0}
+details-written-off.Yes=Iawn
+details-written-off.No=Na
+details-written-off.Unknown=Ddim yn gwybod
 
 TRUE=Iawn
 FALSE=Na
@@ -192,6 +200,8 @@ email-address=Cyfeiriad e-bost
 dates-you-received-loans=Dyddiadau pan gawsoch fenthyciadau
 scheme=Cynllun: 
 disclosure-of-tax-avoidance-schemes-dotas-number=Rhif Datgelu Cynlluniau Arbed Treth (DOTAS)
+disclosure-of-tax-avoidance-schemes-dotas-number.Yes=Iawn
+disclosure-of-tax-avoidance-schemes-dotas-number.No=Na
 disclosure-of-tax-avoidance-schemes-dotas-number.Unknown=Ddim yn gwybod
 hmrc-case-reference-number=Cyfeirnod achos CThEM
 employment-status=Statws cyflogaeth
@@ -221,13 +231,13 @@ cya.submit=Derbyn ac anfon y manylion
 
 # Error messages
 there.is.a.problem=Mae problem wedi codi
-confirm.info=Dewiswch os ydych yn cadarnhau bod yr wybodaeth a roddir yn wir ac yn gyflawn
+confirm.info=Dewiswch os ydych yn cadarnhau bod yr wybodaeth a roddwyd yn wir ac yn gywir
 
 # Amdanoch chi
 aboutyou-completedby.required=Dewiswch Iawn os ydych yn llenwi’r ffurflen hon i chi’ch hun
-aboutyou-nino.required=Nodwch rif Yswiriant Gwladol y person
-aboutyou-nino.format=Nodwch rif Yswiriant Gwladol y person yn y fformat cywir
-aboutyou-personalive.required=Dewiswch ‘ydw’ os yw’r person rydych yn gweithredu ar ei ran yn fyw
+aboutyou-nino.required=Nodwch eich rhif Yswiriant Gwladol
+aboutyou-nino.format=Yswiriant Gwladol yn y fformat cywir
+aboutyou-personalive.required=Dewiswch ‘Iawn’ os yw’r person rydych yn gweithredu ar ei ran yn fyw
 aboutyou-employmentstatus.required=Dewiswch a oedd y person a fu farw yn gyflogedig, yn hunangyflogedig, neu’n gyflogedig ac yn hunangyflogedig
 aboutyou-deceasedbefore.required=Dewiswch Iawn os bu farw’r person ar neu cyn 5 Ebrill 2019
 aboutyou-identitya.required=Nodwch rif Yswiriant Gwladol y person
@@ -320,6 +330,7 @@ scheme-employee.char-limit=Mae’n rhaid i enw’r cyflogwr fod yn 50 o gymeriad
 scheme-employee.inner.name.char-limit=Mae’n rhaid i enw’r cyflogwr fod yn 50 o gymeriadau neu lai
 scheme-employee.name-format=Mae’n rhaid i enw’r cyflogwr gynnwys llythrennau a-z, rhifau, collnodau, symbolau ampersand, comas, cysylltnodau, atalnodau llawn, blaenslaesau, cromfachau crwn a bylchau yn unig
 scheme-employee.inner.name.name-format=Mae’n rhaid i enw’r cyflogwr gynnwys llythrennau a-z, rhifau, collnodau, symbolau ampersand, comas, cysylltnodau, atalnodau llawn, blaenslaesau, cromfachau crwn a bylchau yn unig
+scheme-employee.paye.inner.paye-format=Nodwch gyfeirnod TWE y cyflogwr yn y fformat cywir
 
 scheme-recipient.outer.required=Dewiswch Iawn os mai yn eich enw chi oedd y benthyciad
 scheme-recipient.inner.required=Nodwch enw llawn y sawl y gwnaed y benthyciad yn ei enw
@@ -327,11 +338,6 @@ scheme-recipient.char-limit=Mae’n rhaid i enw’r sawl y gwnaed y benthyciad y
 scheme-recipient.inner.char-limit=Mae’n rhaid i enw’r sawl y gwnaed y benthyciad yn ei enw fod yn 50 o gymeriadau neu lai
 scheme-recipient.name-format=Mae’n rhaid i enw’r sawl y gwnaed y benthyciad yn ei enw gynnwys llythrennau a-z, rhifau, collnodau, symbolau ampersand, comas, cysylltnodau, atalnodau llawn, blaenslaesau, cromfachau crwn a bylchau yn unig
 scheme-recipient.inner.name-format=Mae’n rhaid i enw’r sawl y gwnaed y benthyciad yn ei enw gynnwys llythrennau a-z, rhifau, collnodau, symbolau ampersand, comas, cysylltnodau, atalnodau llawn, blaenslaesau, cromfachau crwn a bylchau yn unig
-
-scheme-employee.paye.inner.paye-format=Nodwch gyfeirnod TWE y cyflogwr yn y fformat cywir
-scheme-employeeinner.char-limit=Mae’n rhaid i enw’r cyflogwr fod yn 50 o gymeriadau neu lai
-scheme-employee.char-limit=Mae’n rhaid i enw’r cyflogwr fod yn 50 o gymeriadau neu lai
-scheme-employee.name-format=Employer's name must only include letters a to z, numbers, apostrophes, ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
 
 scheme-agreedpayment.required=Dewiswch Iawn os oes rhywun wedi talu, neu wedi cytuno â ni i dalu, unrhyw dreth neu Yswiriant Gwladol sy’n ddyledus ar gyfer y cynllun hwn
 
