@@ -16,8 +16,12 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend
 
-import java.time.{LocalDateTime, ZoneId}
 import java.time.format.DateTimeFormatter
+import java.time.{LocalDate, LocalDateTime, ZoneId}
+
+import com.ibm.icu.text.SimpleDateFormat
+import com.ibm.icu.util.{TimeZone, ULocale}
+import play.api.i18n.Messages
 
 package object data {
   type Nino = String
@@ -46,11 +50,31 @@ package object data {
     )
   }
 
+  private val zone = "Europe/London"
+
+  private val zoneId: ZoneId = ZoneId.of(zone)
+
+  private val dateFormatPattern = "d MMMM yyyy"
+
   def getDateTime(): String = {
-    val now = LocalDateTime.now(ZoneId.of("Europe/London"))
-    val dateFormat = DateTimeFormatter.ofPattern("d MMMM yyyy")
+    val now = LocalDateTime.now(zoneId)
+    val dateFormat = DateTimeFormatter.ofPattern(dateFormatPattern)
     val timeFormat = DateTimeFormatter.ofPattern("h:mma")
     val dateTime = s"${now.format(dateFormat)} at ${now.format(timeFormat).toLowerCase}"
     dateTime
+  }
+
+  def formatDate(localDate: LocalDate)(implicit messages: Messages):String = {
+    val date = java.util.Date.from(localDate.atStartOfDay(zoneId).toInstant)
+    createDateFormatForPattern(dateFormatPattern).format(date)
+  }
+
+  private def createDateFormatForPattern(pattern: String)(implicit messages: Messages): SimpleDateFormat = {
+    val uLocale = new ULocale(messages.lang.code)
+    val validLang: Boolean = ULocale.getAvailableLocales.contains(uLocale)
+    val locale: ULocale = if (validLang) uLocale else ULocale.getDefault
+    val sdf = new SimpleDateFormat(pattern, locale)
+    sdf.setTimeZone(TimeZone.getTimeZone(zone))
+    sdf
   }
 }

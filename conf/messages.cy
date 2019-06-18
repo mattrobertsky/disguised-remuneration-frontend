@@ -19,7 +19,7 @@ common.done=WEDI GWNEUD
 #Landing Page
 landing.heading=Anfon manylion eich tâl ar fenthyciad
 landing.info=Llenwch bob adran orau y gallwch. Gallwch gadw eich atebion a dod yn ôl yn nes ymlaen i’w gorffen.
-landing.details.title=Nadwch eich manylion
+landing.details.title=Nodwch eich manylion
 landing.loan.arrangement.heading=Rhoi gwybod i ni am drefniadau benthyca a ddefnyddioch
 landing.loan.arrangement.info=Weithiau caiff y rhain eu galw’n ‘gynlluniau tâl cuddiedig’.
 landing.loan.arrangement.add-scheme=Ychwanegu cynllun cydnabyddiaeth arall
@@ -89,14 +89,15 @@ contactdetails-address.town.heading=Tref neu ddinas
 contactdetails-address.county.heading=Sir
 contactdetails-address.postcode.heading=Cod post
 contactdetails-telephoneemail.heading=Beth yw’ch manylion cyswllt?
-contactdetails-telephoneemail.telephone.heading=Rhif ffôn yn y DU
+contactdetails-telephoneemail.telephone.heading=Rhif ffôn
 contactdetails-telephoneemail.email.heading=Cyfeiriad e-bost
 
 #Scheme
 scheme-name.heading=Nodwch enw ar gyfer y cynllun hwn
 scheme-name.hint=Os nad ydych yn gwybod enw’r cynllun, gallwch nodi unrhyw enw yma.
 scheme-dotas.heading=Oes gennych rif Datgelu Cynlluniau Arbed Treth (DOTAS) ar gyfer y cynllun hwn?
-scheme-dotas.Yes.dotas.heading=Nadwch y rhif DOTAS
+scheme-dotas.intro=Gallwch gael y rhif DOTAS oddi wrth hyrwyddwr y cynllun – mae’n ofynnol iddo roi hwn i chi.
+scheme-dotas.Yes.dotas.heading=Nodwch y rhif DOTAS
 scheme-dotas.Yes.dotas.hint=Er enghraifft, 12345678
 scheme-dotas.Yes=Iawn
 scheme-dotas.No=Na
@@ -113,6 +114,7 @@ scheme-stillusingyes.hint=Er enghraifft, 31 3 2015
 scheme-stillusingno.heading=Dyddiadau pan gawsoch fenthyciadau o’r cynllun
 scheme-stillusingno._1.heading=Y dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun
 scheme-stillusingno._1.hint=Er enghraifft, 31 3 2015
+scheme-stillusingno.intro=Os nad ydych yn gwybod yr union ddyddiad, nodwch amcan o’r dyddiad.
 
 scheme-stillusingno._2.heading=Y dyddiad y cawsoch eich benthyciad olaf o’r cynllun
 scheme-stillusingno._2.hint=Er enghraifft, 31 3 2015
@@ -135,9 +137,9 @@ scheme-recipient.outer.TRUE=Na
 scheme-recipient.outer.FALSE=Iawn
 scheme-recipientname=Nodwch enw’r sawl yr oedd y benthyciad yn ei enw
 scheme-agreedpayment.heading=A oes rhywun wedi talu, neu wedi cytuno â ni i dalu, unrhyw dreth neu Yswiriant Gwladol sy’n ddyledus ar gyfer y cynllun hwn?
-scheme-agreedpayment.intro=Peidiwch â chynnwys unrhyw daliadau mewn ymateb i Hysbysiad i wneud Taliad Cyflym (APN).
+scheme-agreedpayment.intro=Peidiwch â chynnwys unrhyw daliadau mewn ymateb i Hysbysiad i wneud Taliad Cyflymedig (APN).
 
-scheme-settlementstatus.heading=Faint o dreth ac Yswiriant Gwladol y mae unrhyw un wedi talu, neu y cytunwyd i dalu, ar gyfer y cynllun hwn?
+scheme-settlementstatus.heading=Faint o dreth ac Yswiriant Gwladol y mae rhywun wedi’u talu, neu wedi cytuno â ni i’w talu, ar gyfer y cynllun hwn?
 scheme-settlementstatus.amount.heading=
 scheme-settlementstatus.amount.hint=Nodwch y cyfanswm.
 scheme-settlementstatus.dateOfSettlement.heading=Date paid
