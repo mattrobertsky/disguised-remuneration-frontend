@@ -24,6 +24,7 @@ landing.loan.arrangement.heading=Tell us about loan arrangements you used
 landing.loan.arrangement.info=These are sometimes called 'disguised remuneration schemes'.
 landing.loan.arrangement.add-scheme=Add another remuneration scheme
 landing.loan.taxyear.heading=Enter your loan details by tax year
+landing.loan.taxyear.content={0} {1} to {2}
 landing.loan.taxyear.info1=You need to
 landing.loan.taxyear.info2=add a loan arrangement
 landing.loan.taxyear.info3=before you can enter the loan details by tax year.

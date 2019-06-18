@@ -24,6 +24,7 @@ landing.loan.arrangement.heading=Rhoi gwybod i ni am drefniadau benthyca a ddefn
 landing.loan.arrangement.info=Weithiau caiff y rhain eu galw’n ‘gynlluniau tâl cuddiedig’.
 landing.loan.arrangement.add-scheme=Ychwanegu cynllun cydnabyddiaeth arall
 landing.loan.taxyear.heading=Nodwch fanylion eich benthyciad fesul blwyddyn dreth
+landing.loan.taxyear.content={0} {1} i {2}
 landing.loan.taxyear.info1=Bydd angen i chi
 landing.loan.taxyear.info2=ychwanegu trefniant benthyciad
 landing.loan.taxyear.info3=cyn gallu rhoi manylion y benthyciad fesul blwyddyn dreth.
