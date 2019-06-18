@@ -20,7 +20,7 @@ import java.time.LocalDate
 
 import ltbs.uniform._
 import org.atnos.eff.{Eff, Fx}
-import uk.gov.hmrc.disguisedremunerationfrontend.controllers.{EmploymentStatus, YesNoDoNotKnow}
+import uk.gov.hmrc.disguisedremunerationfrontend.controllers.{EmploymentStatus, YesNoDoNotKnow, YesNoUnknown}
 import cats.implicits._
 import uk.gov.hmrc.disguisedremunerationfrontend.controllers.YesNoDoNotKnow.Yes
 
@@ -33,6 +33,7 @@ case class Scheme(
   employee: Option[Employer],
   loanRecipient: Boolean,
   loanRecipientName: Option[String],
+  settlementAgreed: YesNoUnknown,
   settlement: Option[TaxSettlement],
   loanDetailsProvided: Map[Year, LoanDetails] = Map.empty
 ) {
@@ -69,10 +70,11 @@ object Scheme {
     case _ => false
   }
 
-  type Stack = Fx.fx8[
+  type Stack = Fx.fx9[
     UniformAsk[String,?],
     UniformAsk[Option[String],?],
     UniformAsk[Boolean,?],
+    UniformAsk[YesNoUnknown,?],
     UniformAsk[TaxSettlement,?],
     UniformAsk[Option[Employer],?],
     UniformAsk[YesNoDoNotKnow,?],
@@ -84,6 +86,7 @@ object Scheme {
     : _uniformCore
     : _uniformAsk[String,?]
     : _uniformAsk[Option[String],?]
+    : _uniformAsk[YesNoUnknown,?]
     : _uniformAsk[TaxSettlement,?]
     : _uniformAsk[Boolean,?]
     : _uniformAsk[Option[Employer],?]
@@ -98,8 +101,8 @@ object Scheme {
         case true => {
           ask[Date]("scheme-stillusingyes")
           .defaultOpt(default.map{_.schemeStart})
-              .validating("year-incorrect", {case x => x.getYear.toString.matches(yearRegex)})
-          .validating(s"date-far-past", isAfterEarliestDate(_))
+          .validating("year-incorrect", x => x.getYear.toString.matches(yearRegex))
+          .validating(s"date-far-past", isAfterEarliestDate)
           .validating("date-in-future", _.isBefore(LocalDate.now()))
             .in[R] }.map{(_, none[Date])}
         case false => ask[(Date, Date)]("scheme-stillusingno")
@@ -112,7 +115,7 @@ object Scheme {
               case _ => true
             }
           )
-          .validating("scheme-stillusingno.same-or-after", startBeforeEnd _)
+          .validating("scheme-stillusingno.same-or-after", startBeforeEnd)
           .in[R].map{ case (k,v) => (k,v.some) }
       }
 
@@ -188,8 +191,8 @@ object Scheme {
                                     }
                                   )
                                   .in[R]
-      taxNIPaid             <-  ask[Boolean]("scheme-agreedpayment")
-                                  .defaultOpt(default.map{_.settlement.isDefined}).in[R]
+      taxNIPaid             <-  ask[YesNoUnknown]("scheme-agreedpayment")
+                                  .defaultOpt(default.map{_.settlementAgreed}).in[R]
 
       settlementStatus      <-  ask[TaxSettlement]("scheme-settlementstatus")
                                   .defaultOpt(
@@ -197,7 +200,7 @@ object Scheme {
                                   ).validating(
                                     "amount-format",
                                      x => x.amount.matches(MoneyRegex)
-                                  ).in[R] when taxNIPaid
+                                  ).in[R] when (taxNIPaid == YesNoUnknown.Yes)
     } yield {
 
       val scheme = Scheme(
@@ -209,6 +212,7 @@ object Scheme {
         employee = employer,
         loanRecipient = recipient.isEmpty,
         loanRecipientName = recipient,
+        settlementAgreed = taxNIPaid,
         settlement = settlementStatus
       )
       scheme

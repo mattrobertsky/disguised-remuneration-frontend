@@ -28,6 +28,7 @@ case class LoanDetails(
   hmrcApproved: YesNoUnknown,
   amount: Money,
   genuinelyRepaid: Option[Money],
+  isWrittenOff: YesNoUnknown,
   writtenOff: Option[WrittenOff]
 ) {
   // TODO move this to a pimp
@@ -133,6 +134,29 @@ object LoanDetails {
               )
             )
           ).in[R]
+      isWrittenOff <- ask[YesNoUnknown]("details-written-off")
+        .defaultOpt(default.map(_.isWrittenOff))
+        .withCustomContentAndArgs(
+          ("details-written-off.heading",
+            ("details-written-off.heading.range",
+              List(startDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")),
+                endDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")))
+            ))
+        )
+        .withCustomContentAndArgs(
+          ("details-written-off.required",
+            ("details-written-off.required",
+              List(startDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")),
+                endDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")))
+            ))
+        )
+        .withCustomContentAndArgs(
+          ("details-written-off.heading.hint",
+            ("details-written-off.heading.hint.custom",
+              List(scheme.name)
+            )
+          )
+        ).in[R]
       writtenOff <- ask[WrittenOff]("details-written-off-amount")
         .defaultOpt(default.flatMap(_.writtenOff))
         //TODO Need a feature to validate both together, right now it is sequential
@@ -157,32 +181,10 @@ object LoanDetails {
               List(scheme.name)
             )
           )
-        ).in[R] when
-        ask[Boolean]("details-written-off")
-          .defaultOpt(default.map(_.writtenOff.isDefined))
-          .withCustomContentAndArgs(
-            ("details-written-off.heading",
-              ("details-written-off.heading.range",
-                List(startDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")),
-                  endDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")))
-              ))
-          )
-          .withCustomContentAndArgs(
-            ("details-written-off.required",
-              ("details-written-off.required",
-                List(startDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")),
-                  endDate.format(DateTimeFormatter.ofPattern("d MMMM YYYY")))
-              ))
-          )
-          .withCustomContentAndArgs(
-            ("details-written-off.heading.hint",
-              ("details-written-off.heading.hint.custom",
-                List(scheme.name)
-              )
-            )
-          ).in[R]
+        ).in[R] when (isWrittenOff == YesNoUnknown.Yes)
+
     } yield {
-      LoanDetails(year, approved, amount, repaid, writtenOff)
+      LoanDetails(year, approved, amount, repaid, isWrittenOff, writtenOff)
     }
   }
 }
