@@ -96,17 +96,39 @@ object Scheme {
   ](default: Option[Scheme]): Eff[R, Scheme] = {
 
     // subjourney for extracting the date range
-    def getSchemeDateRange: Eff[R, (Date,Option[Date])] =
-      ask[Boolean]("scheme-stillusing").defaultOpt(default.map(_.schemeStopped.isEmpty)) >>= {
+    def getSchemeDateRange(schemeName: String): Eff[R, (Date,Option[Date])] =
+      ask[Boolean]("scheme-stillusing")
+        .defaultOpt(default.map(_.schemeStopped.isEmpty))
+        .withCustomContentAndArgs(
+          ("scheme-stillusing.heading.hint",
+            ("scheme-stillusing.heading.hint.custom",
+              List(schemeName)
+            )
+          )
+        ) >>= {
         case true => {
           ask[Date]("scheme-stillusingyes")
           .defaultOpt(default.map{_.schemeStart})
+          .withCustomContentAndArgs(
+            ("scheme-stillusingyes.heading.hint",
+              ("scheme-stillusingyes.heading.hint.custom",
+                List(schemeName)
+              )
+            )
+          )
           .validating("year-incorrect", x => x.getYear.toString.matches(yearRegex))
           .validating(s"date-far-past", isAfterEarliestDate)
           .validating("date-in-future", _.isBefore(LocalDate.now()))
             .in[R] }.map{(_, none[Date])}
         case false => ask[(Date, Date)]("scheme-stillusingno")
           .defaultOpt(default.flatMap{x => x.schemeStopped.map{stop => (x.schemeStart, stop)}})
+          .withCustomContentAndArgs(
+            ("scheme-stillusingno.heading.hint",
+              ("scheme-stillusingno.heading.hint.custom",
+                List(schemeName)
+              )
+            )
+          )
           .validating(
             "year-incorrect",
             {
@@ -133,6 +155,13 @@ object Scheme {
                                   )
       dotasNumber           <-  ask[YesNoDoNotKnow]("scheme-dotas")
                                   .defaultOpt(default.map{x => YesNoDoNotKnow(x.dotasReferenceNumber)})
+                                  .withCustomContentAndArgs(
+                                    ("scheme-dotas.heading.hint",
+                                      ("scheme-dotas.heading.hint.custom",
+                                        List(schemeName)
+                                      )
+                                    )
+                                  )
                                   .validating(
                                     "char-limit",
                                     {
@@ -142,6 +171,13 @@ object Scheme {
                                   )
       schemeReferenceNumber <-  ask[Option[String]]("scheme-refnumber")
                                   .defaultOpt(default.map{_.caseReferenceNumber})
+                                  .withCustomContentAndArgs(
+                                    ("scheme-refnumber.heading.hint",
+                                      ("scheme-refnumber.heading.hint.custom",
+                                        List(schemeName)
+                                      )
+                                    )
+                                  )
                                   .validating(
                                     "limit",
                                     {
@@ -156,26 +192,40 @@ object Scheme {
                                       case _ => true
                                     }
                                   )
-      dateRange             <-  getSchemeDateRange
+      dateRange             <-  getSchemeDateRange(schemeName)
       employer              <-  ask[Option[Employer]]("scheme-employee")
-                                    .defaultOpt(default.map{x => x.employee})
-                                    .validating(
-                                      "char-limit",
-                                      {
-                                        case Some(employer) => employer.name.length <= maxNameLength
-                                        case _ => true
-                                      }
+                                  .defaultOpt(default.map{x => x.employee})
+                                  .withCustomContentAndArgs(
+                                    ("scheme-employee.heading.hint",
+                                      ("scheme-employee.heading.hint.custom",
+                                        List(schemeName)
+                                      )
                                     )
-                                    .validating(
-                                      "name-format",
-                                      {
-                                        case Some(employer) => employer.name.matches(nameRegex)
-                                        case _ => true
-                                      }
-                                    )
-                                    .in[R]
+                                  )
+                                  .validating(
+                                    "char-limit",
+                                    {
+                                      case Some(employer) => employer.name.length <= maxNameLength
+                                      case _ => true
+                                    }
+                                  )
+                                  .validating(
+                                    "name-format",
+                                    {
+                                      case Some(employer) => employer.name.matches(nameRegex)
+                                      case _ => true
+                                    }
+                                  )
+                                  .in[R]
       recipient             <-  ask[Option[String]]("scheme-recipient")
-                                .defaultOpt(default.map{_.loanRecipientName})
+                                  .defaultOpt(default.map{_.loanRecipientName})
+                                  .withCustomContentAndArgs(
+                                    ("scheme-recipient.heading.hint",
+                                      ("scheme-recipient.heading.hint.custom",
+                                        List(schemeName)
+                                      )
+                                    )
+                                  )
                                   .validating(
                                     "char-limit",
                                     {
@@ -192,15 +242,31 @@ object Scheme {
                                   )
                                   .in[R]
       taxNIPaid             <-  ask[YesNoUnknown]("scheme-agreedpayment")
-                                  .defaultOpt(default.map{_.settlementAgreed}).in[R]
-
+                                  .defaultOpt(default.map{_.settlementAgreed})
+                                  .withCustomContentAndArgs(
+                                    ("scheme-agreedpayment.heading.hint",
+                                      ("scheme-agreedpayment.heading.hint.custom",
+                                        List(schemeName)
+                                      )
+                                    )
+                                  )
+                                  .in[R]
       settlementStatus      <-  ask[TaxSettlement]("scheme-settlementstatus")
                                   .defaultOpt(
                                     default.flatMap{_.settlement}
-                                  ).validating(
+                                  )
+                                  .withCustomContentAndArgs(
+                                    ("scheme-settlementstatus.heading.hint",
+                                      ("scheme-settlementstatus.heading.hint.custom",
+                                        List(schemeName)
+                                      )
+                                    )
+                                  )
+                                  .validating(
                                     "amount-format",
                                      x => x.amount.matches(MoneyRegex)
-                                  ).in[R] when (taxNIPaid == YesNoUnknown.Yes)
+                                  )
+                                  .in[R] when (taxNIPaid == YesNoUnknown.Yes)
     } yield {
 
       val scheme = Scheme(
