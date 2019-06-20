@@ -478,7 +478,10 @@ class JourneyController @Inject()(
           makeAudit(java.util.UUID.randomUUID().toString, username, state)
           clearState
           Logger.info(s"submission details sent to splunk")
-          val contents = views.html.confirmation(formatDate(LocalDate.now()), LocalDateTime.now(ZoneId.of("Europe/London")).format(DateTimeFormatter.ofPattern("h:mma")).toLowerCase)
+          val contents = views.html.confirmation(
+            formatDate(LocalDate.now()),
+            LocalDateTime.now(ZoneId.of("Europe/London")).format(DateTimeFormatter.ofPattern("h:mma")).toLowerCase
+          )
           Ok(views.html.main_template(
             title = s"${m("confirm.title")} - ${m("common.title")}")
           (contents))
