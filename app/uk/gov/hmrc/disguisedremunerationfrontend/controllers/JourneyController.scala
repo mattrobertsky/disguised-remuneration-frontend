@@ -16,11 +16,13 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 
-import java.time.LocalDate
+import java.time.{LocalDate, LocalDateTime, ZoneId}
+import java.time.format.DateTimeFormatter
 
 import cats.implicits._
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import javax.inject.{Inject, Singleton}
+
 import ltbs.uniform._
 import ltbs.uniform.interpreters.playframework._
 import ltbs.uniform.web.InferParser._
@@ -476,7 +478,7 @@ class JourneyController @Inject()(
           makeAudit(java.util.UUID.randomUUID().toString, username, state)
           clearState
           Logger.info(s"submission details sent to splunk")
-          val contents = views.html.confirmation(getDateTime())
+          val contents = views.html.confirmation(formatDate(LocalDate.now()), LocalDateTime.now(ZoneId.of("Europe/London")).format(DateTimeFormatter.ofPattern("h:mma")).toLowerCase)
           Ok(views.html.main_template(
             title = s"${m("confirm.title")} - ${m("common.title")}")
           (contents))

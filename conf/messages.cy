@@ -256,7 +256,7 @@ confirm.info=Dewiswch os ydych yn cadarnhau bod yr wybodaeth a roddwyd yn wir ac
 # Amdanoch chi
 about-you.required=Dewiswch Iawn os ydych yn llenwi’r ffurflen hon i chi’ch hun
 your-ni-no.required=Nodwch eich rhif Yswiriant Gwladol
-your-ni-no.format=Yswiriant Gwladol yn y fformat cywir
+your-ni-no.format=Nodwch eich rhif Yswiriant Gwladol yn y fformat cywir
 user-deceased.required=Dewiswch ‘Iawn’ os yw’r person rydych yn gweithredu ar ei ran yn fyw
 was-user-self-employed.required=Dewiswch a oedd y person a fu farw yn gyflogedig, yn hunangyflogedig, neu’n gyflogedig ac yn hunangyflogedig
 aboutyou-deceasedbefore.required=Dewiswch Iawn os bu farw’r person ar neu cyn 5 Ebrill 2019
@@ -373,7 +373,7 @@ fixed-term-loan.required=Dewiswch Iawn os oedd y benthyciad yn un cyfnod penodol
 loan-amount.required=Nodwch gyfanswm y benthyciad o {0} i {1}
 loan-amount.nonnumericformat=Mae’n rhaid i’r swm rydych wedi'i ad-dalu fod yn swm o arian, megis 123.45 neu 150
 loan-amount.format=Mae’n rhaid i gyfanswm y benthyciad fod yn swm o arian, megis 123.45 neu 150
-repaid-any-loan-during-tax-year.required=Dewiswch Iawn os ydych wedi ad-dalu rhywfaint o’r benthyciad o {0} i {1}
+repaid-any-loan-during-tax-year.required=Dewiswch Iawn os ydych wedi ad-dalu unrhyw ran o’r benthyciad a wnaed o {0} i {1}
 loan-repaid.required=Nodwch faint o’r benthyciad y gwnaethoch ei ad-dalu
 loan-repaid.format=Mae’n rhaid i’r swm rydych wedi'i ad-dalu fod yn swm o arian, megis 123.45 neu 150
 
@@ -387,7 +387,7 @@ written-off-amount.taxPaid.tax-format=Mae’n rhaid i swm y dreth neu Yswiriant 
 
 # Confirmation
 confirmation.heading=Manylion tâl ar fenthyciad wedi dod i law
-confirmation.detail=Cawsom y manylion y gwnaethoch eu hanfon ar
+confirmation.detail=Cawsom y manylion y gwnaethoch eu hanfon ar {0} am {1}
 confirmation.h2=Yr hyn sy’n digwydd nesaf
 confirmation.p1=Byddwn yn gwirio’r manylion y gwnaethoch eu hanfon i weld a ydynt yn cyd-fynd â’n cofnodion.
 confirmation.p2=Byddwn yn cysylltu â chi os bydd angen rhagor o wybodaeth arnom.
