@@ -97,21 +97,21 @@ object Scheme {
 
     // subjourney for extracting the date range
     def getSchemeDateRange(schemeName: String): Eff[R, (Date,Option[Date])] =
-      ask[Boolean]("scheme-stillusing")
+      ask[Boolean]("still-using-the-scheme")
         .defaultOpt(default.map(_.schemeStopped.isEmpty))
         .withCustomContentAndArgs(
-          ("scheme-stillusing.heading.hint",
-            ("scheme-stillusing.heading.hint.custom",
+          ("still-using-the-scheme.heading.hint",
+            ("still-using-the-scheme.heading.hint.custom",
               List(schemeName)
             )
           )
         ) >>= {
         case true => {
-          ask[Date]("scheme-stillusingyes")
+          ask[Date]("still-using-the-scheme-yes")
           .defaultOpt(default.map{_.schemeStart})
           .withCustomContentAndArgs(
-            ("scheme-stillusingyes.heading.hint",
-              ("scheme-stillusingyes.heading.hint.custom",
+            ("still-using-the-scheme-yes.heading.hint",
+              ("still-using-the-scheme-yes.heading.hint.custom",
                 List(schemeName)
               )
             )
@@ -120,11 +120,11 @@ object Scheme {
           .validating(s"date-far-past", isAfterEarliestDate)
           .validating("date-in-future", _.isBefore(LocalDate.now()))
             .in[R] }.map{(_, none[Date])}
-        case false => ask[(Date, Date)]("scheme-stillusingno")
+        case false => ask[(Date, Date)]("still-using-the-scheme-no")
           .defaultOpt(default.flatMap{x => x.schemeStopped.map{stop => (x.schemeStart, stop)}})
           .withCustomContentAndArgs(
-            ("scheme-stillusingno.heading.hint",
-              ("scheme-stillusingno.heading.hint.custom",
+            ("still-using-the-scheme-no.heading.hint",
+              ("still-using-the-scheme-no.heading.hint.custom",
                 List(schemeName)
               )
             )
@@ -137,7 +137,7 @@ object Scheme {
               case _ => true
             }
           )
-          .validating("scheme-stillusingno.same-or-after", startBeforeEnd)
+          .validating("still-using-the-scheme-no.same-or-after", startBeforeEnd)
           .in[R].map{ case (k,v) => (k,v.some) }
       }
 
@@ -153,11 +153,11 @@ object Scheme {
                                     "invalid-name",
                                     name => name.matches(nameRegex)
                                   )
-      dotasNumber           <-  ask[YesNoDoNotKnow]("scheme-dotas")
+      dotasNumber           <-  ask[YesNoDoNotKnow]("dotas-number")
                                   .defaultOpt(default.map{x => YesNoDoNotKnow(x.dotasReferenceNumber)})
                                   .withCustomContentAndArgs(
-                                    ("scheme-dotas.heading.hint",
-                                      ("scheme-dotas.heading.hint.custom",
+                                    ("dotas-number.heading.hint",
+                                      ("dotas-number.heading.hint.custom",
                                         List(schemeName)
                                       )
                                     )
@@ -169,11 +169,11 @@ object Scheme {
                                       case _ => true
                                     }
                                   )
-      schemeReferenceNumber <-  ask[Option[String]]("scheme-refnumber")
+      schemeReferenceNumber <-  ask[Option[String]]("case-reference-number")
                                   .defaultOpt(default.map{_.caseReferenceNumber})
                                   .withCustomContentAndArgs(
-                                    ("scheme-refnumber.heading.hint",
-                                      ("scheme-refnumber.heading.hint.custom",
+                                    ("case-reference-number.heading.hint",
+                                      ("case-reference-number.heading.hint.custom",
                                         List(schemeName)
                                       )
                                     )
@@ -193,11 +193,11 @@ object Scheme {
                                     }
                                   )
       dateRange             <-  getSchemeDateRange(schemeName)
-      employer              <-  ask[Option[Employer]]("scheme-employee")
+      employer              <-  ask[Option[Employer]]("user-employed")
                                   .defaultOpt(default.map{x => x.employee})
                                   .withCustomContentAndArgs(
-                                    ("scheme-employee.heading.hint",
-                                      ("scheme-employee.heading.hint.custom",
+                                    ("user-employed.heading.hint",
+                                      ("user-employed.heading.hint.custom",
                                         List(schemeName)
                                       )
                                     )
@@ -217,11 +217,11 @@ object Scheme {
                                     }
                                   )
                                   .in[R]
-      recipient             <-  ask[Option[String]]("scheme-recipient")
+      recipient             <-  ask[Option[String]]("about-loan")
                                   .defaultOpt(default.map{_.loanRecipientName})
                                   .withCustomContentAndArgs(
-                                    ("scheme-recipient.heading.hint",
-                                      ("scheme-recipient.heading.hint.custom",
+                                    ("about-loan.heading.hint",
+                                      ("about-loan.heading.hint.custom",
                                         List(schemeName)
                                       )
                                     )
@@ -241,23 +241,23 @@ object Scheme {
                                     }
                                   )
                                   .in[R]
-      taxNIPaid             <-  ask[YesNoUnknown]("scheme-agreedpayment")
+      taxNIPaid             <-  ask[YesNoUnknown]("tax-settled")
                                   .defaultOpt(default.map{_.settlementAgreed})
                                   .withCustomContentAndArgs(
-                                    ("scheme-agreedpayment.heading.hint",
-                                      ("scheme-agreedpayment.heading.hint.custom",
+                                    ("tax-settled.heading.hint",
+                                      ("tax-settled.heading.hint.custom",
                                         List(schemeName)
                                       )
                                     )
                                   )
                                   .in[R]
-      settlementStatus      <-  ask[TaxSettlement]("scheme-settlementstatus")
+      settlementStatus      <-  ask[TaxSettlement]("add-settlement")
                                   .defaultOpt(
                                     default.flatMap{_.settlement}
                                   )
                                   .withCustomContentAndArgs(
-                                    ("scheme-settlementstatus.heading.hint",
-                                      ("scheme-settlementstatus.heading.hint.custom",
+                                    ("add-settlement.heading.hint",
+                                      ("add-settlement.heading.hint.custom",
                                         List(schemeName)
                                       )
                                     )

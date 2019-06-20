@@ -256,7 +256,7 @@ class JourneyController @Inject()(
           program = Scheme.program[FxAppend[Stack, PlayStack]](default)
             .useForm(automatic[Unit, String])
             .useFormMap{
-              case List("scheme-recipient") => {
+              case List("about-loan") => {
                 implicit val rev: HtmlField[Option[String]] = optionReversed[String]
                 automatic[Unit, Option[String]]
               }
@@ -353,7 +353,7 @@ class JourneyController @Inject()(
         runWeb(
           program = AboutYou.program[FxAppend[Stack, PlayStack]](state.aboutYou, request.nino, request.utr)
             .useFormMap {
-              case List("aboutyou-completedby") => customBool
+              case List("about-you") => customBool
               case _ => automatic[Unit, Boolean]
             }
             .useForm(automatic[Unit, Either[Nino, Utr]])

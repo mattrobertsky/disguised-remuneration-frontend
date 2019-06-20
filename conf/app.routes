@@ -3,6 +3,7 @@
 GET        /assets/*file            controllers.Assets.versioned(path="/public", file: Asset)
 
 GET        /                         uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.index
+GET        /task-list                uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.index
 
 GET        /sign-in                  uk.gov.hmrc.disguisedremunerationfrontend.controllers.AuthenticationController.signIn()
 GET        /sign-out                 uk.gov.hmrc.disguisedremunerationfrontend.controllers.AuthenticationController.signOut()
@@ -36,7 +37,7 @@ GET        /scheme/:schemeIndex/details/:year/:id	uk.gov.hmrc.disguisedremunerat
 POST       /scheme/:schemeIndex/details/:year/		uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.loanDetails(schemeIndex: Int, year: Int, id = "")
 POST       /scheme/:schemeIndex/details/:year/:id	uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.loanDetails(schemeIndex: Int, year: Int, id: String)
 
-GET        /submit                   uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.cya
-POST       /submit                   uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.cyaPost
+GET        /check-your-answers       uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.cya
+POST       /complete                 uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.cyaPost
 
-GET     /language/:lang       uk.gov.hmrc.disguisedremunerationfrontend.controllers.LanguageSwitchController.switchToLanguage(lang: String)
+GET        /language/:lang           uk.gov.hmrc.disguisedremunerationfrontend.controllers.LanguageSwitchController.switchToLanguage(lang: String)

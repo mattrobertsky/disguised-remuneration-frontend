@@ -43,8 +43,8 @@ class AboutYouSpec extends WordSpec with Matchers {
       val allJourneys = program[FxAppend[Stack, LogicTableStack]](None, Some(validNino), None)
         .evalState(UniformCore())
         .giveExamples{
-          case "aboutyou-completedby" => List(true, false)
-          case "aboutyou-personalive" => List(true)
+          case "about-you" => List(true, false)
+          case "user-deceased" => List(true)
           case "aboutyou-deceasedbefore" => List(false)
           case _ => List(true,false)
         }
@@ -88,8 +88,8 @@ class AboutYouSpec extends WordSpec with Matchers {
       val allJourneys = program[FxAppend[Stack, LogicTableStack]](None, Some(validNino), None)
         .evalState(UniformCore())
         .giveExamples{
-          case "aboutyou-completedby" => List(true)
-          case "aboutyou-personalive" => List(false)
+          case "about-you" => List(true)
+          case "user-deceased" => List(false)
           case "aboutyou-deceasedbefore" => List(true)
         }
         .giveExamples(List("a","b","c"))

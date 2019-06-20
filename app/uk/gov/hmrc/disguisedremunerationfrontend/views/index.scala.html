@@ -20,8 +20,8 @@
 
 @tasklist(
     messages("landing.details.title") -> Right(List(
-        (messages("landing.aboutyou.link").toString(), Some("about-you/aboutyou-completedby"), None, Some(state.aboutYou.isDefined)),
-        (messages("landing.contactdetails.link").toString(), Some("contact-details/contactdetails-address"), None, Some(state.contactDetails.isDefined))
+        (messages("landing.aboutyou.link").toString(), Some("about-you/about-you"), None, Some(state.aboutYou.isDefined)),
+        (messages("landing.contactdetails.link").toString(), Some("contact-details/confirm-contact-details"), None, Some(state.contactDetails.isDefined))
     )),
     messages("landing.loan.arrangement.heading") -> {
         if (state.schemes.isEmpty) {
@@ -50,7 +50,7 @@
     messages("landing.loan.taxyear.heading") -> {
 	val details = state.schemes.zipWithIndex.flatMap{ case (scheme,schemeIndex) =>
 	    scheme.loanDetails.map { case (year, optDetails) =>
-		(s"${messages("landing.loan.taxyear.content", scheme.name, year.toString, (year+1).toString)}", Some(s"scheme/$schemeIndex/details/$year/details-hmrc-approved"), None, Some(optDetails.isDefined))
+		(s"${messages("landing.loan.taxyear.content", scheme.name, year.toString, (year+1).toString)}", Some(s"scheme/$schemeIndex/details/$year/fixed-term-loan"), None, Some(optDetails.isDefined))
 	    }
 	}.sortBy(_._1)
 	if (details.isEmpty) Left {
@@ -60,7 +60,7 @@
                         messages("landing.checkdetails.heading") ->
                           {if(state.readyToSubmit) {
                             Right(List(
-                              (s"""${messages("landing.checkdetails.heading")}""", Some("submit"), None , Some(false))
+                              (s"""${messages("landing.checkdetails.heading")}""", Some("check-your-answers"), None , Some(false))
                             ))
                           } else {
                             Left{ messages("landing.sendanswers.link") }

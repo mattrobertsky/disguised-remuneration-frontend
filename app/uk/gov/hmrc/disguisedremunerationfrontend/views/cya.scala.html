@@ -102,7 +102,7 @@
 </div>
 
     <div>
-    @helper.form(action = play.api.mvc.Call("post", "submit")) {
+    @helper.form(action = play.api.mvc.Call("post", "complete")) {
         @helper.CSRF.formField
         <div class="form-group">
             <fieldset aria-describedby="waste-hint">
@@ -123,7 +123,7 @@
                 }
             </fieldset>
         </div>
-        <button type="submit" class="button">@messages("cya.submit")</button>
+        <button type="submit" class="button">@messages("cya.complete")</button>
     </div>
     }
 </div>

@@ -45,7 +45,7 @@ object ContactDetails {
       : _uniformAsk[TelAndEmail, ?]
   ](default: Option[ContactDetails]): Eff[R, ContactDetails] = {
     for {
-      address <- ask[Address]("contactdetails-address")
+      address <- ask[Address]("confirm-contact-details")
         .defaultOpt(default.map(_.address))
         .validating(
           "street-limit",
@@ -79,7 +79,7 @@ object ContactDetails {
           "postcode-format",
           address => address.postcode.matches(postCodeRegex)
         )
-      telAndEmail <- ask[TelAndEmail]("contactdetails-telephoneemail")
+      telAndEmail <- ask[TelAndEmail]("confirm-contact-prefs")
         .defaultOpt(default.map(_.telephoneAndEmail))
         .validating(
           "phone-limit",

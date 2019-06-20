@@ -74,9 +74,9 @@ object AboutYou {
 
     def aboutAnotherProgram(localDefault: Option[AboutAnother]): Eff[R, Either[Error,AboutYou]] =
       for {
-        alive            <- ask[Boolean]("aboutyou-personalive")
+        alive            <- ask[Boolean]("user-deceased")
                               .defaultOpt(localDefault.map(_.alive))
-        employmentStatus <- ask[EmploymentStatus]("aboutyou-employmentstatus")
+        employmentStatus <- ask[EmploymentStatus]("was-user-self-employed")
                               .defaultOpt(localDefault.flatMap(_.employmentStatus))
                               .in[R] when !alive
         deceasedBefore   <- ask[Boolean]("aboutyou-deceasedbefore")
@@ -86,7 +86,7 @@ object AboutYou {
           tell[Unit]("aboutyou-noloancharge")(()).in[R] >> Eff.pure(Left(NoNeedToComplete))
         } else {
           for {
-            id <- ask[Either[Nino,Utr]]("aboutyou-identity")
+            id <- ask[Either[Nino,Utr]]("about-scheme-user")
               .defaultOpt(localDefault.map(_.identification))
               .validating(
                 "nino-format", {
@@ -101,7 +101,7 @@ object AboutYou {
                 }
               )
               .in[R]
-            personName <- ask[String]("aboutyou-confirmation")
+            personName <- ask[String]("confirm-about-scheme-user")
             .defaultOpt(localDefault.map(_.actingFor))
             .in[R]
           } yield Right(AboutAnother(
@@ -117,7 +117,7 @@ object AboutYou {
     def aboutSelfProgram(default: Option[AboutSelf]): Eff[R, Either[Error,AboutYou]] = {
       val i: Eff[R, String] = nino match {
         case Some(n) => Eff.pure(n)
-        case None    => ask[Nino]("aboutyou-nino")
+        case None    => ask[Nino]("your-ni-no")
           .defaultOpt(default.map{_.nino})
           .validating(
             "format",
@@ -127,7 +127,7 @@ object AboutYou {
       i.map{x => AboutSelf(x).asRight[Error]}
     }
 
-    ask[Boolean]("aboutyou-completedby")
+    ask[Boolean]("about-you")
       .defaultOpt(default.map{_.isInstanceOf[AboutAnother]}) >>= {
         if (_) aboutAnotherProgram(
           default.collect{case x: AboutAnother => x}

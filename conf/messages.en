@@ -36,25 +36,25 @@ landing.loanarrangement.info=These are sometimes called ‘disguised remuneratio
 landing.loanarrangement.link=Add, change or remove a loan arrangement
 
 #About you
-aboutyou-completedby.heading=Are you filling in this form for yourself?
-aboutyou-completedby.FALSE=Yes, for myself
-aboutyou-completedby.TRUE=No, for someone else
-aboutyou-nino.heading=What is your National Insurance number?
-aboutyou-nino.hint=It’s on your National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’.
-aboutyou-personalive.heading=Is the person you are acting for alive?
-aboutyou-identity.heading=How do you want to confirm the identity of the person you are acting for?
-aboutyou-identity.Left=The person’s National Insurance number
-aboutyou-identity.Left.hint=This will be on their National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’
-aboutyou-identity.Left.a.heading=Enter their National Insurance number
-aboutyou-identity.Left.a.label=Enter their National Insurance number
-aboutyou-identity.Right=The person’s Self Assessment Unique Taxpayer Reference (UTR)
-aboutyou-identity.Right.hint=This is 10 numbers like 12345 67890. It will be on tax returns and other letters about Self Assessment. It may be called ‘reference’, ‘UTR’ or ‘official use’. <a target=_blank href="https://www.gov.uk/find-lost-utr-number">Find a lost UTR (opens in a new window or tab)</a>.
-aboutyou-identity.Right.b.heading=Enter their Self Assessment UTR
-aboutyou-identity.Right.label=Enter their Self Assessment UTR
-aboutyou-employmentstatus.heading=Was the deceased person employed or self-employed when they had the loan?
-aboutyou-employmentstatus.Employed=Employed
-aboutyou-employmentstatus.SelfEmployed=Self-employed
-aboutyou-employmentstatus.Both=Both employed and self-employed
+about-you.heading=Are you filling in this form for yourself?
+about-you.FALSE=Yes, for myself
+about-you.TRUE=No, for someone else
+your-ni-no.heading=What is your National Insurance number?
+your-ni-no.hint=It’s on your National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’.
+user-deceased.heading=Is the person you are acting for alive?
+about-scheme-user.heading=How do you want to confirm the identity of the person you are acting for?
+about-scheme-user.Left=The person’s National Insurance number
+about-scheme-user.Left.hint=This will be on their National Insurance card, benefit letter, payslip or P60. For example, ‘QQ 12 34 56 C’
+about-scheme-user.Left.a.heading=Enter their National Insurance number
+about-scheme-user.Left.a.label=Enter their National Insurance number
+about-scheme-user.Right=The person’s Self Assessment Unique Taxpayer Reference (UTR)
+about-scheme-user.Right.hint=This is 10 numbers like 12345 67890. It will be on tax returns and other letters about Self Assessment. It may be called ‘reference’, ‘UTR’ or ‘official use’. <a target=_blank href="https://www.gov.uk/find-lost-utr-number">Find a lost UTR (opens in a new window or tab)</a>.
+about-scheme-user.Right.b.heading=Enter their Self Assessment UTR
+about-scheme-user.Right.label=Enter their Self Assessment UTR
+was-user-self-employed.heading=Was the deceased person employed or self-employed when they had the loan?
+was-user-self-employed.Employed=Employed
+was-user-self-employed.SelfEmployed=Self-employed
+was-user-self-employed.Both=Both employed and self-employed
 aboutyou-deceasedbefore.heading=Did the deceased person die on or before 5 April 2019?
 aboutyou-noloancharge.heading=You do not need to send any loan charge details
 aboutyou-noloancharge.intro=Based on your answers, you do not need to send any loan charge details.
@@ -63,137 +63,137 @@ aboutyou-noloancharge.list=was employed when they had the loan
 aboutyou-noloancharge.list.1=has died on or before 5 April 2019
 aboutyou-noloancharge.outro=If this is not right, you need to <a class="govuk-link" href="/">go back and change your answers<a/>.
 aboutyou-noloancharge.save-continue=Finish and sign out
-#aboutyou-confirmation.heading=Is this the person you are acting for?
-aboutyou-confirmation.heading=What is the full name of the person you are acting for?
-aboutyou-confirmation.TRUE=Yes - this is the correct person
-aboutyou-confirmation.FALSE=No - I need to start over again
+#confirm-about-scheme-user.heading=Is this the person you are acting for?
+confirm-about-scheme-user.heading=What is the full name of the person you are acting for?
+confirm-about-scheme-user.TRUE=Yes - this is the correct person
+confirm-about-scheme-user.FALSE=No - I need to start over again
 
 #Contact details
 
-contactdetails-address.heading=What is your address?
-contactdetails-address.intro=We will only use these details to contact you about your case.
-contactdetails-address.line1.heading=Building or street
-contactdetails-address.line2.heading=
-contactdetails-address.town.heading=Town or city
-contactdetails-address.county.heading=County
-contactdetails-address.postcode.heading=Postcode
-contactdetails-telephoneemail.heading=What are your contact details?
-contactdetails-telephoneemail.intro=We will only use these details to contact you about your case.
-contactdetails-telephoneemail.telephone.heading=Telephone number
-contactdetails-telephoneemail.email.heading=Email address
+confirm-contact-details.heading=What is your address?
+confirm-contact-details.intro=We will only use these details to contact you about your case.
+confirm-contact-details.line1.heading=Building or street
+confirm-contact-details.line2.heading=
+confirm-contact-details.town.heading=Town or city
+confirm-contact-details.county.heading=County
+confirm-contact-details.postcode.heading=Postcode
+confirm-contact-prefs.heading=What are your contact details?
+confirm-contact-prefs.intro=We will only use these details to contact you about your case.
+confirm-contact-prefs.telephone.heading=Telephone number
+confirm-contact-prefs.email.heading=Email address
 
 #Scheme
 scheme-name.heading=Enter a name for this scheme
 scheme-name.hint=If you do not know the scheme’s name, you can enter any name here.
-scheme-dotas.heading=Do you have a Disclosure of Tax Avoidance Schemes (DOTAS) number for this scheme?
-scheme-dotas.intro=You can get the DOTAS number from the promoter of the scheme - they are required to tell you.
-scheme-dotas.Yes.dotas.heading=Enter the DOTAS number
-scheme-dotas.heading.hint=
-scheme-dotas.heading.hint.custom=Scheme: {0}
-scheme-dotas.Yes.dotas.hint=For example, 12345678
-scheme-dotas.Yes=Yes
-scheme-dotas.No=No
-scheme-dotas.DoNotKnow=Do not know
-#scheme-dotas.true.hint=For example, 12345678
-scheme-refnumber.heading=Do you have an HMRC case reference number for this scheme?
-scheme-refnumber.heading.hint=
-scheme-refnumber.heading.hint.custom=Scheme: {0}
-scheme-refnumber.inner.string.heading=Enter the HMRC case reference number
-scheme-refnumber.inner.string.hint=This usually begins with ‘CFS’ or ‘CFSS’.
+dotas-number.heading=Do you have a Disclosure of Tax Avoidance Schemes (DOTAS) number for this scheme?
+dotas-number.intro=You can get the DOTAS number from the promoter of the scheme - they are required to tell you.
+dotas-number.Yes.dotas.heading=Enter the DOTAS number
+dotas-number.heading.hint=
+dotas-number.heading.hint.custom=Scheme: {0}
+dotas-number.Yes.dotas.hint=For example, 12345678
+dotas-number.Yes=Yes
+dotas-number.No=No
+dotas-number.DoNotKnow=Do not know
+#dotas-number.true.hint=For example, 12345678
+case-reference-number.heading=Do you have an HMRC case reference number for this scheme?
+case-reference-number.heading.hint=
+case-reference-number.heading.hint.custom=Scheme: {0}
+case-reference-number.inner.string.heading=Enter the HMRC case reference number
+case-reference-number.inner.string.hint=This usually begins with ‘CFS’ or ‘CFSS’.
 
-scheme-stillusing.heading=Are you still receiving loan payments through the scheme?
-scheme-stillusing.heading.hint=
-scheme-stillusing.heading.hint.custom=Scheme: {0}
-scheme-stillusingyes.heading=When did you first receive a loan from the scheme?
-scheme-stillusingyes.heading.hint=
-scheme-stillusingyes.heading.hint.custom=Scheme: {0}
-scheme-stillusingyes.intro=If you do not know the exact date, enter an estimated date.
-scheme-stillusingyes.hint=For example, 31 3 2015
+still-using-the-scheme.heading=Are you still receiving loan payments through the scheme?
+still-using-the-scheme.heading.hint=
+still-using-the-scheme.heading.hint.custom=Scheme: {0}
+still-using-the-scheme-yes.heading=When did you first receive a loan from the scheme?
+still-using-the-scheme-yes.heading.hint=
+still-using-the-scheme-yes.heading.hint.custom=Scheme: {0}
+still-using-the-scheme-yes.intro=If you do not know the exact date, enter an estimated date.
+still-using-the-scheme-yes.hint=For example, 31 3 2015
 
-scheme-stillusingno.heading=Dates when you received loans from the scheme
-scheme-stillusingno.heading.hint=
-scheme-stillusingno.heading.hint.custom=Scheme: {0}
-scheme-stillusingno.intro=If you do not know the exact date, enter an estimated date.
-scheme-stillusingno._1.heading=Date you received your first loan from the scheme
-scheme-stillusingno._1.hint=For example, 31 3 2015
+still-using-the-scheme-no.heading=Dates when you received loans from the scheme
+still-using-the-scheme-no.heading.hint=
+still-using-the-scheme-no.heading.hint.custom=Scheme: {0}
+still-using-the-scheme-no.intro=If you do not know the exact date, enter an estimated date.
+still-using-the-scheme-no._1.heading=Date you received your first loan from the scheme
+still-using-the-scheme-no._1.hint=For example, 31 3 2015
 
-scheme-stillusingno._2.heading=Date you received your last loan from the scheme
-scheme-stillusingno._2.hint=For example, 31 3 2015
+still-using-the-scheme-no._2.heading=Date you received your last loan from the scheme
+still-using-the-scheme-no._2.hint=For example, 31 3 2015
 scheme-dates.p1=If you do not know the exact date, enter an estimated date.
 scheme-dates.start=Start date
 scheme-dates.end=End date
 scheme-dates.hint=For example, 31 3 2015
-scheme-employee.heading=Were you an employee while you were using the scheme?
-scheme-employee.heading.hint=
-scheme-employee.heading.hint.custom=Scheme: {0}
-scheme-employee.inner.name.heading=Your employer’s name
-scheme-employee.inner.paye.heading=Employer PAYE reference (optional)
-scheme-employee.inner.paye.hint=This is a 3 digit tax office number, a forward slash, and a tax office employer reference, like '123/AB456. It may be called 'Employer PAYE Reference' or 'PAYE reference'. It will be on your P60.
-scheme-employee.intro=If you were a director and an employee of your own company, answer ‘Yes’.
+user-employed.heading=Were you an employee while you were using the scheme?
+user-employed.heading.hint=
+user-employed.heading.hint.custom=Scheme: {0}
+user-employed.inner.name.heading=Your employer’s name
+user-employed.inner.paye.heading=Employer PAYE reference (optional)
+user-employed.inner.paye.hint=This is a 3 digit tax office number, a forward slash, and a tax office employer reference, like '123/AB456. It may be called 'Employer PAYE Reference' or 'PAYE reference'. It will be on your P60.
+user-employed.intro=If you were a director and an employee of your own company, answer ‘Yes’.
 scheme-employername=Your employer’s name
 scheme-dates.employerpayeref=Employer PAYE reference (optional)
 scheme-dates.employerpayeref.hint=This is a 3 digit tax office number, a forward slash, and a tax office employer reference, like 123/AB456. It may be called ‘Employer PAYE reference’ or ‘PAYE reference’. It will be on your P60.
 scheme-fixedterm.heading=Is this loan an approved fixed-term loan?
 scheme-fixedterm.heading.hint=
 scheme-fixedterm.heading.hint.custom=Scheme: {0}
-scheme-recipient.heading=Was the loan made to you?
-scheme-recipient.heading.hint=
-scheme-recipient.heading.hint.custom=Scheme: {0}
-scheme-recipient.inner.string.heading=Enter the name of who the loan was made to 
-scheme-recipient.outer.TRUE=No
-scheme-recipient.outer.FALSE=Yes
-scheme-recipientname=Enter the name of who the loan was made to
-scheme-agreedpayment.heading=Has anyone paid, or agreed with us to pay, any tax or National Insurance owed for this scheme?
-scheme-agreedpayment.heading.hint=
-scheme-agreedpayment.heading.hint.custom=Scheme: {0}
-scheme-agreedpayment.intro=If you made payments in response to an Accelerated Payments Notice (APN), do not include these.
-scheme-agreedpayment.Yes=Yes
-scheme-agreedpayment.No=No
-scheme-agreedpayment.Unknown=Do not know
-scheme-settlementstatus.heading=How much tax and National Insurance has anyone paid, or agreed with us to pay, for this scheme?
-scheme-settlementstatus.heading.hint=
-scheme-settlementstatus.heading.hint.custom=Scheme: {0}
-scheme-settlementstatus.amount.heading=
-scheme-settlementstatus.amount.hint=Enter the total amount.
-scheme-settlementstatus.dateOfSettlement.heading=Date paid
+about-loan.heading=Was the loan made to you?
+about-loan.heading.hint=
+about-loan.heading.hint.custom=Scheme: {0}
+about-loan.inner.string.heading=Enter the name of who the loan was made to 
+about-loan.outer.TRUE=No
+about-loan.outer.FALSE=Yes
+about-loanname=Enter the name of who the loan was made to
+tax-settled.heading=Has anyone paid, or agreed with us to pay, any tax or National Insurance owed for this scheme?
+tax-settled.heading.hint=
+tax-settled.heading.hint.custom=Scheme: {0}
+tax-settled.intro=If you made payments in response to an Accelerated Payments Notice (APN), do not include these.
+tax-settled.Yes=Yes
+tax-settled.No=No
+tax-settled.Unknown=Do not know
+add-settlement.heading=How much tax and National Insurance has anyone paid, or agreed with us to pay, for this scheme?
+add-settlement.heading.hint=
+add-settlement.heading.hint.custom=Scheme: {0}
+add-settlement.intro.1=Enter the total amount.
+add-settlement.amount.heading=
+add-settlement.dateOfSettlement.heading=Date paid
 # scheme validation
 
-details-hmrc-approved.heading=Is this loan an approved fixed-term loan?
-details-hmrc-approved.heading.hint=
-details-hmrc-approved.heading.hint.custom=Scheme: {0}
-details-hmrc-approved.Yes=Yes
-details-hmrc-approved.No=No
-details-hmrc-approved.Unknown=Do not know
+fixed-term-loan.heading=Is this loan an approved fixed-term loan?
+fixed-term-loan.heading.hint=
+fixed-term-loan.heading.hint.custom=Scheme: {0}
+fixed-term-loan.Yes=Yes
+fixed-term-loan.No=No
+fixed-term-loan.Unknown=Do not know
 
-details-amount.heading=What was the total loan amount paid from START to END?
-details-amount.heading.range=What was the total loan amount paid from {0} to {1}?
-details-amount.heading.hint=
-details-amount.heading.hint.custom=Scheme: {0}
+loan-amount.heading=What was the total loan amount paid from START to END?
+loan-amount.heading.range=What was the total loan amount paid from {0} to {1}?
+loan-amount.heading.hint=
+loan-amount.heading.hint.custom=Scheme: {0}
 
-details-genuinely-repaid-amount.heading=How much of the loan did you repay?
-details-genuinely-repaid-amount.intro=Do not include any types of repayment that we disregard. \
+loan-repaid.heading=How much of the loan did you repay?
+loan-repaid.intro=Do not include any types of repayment that we disregard. \
   <a href='https://www.gov.uk/guidance/report-and-account-for-your-disguised-remuneration-loan-charge' target='_blank'>\
   Find out which repayments are disregarded \
   (opens in a new window or tab).</a>
-details-genuinely-repaid-amount.heading.hint=
-details-genuinely-repaid-amount.heading.hint.custom=Scheme: {0}
+loan-repaid.heading.hint=
+loan-repaid.heading.hint.custom=Scheme: {0}
 
-details-genuinely-repaid.heading=Have you made any repayments for the loans received between START to END?
-details-genuinely-repaid.heading.range=Have you made any repayments for the loans received between {0} to {1}?
-details-genuinely-repaid.heading.hint=
-details-genuinely-repaid.heading.hint.custom=Scheme: {0}
+repaid-any-loan-during-tax-year.heading=Have you made any repayments for the loans received between START to END?
+repaid-any-loan-during-tax-year.heading.range=Have you made any repayments for the loans received between {0} to {1}?
+repaid-any-loan-during-tax-year.heading.hint=
+repaid-any-loan-during-tax-year.heading.hint.custom=Scheme: {0}
 
-details-written-off-amount.heading=How much of the loan was written off?
-details-written-off-amount.heading.hint.custom=Scheme: {0}
-details-written-off-amount.amount.heading=Amount of loan written off
-details-written-off-amount.taxPaid.heading=Tax and National Insurance paid on the written-off loan
-details-written-off.heading=Has the lender written off any of the loan made from START DATE to END DATE?
-details-written-off.heading.range=Has the lender written off any of the loan made from {0} to {1}?
-details-written-off.heading.hint=
-details-written-off.heading.hint.custom=Scheme: {0}
-details-written-off.Yes=Yes
-details-written-off.No=No
-details-written-off.Unknown=Do not know
+written-off-amount.heading=How much of the loan was written off?
+written-off-amount.heading.hint.custom=Scheme: {0}
+written-off-amount.amount.heading=Amount of loan written off
+written-off-amount.taxPaid.heading=Tax and National Insurance paid on the written-off loan
+written-off.heading=Has the lender written off any of the loan made from START DATE to END DATE?
+written-off.heading.range=Has the lender written off any of the loan made from {0} to {1}?
+written-off.heading.hint=
+written-off.heading.hint.custom=Scheme: {0}
+written-off.Yes=Yes
+written-off.No=No
+written-off.Unknown=Do not know
 
 TRUE=Yes
 FALSE=No
@@ -217,7 +217,7 @@ cya.loandetails.header.tax-paid=Tax paid
 cya.warning.body=You could be prosecuted if you deliberately give untrue or misleading information.
 cya.declaration.p1=I
 cya.declaration.p2=confirm that, to the best of my knowledge, the information given is true and correct.
-cya.submit=Accept and send details
+cya.complete=Accept and send details
 
 personal-details=Personal details
 name=Name
@@ -244,148 +244,148 @@ there.is.a.problem=There is a problem
 confirm.info=Select if you confirm the information given is true and correct
 
 # About you
-aboutyou-completedby.required=Select yes if you are filling in this form for yourself
-aboutyou-nino.required=Enter your National Insurance number
-aboutyou-nino.format=Enter your National Insurance number in the correct format
-aboutyou-personalive.required=Select yes if the person you are acting for is alive
-aboutyou-employmentstatus.required=Select if the deceased person was employed, self-employed, or both employed \
+about-you.required=Select yes if you are filling in this form for yourself
+your-ni-no.required=Enter your National Insurance number
+your-ni-no.format=Enter your National Insurance number in the correct format
+user-deceased.required=Select yes if the person you are acting for is alive
+was-user-self-employed.required=Select if the deceased person was employed, self-employed, or both employed \
   and self-employed
 aboutyou-deceasedbefore.required=Select yes if the deceased person died on or before 5 April 2019
 
-aboutyou-identity.required=Select if you want to enter the person's National Insurance number or Self Assessment \
+about-scheme-user.required=Select if you want to enter the person's National Insurance number or Self Assessment \
   Unique Taxpayer Reference (UTR)
-aboutyou-identity.a.required=Enter the person’s National Insurance number
-aboutyou-identity.Left.a.required=Enter the person’s National Insurance number
-aboutyou-identity.b.required=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR)
-aboutyou-identity.Right.b.required=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR)
-aboutyou-identity.nino-format=Enter the person’s National Insurance number in the correct format
-aboutyou-identity.Left.a.nino-format=Enter the person’s National Insurance number in the correct format
-aboutyou-identity.utr-format=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR) in the correct format
-aboutyou-identity.Right.b.utr-format=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR) in the correct format
-aboutyou-confirmation.required=Enter the full name of the person you are acting for
+about-scheme-user.a.required=Enter the person’s National Insurance number
+about-scheme-user.Left.a.required=Enter the person’s National Insurance number
+about-scheme-user.b.required=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR)
+about-scheme-user.Right.b.required=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR)
+about-scheme-user.nino-format=Enter the person’s National Insurance number in the correct format
+about-scheme-user.Left.a.nino-format=Enter the person’s National Insurance number in the correct format
+about-scheme-user.utr-format=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR) in the correct format
+about-scheme-user.Right.b.utr-format=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR) in the correct format
+confirm-about-scheme-user.required=Enter the full name of the person you are acting for
 
 # contact details
-contactdetails-address.line1.required=Enter the building or street of your address
-contactdetails-address.street-limit=Building or street must be 40 characters or less
-contactdetails-address.line1.street-limit=Building or street must be 40 characters or less
-contactdetails-address.street-format=Building or street must only include letters a to z, numbers, apostrophes, \
+confirm-contact-details.line1.required=Enter the building or street of your address
+confirm-contact-details.street-limit=Building or street must be 40 characters or less
+confirm-contact-details.line1.street-limit=Building or street must be 40 characters or less
+confirm-contact-details.street-format=Building or street must only include letters a to z, numbers, apostrophes, \
   ampersands, commas, hyphens, full stops, forward slashes and spaces
-contactdetails-address.line1.street-format=Building or street must only include letters a to z, numbers, apostrophes, \
+confirm-contact-details.line1.street-format=Building or street must only include letters a to z, numbers, apostrophes, \
   ampersands, commas, hyphens, full stops, forward slashes and spaces
-contactdetails-address.town.required=Enter the town or city of your address
-contactdetails-address.town-limit=Town or city must be 40 characters or less
-contactdetails-address.town.town-limit=Town or city must be 40 characters or less
-contactdetails-address.town-format=Town or city must only include letters a to z, apostrophes, commas, hyphens, \
+confirm-contact-details.town.required=Enter the town or city of your address
+confirm-contact-details.town-limit=Town or city must be 40 characters or less
+confirm-contact-details.town.town-limit=Town or city must be 40 characters or less
+confirm-contact-details.town-format=Town or city must only include letters a to z, apostrophes, commas, hyphens, \
   full stops and spaces
-contactdetails-address.town.town-format=Town or city must only include letters a to z, apostrophes, commas, hyphens, \
+confirm-contact-details.town.town-format=Town or city must only include letters a to z, apostrophes, commas, hyphens, \
   full stops and spaces
-contactdetails-address.county-limit=County must be 40 characters or less
-contactdetails-address.county.county-limit=County must be 40 characters or less
-contactdetails-address.county-format=County must only include letters a to z, apostrophes, commas, hyphens, \
+confirm-contact-details.county-limit=County must be 40 characters or less
+confirm-contact-details.county.county-limit=County must be 40 characters or less
+confirm-contact-details.county-format=County must only include letters a to z, apostrophes, commas, hyphens, \
   full stops and spaces
-contactdetails-address.county.county-format=County must only include letters a to z, apostrophes, commas, hyphens, \
+confirm-contact-details.county.county-format=County must only include letters a to z, apostrophes, commas, hyphens, \
   full stops and spaces
-contactdetails-address.postcode.required=Enter the postcode of your address
-contactdetails-address.postcode-limit=Postcode must be 40 characters or less
-contactdetails-address.postcode.postcode-limit=Postcode must be 40 characters or less
-contactdetails-address.postcode-format=Enter a real postcode
-contactdetails-address.postcode.postcode-format=Enter a real postcode
+confirm-contact-details.postcode.required=Enter the postcode of your address
+confirm-contact-details.postcode-limit=Postcode must be 40 characters or less
+confirm-contact-details.postcode.postcode-limit=Postcode must be 40 characters or less
+confirm-contact-details.postcode-format=Enter a real postcode
+confirm-contact-details.postcode.postcode-format=Enter a real postcode
 
-contactdetails-telephoneemail.phone-limit=Telephone number must be 24 characters or less
-contactdetails-telephoneemail.telephone.phone-limit=Telephone number must be 24 characters or less
-contactdetails-telephoneemail.phone-format=Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 0808 157 0192
-contactdetails-telephoneemail.telephone.phone-format=Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 0808 157 0192
-contactdetails-telephoneemail.email-limit=Email address must be 256 characters or less
-contactdetails-telephoneemail.email.email-limit=Email address must be 256 characters or less
-contactdetails-telephoneemail.email-format=Email address must only contain letters a to z, numbers, full stops, hyphens, underscores and @ signs
-contactdetails-telephoneemail.email.email-format=Email address must only contain letters a to z, numbers, full stops, hyphens, underscores and @ signs
-contactdetails-telephoneemail.email-or-phone-number-needed=Enter a telephone number or an email address
-contactdetails-telephoneemail.telephone.email-or-phone-number-needed=Enter a telephone number or an email address
-contactdetails-telephoneemail.email.email-or-phone-number-needed=Enter a telephone number or an email address
+confirm-contact-prefs.phone-limit=Telephone number must be 24 characters or less
+confirm-contact-prefs.telephone.phone-limit=Telephone number must be 24 characters or less
+confirm-contact-prefs.phone-format=Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 0808 157 0192
+confirm-contact-prefs.telephone.phone-format=Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 0808 157 0192
+confirm-contact-prefs.email-limit=Email address must be 256 characters or less
+confirm-contact-prefs.email.email-limit=Email address must be 256 characters or less
+confirm-contact-prefs.email-format=Email address must only contain letters a to z, numbers, full stops, hyphens, underscores and @ signs
+confirm-contact-prefs.email.email-format=Email address must only contain letters a to z, numbers, full stops, hyphens, underscores and @ signs
+confirm-contact-prefs.email-or-phone-number-needed=Enter a telephone number or an email address
+confirm-contact-prefs.telephone.email-or-phone-number-needed=Enter a telephone number or an email address
+confirm-contact-prefs.email.email-or-phone-number-needed=Enter a telephone number or an email address
 
 #scheme
 scheme-name.required=Enter the name of the scheme
 scheme-name.char-limit=Scheme name must be 100 characters or less
 scheme-name.invalid-name=Scheme name must only include letters a to z, numbers, apostrophes, ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
-scheme-dotas.required=Select yes if you have a Disclosure of Tax Avoidance Schemes (DOTAS) number
-scheme-dotas.char-limit=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
-scheme-dotas.Yes.dotas.char-limit=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
-scheme-dotas.dotas.required=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
-scheme-dotas.Yes.dotas.required=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
+dotas-number.required=Select yes if you have a Disclosure of Tax Avoidance Schemes (DOTAS) number
+dotas-number.char-limit=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
+dotas-number.Yes.dotas.char-limit=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
+dotas-number.dotas.required=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
+dotas-number.Yes.dotas.required=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
 
-scheme-refnumber.outer.required=Select yes if you have a HMRC case reference number
-scheme-refnumber.inner.required=HMRC case reference number must only include letters a to z, numbers and hyphens
-scheme-refnumber.limit=HMRC case reference number must be 10 characters or less
-scheme-refnumber.inner.limit=HMRC case reference number must be 10 characters or less
-scheme-refnumber.format=HMRC case reference number must only include letters a to z, numbers and hyphens
-scheme-refnumber.inner.format=HMRC case reference number must only include letters a to z, numbers and hyphens
+case-reference-number.outer.required=Select yes if you have a HMRC case reference number
+case-reference-number.inner.required=HMRC case reference number must only include letters a to z, numbers and hyphens
+case-reference-number.limit=HMRC case reference number must be 10 characters or less
+case-reference-number.inner.limit=HMRC case reference number must be 10 characters or less
+case-reference-number.format=HMRC case reference number must only include letters a to z, numbers and hyphens
+case-reference-number.inner.format=HMRC case reference number must only include letters a to z, numbers and hyphens
 
-scheme-stillusing.required=Select yes if you are still using the scheme
-scheme-stillusingyes.badDate=Enter a real date
-scheme-stillusingyes.year.required=The date you started using the scheme must include a year
-scheme-stillusingyes.month.required=The date you started using the scheme must include a month
-scheme-stillusingyes.day.required=The date you started using the scheme must include a day
-scheme-stillusingyes.date-far-past=The date you started using the scheme must after 4 of January 1999
-scheme-stillusingyes.date-in-future=The date you started using the scheme must be in the past
+still-using-the-scheme.required=Select yes if you are still using the scheme
+still-using-the-scheme-yes.badDate=Enter a real date
+still-using-the-scheme-yes.year.required=The date you started using the scheme must include a year
+still-using-the-scheme-yes.month.required=The date you started using the scheme must include a month
+still-using-the-scheme-yes.day.required=The date you started using the scheme must include a day
+still-using-the-scheme-yes.date-far-past=The date you started using the scheme must after 4 of January 1999
+still-using-the-scheme-yes.date-in-future=The date you started using the scheme must be in the past
 
-scheme-stillusingno.year._2.required=The date you stopped using the scheme must include a year
-scheme-stillusingno.month._2.required=The date you stopped using the scheme must include a month
-scheme-stillusingno.day._2.required=The date you stopped using the scheme must include a day
-scheme-stillusingno.year._1.required=The date you started using the scheme must include a year
-scheme-stillusingno.month._1.required=The date you started using the scheme must include a month
-scheme-stillusingno.day._1.required=The date you started using the scheme must include a day
-scheme-stillusingno._1.badDate=Enter a real date
-scheme-stillusingno._2.badDate=Enter a real date
-scheme-stillusingno._1.same-or-after=The date you stopped using the scheme must be the same as or after the date you started using the scheme
-scheme-stillusingno._2.same-or-after=The date you stopped using the scheme must be the same as or after the date you started using the scheme
-scheme-stillusingno.same-or-after=The date you stopped using the scheme must be the same as or after the date you started using the scheme
+still-using-the-scheme-no.year._2.required=The date you stopped using the scheme must include a year
+still-using-the-scheme-no.month._2.required=The date you stopped using the scheme must include a month
+still-using-the-scheme-no.day._2.required=The date you stopped using the scheme must include a day
+still-using-the-scheme-no.year._1.required=The date you started using the scheme must include a year
+still-using-the-scheme-no.month._1.required=The date you started using the scheme must include a month
+still-using-the-scheme-no.day._1.required=The date you started using the scheme must include a day
+still-using-the-scheme-no._1.badDate=Enter a real date
+still-using-the-scheme-no._2.badDate=Enter a real date
+still-using-the-scheme-no._1.same-or-after=The date you stopped using the scheme must be the same as or after the date you started using the scheme
+still-using-the-scheme-no._2.same-or-after=The date you stopped using the scheme must be the same as or after the date you started using the scheme
+still-using-the-scheme-no.same-or-after=The date you stopped using the scheme must be the same as or after the date you started using the scheme
 
-scheme-employee.outer.required=Select yes if you were an employee while you were using the scheme
-scheme-employee.name.inner.required=Enter the employer’s name
-scheme-employee.inner.name.required=Enter the employer’s name
-scheme-employee.paye.inner.paye-format=Enter the employer PAYE reference in the correct format
-scheme-employee.char-limit=Employer’s name must be 50 characters or less
-scheme-employee.inner.name.char-limit=Employer’s name must be 50 characters or less
-scheme-employee.name-format=Employer’s name must only include letters a to z, numbers, apostrophes, \
+user-employed.outer.required=Select yes if you were an employee while you were using the scheme
+user-employed.name.inner.required=Enter the employer’s name
+user-employed.inner.name.required=Enter the employer’s name
+user-employed.paye.inner.paye-format=Enter the employer PAYE reference in the correct format
+user-employed.char-limit=Employer’s name must be 50 characters or less
+user-employed.inner.name.char-limit=Employer’s name must be 50 characters or less
+user-employed.name-format=Employer’s name must only include letters a to z, numbers, apostrophes, \
   ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
-scheme-employee.inner.name.name-format=Employer’s name must only include letters a to z, numbers, apostrophes, \
+user-employed.inner.name.name-format=Employer’s name must only include letters a to z, numbers, apostrophes, \
   ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
 
-scheme-recipient.outer.required=Select yes if the loan was made to you
-scheme-recipient.inner.required=Enter the name of who the loan was made out to
-scheme-recipient.char-limit=Name of who the loan was made out to must be 50 characters or less
-scheme-recipient.inner.char-limit=Name of who the loan was made out to must be 50 characters or less
-scheme-recipient.name-format=Name of who the loan was made out to must only include letters a to z, numbers, \
+about-loan.outer.required=Select yes if the loan was made to you
+about-loan.inner.required=Enter the name of who the loan was made out to
+about-loan.char-limit=Name of who the loan was made out to must be 50 characters or less
+about-loan.inner.char-limit=Name of who the loan was made out to must be 50 characters or less
+about-loan.name-format=Name of who the loan was made out to must only include letters a to z, numbers, \
   apostrophes, ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
-scheme-recipient.inner.name-format=Name of who the loan was made out to must only include letters a to z, numbers, \
+about-loan.inner.name-format=Name of who the loan was made out to must only include letters a to z, numbers, \
   apostrophes, ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
 
-scheme-agreedpayment.required=Select yes if anyone has paid, or agreed with us to pay, any tax or National Insurance owed for this scheme
-scheme-settlementstatusyeardateOfSettlement.required=Enter how much tax and National Insurance anyone has paid, or agreed with us to pay
-scheme-settlementstatus.amount.required=Enter how much tax and National Insurance anyone has paid, or agreed with us to pay
-scheme-settlementstatus.amount-format=Tax and National Insurance paid or agreed to be paid must be an amount of money, like 123.45 or 150
-scheme-settlementstatus.amount.amount-format=Tax and National Insurance paid or agreed to be paid must be an amount of money, like 123.45 or 150
+tax-settled.required=Select yes if anyone has paid, or agreed with us to pay, any tax or National Insurance owed for this scheme
+add-settlementyeardateOfSettlement.required=Enter how much tax and National Insurance anyone has paid, or agreed with us to pay
+add-settlement.amount.required=Enter how much tax and National Insurance anyone has paid, or agreed with us to pay
+add-settlement.amount-format=Tax and National Insurance paid or agreed to be paid must be an amount of money, like 123.45 or 150
+add-settlement.amount.amount-format=Tax and National Insurance paid or agreed to be paid must be an amount of money, like 123.45 or 150
 
 # loan details
-details-hmrc-approved.required=Select yes if the loan was an approved fixed-term loan
-details-amount.required=Enter the total loan amount from {0} to {1}
-details-amount.nonnumericformat=Amount you have repaid must be an amount of money, like 123.45 or 150
-details-amount.format=Total loan amount must be an amount of money, like 123.45 or 150
-details-genuinely-repaid.required=Select yes if you have repaid any of the loan made from {0} to {1}
-details-genuinely-repaid-amount.required=Enter how much of the loan you repaid
-details-genuinely-repaid-amount.nonnumericformat=Amount you have repaid must be an amount of money, like 123.45 or 150
-details-genuinely-repaid-amount.format=Amount you have repaid must be an amount of money, like 123.45 or 150
+fixed-term-loan.required=Select yes if the loan was an approved fixed-term loan
+loan-amount.required=Enter the total loan amount from {0} to {1}
+loan-amount.nonnumericformat=Amount you have repaid must be an amount of money, like 123.45 or 150
+loan-amount.format=Total loan amount must be an amount of money, like 123.45 or 150
+repaid-any-loan-during-tax-year.required=Select yes if you have repaid any of the loan made from {0} to {1}
+loan-repaid.required=Enter how much of the loan you repaid
+loan-repaid.nonnumericformat=Amount you have repaid must be an amount of money, like 123.45 or 150
+loan-repaid.format=Amount you have repaid must be an amount of money, like 123.45 or 150
 
-details-written-off.required=Select yes if the lender has written off any of the loan made from {0} to {1}
-details-written-off-amount.amount.required=Enter the amount that the lender has written off of the loan
-details-written-off-amount.taxPaid.required=Enter the amount of tax or National Insurance paid on the written-off loan
-details-written-off-amount.amount-format=Amount of loan written off must be an amount of money, \
+written-off.required=Select yes if the lender has written off any of the loan made from {0} to {1}
+written-off-amount.amount.required=Enter the amount that the lender has written off of the loan
+written-off-amount.taxPaid.required=Enter the amount of tax or National Insurance paid on the written-off loan
+written-off-amount.amount-format=Amount of loan written off must be an amount of money, \
   like 123.45 or 150
-details-written-off-amount.amount.amount-format=Amount of loan written off must be an amount of money, \
+written-off-amount.amount.amount-format=Amount of loan written off must be an amount of money, \
   like 123.45 or 150
-details-written-off-amount.tax-format=Amount of tax or National Insurance paid on the written-off loan \
+written-off-amount.tax-format=Amount of tax or National Insurance paid on the written-off loan \
   must be an amount of money, like 123.45 or 150
-details-written-off-amount.taxPaid.tax-format=Amount of tax or National Insurance paid on the written-off loan \
+written-off-amount.taxPaid.tax-format=Amount of tax or National Insurance paid on the written-off loan \
   must be an amount of money, like 123.45 or 150
 
 # Confirmation

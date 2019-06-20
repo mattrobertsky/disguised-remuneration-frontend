@@ -62,102 +62,102 @@ object LoanDetails {
   ](year: Int, scheme: Scheme, default: Option[LoanDetails] = None)(implicit messages: Messages): Eff[R, LoanDetails] = {
     val (startDate, endDate) = year.toFinancialYear
     for {
-      approved <- ask[YesNoUnknown]("details-hmrc-approved")
+      approved <- ask[YesNoUnknown]("fixed-term-loan")
         .defaultOpt(default.map(_.hmrcApproved))
         .withCustomContentAndArgs(
-            ("details-hmrc-approved.heading.hint",
-              ("details-hmrc-approved.heading.hint.custom",
+            ("fixed-term-loan.heading.hint",
+              ("fixed-term-loan.heading.hint.custom",
                 List(scheme.name)
               )
             )
           ).in[R]
-      amount <- ask[Money]("details-amount")
+      amount <- ask[Money]("loan-amount")
         .defaultOpt(default.map(_.amount))
         .validating(
           "format",
           x => x.matches(MoneyRegex)
         )
         .withCustomContentAndArgs(
-          ("details-amount.required",
-            ("details-amount.required",
+          ("loan-amount.required",
+            ("loan-amount.required",
             List(formatDate(startDate),
             formatDate(endDate))
         ))
         )
         .withCustomContentAndArgs(
-          ("details-amount.heading",
-            ("details-amount.heading.range",
+          ("loan-amount.heading",
+            ("loan-amount.heading.range",
               List(formatDate(startDate),
                 formatDate(endDate))
             ))
         )
         .withCustomContentAndArgs(
-          ("details-amount.heading.hint",
-            ("details-amount.heading.hint.custom",
+          ("loan-amount.heading.hint",
+            ("loan-amount.heading.hint.custom",
               List(scheme.name)
             )
           )
         ).in[R]
-      repaid <-  ask[Money]("details-genuinely-repaid-amount")
+      repaid <-  ask[Money]("loan-repaid")
         .defaultOpt(default.flatMap(_.genuinelyRepaid))
         .validating(
           "format",
           x => x.matches(MoneyRegex)
         )
         .withCustomContentAndArgs(
-          ("details-genuinely-repaid-amount.heading.hint",
-            ("details-genuinely-repaid-amount.heading.hint.custom",
+          ("loan-repaid.heading.hint",
+            ("loan-repaid.heading.hint.custom",
               List(scheme.name)
             )
           )
         ).in[R] when
-        ask[Boolean]("details-genuinely-repaid")
+        ask[Boolean]("repaid-any-loan-during-tax-year")
           .defaultOpt(default.map(_.genuinelyRepaid != 0))
           .withCustomContentAndArgs(
-            ("details-genuinely-repaid.heading",
-              ("details-genuinely-repaid.heading.range",
+            ("repaid-any-loan-during-tax-year.heading",
+              ("repaid-any-loan-during-tax-year.heading.range",
                 List(formatDate(startDate),
                   formatDate(endDate))
               ))
           )
           .withCustomContentAndArgs(
-            ("details-genuinely-repaid.required",
-              ("details-genuinely-repaid.required",
+            ("repaid-any-loan-during-tax-year.required",
+              ("repaid-any-loan-during-tax-year.required",
                 List(formatDate(startDate),
                   formatDate(endDate))
               ))
           )
           .withCustomContentAndArgs(
-            ("details-genuinely-repaid.heading.hint",
-              ("details-genuinely-repaid.heading.hint.custom",
+            ("repaid-any-loan-during-tax-year.heading.hint",
+              ("repaid-any-loan-during-tax-year.heading.hint.custom",
                 List(scheme.name)
               )
             )
           ).in[R]
-      isWrittenOff <- ask[YesNoUnknown]("details-written-off")
+      isWrittenOff <- ask[YesNoUnknown]("written-off")
         .defaultOpt(default.map(_.isWrittenOff))
         .withCustomContentAndArgs(
-          ("details-written-off.heading",
-            ("details-written-off.heading.range",
+          ("written-off.heading",
+            ("written-off.heading.range",
               List(formatDate(startDate),
                 formatDate(endDate))
             ))
         )
         .withCustomContentAndArgs(
-          ("details-written-off.required",
-            ("details-written-off.required",
+          ("written-off.required",
+            ("written-off.required",
               List(formatDate(startDate),
                 formatDate(endDate))
             ))
         )
         .withCustomContentAndArgs(
-          ("details-written-off.heading.hint",
-            ("details-written-off.heading.hint.custom",
+          ("written-off.heading.hint",
+            ("written-off.heading.hint.custom",
               List(scheme.name)
             )
           )
         ).in[R]
-      writtenOff <- ask[WrittenOff]("details-written-off-amount")
+      writtenOff <- ask[WrittenOff]("written-off-amount")
         .defaultOpt(default.flatMap(_.writtenOff))
         //TODO Need a feature to validate both together, right now it is sequential
 //          .validating(
@@ -176,8 +176,8 @@ object LoanDetails {
            x => x.taxPaid.matches(MoneyRegex)
         )
         .withCustomContentAndArgs(
-          ("details-written-off-amount.heading.hint",
-            ("details-written-off-amount.heading.hint.custom",
+          ("written-off-amount.heading.hint",
+            ("written-off-amount.heading.hint.custom",
               List(scheme.name)
             )
           )

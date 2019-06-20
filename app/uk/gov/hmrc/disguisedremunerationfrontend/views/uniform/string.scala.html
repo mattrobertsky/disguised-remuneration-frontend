@@ -21,10 +21,10 @@
 @path=@{key.split("[.]").filter(_.nonEmpty).tail}
 
 @currencyInput=@{
-    key === "details-amount" ||
-    key === "details-genuinely-repaid-amount" ||
-    key.contains("scheme-settlementstatus") ||
-    key.contains("details-written-off-amount")
+    key === "loan-amount" ||
+    key === "loan-repaid" ||
+    key.contains("add-settlement") ||
+    key.contains("written-off-amount")
 }
  @*TODO fix these headings*@
 @messages.get(s"$key.string.heading").map { hint =>
