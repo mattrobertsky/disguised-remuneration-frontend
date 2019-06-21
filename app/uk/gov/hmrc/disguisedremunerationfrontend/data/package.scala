@@ -53,6 +53,8 @@ package object data {
   private val zone = "Europe/London"
   private val zoneId: ZoneId = ZoneId.of(zone)
   private val dateFormatPattern = "d MMMM yyyy"
+  private val timeFomat = "h:mma"
+  val formattedTimeNow: String = LocalDateTime.now(zoneId).format(DateTimeFormatter.ofPattern(timeFomat)).toLowerCase
 
   def formatDate(localDate: LocalDate)(implicit messages: Messages):String = {
     val date = java.util.Date.from(localDate.atStartOfDay(zoneId).toInstant)
