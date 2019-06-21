@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@(dateTime: String)(implicit messages: UniformMessages[Html], request: Request[AnyContent])
+@(dateTime: String, time: String)(implicit messages: UniformMessages[Html], request: Request[AnyContent])
 
     <form action="index" method="get" class="form">
         <div class="govuk-box-highlight">
@@ -22,7 +22,7 @@
                 @messages("confirmation.heading")
             </h1>
             <span class="heading-large">
-                @messages("confirmation.detail") @dateTime
+                @messages("confirmation.detail", dateTime, time)
             </span>
 
         </div>

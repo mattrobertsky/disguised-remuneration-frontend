@@ -17,14 +17,14 @@
 package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 
 import java.time.LocalDate
+import javax.inject.{Inject, Singleton}
 
 import cats.implicits._
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
-import javax.inject.{Inject, Singleton}
 import ltbs.uniform._
 import ltbs.uniform.interpreters.playframework._
-import ltbs.uniform.web.InferParser._
 import ltbs.uniform.web._
+import ltbs.uniform.web.InferParser._
 import ltbs.uniform.web.parser._
 import org.atnos.eff._
 import play.api.Logger
@@ -247,7 +247,6 @@ class JourneyController @Inject()(
     implicit request =>
 
       implicit val keys: List[String] = key.split("/").toList
-      import AssetsFrontend.optionHtml
       import Scheme._
 
       getState.flatMap { state =>
@@ -476,7 +475,10 @@ class JourneyController @Inject()(
           makeAudit(java.util.UUID.randomUUID().toString, username, state)
           clearState
           Logger.info(s"submission details sent to splunk")
-          val contents = views.html.confirmation(getDateTime())
+          val contents = views.html.confirmation(
+            formatDate(LocalDate.now()),
+            formattedTimeNow
+          )
           Ok(views.html.main_template(
             title = s"${m("confirm.title")} - ${m("common.title")}")
           (contents))
