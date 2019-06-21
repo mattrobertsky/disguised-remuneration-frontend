@@ -267,6 +267,8 @@ about-scheme-user.Right.b.required=Nodwch Gyfeirnod Unigryw Trethdalwr (UTR) y p
 about-scheme-user.nino-format=Nodwch rif Yswiriant Gwladol y person yn y fformat cywir
 about-scheme-user.utr-format=Nodwch Gyfeirnod Unigryw Trethdalwr (UTR) y person ar gyfer Hunanasesiad yn y fformat cywir
 confirm-about-scheme-user.required=Nodwch enw llawn y person rydych yn gweithredu ar ei ran
+confirm-about-scheme-user.limit=Mae'n rhaid i enw llawn fod yn 50 nod neu lai
+confirm-about-scheme-user.format=Rhaid i enw llawn ond yn cynnwys llythyrau aiy, gysylltnodau, atalnod llawn, collnodau a mannau
 
 # contact details
 confirm-contact-details.line1.required=Nodwch adeilad neu stryd eich cyfeiriad
