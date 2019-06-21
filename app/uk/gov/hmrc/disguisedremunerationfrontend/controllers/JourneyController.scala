@@ -16,16 +16,13 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 
-import java.time.{LocalDate, LocalDateTime, ZoneId}
-import java.time.format.DateTimeFormatter
+import java.time.LocalDate
+import javax.inject.{Inject, Singleton}
 
 import cats.implicits._
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
-import javax.inject.{Inject, Singleton}
-
 import ltbs.uniform._
 import ltbs.uniform.interpreters.playframework._
-import ltbs.uniform.web.InferParser._
 import ltbs.uniform.web._
 import ltbs.uniform.web.parser._
 import org.atnos.eff._
@@ -40,7 +37,7 @@ import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
 import uk.gov.hmrc.disguisedremunerationfrontend.actions.{AuthorisedAction, AuthorisedRequest}
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
 import uk.gov.hmrc.disguisedremunerationfrontend.controllers.AssetsFrontend.{optionHtml => _, _}
-import uk.gov.hmrc.disguisedremunerationfrontend.data.JsonConversion.{FlatState, journeyStateFormat}
+import uk.gov.hmrc.disguisedremunerationfrontend.data.JsonConversion.FlatState
 import uk.gov.hmrc.disguisedremunerationfrontend.data.{Date, Nino, Utr, _}
 import uk.gov.hmrc.disguisedremunerationfrontend.repo.{JourneyStateStore, ShortLivedStore}
 import uk.gov.hmrc.disguisedremunerationfrontend.views
@@ -249,7 +246,6 @@ class JourneyController @Inject()(
     implicit request =>
 
       implicit val keys: List[String] = key.split("/").toList
-      import AssetsFrontend.optionHtml
       import Scheme._
 
       getState.flatMap { state =>
