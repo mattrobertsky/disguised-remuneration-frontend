@@ -103,6 +103,15 @@ object AboutYou {
               .in[R]
             personName <- ask[String]("confirm-about-scheme-user")
             .defaultOpt(localDefault.map(_.actingFor))
+              .validating(
+                "format",
+                name => name.matches(nameRegex)
+              )
+              .validating(
+                "limit",
+                name => name.length <= 50
+              )
+
             .in[R]
           } yield Right(AboutAnother(
             alive,

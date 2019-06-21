@@ -21,7 +21,7 @@ landing.heading=Send your loan charge details
 landing.info=Fill in each section as best you can. You can save your answers and come back later to finish.
 landing.details.title=Enter your details
 landing.loan.arrangement.heading=Tell us about loan arrangements you used
-landing.loan.arrangement.info=These are sometimes called 'disguised remuneration schemes'.
+landing.loan.arrangement.info=These are sometimes called ’disguised remuneration schemes’.
 landing.loan.arrangement.add-scheme=Add another remuneration scheme
 landing.loan.taxyear.heading=Enter your loan details by tax year
 landing.loan.taxyear.content={0} {1} to {2}
@@ -128,7 +128,7 @@ user-employed.heading.hint=
 user-employed.heading.hint.custom=Scheme: {0}
 user-employed.inner.name.heading=Your employer’s name
 user-employed.inner.paye.heading=Employer PAYE reference (optional)
-user-employed.inner.paye.hint=This is a 3 digit tax office number, a forward slash, and a tax office employer reference, like '123/AB456. It may be called 'Employer PAYE Reference' or 'PAYE reference'. It will be on your P60.
+user-employed.inner.paye.hint=This is a 3 digit tax office number, a forward slash, and a tax office employer reference, like 123/AB456. It may be called ‘Employer PAYE Reference’ or ‘PAYE reference’. It will be on your P60.
 user-employed.intro=If you were a director and an employee of your own company, answer ‘Yes’.
 scheme-employername=Your employer’s name
 scheme-dates.employerpayeref=Employer PAYE reference (optional)
@@ -252,7 +252,7 @@ was-user-self-employed.required=Select if the deceased person was employed, self
   and self-employed
 aboutyou-deceasedbefore.required=Select yes if the deceased person died on or before 5 April 2019
 
-about-scheme-user.required=Select if you want to enter the person's National Insurance number or Self Assessment \
+about-scheme-user.required=Select if you want to enter the person’s National Insurance number or Self Assessment \
   Unique Taxpayer Reference (UTR)
 about-scheme-user.a.required=Enter the person’s National Insurance number
 about-scheme-user.Left.a.required=Enter the person’s National Insurance number
@@ -263,6 +263,8 @@ about-scheme-user.Left.a.nino-format=Enter the person’s National Insurance num
 about-scheme-user.utr-format=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR) in the correct format
 about-scheme-user.Right.b.utr-format=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR) in the correct format
 confirm-about-scheme-user.required=Enter the full name of the person you are acting for
+confirm-about-scheme-user.limit=Full name must be 50 characters or less
+confirm-about-scheme-user.format=Full name must only include letters a to z, hyphens, full stops, apostrophes and spaces
 
 # contact details
 confirm-contact-details.line1.required=Enter the building or street of your address
@@ -310,17 +312,17 @@ scheme-name.invalid-name=Scheme name must only include letters a to z, numbers, 
 dotas-number.required=Select yes if you have a Disclosure of Tax Avoidance Schemes (DOTAS) number
 dotas-number.char-limit=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
 dotas-number.Yes.dotas.char-limit=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
-dotas-number.dotas.required=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
+dotas-number.dotas.required=Enter the Disclosure of Tax Avoidance Schemes (DOTAS) number
 dotas-number.Yes.dotas.required=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
 
 case-reference-number.outer.required=Select yes if you have a HMRC case reference number
-case-reference-number.inner.required=HMRC case reference number must only include letters a to z, numbers and hyphens
+case-reference-number.inner.required=Enter the HMRC case reference number
 case-reference-number.limit=HMRC case reference number must be 10 characters or less
 case-reference-number.inner.limit=HMRC case reference number must be 10 characters or less
 case-reference-number.format=HMRC case reference number must only include letters a to z, numbers and hyphens
 case-reference-number.inner.format=HMRC case reference number must only include letters a to z, numbers and hyphens
 
-still-using-the-scheme.required=Select yes if you are still using the scheme
+still-using-the-scheme.required=Select yes if you are still receiving loan payments through the scheme
 still-using-the-scheme-yes.badDate=Enter a real date
 still-using-the-scheme-yes.year.required=The date you started using the scheme must include a year
 still-using-the-scheme-yes.month.required=The date you started using the scheme must include a month
@@ -372,7 +374,7 @@ loan-amount.required=Enter the total loan amount from {0} to {1}
 loan-amount.nonnumericformat=Amount you have repaid must be an amount of money, like 123.45 or 150
 loan-amount.format=Total loan amount must be an amount of money, like 123.45 or 150
 repaid-any-loan-during-tax-year.required=Select yes if you have repaid any of the loan made from {0} to {1}
-loan-repaid.required=Enter how much of the loan you repaid
+loan-repaid.required=Enter how much of the loan you have repaid in actual repayments
 loan-repaid.nonnumericformat=Amount you have repaid must be an amount of money, like 123.45 or 150
 loan-repaid.format=Amount you have repaid must be an amount of money, like 123.45 or 150
 
