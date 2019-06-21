@@ -24,6 +24,7 @@ import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import ltbs.uniform._
 import ltbs.uniform.interpreters.playframework._
 import ltbs.uniform.web._
+import ltbs.uniform.web.InferParser._
 import ltbs.uniform.web.parser._
 import org.atnos.eff._
 import play.api.Logger
@@ -37,7 +38,7 @@ import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
 import uk.gov.hmrc.disguisedremunerationfrontend.actions.{AuthorisedAction, AuthorisedRequest}
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
 import uk.gov.hmrc.disguisedremunerationfrontend.controllers.AssetsFrontend.{optionHtml => _, _}
-import uk.gov.hmrc.disguisedremunerationfrontend.data.JsonConversion.FlatState
+import uk.gov.hmrc.disguisedremunerationfrontend.data.JsonConversion.{FlatState, journeyStateFormat}
 import uk.gov.hmrc.disguisedremunerationfrontend.data.{Date, Nino, Utr, _}
 import uk.gov.hmrc.disguisedremunerationfrontend.repo.{JourneyStateStore, ShortLivedStore}
 import uk.gov.hmrc.disguisedremunerationfrontend.views
