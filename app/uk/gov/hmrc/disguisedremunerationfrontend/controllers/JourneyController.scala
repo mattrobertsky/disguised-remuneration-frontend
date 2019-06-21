@@ -248,7 +248,7 @@ class JourneyController @Inject()(
 
       implicit val keys: List[String] = key.split("/").toList
       import Scheme._
-
+      import AssetsFrontend.optionHtml
       getState.flatMap { state =>
         val default: Option[Scheme] = schemeIndex.map(state.schemes(_))
         runWeb(
