@@ -313,9 +313,9 @@ dotas-number.required=Select yes if you have a Disclosure of Tax Avoidance Schem
 dotas-number.char-limit=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
 dotas-number.Yes.dotas.char-limit=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
 dotas-number.dotas.required=Enter the Disclosure of Tax Avoidance Schemes (DOTAS) number
-dotas-number.Yes.dotas.required=Disclosure of Tax Avoidance Schemes (DOTAS) number must be 8 numbers
+dotas-number.Yes.dotas.required=Enter the Disclosure of Tax Avoidance Schemes (DOTAS) number
 
-case-reference-number.outer.required=Select yes if you have a HMRC case reference number
+case-reference-number.outer.required=Select yes if you have an HMRC case reference number
 case-reference-number.inner.required=Enter the HMRC case reference number
 case-reference-number.limit=HMRC case reference number must be 10 characters or less
 case-reference-number.inner.limit=HMRC case reference number must be 10 characters or less
@@ -400,7 +400,7 @@ confirmation.p3=If you need to add to or change the details you sent, fill in th
 confirmation.h3=What you need to do next
 confirmation.p4=You need to include your outstanding loan amounts in your Self Assessment tax return.
 confirmation.p5=Make sure you have sent these details to any employers you had disguised remuneration loan arrangements with.
-confirmation.p6=<a href={0} target="_blank">Check the guidance</a> to find out what you need to do (opens in a new window or tab).
+confirmation.p6=<a href={0} target="_blank">Check the guidance to find out what you need to do (opens in a new window or tab).</a>
 confirmation.h4=If you need help
 confirmation.p7=If you need help using this service, use the ‘get help with this page’ link at the bottom of the page.
 confirmation.p8=<a href={0}>What do you think of this service?</a> (takes 30 seconds)
