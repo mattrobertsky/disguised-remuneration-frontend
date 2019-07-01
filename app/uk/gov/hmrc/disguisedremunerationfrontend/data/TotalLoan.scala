@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,20 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@(key: String, values: Input, errors: ErrorTree, messages: UniformMessages[Html], inner: (String, Input, ErrorTree, UniformMessages[Html]) => Html, reverse: Boolean = false)
+package uk.gov.hmrc.disguisedremunerationfrontend.data
 
-@path=@{key.split("[.]").toList.filter(_.nonEmpty).tail: List[String]}
-
-@elements=@{if(reverse) Seq("FALSE","TRUE") else Seq("TRUE","FALSE") }
-
-@radios(
- s"${key}.outer",
- elements,
- values.atPath({path :+ "outer"}:_*).flatMap(_.headOption),
- errors,
- values,
- messages,
- {case "TRUE" => inner(s"${key}.inner", values, errors, messages)}
-)
+case class TotalLoan (amount: Money, estimate: Boolean)

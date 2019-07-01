@@ -116,7 +116,7 @@ object Scheme {
               )
             )
           )
-          .validating("year-incorrect", x => x.getYear.toString.matches(yearRegex))
+//          .validating("year-incorrect", x => x.getYear.toString.matches(yearRegex))
           .validating(s"date-far-past", isAfterEarliestDate)
           .validating("date-in-future", _.isBefore(LocalDate.now()))
             .in[R] }.map{(_, none[Date])}

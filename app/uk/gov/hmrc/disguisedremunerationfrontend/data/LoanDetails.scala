@@ -24,17 +24,18 @@ import uk.gov.hmrc.disguisedremunerationfrontend.controllers.YesNoUnknown
 import uk.gov.hmrc.disguisedremunerationfrontend.data.Scheme.MoneyRegex
 
 case class LoanDetails(
-  year: Int,
-  hmrcApproved: YesNoUnknown,
-  amount: Money,
-  genuinelyRepaid: Option[Money],
-  isWrittenOff: YesNoUnknown,
-  writtenOff: Option[WrittenOff]
+                        year: Int,
+                        hmrcApproved: YesNoUnknown,
+                        totalLoan: TotalLoan,
+                        genuinelyRepaid: Option[Money],
+                        isWrittenOff: YesNoUnknown,
+                        writtenOff: Option[WrittenOff]
 ) {
   // TODO move this to a pimp
   def toListString: List[String] = {
     List(
-      "£" ++ amount.toString,
+      "£" ++ totalLoan.amount.toString,
+      totalLoan.estimate.toString,
       genuinelyRepaid.fold("£" ++ "0")(gr => "£" ++ gr.toString),
       writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.amount.toString),
       writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.taxPaid.toString)
@@ -44,8 +45,9 @@ case class LoanDetails(
 
 object LoanDetails {
 
-  type Stack = Fx.fx5[
+  type Stack = Fx.fx6[
     UniformAsk[YesNoUnknown, ?],
+    UniformAsk[TotalLoan, ?],
     UniformAsk[Boolean, ?],
     UniformAsk[Money, ?],
     UniformAsk[Option[Money], ?],
@@ -55,6 +57,7 @@ object LoanDetails {
   def program[R
   : _uniformCore
   : _uniformAsk[YesNoUnknown, ?]
+  : _uniformAsk[TotalLoan, ?]
   : _uniformAsk[Boolean, ?]
   : _uniformAsk[Money, ?]
   : _uniformAsk[Option[Money], ?]
@@ -71,29 +74,31 @@ object LoanDetails {
               )
             )
           ).in[R]
-      amount <- ask[Money]("loan-amount")
-        .defaultOpt(default.map(_.amount))
+      amount <- ask[TotalLoan]("loan-amount")
+        .defaultOpt(default.map(_.totalLoan))
         .validating(
           "format",
-          x => x.matches(MoneyRegex)
+          x => x.amount.matches(MoneyRegex)
         )
         .withCustomContentAndArgs(
-          ("loan-amount.required",
-            ("loan-amount.required",
+          ("loan-amount.amount.required",
+            ("loan-amount.amount.required",
             List(formatDate(startDate),
             formatDate(endDate))
-        ))
+            )
+          )
         )
         .withCustomContentAndArgs(
           ("loan-amount.heading",
-            ("loan-amount.heading.range",
+            ("loan-amount.heading",
               List(formatDate(startDate),
                 formatDate(endDate))
-            ))
+            )
+          )
         )
         .withCustomContentAndArgs(
           ("loan-amount.heading.hint",
-            ("loan-amount.heading.hint.custom",
+            ("loan-amount.heading.hint",
               List(scheme.name)
             )
           )

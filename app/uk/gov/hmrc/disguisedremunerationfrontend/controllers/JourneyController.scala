@@ -297,6 +297,20 @@ class JourneyController @Inject()(
   ) = authorisedAction.async { implicit request =>
     implicit val keys: List[String] = key.split("/").toList
     import LoanDetails._
+    import uk.gov.hmrc.disguisedremunerationfrontend.views.html.{uniform => html}
+
+//    implicit val estimateBooleanField = new HtmlField[Boolean] {
+//      def render(key: String, values: Input, errors: ErrorTree, messages: UniformMessages[Html]) = {
+//
+//        html.radios(
+//          key,
+//          Seq("TRUE", "FALSE"),
+//          values.value.headOption,
+//          errors,
+//          messages
+//        )
+//      }
+//    }
 
     getState.flatMap { state =>
       val scheme = state.schemes(schemeIndex)
@@ -304,6 +318,7 @@ class JourneyController @Inject()(
       runWeb(
         program = LoanDetails.program[FxAppend[Stack, PlayStack]](year, scheme, existing)
           .useForm(automatic[Unit, YesNoUnknown])
+          .useForm(automatic[Unit, TotalLoan])
           .useForm(automatic[Unit, Boolean])
           .useForm(automatic[Unit, Money])
           .useForm(automatic[Unit, Option[Money]])
@@ -341,6 +356,7 @@ class JourneyController @Inject()(
               Seq("FALSE", "TRUE"),
               values.value.headOption,
               errors,
+              values,
               messages
             )
         }
@@ -519,7 +535,7 @@ class JourneyController @Inject()(
             scheme.settlement,
             loanDetails._2.year,
             loanDetails._2.hmrcApproved,
-            loanDetails._2.amount,
+            loanDetails._2.totalLoan,
             loanDetails._2.genuinelyRepaid,
             loanDetails._2.writtenOff,
             state.contactDetails
