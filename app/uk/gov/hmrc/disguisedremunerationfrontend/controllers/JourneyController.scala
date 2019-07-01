@@ -299,19 +299,6 @@ class JourneyController @Inject()(
     import LoanDetails._
     import uk.gov.hmrc.disguisedremunerationfrontend.views.html.{uniform => html}
 
-//    implicit val estimateBooleanField = new HtmlField[Boolean] {
-//      def render(key: String, values: Input, errors: ErrorTree, messages: UniformMessages[Html]) = {
-//
-//        html.radios(
-//          key,
-//          Seq("TRUE", "FALSE"),
-//          values.value.headOption,
-//          errors,
-//          messages
-//        )
-//      }
-//    }
-
     getState.flatMap { state =>
       val scheme = state.schemes(schemeIndex)
       val existing = scheme.loanDetails(year)
@@ -356,7 +343,6 @@ class JourneyController @Inject()(
               Seq("FALSE", "TRUE"),
               values.value.headOption,
               errors,
-              values,
               messages
             )
         }

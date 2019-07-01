@@ -211,6 +211,7 @@ cya.p2=By submitting your answers, you confirm that, to the best of your knowled
 cya.loandetails.h1=Loan details for {0}
 cya.loandetails.header.tax-year=Tax year
 cya.loandetails.header.amount=Amount
+cya.loandetails.header.estimate=Estimate
 cya.loandetails.header.repaid=Repaid
 cya.loandetails.header.written-off=Written off
 cya.loandetails.header.tax-paid=Tax paid

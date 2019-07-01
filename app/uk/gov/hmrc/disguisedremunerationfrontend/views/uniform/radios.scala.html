@@ -17,7 +17,7 @@
 @import ltbs.uniform._
 @import cats.implicits._
 
-@(key: String, options: Seq[String], existing: Option[String], errors: ErrorTree, values: Input, messages: UniformMessages[Html], conditional: PartialFunction[String,Html] = PartialFunction.empty )
+@(key: String, options: Seq[String], existing: Option[String], errors: ErrorTree, messages: UniformMessages[Html], conditional: PartialFunction[String,Html] = PartialFunction.empty )
 
 @keyNoDots=@{key.replace(".","-")}
 
@@ -26,7 +26,6 @@
 @childkey=@{errors.children.keys.headOption.getOrElse("")}
 @grandchildValue=@{errors.children.map(_._2.value).headOption.getOrElse("")}
 @separateBooleanValue=@{errors.children.map(_._2.children.map(_._2.value)).headOption.fold("")(x => x.headOption.getOrElse(""))}
-<p>@values</p>
     @defining(
         errors match {
             case Tree("required", childTree) => errors.value

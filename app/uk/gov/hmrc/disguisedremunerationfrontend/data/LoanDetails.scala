@@ -35,7 +35,11 @@ case class LoanDetails(
   def toListString: List[String] = {
     List(
       "£" ++ totalLoan.amount.toString,
-      totalLoan.estimate.toString,
+      if(totalLoan.estimate)
+        "Yes"
+      else
+        "No"
+      ,
       genuinelyRepaid.fold("£" ++ "0")(gr => "£" ++ gr.toString),
       writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.amount.toString),
       writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.taxPaid.toString)

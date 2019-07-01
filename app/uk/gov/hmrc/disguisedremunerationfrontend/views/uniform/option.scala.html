@@ -25,7 +25,6 @@
  elements,
  values.atPath({path :+ "outer"}:_*).flatMap(_.headOption),
  errors,
- values,
  messages,
  {case "TRUE" => inner(s"${key}.inner", values, errors, messages)}
 )

@@ -46,7 +46,6 @@ object AssetsFrontend extends InferForm {
     inner.map{_._1},
     values.value.headOption,
     errors,
-    values,
     messages,
     inner.map{
       case(subkey,f) => subkey -> f(s"$key.$subkey", values, errors, messages)
@@ -54,15 +53,16 @@ object AssetsFrontend extends InferForm {
   )
 
   implicit val booleanField = new HtmlField[Boolean] {
-    def render(key: String, values: Input, errors: ErrorTree, messages: UniformMessages[Html]) =
+    def render(key: String, values: Input, errors: ErrorTree, messages: UniformMessages[Html]) = {
+      val path = key.split("[.]").filter(_.nonEmpty).tail
       html.radios(
         key,
-        Seq("TRUE","FALSE"),
-        values.value.headOption,
+        Seq("TRUE", "FALSE"),
+        values.atPath(path:_*).flatMap(_.headOption),
         errors,
-        values,
         messages
       )
+    }
   }
 
   implicit val longHtml = new HtmlField[Long] {
@@ -122,7 +122,7 @@ object AssetsFrontend extends InferForm {
       val options: Seq[A] = enum.values
       val path = key.split("[.]").filter(_.nonEmpty).tail
       val existing: Option[String] = values.atPath(path:_*).flatMap{_.headOption}
-      html.radios(key, options.map{_.toString}, existing, errors, values, messages)
+      html.radios(key, options.map{_.toString}, existing, errors, messages)
     }
   }
 
@@ -142,7 +142,7 @@ object AssetsFrontend extends InferForm {
 
       val visibleRadios: Html = {
         val options: Seq[ListControl] = Seq(AddAnother, Continue)
-        html.radios(key, options.map{_.toString}, existing, errors,values, messages)
+        html.radios(key, options.map{_.toString}, existing, errors, messages)
       }
 
       val hiddenFields = Html {
@@ -163,7 +163,7 @@ object AssetsFrontend extends InferForm {
       val existing: Option[String] = values.atPath(path:_*).flatMap{_.headOption}
 
       val options: Seq[ListControl] = Seq(AddAnother, Continue)
-      html.radios(key, options.map{_.toString}, existing, errors,values, messages)
+      html.radios(key, options.map{_.toString}, existing, errors, messages)
     }
   }
 
