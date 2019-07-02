@@ -17,14 +17,14 @@
 package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 
 import java.time.LocalDate
-import javax.inject.{Inject, Singleton}
 
 import cats.implicits._
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
+import javax.inject.{Inject, Singleton}
 import ltbs.uniform._
 import ltbs.uniform.interpreters.playframework._
-import ltbs.uniform.web._
 import ltbs.uniform.web.InferParser._
+import ltbs.uniform.web._
 import ltbs.uniform.web.parser._
 import org.atnos.eff._
 import play.api.Logger
@@ -33,12 +33,13 @@ import play.api.data._
 import play.api.i18n.I18nSupport
 import play.api.libs.json.{Json, OFormat}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
+import play.twirl.api.HtmlFormat.escape
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
 import uk.gov.hmrc.disguisedremunerationfrontend.actions.{AuthorisedAction, AuthorisedRequest}
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
 import uk.gov.hmrc.disguisedremunerationfrontend.controllers.AssetsFrontend.{optionHtml => _, _}
-import uk.gov.hmrc.disguisedremunerationfrontend.data.JsonConversion.{FlatState, journeyStateFormat}
+import uk.gov.hmrc.disguisedremunerationfrontend.data.JsonConversion._
 import uk.gov.hmrc.disguisedremunerationfrontend.data.{Date, Nino, Utr, _}
 import uk.gov.hmrc.disguisedremunerationfrontend.repo.{JourneyStateStore, ShortLivedStore}
 import uk.gov.hmrc.disguisedremunerationfrontend.views
@@ -232,7 +233,6 @@ class JourneyController @Inject()(
       }
     }
 
-
   def addScheme(key: String) = runScheme(None, key)
 
   def editScheme(
@@ -247,8 +247,8 @@ class JourneyController @Inject()(
     implicit request =>
 
       implicit val keys: List[String] = key.split("/").toList
-      import Scheme._
       import AssetsFrontend.optionHtml
+      import Scheme._
       getState.flatMap { state =>
         val default: Option[Scheme] = schemeIndex.map(state.schemes(_))
         runWeb(
@@ -380,26 +380,26 @@ class JourneyController @Inject()(
     "confirm" -> boolean.verifying("error.cya.confirmation-needed", identity(_))
   ))
 
-  def blocksFromState(
+
+  private def msg(in: String)(implicit request: AuthorisedRequest[AnyContent]) = {
+    messages(request)(in)
+  }
+
+  private def personalDetailsBlock(
     state: JourneyState
   )(
     implicit request: AuthorisedRequest[AnyContent]
-  ): List[(Html, (List[(Html, Html)], Option[(Html, Map[String, List[String]])]))] = {
-    def msg(in: String): Html = messages(request)(in)
-    import HtmlFormat.escape
+  ): Html = {
+    implicit val m: UniformMessages[Html] = messages(request)
     state match {
-      case JourneyState(Some(aboutYou), schemes, Some(contactDetails)) =>
-        val h: (Html, (List[(Html, Html)], Option[(Html, Map[String, List[String]])])) =
-          (msg("personal-details"),(List(
-            msg("name") ->
-              escape(username),
-            msg("filling-in-form-for-self") ->
-              msg(if(aboutYou.completedBySelf) "TRUE" else "FALSE"),
-            msg("address") ->
-              contactDetails.address.lines.
-                map(escape).
-                intercalate(Html("<br />")),
-            msg("contact-details") -> {
+      case JourneyState(Some(aboutYou), _, Some(contactDetails)) =>
+        views.html.answer_list(
+          msg("personal-details"),
+          List(
+            (msg("name"), escape(username), None),
+            (msg("filling-in-form-for-self"), msg(if(aboutYou.completedBySelf) "TRUE" else "FALSE"), "about-you/about-you".some),
+            (msg("address"), contactDetails.address.lines.map(escape).intercalate(Html("<br />")), "contact-details/confirm-contact-details".some),
+            (msg("contact-details"), {
               import contactDetails.telephoneAndEmail._
               List(
                 telephone.map{x => ("telephone", x)},
@@ -407,37 +407,76 @@ class JourneyController @Inject()(
               ).flatten.map{ case (l,r) =>
                 msg(l) |+| Html(": ") |+| escape(r)
               }.intercalate(Html("<br />"))
-            }
-          ), Option.empty ))
-
-        val t: List[(Html, (List[(Html, Html)], Option[(Html, Map[String, List[String]])]))] = schemes.map { scheme =>
-          import scheme._
-          ((msg("scheme") |+| escape(s" $name")), (List(
-            msg("dates-you-received-loans") ->
-              Html(s"${formatDate(scheme.schemeStart)} ${msg("language.to")} ${formatDate(scheme.schemeStopped.getOrElse(LocalDate.now))}"),
-            msg("disclosure-of-tax-avoidance-schemes-dotas-number") ->
-              dotasReferenceNumber.fold(msg("not-applicable"))(m => msg(s"disclosure-of-tax-avoidance-schemes-dotas-number.$m")),
-            msg("hmrc-case-reference-number") ->
-              caseReferenceNumber.fold(msg("FALSE")){escape},
-            msg("employment-status") ->
-              employee
-                .fold(msg("FALSE")){_ => msg("employed")},
-            msg("loan-recipient") ->
-              msg(if(loanRecipient) "TRUE" else "FALSE"),
-            msg("tax-or-national-insurance-paid-or-agreed-to-pay") ->
-              settlement.fold(msg("none")){x => Html(s"£${x.amount}")}
-          ), Some(Html(s"$name") ->
-              scheme.loanDetails.flatMap(
-                {
-                  case(k,v) => Map(k.toString -> v.fold(List.empty[String])(ld => ld.toListString))
-                }
-              )
-            )
-          ))
-        }
-        h :: t
-      case _ => Nil
+            }, "contact-details/confirm-contact-prefs".some)
+          )
+        )
     }
+  }
+
+  implicit class LoanDetailTableDecorator(loanDetails: LoanDetails) {
+    def rowValues(index: Int, year: String): List[(String, String)] = {
+      List(
+        ("£" ++ loanDetails.amount.toString,
+          s"scheme/$index/details/$year/loan-amount"),
+        (loanDetails.genuinelyRepaid.fold("£" ++ "0")(gr => "£" ++ gr.toString),
+          loanDetails.genuinelyRepaid.fold(s"scheme/$index/details/$year/repaid-any-loan-during-tax-year")(_=> s"scheme/$index/details/$year/loan-repaid")),
+        (loanDetails.writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.amount.toString),
+          loanDetails.writtenOff.fold(s"scheme/$index/details/$year/written-off")(_=> s"scheme/$index/details/$year/written-off-amount")),
+        (loanDetails.writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.taxPaid.toString),
+          loanDetails.writtenOff.fold(s"scheme/$index/details/$year/written-off")(_=> s"scheme/$index/details/$year/written-off-amount"))
+      )
+    }
+  }
+
+
+  private def schemeBlock(
+    state: JourneyState
+  )(
+    implicit request: AuthorisedRequest[AnyContent]
+  ): Html = {
+    implicit val m: UniformMessages[Html] = messages(request)
+    state match {
+      case JourneyState(Some(_), schemes, Some(_)) =>
+        Html(schemes.zipWithIndex.map { case(scheme, index) =>
+          import scheme._
+          views.html.answer_list(
+            msg("scheme") |+| escape(s" $name"),
+            List(
+              (msg("dates-you-received-loans"),
+                Html(s"${formatDate(scheme.schemeStart)} ${msg("language.to")} ${formatDate(scheme.schemeStopped.getOrElse(LocalDate.now))}"),
+                scheme.schemeStopped.fold(s"scheme/$index/still-using-the-scheme-yes")(_=> s"scheme/$index/still-using-the-scheme-no").some),
+              (msg("disclosure-of-tax-avoidance-schemes-dotas-number"),
+                dotasReferenceNumber.fold(msg("not-applicable"))(m => msg(s"disclosure-of-tax-avoidance-schemes-dotas-number.$m")),
+                s"scheme/$index/dotas-number".some),
+              (msg("hmrc-case-reference-number"),
+                caseReferenceNumber.fold(msg("FALSE")){escape},
+                s"scheme/$index/case-reference-number".some),
+              (msg("employment-status"),
+                employee.fold(msg("FALSE")){_ => msg("employed")},
+                s"scheme/$index/case-reference-number".some),
+              (msg("loan-recipient"),
+                msg(if(loanRecipient) "TRUE" else "FALSE"),
+                s"scheme/$index/about-loan".some),
+              (msg("tax-or-national-insurance-paid-or-agreed-to-pay"),
+                settlement.fold(msg("none")){x => Html(s"£${x.amount}")},
+                settlement.fold(s"scheme/$index/tax-settled")(_ => s"scheme/$index/add-settlement").some )
+            )
+          ) |+|
+          views.html.answer_table(Html(s"$name"), scheme.loanDetails.flatMap(
+            {
+              case(k,v) => Map(k.toString -> v.fold(List.empty[(String,String)])(ld => ld.rowValues(index, k.toString)))
+            }
+          ))
+        }.mkString)
+    }
+  }
+
+  private def blocksFromState(
+    state: JourneyState
+  )(
+    implicit request: AuthorisedRequest[AnyContent]
+  ): Html = {
+    personalDetailsBlock(state) |+| schemeBlock(state)
   }
 
   def cya: Action[AnyContent] = authorisedAction.async { implicit request =>
@@ -495,7 +534,7 @@ class JourneyController @Inject()(
     implicit val auditWrapperFormatter: OFormat[AuditWrapper] = Json.format[AuditWrapper]
   }
 
-  def makeAudit(id: String, username: String, state: JourneyState)(implicit request: AuthorisedRequest[AnyContent]) = {
+  def makeAudit(id: String, username: String, state: JourneyState)(implicit request: AuthorisedRequest[AnyContent]): List[Unit] = {
     // the audit for TXM
     auditConnector.sendExplicitAudit("disguisedRemunerationCheck", Json.toJson(AuditWrapper(username, state)))
     // the audit for RIS

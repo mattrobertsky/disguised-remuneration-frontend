@@ -1,0 +1,52 @@
+@*
+ * Copyright 2019 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@(title: Html, rows:Map[String, List[(String, String)]])(implicit messages: UniformMessages[Html])
+
+<div class="subsection--wide">
+    <h3 class="govuk-heading-s">@messages("cya.loandetails.h1", title.toString())</h3>
+    <table class="govuk-table loans-table">
+        <caption class="govuk-table__caption"></caption>
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.tax-year")</th>
+                <th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.amount")</th>
+                <th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.repaid")</th>
+                <th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.written-off")</th>
+                <th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.tax-paid")</th>
+                <th class="govuk-table__header" scope="col"></th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+        @rows.map{ case (taxyear, values) =>
+            @for(n <- values) {
+                <tr>
+                }
+
+        <td scope="col">@taxyear</td>
+
+            @for(n <- values) {
+                @*TODO remove BR once UX have checked design*@
+                <td scope="col">@n._1 <br/> <a href="@n._2">@messages("tasklist.edit")</a></td>
+            }
+
+            @for(n <- values) {
+            </tr>
+            }
+        }
+        </tbody>
+    </table>
+</div>
