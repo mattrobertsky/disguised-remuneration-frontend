@@ -421,14 +421,6 @@ class JourneyController @Inject()(
         Html(loanDetails.genuinelyRepaid.fold("£" ++ "0")(gr => "£" ++ gr.toString)),
         Html(loanDetails.writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.amount.toString)),
         Html(loanDetails.writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.taxPaid.toString))
-//        ("£" ++ loanDetails.amount.toString,
-//          s"scheme/$index/details/$year/loan-amount"),
-//        (loanDetails.genuinelyRepaid.fold("£" ++ "0")(gr => "£" ++ gr.toString),
-//          loanDetails.genuinelyRepaid.fold(s"scheme/$index/details/$year/repaid-any-loan-during-tax-year")(_=> s"scheme/$index/details/$year/loan-repaid")),
-//        (loanDetails.writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.amount.toString),
-//          loanDetails.writtenOff.fold(s"scheme/$index/details/$year/written-off")(_=> s"scheme/$index/details/$year/written-off-amount")),
-//        (loanDetails.writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.taxPaid.toString),
-//          loanDetails.writtenOff.fold(s"scheme/$index/details/$year/written-off")(_=> s"scheme/$index/details/$year/written-off-amount"))
       )
     }
   }
