@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@(title: Html, rows:Map[String, List[(String, String)]])(implicit messages: UniformMessages[Html])
+@(title: Html,  headingKeys: List[String], rows:Map[String, List[Html]])(implicit messages: UniformMessages[Html])
 
 <div class="subsection--wide">
     <h3 class="govuk-heading-s">@messages("cya.loandetails.h1", title.toString())</h3>
@@ -22,30 +22,25 @@
         <caption class="govuk-table__caption"></caption>
         <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.tax-year")</th>
-                <th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.amount")</th>
-                <th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.repaid")</th>
-                <th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.written-off")</th>
-                <th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.tax-paid")</th>
-                <th class="govuk-table__header" scope="col"></th>
+                @for(k <- headingKeys) {
+                    <th class="govuk-table__header" scope="col">@messages(k)</th>
+                }
+                @*<th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.amount")</th>*@
+                @*<th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.repaid")</th>*@
+                @*<th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.tax-year")</th>*@
+                @*<th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.written-off")</th>*@
+                @*<th class="govuk-table__header" scope="col">@messages("cya.loandetails.header.tax-paid")</th>*@
+                @*<th class="govuk-table__header" scope="col"></th>*@
             </tr>
         </thead>
         <tbody class="govuk-table__body">
-        @rows.map{ case (taxyear, values) =>
-            @for(n <- values) {
-                <tr>
+        @for((_,row) <- rows) {
+            <tr>
+                @for(cell <- row) {
+                    @*TODO remove BR once UX have checked design*@
+                    <td scope="col">@cell</td>
                 }
-
-        <td scope="col">@taxyear</td>
-
-            @for(n <- values) {
-                @*TODO remove BR once UX have checked design*@
-                <td scope="col">@n._1 <br/> <a href="@n._2">@messages("tasklist.edit")</a></td>
-            }
-
-            @for(n <- values) {
             </tr>
-            }
         }
         </tbody>
     </table>

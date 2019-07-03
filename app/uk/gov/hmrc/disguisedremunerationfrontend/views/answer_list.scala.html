@@ -25,7 +25,7 @@
   <div>
    <dt class="cya-question">@title</dt>
    <dd class="cya-answer">@value</dd>
-   <dd>@editLink.map(x => Html(s"""<a href="$x">${messages("tasklist.edit")}</a>""")).getOrElse(Html(""))</dd>
+   <dd class="app-check-your-answers__change">@editLink.map(x => Html(s"""<a href="$x">${messages("tasklist.edit")}</a>""")).getOrElse(Html(""))</dd>
   </div>
  }
  </dl>

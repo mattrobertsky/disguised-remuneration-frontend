@@ -414,16 +414,21 @@ class JourneyController @Inject()(
   }
 
   implicit class LoanDetailTableDecorator(loanDetails: LoanDetails) {
-    def rowValues(index: Int, year: String): List[(String, String)] = {
+    def rowValues(index: Int, year: String): List[(Html)] = {
       List(
-        ("£" ++ loanDetails.amount.toString,
-          s"scheme/$index/details/$year/loan-amount"),
-        (loanDetails.genuinelyRepaid.fold("£" ++ "0")(gr => "£" ++ gr.toString),
-          loanDetails.genuinelyRepaid.fold(s"scheme/$index/details/$year/repaid-any-loan-during-tax-year")(_=> s"scheme/$index/details/$year/loan-repaid")),
-        (loanDetails.writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.amount.toString),
-          loanDetails.writtenOff.fold(s"scheme/$index/details/$year/written-off")(_=> s"scheme/$index/details/$year/written-off-amount")),
-        (loanDetails.writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.taxPaid.toString),
-          loanDetails.writtenOff.fold(s"scheme/$index/details/$year/written-off")(_=> s"scheme/$index/details/$year/written-off-amount"))
+        Html(year),
+        Html("£" ++ loanDetails.amount.toString),
+        Html(loanDetails.genuinelyRepaid.fold("£" ++ "0")(gr => "£" ++ gr.toString)),
+        Html(loanDetails.writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.amount.toString)),
+        Html(loanDetails.writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.taxPaid.toString))
+//        ("£" ++ loanDetails.amount.toString,
+//          s"scheme/$index/details/$year/loan-amount"),
+//        (loanDetails.genuinelyRepaid.fold("£" ++ "0")(gr => "£" ++ gr.toString),
+//          loanDetails.genuinelyRepaid.fold(s"scheme/$index/details/$year/repaid-any-loan-during-tax-year")(_=> s"scheme/$index/details/$year/loan-repaid")),
+//        (loanDetails.writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.amount.toString),
+//          loanDetails.writtenOff.fold(s"scheme/$index/details/$year/written-off")(_=> s"scheme/$index/details/$year/written-off-amount")),
+//        (loanDetails.writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.taxPaid.toString),
+//          loanDetails.writtenOff.fold(s"scheme/$index/details/$year/written-off")(_=> s"scheme/$index/details/$year/written-off-amount"))
       )
     }
   }
@@ -435,6 +440,15 @@ class JourneyController @Inject()(
     implicit request: AuthorisedRequest[AnyContent]
   ): Html = {
     implicit val m: UniformMessages[Html] = messages(request)
+    val loanDetailsTableHeadings =
+      List(
+        "cya.loandetails.header.amount",
+        "cya.loandetails.header.repaid",
+        "cya.loandetails.header.tax-year",
+        "cya.loandetails.header.written-off",
+        "cya.loandetails.header.tax-paid",
+        ""
+      )
     state match {
       case JourneyState(Some(_), schemes, Some(_)) =>
         Html(schemes.zipWithIndex.map { case(scheme, index) =>
@@ -462,9 +476,13 @@ class JourneyController @Inject()(
                 settlement.fold(s"scheme/$index/tax-settled")(_ => s"scheme/$index/add-settlement").some )
             )
           ) |+|
-          views.html.answer_table(Html(s"$name"), scheme.loanDetails.flatMap(
+          views.html.answer_table(Html(s"$name"), loanDetailsTableHeadings, scheme.loanDetails.flatMap(
             {
-              case(k,v) => Map(k.toString -> v.fold(List.empty[(String,String)])(ld => ld.rowValues(index, k.toString)))
+              case(k,v) => {
+                Map(k.toString -> v.fold(List.empty[Html]){ ld =>
+                  ld.rowValues(index, k.toString):+ Html(s"""<a href="scheme/$index/details/${k.toString}/loan-amount">${msg("tasklist.edit")}</a>""")
+                })
+              }
             }
           ))
         }.mkString)

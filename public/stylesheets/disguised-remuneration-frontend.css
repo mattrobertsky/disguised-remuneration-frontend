@@ -2,7 +2,8 @@
     border: 2px solid #0b0c0c;
 }
 
-.check-your-answers .change-answer {
+.check-your-answers .change-answer,
+.app-check-your-answers__change {
     text-align: right;
     padding-right: 0;
 }
