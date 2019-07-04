@@ -244,6 +244,7 @@ cya.loandetails.header.amount=Swm
 cya.loandetails.header.repaid=Wedi’i ad-dalu
 cya.loandetails.header.written-off=Wedi’i ddileu
 cya.loandetails.header.tax-paid=Treth a dalwyd
+cya.loandetails.tax-year={0} i {1}
 cya.warning.body=Gallech gael eich erlyn os byddwch yn rhoi gwybodaeth anwir neu gamarweiniol yn fwriadol.
 cya.declaration.p1=Rwyf i
 cya.declaration.p2=yn cadarnhau, hyd eithaf fy ngwybodaeth, fod yr wybodaeth a roddwyd gennyf yn wir ac yn gywir.

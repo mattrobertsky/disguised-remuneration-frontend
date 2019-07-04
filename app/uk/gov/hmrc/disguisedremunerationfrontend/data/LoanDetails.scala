@@ -27,6 +27,7 @@ case class LoanDetails(
   year: Int,
   hmrcApproved: YesNoUnknown,
   amount: Money,
+  isGenuinelyRepaid: Boolean,
   genuinelyRepaid: Option[Money],
   isWrittenOff: YesNoUnknown,
   writtenOff: Option[WrittenOff]
@@ -98,6 +99,29 @@ object LoanDetails {
             )
           )
         ).in[R]
+      isRepaid <- ask[Boolean]("repaid-any-loan-during-tax-year")
+        .defaultOpt(default.map(_.genuinelyRepaid != 0))
+        .withCustomContentAndArgs(
+          ("repaid-any-loan-during-tax-year.heading",
+            ("repaid-any-loan-during-tax-year.heading.range",
+              List(formatDate(startDate),
+                formatDate(endDate))
+            ))
+        )
+        .withCustomContentAndArgs(
+          ("repaid-any-loan-during-tax-year.required",
+            ("repaid-any-loan-during-tax-year.required",
+              List(formatDate(startDate),
+                formatDate(endDate))
+            ))
+        )
+        .withCustomContentAndArgs(
+          ("repaid-any-loan-during-tax-year.heading.hint",
+            ("repaid-any-loan-during-tax-year.heading.hint.custom",
+              List(scheme.name)
+            )
+          )
+        ).in[R]
       repaid <-  ask[Money]("loan-repaid")
         .defaultOpt(default.flatMap(_.genuinelyRepaid))
         .validating(
@@ -110,30 +134,7 @@ object LoanDetails {
               List(scheme.name)
             )
           )
-        ).in[R] when
-        ask[Boolean]("repaid-any-loan-during-tax-year")
-          .defaultOpt(default.map(_.genuinelyRepaid != 0))
-          .withCustomContentAndArgs(
-            ("repaid-any-loan-during-tax-year.heading",
-              ("repaid-any-loan-during-tax-year.heading.range",
-                List(formatDate(startDate),
-                  formatDate(endDate))
-              ))
-          )
-          .withCustomContentAndArgs(
-            ("repaid-any-loan-during-tax-year.required",
-              ("repaid-any-loan-during-tax-year.required",
-                List(formatDate(startDate),
-                  formatDate(endDate))
-              ))
-          )
-          .withCustomContentAndArgs(
-            ("repaid-any-loan-during-tax-year.heading.hint",
-              ("repaid-any-loan-during-tax-year.heading.hint.custom",
-                List(scheme.name)
-              )
-            )
-          ).in[R]
+        ).in[R] when isRepaid
       isWrittenOff <- ask[YesNoUnknown]("written-off")
         .defaultOpt(default.map(_.isWrittenOff))
         .withCustomContentAndArgs(
@@ -184,7 +185,7 @@ object LoanDetails {
         ).in[R] when (isWrittenOff == YesNoUnknown.Yes)
 
     } yield {
-      LoanDetails(year, approved, amount, repaid, isWrittenOff, writtenOff)
+      LoanDetails(year, approved, amount, isRepaid, repaid, isWrittenOff, writtenOff)
     }
   }
 }

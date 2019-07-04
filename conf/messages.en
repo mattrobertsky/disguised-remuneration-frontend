@@ -214,6 +214,7 @@ cya.loandetails.header.amount=Amount
 cya.loandetails.header.repaid=Repaid
 cya.loandetails.header.written-off=Written off
 cya.loandetails.header.tax-paid=Tax paid
+cya.loandetails.tax-year={0} to {1}
 cya.warning.body=You could be prosecuted if you deliberately give untrue or misleading information.
 cya.declaration.p1=I
 cya.declaration.p2=confirm that, to the best of my knowledge, the information given is true and correct.
