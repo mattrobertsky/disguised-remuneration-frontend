@@ -472,7 +472,7 @@ class JourneyController @Inject()(
             {
               case(k,v) => {
                 Map(k.toString -> v.fold(List.empty[Html]){ ld =>
-                  ld.rowValues(index, k.toString):+ Html(s"""<a href="scheme/$index/details/${k.toString}/loan-amount">${msg("tasklist.edit")}</a>""")
+                  ld.rowValues(index, k.toString):+ Html(s"""<a href="scheme/$index/details/${k.toString}/fixed-term-loan">${msg("tasklist.edit")}</a>""")
                 })
               }
             }
