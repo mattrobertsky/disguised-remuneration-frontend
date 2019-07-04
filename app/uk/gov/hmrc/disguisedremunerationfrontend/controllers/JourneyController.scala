@@ -414,9 +414,9 @@ class JourneyController @Inject()(
   }
 
   implicit class LoanDetailTableDecorator(loanDetails: LoanDetails) {
-    def rowValues(index: Int, year: String): List[(Html)] = {
+    def rowValues(index: Int, year: String)(implicit request: AuthorisedRequest[AnyContent]): List[(Html)] = {
       List(
-        Html(year),
+        messages(request)("cya.loandetails.tax-year", year, (year.toInt + 1).toString),
         Html("£" ++ loanDetails.amount.toString),
         Html(loanDetails.genuinelyRepaid.fold("£" ++ "0")(gr => "£" ++ gr.toString)),
         Html(loanDetails.writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.amount.toString)),
@@ -545,8 +545,17 @@ class JourneyController @Inject()(
   }
 
   def makeAudit(id: String, username: String, state: JourneyState)(implicit request: AuthorisedRequest[AnyContent]): List[Unit] = {
+    // remove spaces from nino for splunk
+    val cleanNinoState = state.aboutYou match {
+      case Some(a@AboutSelf(spaceyNino)) =>
+        state.copy(aboutYou = a.copy(nino = spaceyNino.replace(" ", "")).some)
+      case Some(a@AboutAnother(_, Left(nino), _, _, _)) =>
+        state.copy(aboutYou = a.copy(identification = Left(nino.replace(" ", ""))).some)
+      case _ =>
+        state
+    }
     // the audit for TXM
-    auditConnector.sendExplicitAudit("disguisedRemunerationCheck", Json.toJson(AuditWrapper(username, state)))
+    auditConnector.sendExplicitAudit("disguisedRemunerationCheck", Json.toJson(AuditWrapper(username, cleanNinoState)))
     // the audit for RIS
     for {
       scheme <- state.schemes
@@ -556,7 +565,7 @@ class JourneyController @Inject()(
       val flatState = Json.toJson(FlatState(
             id,
             username,
-            state.aboutYou,
+            cleanNinoState.aboutYou,
             scheme.name,
             scheme.dotasReferenceNumber,
             scheme.caseReferenceNumber,
