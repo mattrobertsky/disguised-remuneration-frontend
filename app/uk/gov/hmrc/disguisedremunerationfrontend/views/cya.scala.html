@@ -71,7 +71,7 @@
                         <tr>
                     }
 
-                    <td scope="col">@taxyear</td>
+                    <td scope="col">@messages("cya.loandetails.tax-year", taxyear, (taxyear.toInt + 1).toString)</td>
 
                     @for(n <- values) {
                         <td scope="col">@n</td>
