@@ -100,7 +100,7 @@ object LoanDetails {
           )
         ).in[R]
       isRepaid <- ask[Boolean]("repaid-any-loan-during-tax-year")
-        .defaultOpt(default.map(_.genuinelyRepaid != 0))
+        .defaultOpt(default.map(_.isGenuinelyRepaid))
         .withCustomContentAndArgs(
           ("repaid-any-loan-during-tax-year.heading",
             ("repaid-any-loan-during-tax-year.heading.range",
