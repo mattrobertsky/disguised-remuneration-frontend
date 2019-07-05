@@ -16,6 +16,14 @@
 
 @(usersName: String, blocks: Html, form: Form[Boolean])(implicit messages: UniformMessages[Html], request: Request[AnyContent])
 
+@withCommas(name: String) = @{
+    if(name.nonEmpty) {
+        s", ${name.trim},"
+    } else {
+        s" $name"
+    }
+}
+
 <a href="/disguised-remuneration/" class="govuk-link link-back">@messages(List(s"back-to-service-page","back"))</a>
 
 @if(form.errors.nonEmpty) {
@@ -66,7 +74,7 @@
                         <input id="submit-declaration" name="confirm" type="checkbox" value="true">
 
                         <label for="submit-declaration">
-                            @messages("cya.declaration.p1") @usersName @messages("cya.declaration.p2")
+                            @messages("cya.declaration.p1")@withCommas(usersName) @messages("cya.declaration.p2")
                         </label>
                     </div>
                 @if(form.errors.nonEmpty){
