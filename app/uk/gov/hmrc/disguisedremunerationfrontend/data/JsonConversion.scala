@@ -103,7 +103,7 @@ object JsonConversion {
     loanRecipientName: Option[String],
     settlement: Option[TaxSettlement],
     year: Int,
-    hmrcApproved: YesNoUnknown,
+    hmrcApproved: Option[YesNoUnknown],
     amount: Money,
     genuinelyRepaid: Option[Money],
     writtenOff: Option[WrittenOff],

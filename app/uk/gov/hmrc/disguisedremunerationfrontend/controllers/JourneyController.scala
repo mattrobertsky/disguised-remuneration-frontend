@@ -104,7 +104,6 @@ object YesNoDoNotKnow {
     }
 }
 
-
 @Singleton
 class JourneyController @Inject()(
   mcc: MessagesControllerComponents,
