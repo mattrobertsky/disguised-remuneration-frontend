@@ -434,9 +434,9 @@ class JourneyController @Inject()(
     implicit val m: UniformMessages[Html] = messages(request)
     val loanDetailsTableHeadings =
       List(
+        "cya.loandetails.header.tax-year",
         "cya.loandetails.header.amount",
         "cya.loandetails.header.repaid",
-        "cya.loandetails.header.tax-year",
         "cya.loandetails.header.written-off",
         "cya.loandetails.header.tax-paid",
         ""
