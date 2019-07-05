@@ -17,6 +17,8 @@
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
 
+import java.time.LocalDate
+
 import ltbs.uniform._
 import org.atnos.eff._
 import play.api.i18n.Messages
@@ -25,7 +27,7 @@ import uk.gov.hmrc.disguisedremunerationfrontend.data.Scheme.MoneyRegex
 
 case class LoanDetails(
   year: Int,
-  hmrcApproved: YesNoUnknown,
+  hmrcApproved: Option[YesNoUnknown],
   amount: Money,
   isGenuinelyRepaid: Boolean,
   genuinelyRepaid: Option[Money],
@@ -54,14 +56,14 @@ object LoanDetails {
     val (startDate, endDate) = year.toFinancialYear
     for {
       approved <- ask[YesNoUnknown]("fixed-term-loan")
-        .defaultOpt(default.map(_.hmrcApproved))
+        .defaultOpt(default.flatMap(_.hmrcApproved))
         .withCustomContentAndArgs(
             ("fixed-term-loan.heading.hint",
               ("fixed-term-loan.heading.hint.custom",
                 List(scheme.name)
               )
             )
-          ).in[R]
+          ).in[R] when startDate.isBefore(LocalDate.of(2010, 4, 6))
       amount <- ask[Money]("loan-amount")
         .defaultOpt(default.map(_.amount))
         .validating(
