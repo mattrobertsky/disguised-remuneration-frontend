@@ -31,17 +31,7 @@ case class LoanDetails(
   genuinelyRepaid: Option[Money],
   isWrittenOff: YesNoUnknown,
   writtenOff: Option[WrittenOff]
-) {
-  // TODO move this to a pimp
-  def toListString: List[String] = {
-    List(
-      "£" ++ amount.toString,
-      genuinelyRepaid.fold("£" ++ "0")(gr => "£" ++ gr.toString),
-      writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.amount.toString),
-      writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.taxPaid.toString)
-    )
-  }
-}
+)
 
 object LoanDetails {
 
