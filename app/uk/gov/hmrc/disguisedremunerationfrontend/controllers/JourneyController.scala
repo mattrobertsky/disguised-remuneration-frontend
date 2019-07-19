@@ -470,8 +470,10 @@ class JourneyController @Inject()(
           views.html.answer_table(Html(s"$name"), loanDetailsTableHeadings, scheme.loanDetails.flatMap(
             {
               case(k,v) => {
-                Map(k.toString -> v.fold(List.empty[Html]){ ld =>
-                  ld.rowValues(index, k.toString):+ Html(s"""<a href="scheme/$index/details/${k.toString}/fixed-term-loan">${msg("tasklist.edit")}</a>""")
+                Map(k.toString -> v.fold(List.empty[Html]){ ld => {
+                  val targetPage = if (k >= 2010) "loan-amount" else "fixed-term-loan"
+                  ld.rowValues(index, k.toString) :+ Html(s"""<a href="scheme/$index/details/${k.toString}/$targetPage">${msg("tasklist.edit")}</a>""")
+                }
                 })
               }
             }
