@@ -47,7 +47,6 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Either
 
 sealed abstract class EmploymentStatus extends EnumEntry
 object EmploymentStatus
