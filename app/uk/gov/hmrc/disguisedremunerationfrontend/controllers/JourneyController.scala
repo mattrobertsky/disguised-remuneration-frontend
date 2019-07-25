@@ -399,6 +399,7 @@ class JourneyController @Inject()(
           ninoOrUtr match {
             case Left(nino) =>  List((msg("nino"), escape(nino), "about-you/about-scheme-user".some))
             case Right(utr) =>  List((msg("utr"), escape(utr), "about-you/about-scheme-user".some))
+            case _ => List.empty
           }
         case _ => List.empty
         }
