@@ -223,10 +223,12 @@ cya.complete=Accept and send details
 personal-details=Personal details
 name=Name
 filling-in-form-for-self=Filling in form for self
+utr=Unique taxpayer's reference (UTR)
+nino=National insurance number
 address=Address
 contact-details=Contact details
 telephone=Telephone number
-email-address=Email Address
+email-address=Email address
 
 dates-you-received-loans=Dates when you received loans
 scheme=Scheme: 

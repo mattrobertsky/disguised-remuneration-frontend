@@ -47,6 +47,7 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.Either
 
 sealed abstract class EmploymentStatus extends EnumEntry
 object EmploymentStatus
@@ -392,11 +393,23 @@ class JourneyController @Inject()(
     implicit val m: UniformMessages[Html] = messages(request)
     state match {
       case JourneyState(Some(aboutYou), _, Some(contactDetails)) =>
+        val checkYourNinoOrUtr = aboutYou match {
+        case a@AboutSelf(nino) =>
+          List((msg("utr"), escape(nino), "about-you/your-ni-no".some))
+        case a@AboutAnother(_, ninoOrUtr, _, _, _) =>
+          ninoOrUtr match {
+            case Left(nino) =>  List((msg("nino"), escape(nino), "about-you/about-scheme-user".some))
+            case Right(utr) =>  List((msg("utr"), escape(utr), "about-you/about-scheme-user".some))
+          }
+        case _ => List.empty
+        }
+
         views.html.answer_list(
           msg("personal-details"),
           List(
             (msg("name"), escape(username), None),
             (msg("filling-in-form-for-self"), msg(if(aboutYou.completedBySelf) "TRUE" else "FALSE"), "about-you/about-you".some),
+            checkYourNinoOrUtr.head,
             (msg("address"), contactDetails.address.lines.map(escape).intercalate(Html("<br />")), "contact-details/confirm-contact-details".some),
             (msg("contact-details"), {
               import contactDetails.telephoneAndEmail._
