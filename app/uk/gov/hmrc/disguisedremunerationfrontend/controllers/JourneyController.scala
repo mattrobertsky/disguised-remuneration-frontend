@@ -471,7 +471,7 @@ class JourneyController @Inject()(
                 s"scheme/$index/case-reference-number".some),
               (msg("employment-status"),
                 employee.fold(msg("FALSE")){_ => msg("employed")},
-                s"scheme/$index/case-reference-number".some),
+                s"scheme/$index/user-employed".some),
               (msg("loan-recipient"),
                 msg(if(loanRecipient) "TRUE" else "FALSE"),
                 s"scheme/$index/about-loan".some),
