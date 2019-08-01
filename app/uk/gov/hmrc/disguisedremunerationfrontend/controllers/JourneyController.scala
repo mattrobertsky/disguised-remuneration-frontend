@@ -394,7 +394,7 @@ class JourneyController @Inject()(
       case JourneyState(Some(aboutYou), _, Some(contactDetails)) =>
         val checkYourNinoOrUtr = aboutYou match {
         case a@AboutSelf(nino) =>
-          List((msg("utr"), escape(nino), "about-you/your-ni-no".some))
+          List((msg("nino"), escape(nino), "about-you/your-ni-no".some))
         case a@AboutAnother(_, ninoOrUtr, _, _, _) =>
           ninoOrUtr match {
             case Left(nino) =>  List((msg("nino"), escape(nino), "about-you/about-scheme-user".some))
