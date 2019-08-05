@@ -24,7 +24,7 @@ import cats.implicits._
 
 sealed trait AboutYou {
   def identification: Either[Nino, Utr]
-  def completedBySelf: Boolean 
+  def completedBySelf: Boolean
 }
 
 case class AboutSelf (
