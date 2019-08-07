@@ -65,8 +65,7 @@ object Scheme {
   def isAfterEarliestDate(d: LocalDate): Boolean = d.isAfter(earliestDate)
 
   def startBeforeEnd(dates: (LocalDate, LocalDate)): Boolean = (dates._1, dates._2) match {
-      //TODO Error throws on same day
-    case (start, end) if isInRange(start) && isInRange(end) && start.isBefore(end) => true
+    case (start, end) if isInRange(start) && isInRange(end) && (start.isBefore(end) || start.isEqual(end)) => true
     case _ => false
   }
 

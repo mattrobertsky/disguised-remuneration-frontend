@@ -24,13 +24,13 @@ import cats.implicits._
 
 sealed trait AboutYou {
   def identification: Either[Nino, Utr]
-  def completedBySelf: Boolean 
+  def completedBySelf: Boolean
 }
 
 case class AboutSelf (
   nino: String
 ) extends AboutYou {
-  def identification: Either[Nino, Utr] = Left(nino.replace(" ", ""))
+  def identification: Either[Nino, Utr] = Left(nino)
   def completedBySelf: Boolean = true  
 }
 

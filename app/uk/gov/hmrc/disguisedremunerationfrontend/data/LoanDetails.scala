@@ -17,6 +17,8 @@
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
 
+import java.time.LocalDate
+
 import ltbs.uniform._
 import org.atnos.eff._
 import play.api.i18n.Messages
@@ -47,6 +49,7 @@ case class LoanDetails(
   }
 }
 
+
 object LoanDetails {
 
   type Stack = Fx.fx6[
@@ -70,16 +73,22 @@ object LoanDetails {
     val (startDate, endDate) = year.toFinancialYear
     for {
       approved <- ask[YesNoUnknown]("fixed-term-loan")
-        .defaultOpt(default.map(_.hmrcApproved))
+        .defaultOpt(default.flatMap(_.hmrcApproved))
         .withCustomContentAndArgs(
             ("fixed-term-loan.heading.hint",
               ("fixed-term-loan.heading.hint.custom",
                 List(scheme.name)
               )
             )
+<<<<<<< HEAD
           ).in[R]
       amount <- ask[TotalLoan]("loan-amount")
         .defaultOpt(default.map(_.totalLoan))
+=======
+          ).in[R] when startDate.isBefore(LocalDate.of(2010, 4, 6))
+      amount <- ask[Money]("loan-amount")
+        .defaultOpt(default.map(_.amount))
+>>>>>>> master
         .validating(
           "format",
           x => x.amount.matches(MoneyRegex)
@@ -107,6 +116,29 @@ object LoanDetails {
             )
           )
         ).in[R]
+      isRepaid <- ask[Boolean]("repaid-any-loan-during-tax-year")
+        .defaultOpt(default.map(_.isGenuinelyRepaid))
+        .withCustomContentAndArgs(
+          ("repaid-any-loan-during-tax-year.heading",
+            ("repaid-any-loan-during-tax-year.heading.range",
+              List(formatDate(startDate),
+                formatDate(endDate))
+            ))
+        )
+        .withCustomContentAndArgs(
+          ("repaid-any-loan-during-tax-year.required",
+            ("repaid-any-loan-during-tax-year.required",
+              List(formatDate(startDate),
+                formatDate(endDate))
+            ))
+        )
+        .withCustomContentAndArgs(
+          ("repaid-any-loan-during-tax-year.heading.hint",
+            ("repaid-any-loan-during-tax-year.heading.hint.custom",
+              List(scheme.name)
+            )
+          )
+        ).in[R]
       repaid <-  ask[Money]("loan-repaid")
         .defaultOpt(default.flatMap(_.genuinelyRepaid))
         .validating(
@@ -119,30 +151,7 @@ object LoanDetails {
               List(scheme.name)
             )
           )
-        ).in[R] when
-        ask[Boolean]("repaid-any-loan-during-tax-year")
-          .defaultOpt(default.map(_.genuinelyRepaid != 0))
-          .withCustomContentAndArgs(
-            ("repaid-any-loan-during-tax-year.heading",
-              ("repaid-any-loan-during-tax-year.heading.range",
-                List(formatDate(startDate),
-                  formatDate(endDate))
-              ))
-          )
-          .withCustomContentAndArgs(
-            ("repaid-any-loan-during-tax-year.required",
-              ("repaid-any-loan-during-tax-year.required",
-                List(formatDate(startDate),
-                  formatDate(endDate))
-              ))
-          )
-          .withCustomContentAndArgs(
-            ("repaid-any-loan-during-tax-year.heading.hint",
-              ("repaid-any-loan-during-tax-year.heading.hint.custom",
-                List(scheme.name)
-              )
-            )
-          ).in[R]
+        ).in[R] when isRepaid
       isWrittenOff <- ask[YesNoUnknown]("written-off")
         .defaultOpt(default.map(_.isWrittenOff))
         .withCustomContentAndArgs(
@@ -193,7 +202,7 @@ object LoanDetails {
         ).in[R] when (isWrittenOff == YesNoUnknown.Yes)
 
     } yield {
-      LoanDetails(year, approved, amount, repaid, isWrittenOff, writtenOff)
+      LoanDetails(year, approved, amount, isRepaid, repaid, isWrittenOff, writtenOff)
     }
   }
 }

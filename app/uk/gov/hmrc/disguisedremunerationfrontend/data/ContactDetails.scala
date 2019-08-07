@@ -75,10 +75,6 @@ object ContactDetails {
           "postcode-limit",
           address => address.postcode.length <= 40
         )
-        .validating(
-          "postcode-format",
-          address => address.postcode.matches(postCodeRegex)
-        )
       telAndEmail <- ask[TelAndEmail]("confirm-contact-prefs")
         .defaultOpt(default.map(_.telephoneAndEmail))
         .validating(

@@ -79,7 +79,6 @@ object JsonConversion {
       case _ => JsError(s"cannot find $leftName or $rightName")
     }
     def writes(o: Either[A,B]): JsValue = o match {
-      case Left(a) if leftName == "nino" => Json.obj(leftName -> a.toString.replace(" ", ""))
       case Left(a) => Json.obj(leftName -> a)
       case Right(b) => Json.obj(rightName -> b)
     }
@@ -105,8 +104,8 @@ object JsonConversion {
     loanRecipientName: Option[String],
     settlement: Option[TaxSettlement],
     year: Int,
-    hmrcApproved: YesNoUnknown,
-    totalLoan: TotalLoan,
+    hmrcApproved: Option[YesNoUnknown],
+    amount: Money,
     genuinelyRepaid: Option[Money],
     writtenOff: Option[WrittenOff],
     contactDetails: Option[ContactDetails],
