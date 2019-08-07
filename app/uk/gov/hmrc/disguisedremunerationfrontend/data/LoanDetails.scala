@@ -33,23 +33,7 @@ case class LoanDetails(
   genuinelyRepaid: Option[Money],
   isWrittenOff: YesNoUnknown,
   writtenOff: Option[WrittenOff]
-) {
-
-  def toListString: List[String] = {
-    List(
-      "£" ++ totalLoan.amount.toString,
-      if(totalLoan.estimate)
-        "Yes"
-      else
-        "No"
-      ,
-      genuinelyRepaid.fold("£" ++ "0")(gr => "£" ++ gr.toString),
-      writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.amount.toString),
-      writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.taxPaid.toString)
-    )
-  }
-}
-
+)
 
 object LoanDetails {
 
