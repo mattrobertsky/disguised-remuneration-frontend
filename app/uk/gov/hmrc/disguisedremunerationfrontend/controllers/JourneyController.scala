@@ -385,7 +385,8 @@ class JourneyController @Inject()(
   }
 
   private def personalDetailsBlock(
-    state: JourneyState
+    state: JourneyState,
+    retrievedNino: Boolean
   )(
     implicit request: AuthorisedRequest[AnyContent]
   ): Html = {
@@ -394,7 +395,7 @@ class JourneyController @Inject()(
       case JourneyState(Some(aboutYou), _, Some(contactDetails)) =>
         val checkYourNinoOrUtr = aboutYou match {
         case a@AboutSelf(nino) =>
-          List((msg("nino"), escape(nino), "about-you/your-ni-no".some))
+          List((msg("nino"), escape(nino), if(!retrievedNino)"about-you/your-ni-no".some else None))
         case a@AboutAnother(_, ninoOrUtr, _, _, _) =>
           ninoOrUtr match {
             case Left(nino) =>  List((msg("nino"), escape(nino), "about-you/about-scheme-user".some))
@@ -496,11 +497,12 @@ class JourneyController @Inject()(
   }
 
   private def blocksFromState(
-    state: JourneyState
+    state: JourneyState,
+    retrievedNino: Boolean = false
   )(
     implicit request: AuthorisedRequest[AnyContent]
   ): Html = {
-    personalDetailsBlock(state) |+| schemeBlock(state)
+    personalDetailsBlock(state, retrievedNino) |+| schemeBlock(state)
   }
 
   def cya: Action[AnyContent] = authorisedAction.async { implicit request =>
@@ -511,7 +513,7 @@ class JourneyController @Inject()(
       } else {
         val contents = views.html.cya(
           username,
-          blocksFromState(state),
+          blocksFromState(state, request.nino.nonEmpty),
           confirmationForm
         )
         Logger.debug("completed check your answers")
