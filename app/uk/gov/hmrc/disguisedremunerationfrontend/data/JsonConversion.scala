@@ -105,7 +105,7 @@ object JsonConversion {
     settlement: Option[TaxSettlement],
     year: Int,
     hmrcApproved: Option[YesNoUnknown],
-    amount: Money,
+    amount: TotalLoan,
     genuinelyRepaid: Option[Money],
     writtenOff: Option[WrittenOff],
     contactDetails: Option[ContactDetails],

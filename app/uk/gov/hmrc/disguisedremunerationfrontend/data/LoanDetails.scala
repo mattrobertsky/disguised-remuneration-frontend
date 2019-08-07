@@ -26,14 +26,15 @@ import uk.gov.hmrc.disguisedremunerationfrontend.controllers.YesNoUnknown
 import uk.gov.hmrc.disguisedremunerationfrontend.data.Scheme.MoneyRegex
 
 case class LoanDetails(
-                        year: Int,
-                        hmrcApproved: YesNoUnknown,
-                        totalLoan: TotalLoan,
-                        genuinelyRepaid: Option[Money],
-                        isWrittenOff: YesNoUnknown,
-                        writtenOff: Option[WrittenOff]
+  year: Int,
+  hmrcApproved: Option[YesNoUnknown],
+  totalLoan: TotalLoan,
+  isGenuinelyRepaid: Boolean,
+  genuinelyRepaid: Option[Money],
+  isWrittenOff: YesNoUnknown,
+  writtenOff: Option[WrittenOff]
 ) {
-  // TODO move this to a pimp
+
   def toListString: List[String] = {
     List(
       "£" ++ totalLoan.amount.toString,
@@ -80,15 +81,10 @@ object LoanDetails {
                 List(scheme.name)
               )
             )
-<<<<<<< HEAD
-          ).in[R]
-      amount <- ask[TotalLoan]("loan-amount")
-        .defaultOpt(default.map(_.totalLoan))
-=======
           ).in[R] when startDate.isBefore(LocalDate.of(2010, 4, 6))
-      amount <- ask[Money]("loan-amount")
-        .defaultOpt(default.map(_.amount))
->>>>>>> master
+      amount <- ask[TotalLoan]("loan-amount")
+        .defaultOpt(default.map(_.totalLoan)
+        )
         .validating(
           "format",
           x => x.amount.matches(MoneyRegex)
@@ -177,14 +173,6 @@ object LoanDetails {
         ).in[R]
       writtenOff <- ask[WrittenOff]("written-off-amount")
         .defaultOpt(default.flatMap(_.writtenOff))
-        //TODO Need a feature to validate both together, right now it is sequential
-//          .validating(
-//            "both-format",
-//            {
-//              case WrittenOff(amount, tax) => amount.matches(MoneyRegex) && tax.matches(MoneyRegex)
-//              case _ => true
-//            }
-//          )
         .validating(
           "amount-format",
             x => x.amount.matches(MoneyRegex)

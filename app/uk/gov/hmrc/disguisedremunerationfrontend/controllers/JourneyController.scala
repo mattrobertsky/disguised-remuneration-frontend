@@ -432,7 +432,7 @@ class JourneyController @Inject()(
     def rowValues(index: Int, year: String)(implicit request: AuthorisedRequest[AnyContent]): List[(Html)] = {
       List(
         messages(request)("cya.loandetails.tax-year", year, (year.toInt + 1).toString),
-        Html("£" ++ loanDetails.amount.toString),
+        Html("£" ++ loanDetails.totalLoan.amount.toString),
         Html(loanDetails.genuinelyRepaid.fold("£" ++ "0")(gr => "£" ++ gr.toString)),
         Html(loanDetails.writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.amount.toString)),
         Html(loanDetails.writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.taxPaid.toString))
