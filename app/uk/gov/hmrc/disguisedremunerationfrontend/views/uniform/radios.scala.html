@@ -25,17 +25,17 @@
 
 @childkey=@{errors.children.keys.headOption.getOrElse("")}
 @grandchildValue=@{errors.children.map(_._2.value).headOption.getOrElse("")}
-
-
+@separateBooleanValue=@{errors.children.map(_._2.children.map(_._2.value)).headOption.fold("")(x => x.headOption.getOrElse(""))}
     @defining(
         errors match {
             case Tree("required", childTree) => errors.value
             case Tree(_, childTree) if childTree.keys.headOption === Some("outer") &&
                     childTree.map(_._2.value === "required") => s"$grandchildValue"
+            case Tree(_, childTree) if childTree.keys.headOption === Some("estimate") =>
+                s"$separateBooleanValue"
             case _ => ""
         }
     ) { topLevelError =>
-
     <div class="radios @if(topLevelError.nonEmpty) {form-group-error}">
         @if(topLevelError.nonEmpty) {
                 <span class="error-message">

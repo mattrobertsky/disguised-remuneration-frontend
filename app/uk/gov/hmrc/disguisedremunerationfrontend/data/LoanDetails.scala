@@ -28,7 +28,7 @@ import uk.gov.hmrc.disguisedremunerationfrontend.data.Scheme.MoneyRegex
 case class LoanDetails(
   year: Int,
   hmrcApproved: Option[YesNoUnknown],
-  amount: Money,
+  totalLoan: TotalLoan,
   isGenuinelyRepaid: Boolean,
   genuinelyRepaid: Option[Money],
   isWrittenOff: YesNoUnknown,
@@ -37,8 +37,9 @@ case class LoanDetails(
 
 object LoanDetails {
 
-  type Stack = Fx.fx5[
+  type Stack = Fx.fx6[
     UniformAsk[YesNoUnknown, ?],
+    UniformAsk[TotalLoan, ?],
     UniformAsk[Boolean, ?],
     UniformAsk[Money, ?],
     UniformAsk[Option[Money], ?],
@@ -48,6 +49,7 @@ object LoanDetails {
   def program[R
   : _uniformCore
   : _uniformAsk[YesNoUnknown, ?]
+  : _uniformAsk[TotalLoan, ?]
   : _uniformAsk[Boolean, ?]
   : _uniformAsk[Money, ?]
   : _uniformAsk[Option[Money], ?]
@@ -64,29 +66,32 @@ object LoanDetails {
               )
             )
           ).in[R] when startDate.isBefore(LocalDate.of(2010, 4, 6))
-      amount <- ask[Money]("loan-amount")
-        .defaultOpt(default.map(_.amount))
+      amount <- ask[TotalLoan]("loan-amount")
+        .defaultOpt(default.map(_.totalLoan)
+        )
         .validating(
           "format",
-          x => x.matches(MoneyRegex)
+          x => x.amount.matches(MoneyRegex)
         )
         .withCustomContentAndArgs(
-          ("loan-amount.required",
-            ("loan-amount.required",
+          ("loan-amount.amount.required",
+            ("loan-amount.amount.required",
             List(formatDate(startDate),
             formatDate(endDate))
-        ))
+            )
+          )
         )
         .withCustomContentAndArgs(
           ("loan-amount.heading",
-            ("loan-amount.heading.range",
+            ("loan-amount.heading",
               List(formatDate(startDate),
                 formatDate(endDate))
-            ))
+            )
+          )
         )
         .withCustomContentAndArgs(
           ("loan-amount.heading.hint",
-            ("loan-amount.heading.hint.custom",
+            ("loan-amount.heading.hint",
               List(scheme.name)
             )
           )
@@ -152,14 +157,6 @@ object LoanDetails {
         ).in[R]
       writtenOff <- ask[WrittenOff]("written-off-amount")
         .defaultOpt(default.flatMap(_.writtenOff))
-        //TODO Need a feature to validate both together, right now it is sequential
-//          .validating(
-//            "both-format",
-//            {
-//              case WrittenOff(amount, tax) => amount.matches(MoneyRegex) && tax.matches(MoneyRegex)
-//              case _ => true
-//            }
-//          )
         .validating(
           "amount-format",
             x => x.amount.matches(MoneyRegex)

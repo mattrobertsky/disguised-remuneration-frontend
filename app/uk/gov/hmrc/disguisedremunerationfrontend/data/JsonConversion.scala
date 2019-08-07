@@ -26,6 +26,7 @@ object JsonConversion {
   implicit private[data] lazy val addressFormatter = Json.format[Address]
   implicit private[data] lazy val telAndEmailFormatter = Json.format[TelAndEmail]
   implicit private[data] lazy val contactDetailsFormatter = Json.format[ContactDetails]
+  implicit private[data] lazy val totalLoanFormatter = Json.format[TotalLoan]
   implicit private[data] lazy val loanDetailsFormatter = Json.format[LoanDetails]
   implicit private[data] lazy val taxSettlementFormatter = Json.format[TaxSettlement]
 
@@ -104,7 +105,7 @@ object JsonConversion {
     settlement: Option[TaxSettlement],
     year: Int,
     hmrcApproved: Option[YesNoUnknown],
-    amount: Money,
+    amount: TotalLoan,
     genuinelyRepaid: Option[Money],
     writtenOff: Option[WrittenOff],
     contactDetails: Option[ContactDetails],

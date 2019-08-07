@@ -165,10 +165,11 @@ fixed-term-loan.Yes=Yes
 fixed-term-loan.No=No
 fixed-term-loan.Unknown=Do not know
 
-loan-amount.heading=What was the total loan amount paid from START to END?
-loan-amount.heading.range=What was the total loan amount paid from {0} to {1}?
-loan-amount.heading.hint=
-loan-amount.heading.hint.custom=Scheme: {0}
+loan-amount.heading=What was the total loan amount paid from {0} to {1}?
+loan-amount.heading.hint=Scheme: {0}
+loan-amount.estimate.heading.large=Is the amount you entered an estimate?
+loan-amount.amount.heading=
+loan-amount.estimate.heading=
 
 loan-repaid.heading=How much of the loan did you repay?
 loan-repaid.intro=Do not include any types of repayment that we disregard. \
@@ -211,6 +212,7 @@ cya.p2=By submitting your answers, you confirm that, to the best of your knowled
 cya.loandetails.h1=Loan details for {0}
 cya.loandetails.header.tax-year=Tax year
 cya.loandetails.header.amount=Amount
+cya.loandetails.header.estimate=Estimate
 cya.loandetails.header.repaid=Repaid
 cya.loandetails.header.written-off=Written off
 cya.loandetails.header.tax-paid=Tax paid
@@ -373,10 +375,15 @@ add-settlement.amount.amount-format=Tax and National Insurance paid or agreed to
 
 # loan details
 fixed-term-loan.required=Select yes if the loan was an approved fixed-term loan
-loan-amount.required=Enter the total loan amount from {0} to {1}
-loan-amount.nonnumericformat=Amount you have repaid must be an amount of money, like 123.45 or 150
-loan-amount.format=Total loan amount must be an amount of money, like 123.45 or 150
+
+loan-amount.amount.required=Enter the total loan amount from {0} to {1}
+loan-amount.amount.nonnumericformat=Amount you have repaid must be an amount of money, like 123.45 or 150
+loan-amount.amount.format=Total loan amount must be an amount of money, like 123.45 or 150
+loan-amount.estimate.estimate.required=Select yes if the amount you entered is an estimate
+loan-amount.estimate.required=Select yes if the amount you entered is an estimate
+
 repaid-any-loan-during-tax-year.required=Select yes if you have repaid any of the loan made from {0} to {1}
+
 loan-repaid.required=Enter how much of the loan you have repaid in actual repayments
 loan-repaid.nonnumericformat=Amount you have repaid must be an amount of money, like 123.45 or 150
 loan-repaid.format=Amount you have repaid must be an amount of money, like 123.45 or 150

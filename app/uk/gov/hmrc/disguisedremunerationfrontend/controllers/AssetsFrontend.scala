@@ -28,9 +28,11 @@ object AssetsFrontend extends InferForm {
   def errorSummary(key: String, values: Input, errors: ErrorTree, messages: UniformMessages[Html]): Html =
     html.errorsummary(key, values, errors, messages)
 
-  def compoundField(key: String, values: Input, errors: ErrorTree, messages: UniformMessages[Html])(inner: Html): Html = html.compoundfield(key, errors, messages)(inner)
+  def compoundField(key: String, values: Input, errors: ErrorTree, messages: UniformMessages[Html])(inner: Html): Html =
+    html.compoundfield(key, errors, messages)(inner)
 
-  def soloField(key: String, values: Input,errors: ErrorTree,messages: UniformMessages[Html])(ask: Html)(tell: Html): Html = html.standardfield(key, errors, messages)(ask)(tell)
+  def soloField(key: String, values: Input,errors: ErrorTree,messages: UniformMessages[Html])(ask: Html)(tell: Html): Html =
+    html.standardfield(key, errors, messages)(ask)(tell)
 
   def selectionOfFields(
     inner: List[(String, (String, Input, ErrorTree, UniformMessages[Html]) => Html)]
@@ -51,14 +53,16 @@ object AssetsFrontend extends InferForm {
   )
 
   implicit val booleanField = new HtmlField[Boolean] {
-    def render(key: String, values: Input, errors: ErrorTree, messages: UniformMessages[Html]) =
+    def render(key: String, values: Input, errors: ErrorTree, messages: UniformMessages[Html]) = {
+      val path = key.split("[.]").filter(_.nonEmpty).tail
       html.radios(
         key,
-        Seq("TRUE","FALSE"),
-        values.value.headOption,
+        Seq("TRUE", "FALSE"),
+        values.atPath(path:_*).flatMap(_.headOption),
         errors,
         messages
       )
+    }
   }
 
   implicit val longHtml = new HtmlField[Long] {

@@ -177,9 +177,11 @@ fixed-term-loan.Yes=Iawn
 fixed-term-loan.No=Na
 fixed-term-loan.Unknown=Ddim yn gwybod
 
-loan-amount.heading.range=Beth oedd cyfanswm y benthyciad a dalwyd o {0} i {1}?
-loan-amount.heading.hint=
-loan-amount.heading.hint.custom=Cynllun: {0}
+loan-amount.heading=Beth oedd cyfanswm y benthyciad a dalwyd o {0} i {1}?
+loan-amount.heading.hint=Cynllun: {0}
+loan-amount.estimate.heading.large=Ai amcangyfrif yw’r swm y gwnaethoch ei nodi?
+loan-amount.amount.heading=
+loan-amount.estimate.heading=
 
 loan-repaid.heading=Faint o’r benthyciad y gwnaethoch ei ad-dalu?
 loan-repaid.intro=Peidiwch â chynnwys unrhyw fathau o ad-daliadau yr ydym yn eu diystyru. \
@@ -373,9 +375,13 @@ add-settlement.amount.amount-format=Mae’n rhaid i’r dreth a’r Yswiriant Gw
 
 # loan details
 fixed-term-loan.required=Dewiswch Iawn os oedd y benthyciad yn un cyfnod penodol cymeradwy
-loan-amount.required=Nodwch gyfanswm y benthyciad o {0} i {1}
-loan-amount.nonnumericformat=Mae’n rhaid i’r swm rydych wedi'i ad-dalu fod yn swm o arian, megis 123.45 neu 150
-loan-amount.format=Mae’n rhaid i gyfanswm y benthyciad fod yn swm o arian, megis 123.45 neu 150
+
+loan-amount.amount.required=Nodwch gyfanswm y benthyciad o {0} i {1}
+loan-amount.amount.nonnumericformat=Mae’n rhaid i’r swm rydych wedi'i ad-dalu fod yn swm o arian, megis 123.45 neu 150
+loan-amount.amount.format=Mae’n rhaid i gyfanswm y benthyciad fod yn swm o arian, megis 123.45 neu 150
+loan-amount.estimate.estimate.required=Dewiswch ‘Iawn’ os mai amcangyfrif yw’r swm y gwnaethoch ei nodi
+loan-amount.estimate.required=Dewiswch ‘Iawn’ os mai amcangyfrif yw’r swm y gwnaethoch ei nodi
+
 repaid-any-loan-during-tax-year.required=Dewiswch Iawn os ydych wedi ad-dalu unrhyw ran o’r benthyciad a wnaed o {0} i {1}
 loan-repaid.required=Nodwch faint o’r benthyciad y gwnaethoch ei ad-dalu
 loan-repaid.format=Mae’n rhaid i’r swm rydych wedi'i ad-dalu fod yn swm o arian, megis 123.45 neu 150

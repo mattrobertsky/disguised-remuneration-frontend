@@ -296,6 +296,7 @@ class JourneyController @Inject()(
   ) = authorisedAction.async { implicit request =>
     implicit val keys: List[String] = key.split("/").toList
     import LoanDetails._
+    import uk.gov.hmrc.disguisedremunerationfrontend.views.html.{uniform => html}
 
     getState.flatMap { state =>
       val scheme = state.schemes(schemeIndex)
@@ -303,6 +304,7 @@ class JourneyController @Inject()(
       runWeb(
         program = LoanDetails.program[FxAppend[Stack, PlayStack]](year, scheme, existing)
           .useForm(automatic[Unit, YesNoUnknown])
+          .useForm(automatic[Unit, TotalLoan])
           .useForm(automatic[Unit, Boolean])
           .useForm(automatic[Unit, Money])
           .useForm(automatic[Unit, Option[Money]])
@@ -430,7 +432,7 @@ class JourneyController @Inject()(
     def rowValues(index: Int, year: String)(implicit request: AuthorisedRequest[AnyContent]): List[(Html)] = {
       List(
         messages(request)("cya.loandetails.tax-year", year, (year.toInt + 1).toString),
-        Html("£" ++ loanDetails.amount.toString),
+        Html("£" ++ loanDetails.totalLoan.amount.toString),
         Html(loanDetails.genuinelyRepaid.fold("£" ++ "0")(gr => "£" ++ gr.toString)),
         Html(loanDetails.writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.amount.toString)),
         Html(loanDetails.writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.taxPaid.toString))
@@ -593,7 +595,7 @@ class JourneyController @Inject()(
             scheme.settlement,
             loanDetails._2.year,
             loanDetails._2.hmrcApproved,
-            loanDetails._2.amount,
+            loanDetails._2.totalLoan,
             loanDetails._2.genuinelyRepaid,
             loanDetails._2.writtenOff,
             state.contactDetails

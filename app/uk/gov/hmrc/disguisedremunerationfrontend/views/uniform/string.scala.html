@@ -21,7 +21,7 @@
 @path=@{key.split("[.]").filter(_.nonEmpty).tail}
 
 @currencyInput=@{
-    key === "loan-amount" ||
+    key === "loan-amount.amount" ||
     key === "loan-repaid" ||
     key.contains("add-settlement") ||
     key.contains("written-off-amount")
@@ -48,6 +48,7 @@
             ""
     }
 ) { errorKey =>
+        @errorKey
     @if(errorKey.nonEmpty) {
         @messages.get(s"$key.$errorKey").map { er =>
         <div class="form-group-error">
