@@ -433,6 +433,7 @@ class JourneyController @Inject()(
       List(
         messages(request)("cya.loandetails.tax-year", year, (year.toInt + 1).toString),
         Html("£" ++ loanDetails.totalLoan.amount.toString),
+        msg("cya.total-loan.estimate." ++ loanDetails.totalLoan.estimate.toString),
         Html(loanDetails.genuinelyRepaid.fold("£" ++ "0")(gr => "£" ++ gr.toString)),
         Html(loanDetails.writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.amount.toString)),
         Html(loanDetails.writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.taxPaid.toString))
@@ -451,6 +452,7 @@ class JourneyController @Inject()(
       List(
         "cya.loandetails.header.tax-year",
         "cya.loandetails.header.amount",
+        "cya.loandetails.header.estimate",
         "cya.loandetails.header.repaid",
         "cya.loandetails.header.written-off",
         "cya.loandetails.header.tax-paid",

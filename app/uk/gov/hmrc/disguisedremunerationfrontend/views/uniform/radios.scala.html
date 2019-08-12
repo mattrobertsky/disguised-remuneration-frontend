@@ -26,23 +26,26 @@
 @childkey=@{errors.children.keys.headOption.getOrElse("")}
 @grandchildValue=@{errors.children.map(_._2.value).headOption.getOrElse("")}
 @separateBooleanValue=@{errors.children.map(_._2.children.map(_._2.value)).headOption.fold("")(x => x.headOption.getOrElse(""))}
-    @defining(
-        errors match {
-            case Tree("required", childTree) => errors.value
-            case Tree(_, childTree) if childTree.keys.headOption === Some("outer") &&
-                    childTree.map(_._2.value === "required") => s"$grandchildValue"
-            case Tree(_, childTree) if childTree.keys.headOption === Some("estimate") =>
-                s"$separateBooleanValue"
-            case _ => ""
-        }
-    ) { topLevelError =>
-    <div class="radios @if(topLevelError.nonEmpty) {form-group-error}">
-        @if(topLevelError.nonEmpty) {
-                <span class="error-message">
-                    @messages(s"$key.$topLevelError")
-                </span>
-        }
+@defining(
+    errors match {
+        case Tree("required", childTree) => errors.value
+        case Tree(_, childTree) if childTree.keys.headOption === Some("outer") &&
+                childTree.map(_._2.value === "required") => s"$grandchildValue"
+        case Tree(_, childTree) if childTree.keys.headOption === Some("estimate") =>
+            s"$separateBooleanValue"
+        case _ => ""
+    }
+) { topLevelError =>
+<div class="radios @if(topLevelError.nonEmpty) {form-group-error}">
+    @if(topLevelError.nonEmpty) {
+            <span class="error-message">
+                @messages(s"$key.$topLevelError")
+            </span>
+    }
 
+@if(key == "loan-amount.estimate") {
+  <div class="radios--inline">
+}
   @for((opt,num) <- options.zipWithIndex) {
     <div class="radios__item multiple-choice" data-target="@keyNoDots">
       <input
@@ -62,12 +65,16 @@
     </div>
 
 
-@if(conditional.isDefinedAt(opt)) {
-      <div id="conditional-@keyNoDots-@opt" class="conditional-@keyNoDots @if(existing.exists(_ == opt)){radios__conditional} else {radios__conditional--hidden}" aria-hidden="false">
-        @conditional(opt)
-      </div>
-    }
-  }
+    @if(conditional.isDefinedAt(opt)) {
+          <div id="conditional-@keyNoDots-@opt" class="conditional-@keyNoDots @if(existing.exists(_ == opt)){radios__conditional} else {radios__conditional--hidden}" aria-hidden="false">
+            @conditional(opt)
+          </div>
+        }
+      }
+
+@if(key == "loan-amount.estimate") {
+    </div>
+}
 
 @if(topLevelError.nonEmpty) {
     </div>

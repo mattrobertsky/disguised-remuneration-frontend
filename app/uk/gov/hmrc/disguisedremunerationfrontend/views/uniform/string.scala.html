@@ -48,7 +48,6 @@
             ""
     }
 ) { errorKey =>
-        @errorKey
     @if(errorKey.nonEmpty) {
         @messages.get(s"$key.$errorKey").map { er =>
         <div class="form-group-error">

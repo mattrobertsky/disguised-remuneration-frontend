@@ -393,6 +393,12 @@ fieldset__legend--s {
     clear: left;
 }
 
+.radios--inline .radios__item {
+    margin-right: 20px;
+    float: left;
+    clear: none;
+}
+
 .radios__item_nino {
     font-family: "nta",Arial,sans-serif;
     -webkit-font-smoothing: antialiased;
