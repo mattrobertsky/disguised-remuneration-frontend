@@ -16,33 +16,33 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
-import java.time.LocalDate
-
-import ltbs.uniform.UniformCore
-import ltbs.uniform.interpreters.logictable.LogicTableStack
-import org.atnos.eff.FxAppend
-import org.scalatest.{Matchers, WordSpec}
-import uk.gov.hmrc.disguisedremunerationfrontend.data.Scheme._
-import uk.gov.hmrc.disguisedremunerationfrontend.controllers.{YesNoDoNotKnow, YesNoUnknown}
-import cats.implicits._
-import ltbs.uniform.{UniformCore, _}
-import org.atnos.eff.syntax.all._
-import ltbs.uniform._
-import interpreters.logictable._
-import org.atnos.eff.syntax._
-import uk.gov.hmrc.disguisedremunerationfrontend.Path
-import uk.gov.hmrc.disguisedremunerationfrontend.controllers.YesNoDoNotKnow.z.DoNotKnow
-import uk.gov.hmrc.disguisedremunerationfrontend.controllers.YesNoDoNotKnow.{No, Yes}
-
-import scala.collection.immutable
-
-class SchemeSpec  extends WordSpec with Matchers {
-
-  val date: LocalDate = java.time.LocalDate.now.minusDays(1) // TODO validation message is wrong here, make now to see
-  val employee = Employer("bob", Some("123/ab123"))
-  val taxSettlement = TaxSettlement("100")
-  val scheme = Scheme("a", "b".some, "c".some, Scheme.earliestDate, date.some, employee.some, loanRecipient = true, "d".some, YesNoUnknown.Yes, taxSettlement.some)
-  val yesNoList: List[YesNoDoNotKnow] = List(Yes("y"), No, DoNotKnow)
+//import java.time.LocalDate
+//
+//import ltbs.uniform.UniformCore
+//import ltbs.uniform.interpreters.logictable.LogicTableStack
+//import org.atnos.eff.FxAppend
+//import org.scalatest.{Matchers, WordSpec}
+//import uk.gov.hmrc.disguisedremunerationfrontend.data.Scheme._
+//import uk.gov.hmrc.disguisedremunerationfrontend.controllers.{YesNoDoNotKnow, YesNoUnknown}
+//import cats.implicits._
+//import ltbs.uniform.{UniformCore, _}
+//import org.atnos.eff.syntax.all._
+//import ltbs.uniform._
+//import interpreters.logictable._
+//import org.atnos.eff.syntax._
+//import uk.gov.hmrc.disguisedremunerationfrontend.Path
+//import uk.gov.hmrc.disguisedremunerationfrontend.controllers.YesNoDoNotKnow.z.DoNotKnow
+//import uk.gov.hmrc.disguisedremunerationfrontend.controllers.YesNoDoNotKnow.{No, Yes}
+//
+//import scala.collection.immutable
+//
+//class SchemeSpec  extends WordSpec with Matchers {
+//
+//  val date: LocalDate = java.time.LocalDate.now.minusDays(1) // TODO validation message is wrong here, make now to see
+//  val employee = Employer("bob", Some("123/ab123"))
+//  val taxSettlement = TaxSettlement("100")
+//  val scheme = Scheme("a", "b".some, "c".some, Scheme.earliestDate, date.some, employee.some, loanRecipient = true, "d".some, YesNoUnknown.Yes, taxSettlement.some)
+//  val yesNoList: List[YesNoDoNotKnow] = List(Yes("y"), No, DoNotKnow)
 
 
 
@@ -83,4 +83,4 @@ class SchemeSpec  extends WordSpec with Matchers {
 //  }
 
 
-}
+//}

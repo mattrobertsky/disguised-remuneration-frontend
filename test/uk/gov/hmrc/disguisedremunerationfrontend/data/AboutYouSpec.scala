@@ -19,8 +19,6 @@ package uk.gov.hmrc.disguisedremunerationfrontend.data
 import org.scalatest.{Matchers, WordSpec}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
-import org.atnos.eff._
-import org.atnos.eff.syntax.all._
 import ltbs.uniform._
 import interpreters.logictable._
 import cats.implicits._

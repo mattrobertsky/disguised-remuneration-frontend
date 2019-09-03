@@ -54,14 +54,14 @@ about-scheme-user.Right.label=Enter their Self Assessment UTR
 was-user-self-employed.heading=Was the deceased person employed or self-employed when they had the loan?
 was-user-self-employed.Employed=Employed
 was-user-self-employed.SelfEmployed=Self-employed
-was-user-self-employed.Both=Both employed and self-employed
+was-user-self-employed.ZBoth=Both employed and self-employed
 aboutyou-deceasedbefore.heading=Did the deceased person die on or before 5 April 2019?
 aboutyou-noloancharge.heading=You do not need to send any loan charge details
 aboutyou-noloancharge.intro=Based on your answers, you do not need to send any loan charge details.
 aboutyou-noloancharge.intro.1=This is because you told us the deceased person:
 aboutyou-noloancharge.list=was employed when they had the loan
 aboutyou-noloancharge.list.1=has died on or before 5 April 2019
-aboutyou-noloancharge.outro=If this is not right, you need to <a class="govuk-link" href="/">go back and change your answers<a/>.
+aboutyou-noloancharge.outro=If this is not right, you need to <a class="govuk-link" href="/disguised-remuneration/about-you/about-you">go back and change your answers<a/>.
 aboutyou-noloancharge.save-continue=Finish and sign out
 #confirm-about-scheme-user.heading=Is this the person you are acting for?
 confirm-about-scheme-user.heading=What is the full name of the person you are acting for?
@@ -88,31 +88,28 @@ scheme-name.hint=If you do not know the scheme’s name, you can enter any name 
 dotas-number.heading=Do you have a Disclosure of Tax Avoidance Schemes (DOTAS) number for this scheme?
 dotas-number.intro=You can get the DOTAS number from the promoter of the scheme - they are required to tell you.
 dotas-number.Yes.dotas.heading=Enter the DOTAS number
-dotas-number.heading.hint=
-dotas-number.heading.hint.custom=Scheme: {0}
+dotas-number.heading.hint=Scheme: {0}
 dotas-number.Yes.dotas.hint=For example, 12345678
 dotas-number.Yes=Yes
 dotas-number.No=No
 dotas-number.DoNotKnow=Do not know
-#dotas-number.true.hint=For example, 12345678
+
 case-reference-number.heading=Do you have an HMRC case reference number for this scheme?
-case-reference-number.heading.hint=
-case-reference-number.heading.hint.custom=Scheme: {0}
-case-reference-number.inner.string.heading=Enter the HMRC case reference number
-case-reference-number.inner.string.hint=This usually begins with ‘CFS’ or ‘CFSS’.
+case-reference-number.heading.hint=Scheme: {0}
+case-reference-number.None=No
+case-reference-number.Some=Yes
+case-reference-number.Some.value.heading=Enter the HMRC case reference number
+case-reference-number.Some.value.hint=This usually begins with ‘CFS’ or ‘CFSS’.
 
 still-using-the-scheme.heading=Are you still receiving loan payments through the scheme?
-still-using-the-scheme.heading.hint=
-still-using-the-scheme.heading.hint.custom=Scheme: {0}
+still-using-the-scheme.heading.hint=Scheme: {0}
 still-using-the-scheme-yes.heading=When did you first receive a loan from the scheme?
-still-using-the-scheme-yes.heading.hint=
-still-using-the-scheme-yes.heading.hint.custom=Scheme: {0}
+still-using-the-scheme-yes.heading.hint=Scheme: {0}
 still-using-the-scheme-yes.intro=If you do not know the exact date, enter an estimated date.
 still-using-the-scheme-yes.hint=For example, 31 3 2015
 
 still-using-the-scheme-no.heading=Dates when you received loans from the scheme
-still-using-the-scheme-no.heading.hint=
-still-using-the-scheme-no.heading.hint.custom=Scheme: {0}
+still-using-the-scheme-no.heading.hint=Scheme: {0}
 still-using-the-scheme-no.intro=If you do not know the exact date, enter an estimated date.
 still-using-the-scheme-no._1.heading=Date you received your first loan from the scheme
 still-using-the-scheme-no._1.hint=For example, 31 3 2015
@@ -124,11 +121,10 @@ scheme-dates.start=Start date
 scheme-dates.end=End date
 scheme-dates.hint=For example, 31 3 2015
 user-employed.heading=Were you an employee while you were using the scheme?
-user-employed.heading.hint=
-user-employed.heading.hint.custom=Scheme: {0}
-user-employed.inner.name.heading=Your employer’s name
-user-employed.inner.paye.heading=Employer PAYE reference (optional)
-user-employed.inner.paye.hint=This is a 3 digit tax office number, a forward slash, and a tax office employer reference, like 123/AB456. It may be called ‘Employer PAYE Reference’ or ‘PAYE reference’. It will be on your P60.
+user-employed.heading.hint=Scheme: {0}
+user-employed.Some.value.name.heading=Your employer’s name
+user-employed.Some.value.paye.heading=Employer PAYE reference (optional)
+user-employed.Some.value.paye.hint=This is a 3 digit tax office number, a forward slash, and a tax office employer reference, like 123/AB456. It may be called ‘Employer PAYE Reference’ or ‘PAYE reference’. It will be on your P60.
 user-employed.intro=If you were a director and an employee of your own company, answer ‘Yes’.
 scheme-employername=Your employer’s name
 scheme-dates.employerpayeref=Employer PAYE reference (optional)
@@ -136,62 +132,53 @@ scheme-dates.employerpayeref.hint=This is a 3 digit tax office number, a forward
 scheme-fixedterm.heading=Is this loan an approved fixed-term loan?
 scheme-fixedterm.heading.hint=
 scheme-fixedterm.heading.hint.custom=Scheme: {0}
+
+about-loan.None=Yes
+about-loan.Some=No
 about-loan.heading=Was the loan made to you?
-about-loan.heading.hint=
-about-loan.heading.hint.custom=Scheme: {0}
-about-loan.inner.string.heading=Enter the name of who the loan was made to 
-about-loan.outer.TRUE=No
-about-loan.outer.FALSE=Yes
-about-loanname=Enter the name of who the loan was made to
+about-loan.heading.hint=Scheme: {0}
+about-loan.Some.value.heading=Enter the name of who the loan was made to 
+
 tax-settled.heading=Has anyone paid, or agreed with us to pay, any tax or National Insurance owed for this scheme?
-tax-settled.heading.hint=
-tax-settled.heading.hint.custom=Scheme: {0}
+tax-settled.heading.hint=Scheme: {0}
 tax-settled.intro=If you made payments in response to an Accelerated Payments Notice (APN), do not include these.
-tax-settled.Yes=Yes
-tax-settled.No=No
-tax-settled.Unknown=Do not know
+tax-settled.AYes=Yes
+tax-settled.BNo=No
+tax-settled.CUnknown=Do not know
+
 add-settlement.heading=How much tax and National Insurance has anyone paid, or agreed with us to pay, for this scheme?
-add-settlement.heading.hint=
-add-settlement.heading.hint.custom=Scheme: {0}
+add-settlement.heading.hint=Scheme: {0}
 add-settlement.intro.1=Enter the total amount.
 add-settlement.amount.heading=
 add-settlement.dateOfSettlement.heading=Date paid
-# scheme validation
 
+# scheme validation
 fixed-term-loan.heading=Is this loan an approved fixed-term loan?
-fixed-term-loan.heading.hint=
-fixed-term-loan.heading.hint.custom=Scheme: {0}
-fixed-term-loan.Yes=Yes
-fixed-term-loan.No=No
-fixed-term-loan.Unknown=Do not know
+fixed-term-loan.heading.hint=Scheme: {0}
+fixed-term-loan.AYes=Yes
+fixed-term-loan.BNo=No
+fixed-term-loan.CUnknown=Do not know
 
 loan-amount.heading=What was the total loan amount paid from {0} to {1}?
 loan-amount.heading.hint=Scheme: {0}
 loan-amount.estimate.heading.large=Is the amount you entered an estimate?
-loan-amount.amount.heading=
-loan-amount.estimate.heading=
 
 loan-repaid.heading=How much of the loan did you repay?
 loan-repaid.intro=Do not include any types of repayment that we disregard. \
   <a href='https://www.gov.uk/guidance/report-and-account-for-your-disguised-remuneration-loan-charge' target='_blank'>\
   Find out which repayments are disregarded \
   (opens in a new window or tab).</a>
-loan-repaid.heading.hint=
-loan-repaid.heading.hint.custom=Scheme: {0}
+loan-repaid.heading.hint=Scheme: {0}
 
-repaid-any-loan-during-tax-year.heading=Have you made any repayments for the loans received between START to END?
-repaid-any-loan-during-tax-year.heading.range=Have you made any repayments for the loans received between {0} to {1}?
-repaid-any-loan-during-tax-year.heading.hint=
-repaid-any-loan-during-tax-year.heading.hint.custom=Scheme: {0}
+repaid-any-loan-during-tax-year.heading=Have you made any repayments for the loans received between {0} to {1}?
+repaid-any-loan-during-tax-year.heading.hint=Scheme: {0}
 
-written-off-amount.heading=How much of the loan was written off?
-written-off-amount.heading.hint.custom=Scheme: {0}
-written-off-amount.amount.heading=Amount of loan written off
-written-off-amount.taxPaid.heading=Tax and National Insurance paid on the written-off loan
-written-off.heading=Has the lender written off any of the loan made from START DATE to END DATE?
-written-off.heading.range=Has the lender written off any of the loan made from {0} to {1}?
-written-off.heading.hint=
-written-off.heading.hint.custom=Scheme: {0}
+written-off.amount.heading=Amount of loan written off
+written-off.Yes.writtenOff.amount.heading=Amount of loan written off
+written-off.taxPaid.heading=Tax and National Insurance paid on the written-off loan
+written-off.Yes.writtenOff.taxPaid.heading=Tax and National Insurance paid on the written-off loan
+written-off.heading=Has the lender written off any of the loan made from {0} to {1}?
+written-off.heading.hint=Scheme: {0}
 written-off.Yes=Yes
 written-off.No=No
 written-off.Unknown=Do not know
@@ -209,13 +196,14 @@ cya.title=Check your answers before sending your details
 confirm.title=Loan charge details received
 cya.p1=Make sure you check your answers before you send them. If you need to add or change any details later, you will need to fill in this form again.
 cya.p2=By submitting your answers, you confirm that, to the best of your knowledge, the information you have provided is correct and complete.
-cya.loandetails.h1=Loan details for {0}
+cya.loandetails.h1=Loan details for 
 cya.loandetails.header.tax-year=Tax year
 cya.loandetails.header.amount=Amount
 cya.loandetails.header.estimate=Estimate
 cya.loandetails.header.repaid=Repaid
 cya.loandetails.header.written-off=Written off
 cya.loandetails.header.tax-paid=Tax paid
+cya.loandetails.header.estimate=Is the total loan amount paid from {0} to {1} an estimate?
 cya.loandetails.tax-year={0} to {1}
 cya.total-loan.estimate.true=Yes
 cya.total-loan.estimate.false=No
@@ -237,9 +225,9 @@ email-address=Email address
 dates-you-received-loans=Dates when you received loans
 scheme=Scheme: 
 disclosure-of-tax-avoidance-schemes-dotas-number=Disclosure of Tax Avoidance Schemes (DOTAS) number
-disclosure-of-tax-avoidance-schemes-dotas-number.Yes=Yes
-disclosure-of-tax-avoidance-schemes-dotas-number.No=No
-disclosure-of-tax-avoidance-schemes-dotas-number.Unknown=Do not know
+disclosure-of-tax-avoidance-schemes-dotas-number.AYes=Yes
+disclosure-of-tax-avoidance-schemes-dotas-number.BNo=No
+disclosure-of-tax-avoidance-schemes-dotas-number.CUnknown=Do not know
 hmrc-case-reference-number=HMRC case reference number
 employment-status=Employment status
 employed=Employed
@@ -261,14 +249,11 @@ aboutyou-deceasedbefore.required=Select yes if the deceased person died on or be
 
 about-scheme-user.required=Select if you want to enter the person’s National Insurance number or Self Assessment \
   Unique Taxpayer Reference (UTR)
-about-scheme-user.a.required=Enter the person’s National Insurance number
 about-scheme-user.Left.a.required=Enter the person’s National Insurance number
-about-scheme-user.b.required=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR)
 about-scheme-user.Right.b.required=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR)
-about-scheme-user.nino-format=Enter the person’s National Insurance number in the correct format
-about-scheme-user.Left.a.nino-format=Enter the person’s National Insurance number in the correct format
-about-scheme-user.utr-format=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR) in the correct format
-about-scheme-user.Right.b.utr-format=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR) in the correct format
+about-scheme-user.Left.a.format=Enter the person’s National Insurance number in the correct format
+about-scheme-user.Right.b.format=Enter the person’s Self Assessment Unique Taxpayer Reference (UTR) in the correct format
+
 confirm-about-scheme-user.required=Enter the full name of the person you are acting for
 confirm-about-scheme-user.limit=Full name must be 50 characters or less
 confirm-about-scheme-user.format=Full name must only include letters a to z, hyphens, full stops, apostrophes and spaces
@@ -311,6 +296,8 @@ confirm-contact-prefs.email.email-format=Email address must only contain letters
 confirm-contact-prefs.email-or-phone-number-needed=Enter a telephone number or an email address
 confirm-contact-prefs.telephone.email-or-phone-number-needed=Enter a telephone number or an email address
 confirm-contact-prefs.email.email-or-phone-number-needed=Enter a telephone number or an email address
+confirm-contact-prefs.email.telephone.email-or-phone-number-needed=Enter a telephone number or an email address
+confirm-contact-prefs.email.confirm-contact-prefs.telephone.email-or-phone-number-needed=Enter a telephone number or an email address
 
 #scheme
 scheme-name.required=Enter the name of the scheme
@@ -322,51 +309,58 @@ dotas-number.Yes.dotas.char-limit=Disclosure of Tax Avoidance Schemes (DOTAS) nu
 dotas-number.dotas.required=Enter the Disclosure of Tax Avoidance Schemes (DOTAS) number
 dotas-number.Yes.dotas.required=Enter the Disclosure of Tax Avoidance Schemes (DOTAS) number
 
-case-reference-number.outer.required=Select yes if you have an HMRC case reference number
-case-reference-number.inner.required=Enter the HMRC case reference number
-case-reference-number.limit=HMRC case reference number must be 10 characters or less
-case-reference-number.inner.limit=HMRC case reference number must be 10 characters or less
-case-reference-number.format=HMRC case reference number must only include letters a to z, numbers and hyphens
-case-reference-number.inner.format=HMRC case reference number must only include letters a to z, numbers and hyphens
+case-reference-number.required=Select yes if you have an HMRC case reference number
+case-reference-number.Some.value.required=Enter the HMRC case reference number
+case-reference-number.Some.value.limit=HMRC case reference number must be 10 characters or less
+case-reference-number.Some.value.format=HMRC case reference number must only include letters a to z, numbers and hyphens
 
 still-using-the-scheme.required=Select yes if you are still receiving loan payments through the scheme
-still-using-the-scheme-yes.badDate=Enter a real date
-still-using-the-scheme-yes.year.required=The date you started using the scheme must include a year
-still-using-the-scheme-yes.month.required=The date you started using the scheme must include a month
-still-using-the-scheme-yes.day.required=The date you started using the scheme must include a day
-still-using-the-scheme-yes.date-far-past=The date you started using the scheme must after 4 of January 1999
-still-using-the-scheme-yes.date-in-future=The date you started using the scheme must be in the past
 
-still-using-the-scheme-no.year._2.required=The date you stopped using the scheme must include a year
-still-using-the-scheme-no.month._2.required=The date you stopped using the scheme must include a month
-still-using-the-scheme-no.day._2.required=The date you stopped using the scheme must include a day
-still-using-the-scheme-no.year._1.required=The date you started using the scheme must include a year
-still-using-the-scheme-no.month._1.required=The date you started using the scheme must include a month
-still-using-the-scheme-no.day._1.required=The date you started using the scheme must include a day
+still-using-the-scheme-yes.date-empty=Enter the date you received your first loan from the scheme
+still-using-the-scheme-yes.day.empty=The date you received your first loan from the scheme must include a day
+still-using-the-scheme-yes.month.empty=The date you received your first loan from the scheme must include a month
+still-using-the-scheme-yes.year.empty=The date you received your first loan from the scheme must include a year
+still-using-the-scheme-yes.day.month.empty=The date you received your first loan from the scheme must include a day and month
+still-using-the-scheme-yes.day.year.empty=The date you received your first loan from the scheme must include a day and year
+still-using-the-scheme-yes.year.month.empty=The date you received your first loan from the scheme must include a month and year
+
+still-using-the-scheme-no._1.date-empty=Enter the date you received your first loan from the scheme
+still-using-the-scheme-no._2.date-empty=Enter the date you received your last loan from the scheme
+        
+still-using-the-scheme-no._1.day.empty=The date you received your first loan from the scheme must include a day
+still-using-the-scheme-no._1.month.empty=The date you received your first loan from the scheme must include a month
+still-using-the-scheme-no._1.year.empty=The date you received your first loan from the scheme must include a year
+still-using-the-scheme-no._1.day._1.month.empty=The date you received your first loan from the scheme must include a day and month
+still-using-the-scheme-no._1.day._1.year.empty=The date you received your first loan from the scheme must include a day and year
+still-using-the-scheme-no._1.year._1.month.empty=The date you received your first loan from the scheme must include a month and year
+
+still-using-the-scheme-no._2.day._2.month.empty=The date you received your last loan from the scheme must include a day and month
+still-using-the-scheme-no._2.day._2.year.empty=The date you received your last loan from the scheme must include a day and year
+still-using-the-scheme-no._2.year._2.month.empty=The date you received your last loan from the scheme must include a month and year
+still-using-the-scheme-no._2.day.empty=The date you received your last loan from the scheme must include a day
+still-using-the-scheme-no._2.month.empty=The date you received your last loan from the scheme must include a month
+still-using-the-scheme-no._2.year.empty=The date you received your last loan from the scheme must include a year
+
+still-using-the-scheme-yes.badDate=Enter a real date
 still-using-the-scheme-no._1.badDate=Enter a real date
 still-using-the-scheme-no._2.badDate=Enter a real date
 still-using-the-scheme-no._1.same-or-after=The date you stopped using the scheme must be the same as or after the date you started using the scheme
 still-using-the-scheme-no._2.same-or-after=The date you stopped using the scheme must be the same as or after the date you started using the scheme
 still-using-the-scheme-no.same-or-after=The date you stopped using the scheme must be the same as or after the date you started using the scheme
 
-user-employed.outer.required=Select yes if you were an employee while you were using the scheme
-user-employed.name.inner.required=Enter the employer’s name
-user-employed.inner.name.required=Enter the employer’s name
-user-employed.paye.inner.paye-format=Enter the employer PAYE reference in the correct format
-user-employed.char-limit=Employer’s name must be 50 characters or less
-user-employed.inner.name.char-limit=Employer’s name must be 50 characters or less
-user-employed.name-format=Employer’s name must only include letters a to z, numbers, apostrophes, \
+user-employed.None=No
+user-employed.Some=Yes
+user-employed.required=Select yes if you were an employee while you were using the scheme
+user-employed.Some.value.name.required=Enter the employer’s name
+user-employed.Some.value.name.char-limit=Employer’s name must be 50 characters or less
+user-employed.Some.value.name.format=Employer’s name must only include letters a to z, numbers, apostrophes, \
   ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
-user-employed.inner.name.name-format=Employer’s name must only include letters a to z, numbers, apostrophes, \
-  ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
+user-employed.Some.value.paye.paye-format=Enter the employer PAYE reference in the correct format
 
-about-loan.outer.required=Select yes if the loan was made to you
-about-loan.inner.required=Enter the name of who the loan was made out to
-about-loan.char-limit=Name of who the loan was made out to must be 50 characters or less
-about-loan.inner.char-limit=Name of who the loan was made out to must be 50 characters or less
-about-loan.name-format=Name of who the loan was made out to must only include letters a to z, numbers, \
-  apostrophes, ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
-about-loan.inner.name-format=Name of who the loan was made out to must only include letters a to z, numbers, \
+about-loan.required=Select yes if the loan was made to you
+about-loan.Some.value.required=Enter the name of who the loan was made out to
+about-loan.Some.value.name-length=Name of who the loan was made out to must be 50 characters or less
+about-loan.Some.value.name-format=Name of who the loan was made out to must only include letters a to z, numbers, \
   apostrophes, ampersands, commas, hyphens, full stops, forward slashes, round brackets and spaces
 
 tax-settled.required=Select yes if anyone has paid, or agreed with us to pay, any tax or National Insurance owed for this scheme
@@ -379,30 +373,23 @@ add-settlement.amount.amount-format=Tax and National Insurance paid or agreed to
 fixed-term-loan.required=Select yes if the loan was an approved fixed-term loan
 
 loan-amount.amount.required=Enter the total loan amount from {0} to {1}
-loan-amount.required=Enter the total loan amount from {0} to {1}
 loan-amount.amount.nonnumericformat=Amount you have repaid must be an amount of money, like 123.45 or 150
-loan-amount.nonnumericformat=Amount you have repaid must be an amount of money, like 123.45 or 150
-loan-amount.format=Total loan amount must be an amount of money, like 123.45 or 150
 loan-amount.amount.format=Total loan amount must be an amount of money, like 123.45 or 150
 loan-amount.estimate.estimate.required=Select yes if the amount you entered is an estimate
 loan-amount.estimate.required=Select yes if the amount you entered is an estimate
-
-repaid-any-loan-during-tax-year.required=Select yes if you have repaid any of the loan made from {0} to {1}
 
 loan-repaid.required=Enter how much of the loan you have repaid in actual repayments
 loan-repaid.nonnumericformat=Amount you have repaid must be an amount of money, like 123.45 or 150
 loan-repaid.format=Amount you have repaid must be an amount of money, like 123.45 or 150
 
+repaid-any-loan-during-tax-year.required=Select yes if you have repaid any of the loan made from {0} to {1}
+
 written-off.required=Select yes if the lender has written off any of the loan made from {0} to {1}
-written-off-amount.amount.required=Enter the amount that the lender has written off of the loan
-written-off-amount.taxPaid.required=Enter the amount of tax or National Insurance paid on the written-off loan
-written-off-amount.amount-format=Amount of loan written off must be an amount of money, \
+written-off.Yes.writtenOff.amount.required=Enter the amount that the lender has written off of the loan
+written-off.Yes.writtenOff.taxPaid.required=Enter the amount of tax or National Insurance paid on the written-off loan
+written-off.Yes.writtenOff.amount.format=Amount of loan written off must be an amount of money, \
   like 123.45 or 150
-written-off-amount.amount.amount-format=Amount of loan written off must be an amount of money, \
-  like 123.45 or 150
-written-off-amount.tax-format=Amount of tax or National Insurance paid on the written-off loan \
-  must be an amount of money, like 123.45 or 150
-written-off-amount.taxPaid.tax-format=Amount of tax or National Insurance paid on the written-off loan \
+written-off.Yes.writtenOff.taxPaid.format=Amount of tax or National Insurance paid on the written-off loan \
   must be an amount of money, like 123.45 or 150
 
 # Confirmation
@@ -424,4 +411,3 @@ tasklist.caption=Caption
 tasklist.item=Item
 tasklist.delete=Remove
 tasklist.edit=Change
-

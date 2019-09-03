@@ -16,12 +16,13 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
+
 case class Address (
   line1: String,
-  line2: Option[String],
+  line2: String,
   town: String,
-  county: Option[String],
+  county: String,
   postcode: String
 ) {
-  def lines: List[String] = List(Some(line1), line2, Some(town), county, Some(postcode)).flatten
+  def lines: List[String] = List(line1, line2, town, county, postcode)
 }

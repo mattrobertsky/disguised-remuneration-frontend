@@ -14,69 +14,41 @@
  * limitations under the License.
  *@
 
-@import ltbs.uniform._
-@import cats.implicits._
+@(key: List[String], options: Seq[String], existing: Option[String], errors: ErrorTree, messages: UniformMessages[Html], conditional: PartialFunction[String,Html] = PartialFunction.empty )
 
-@(key: String, options: Seq[String], existing: Option[String], errors: ErrorTree, messages: UniformMessages[Html], conditional: PartialFunction[String,Html] = PartialFunction.empty )
+@keyNoDots=@{key.mkString("-")}
+@inlineRadioKeys=@{(key.mkString(".") == "loan-amount.estimate")}
 
-@keyNoDots=@{key.replace(".","-")}
+@standard_field(key, errors, messages) {
 
-@path=@{key.split("[.]").filter(_.nonEmpty).tail}
-
-@childkey=@{errors.children.keys.headOption.getOrElse("")}
-@grandchildValue=@{errors.children.map(_._2.value).headOption.getOrElse("")}
-@separateBooleanValue=@{errors.children.map(_._2.children.map(_._2.value)).headOption.fold("")(x => x.headOption.getOrElse(""))}
-@defining(
-    errors match {
-        case Tree("required", childTree) => errors.value
-        case Tree(_, childTree) if childTree.keys.headOption === Some("outer") &&
-                childTree.map(_._2.value === "required") => s"$grandchildValue"
-        case Tree(_, childTree) if childTree.keys.headOption === Some("estimate") =>
-            s"$separateBooleanValue"
-        case _ => ""
-    }
-) { topLevelError =>
-<div class="radios @if(topLevelError.nonEmpty) {form-group-error}">
-    @if(topLevelError.nonEmpty) {
-            <span class="error-message">
-                @messages(s"$key.$topLevelError")
-            </span>
-    }
-
-@if(key == "loan-amount.estimate") {
-  <div class="radios--inline">
-}
+<div class="radios@if(inlineRadioKeys){--inline}">
   @for((opt,num) <- options.zipWithIndex) {
-    <div class="radios__item multiple-choice" data-target="@keyNoDots">
+    <div class="radios__item multiple-choice" data-target="@keyNoDots-@opt">
       <input
-        class="radios__input"
-        id="@keyNoDots-@num"
-        name="@key" type="radio"
-        value="@opt"
-        aria-describedby="@keyNoDots-@num-item-hint" @if(existing.exists(_ == opt)){ checked } @if(conditional.isDefinedAt(opt)) {aria-controls="ting" aria-expanded="true"}>
+      class="radios__input"
+      id="@keyNoDots-@num"
+      name="@{key.mkString(".")}"
+      type="radio"
+      value="@opt"
+      @if(existing.exists(_.toUpperCase == opt.toUpperCase())){ checked }
+      >
       <label class="label radios__label form-label" for="@keyNoDots-@num">
-          <span class="form-label">@messages.decompose(s"$key.$opt")</span>
-          @messages.get(s"$key.$opt.hint").map { hint =>
-              <span id="@keyNoDots-@opt-item-hint" class="form-hint checkboxes__hint">
-              @hint
-              </span>
-          }
+        <span>
+            @messages.decompose({key :+ opt}.mkString("."))
+        </span>
+      @messages.get({key :+ opt :+ "hint"}.mkString(".")).map { hint =>
+        <span id="@keyNoDots-@opt-item-hint" class="form-hint checkboxes__hint">
+          @hint
+        </span>
+      }
       </label>
     </div>
 
-
     @if(conditional.isDefinedAt(opt)) {
-          <div id="conditional-@keyNoDots-@opt" class="conditional-@keyNoDots @if(existing.exists(_ == opt)){radios__conditional} else {radios__conditional--hidden}" aria-hidden="false">
-            @conditional(opt)
-          </div>
-        }
-      }
-
-@if(key == "loan-amount.estimate") {
-    </div>
-}
-
-@if(topLevelError.nonEmpty) {
-    </div>
+      <div id="@keyNoDots-@opt" class="radios__conditional panel panel-border-narrow js-hidden">
+        @conditional(opt)
+      </div>
     }
+  }
+  </div>
 }

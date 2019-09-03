@@ -27,3 +27,9 @@ trait Store {
   val cacheRepositoryKey: String
 
 }
+
+trait JourneyStore {
+
+  val journeyKey: String
+
+}

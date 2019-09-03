@@ -14,17 +14,7 @@
  * limitations under the License.
  *@
 
-@(key: String, values: Input, errors: ErrorTree, messages: UniformMessages[Html], inner: (String, Input, ErrorTree, UniformMessages[Html]) => Html, reverse: Boolean = false)
+@(key: List[String], values: Input, errors: ErrorTree, messages: UniformMessages[Html], inner: (List[String], Input, ErrorTree, UniformMessages[Html]) => Html)
 
-@path=@{key.split("[.]").toList.filter(_.nonEmpty).tail: List[String]}
 
-@elements=@{if(reverse) Seq("FALSE","TRUE") else Seq("TRUE","FALSE") }
-
-@radios(
- s"${key}.outer",
- elements,
- values.atPath({path :+ "outer"}:_*).flatMap(_.headOption),
- errors,
- messages,
- {case "TRUE" => inner(s"${key}.inner", values, errors, messages)}
-)
+@radios(key :+ "outer", Seq("TRUE","FALSE"), values.valueAtPath({key :+ "outer"}).flatMap(_.headOption), errors, messages, {case "TRUE" => inner(key :+ "inner", values, errors, messages)})

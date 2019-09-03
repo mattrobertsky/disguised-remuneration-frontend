@@ -14,13 +14,57 @@
  * limitations under the License.
  */
 
+///*
+// * Copyright 2019 HM Revenue & Customs
+// *
+// * Licensed under the Apache License, Version 2.0 (the "License");
+// * you may not use this file except in compliance with the License.
+// * You may obtain a copy of the License at
+// *
+// *     http://www.apache.org/licenses/LICENSE-2.0
+// *
+// * Unless required by applicable law or agreed to in writing, software
+// * distributed under the License is distributed on an "AS IS" BASIS,
+// * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// * See the License for the specific language governing permissions and
+// * limitations under the License.
+// */
+//
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
+import enumeratum.EnumEntry
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import uk.gov.hmrc.disguisedremunerationfrontend.controllers.YesNoUnknown
+import uk.gov.hmrc.disguisedremunerationfrontend.controllers.{EmploymentStatus, YesNoUnknown, YesNoUnknownWrittenOff}
+import shapeless.tag.{@@, Tagger}
+
+import scala.language.higherKinds
 
 object JsonConversion {
+
+  implicit def taggedStringFormat[T]: Format[String @@ T] = new Format[String @@ T] {
+    def reads(json: JsValue): JsResult[String @@ T] = json match {
+      case JsString(v) => JsSuccess(shapeless.tag[T][String](v))
+      case unknown => JsError(s"String value expected, got: $unknown")
+    }
+    def writes(v: String @@ T): JsValue = JsString(v.toString)
+  }
+
+  // TODO try converting to Format
+  implicit object myStringReads extends Reads[String] {
+    override def reads(json: JsValue) = {
+      json match {
+        case JsNull => JsSuccess("")
+        case JsString(s) => JsSuccess(s)
+        case _ => JsError(Seq(JsPath -> Seq(JsonValidationError("error.expected.jsstring"))))
+      }
+    }
+  }
+
+  implicit object myStringWrites extends Writes[String] {
+    override def writes(o: String): JsValue = JsString(o)
+  }
+
   implicit private[data] lazy val employerFormatter = Json.format[Employer]
   implicit private[data] lazy val writtedOffFormatter = Json.format[WrittenOff]
   implicit private[data] lazy val addressFormatter = Json.format[Address]
@@ -32,8 +76,8 @@ object JsonConversion {
 
   implicit val formatAboutYou: Format[AboutYou] = {
     implicit val fself = Json.format[AboutSelf]
-    implicit lazy val ef = eitherFormatter[Nino,Utr]("nino", "utr")    
-    implicit val fanother = Json.format[AboutAnother]    
+    implicit lazy val ef = eitherFormatter[Nino,Utr]("nino", "utr")
+    implicit val fanother = Json.format[AboutAnother]
     val feither = eitherFormatter[AboutSelf, AboutAnother]("aboutSelf", "aboutAnother")
     new Format[AboutYou] {
       def reads(json: JsValue): JsResult[AboutYou] = feither.reads(json).map{

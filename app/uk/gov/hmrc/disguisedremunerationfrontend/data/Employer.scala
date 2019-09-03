@@ -16,4 +16,4 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
-case class Employer(name: String, paye: Option[Paye])
+case class Employer(name: String, paye: Paye)

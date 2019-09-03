@@ -24,7 +24,7 @@ import play.api.i18n.Messages.Implicits._
 import play.api.i18n.{Lang, Messages}
 import play.api.mvc.RequestHeader
 import play.twirl.api.Html
-
+import ltbs.uniform.interpreters.playframework._
 object AdaptMessages {
 
   implicit def ufMessagesToPlayMessages(implicit ufMessages: UniformMessages[Html], request: RequestHeader): Messages = new Messages {

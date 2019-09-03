@@ -24,10 +24,14 @@ import com.ibm.icu.util.{TimeZone, ULocale}
 import play.api.i18n.Messages
 
 package object data {
+
+  lazy val nonEmptyStringRegex = """^(?!\s*$).+"""
+
   type Nino = String
   type Utr = String
   type Paye = String
   type Money = String
+  type CaseRef = String
   type Date = java.time.LocalDate
   type Year = Int
   type EndJourney = String
@@ -52,11 +56,10 @@ package object data {
 
   private val zone = "Europe/London"
   private val zoneId: ZoneId = ZoneId.of(zone)
-  private val dateFormatPattern = "d MMMM yyyy"
   private val timeFomat = "h:mma"
   def formattedTimeNow: String = LocalDateTime.now(zoneId).format(DateTimeFormatter.ofPattern(timeFomat)).toLowerCase
 
-  def formatDate(localDate: LocalDate)(implicit messages: Messages):String = {
+  def formatDate(localDate: LocalDate, dateFormatPattern: String = "d MMMM yyyy")(implicit messages: Messages):String = {
     val date = java.util.Date.from(localDate.atStartOfDay(zoneId).toInstant)
     createDateFormatForPattern(dateFormatPattern).format(date)
   }

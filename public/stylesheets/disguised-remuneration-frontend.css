@@ -739,6 +739,11 @@ li {
     appearance: none;
 }
 
+/* input outline fix */
+input:focus, textarea:focus, select:focus, button:focus {
+    outline-offset: 0;
+}
+
 .\!-width-two-thirds {
     width: 66.66% !important;
 }
@@ -998,6 +1003,10 @@ strong, b {
     max-width: 72px;
 }
 
+.govuk-input--error {
+    border: 4px solid #b10e1e;
+}
+
 .pound-symbol {
     display: inline-block;
     font-size: 24px;
@@ -1007,4 +1016,22 @@ strong, b {
 /* Indent for currency inputs */
 .input-currency .form-control {
     padding-left: 19px;
+}
+
+.govuk-visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    clip: rect(0 0 0 0) !important;
+    -webkit-clip-path: inset(50%) !important;
+    clip-path: inset(50%) !important;
+    border: 0 !important;
+    white-space: nowrap !important;
+}
+
+.govuk-\!-font-weight-bold {
+    font-weight: 700 !important;
 }

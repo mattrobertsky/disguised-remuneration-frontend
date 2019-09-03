@@ -31,7 +31,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(
     resolvers += Resolver.jcenterRepo,
     resolvers += Resolver.bintrayRepo("hmrc", "releases"),
-    addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.3"),
+//    addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.3"),
     scalacOptions ++= Seq(
       //    "-Xfatal-warnings",                  // Fail the compilation if there are any warnings.
       "-deprecation",                      // Emit warning and location for usages of deprecated APIs.
@@ -43,7 +43,7 @@ lazy val microservice = Project(appName, file("."))
       "-Xfuture",                          // Turn on future language features.
       "-Xlint:adapted-args",               // Warn if an argument list is modified to match the receiver.
       "-Xlint:by-name-right-associative",  // By-name parameter of right associative operator.
-      //    "-Xlint:constant",                   // Evaluation of a constant arithmetic expression results in an error.
+      "-Xlint:constant",                   // Evaluation of a constant arithmetic expression results in an error.
       "-Xlint:delayedinit-select",         // Selecting member of DelayedInit.
       "-Xlint:doc-detached",               // A Scaladoc comment appears to be detached from its element.
       "-Xlint:inaccessible",               // Warn about inaccessible types in method signatures.
@@ -77,12 +77,14 @@ lazy val microservice = Project(appName, file("."))
       "-Ywarn-value-discard"               // Warn when non-Unit expression results are unused.
     ),
     TwirlKeys.templateImports ++= Seq(
-      "ltbs.uniform.web._",
-      "ltbs.uniform._"
+      "ltbs.uniform._",
+      "ltbs.uniform.interpreters.playframework._"
     )
   )
+
+// TODO - remove this line before merging fork back into base
+resolvers += Resolver.sonatypeRepo("snapshots")
 
 libraryDependencies ++= Seq(
   ws
 )
-

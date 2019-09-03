@@ -16,6 +16,37 @@
 
 @import cats.implicits._
 
+@(key: List[String], values: String, errors: ErrorTree, messages: UniformMessages[Html])
+
+@headKey=@{key.headOption.getOrElse("")}
+
+@currencyInput=@{
+    headKey === "loan-amount" ||
+    headKey === "loan-repaid" ||
+    headKey.contains("add-settlement") ||
+    headKey.contains("written-off")
+}
+
+@standard_field(key, errors, messages) {
+
+    @if(currencyInput){
+        <span class="input-currency">
+    }
+            <input class="form-control form-control-2-3 @if(errors.definedAtRoot) {form-control-error}"
+            id="@{key.mkString(".")}-input"
+            name="@{key.mkString(".")}"
+            value="@{values}" />
+    @if(currencyInput){
+        </span>
+    }
+}
+
+
+
+@*
+
+@import cats.implicits._
+
 @(key: String, values: Input, errors: ErrorTree, messages: UniformMessages[Html])
 
 @path=@{key.split("[.]").filter(_.nonEmpty).tail}
@@ -26,7 +57,7 @@
     key.contains("add-settlement") ||
     key.contains("written-off-amount")
 }
- @*TODO fix these headings*@
+
 @messages.get(s"$key.string.heading").map { hint =>
    <label class="label" for="@key">@messages.decompose(s"$key.string.heading")</label>
 }
@@ -70,4 +101,4 @@
         }
     }
 }
-
+*@

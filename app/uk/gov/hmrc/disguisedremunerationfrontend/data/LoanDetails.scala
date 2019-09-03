@@ -16,166 +16,175 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
-
 import java.time.LocalDate
 
 import ltbs.uniform._
-import org.atnos.eff._
 import play.api.i18n.Messages
-import uk.gov.hmrc.disguisedremunerationfrontend.controllers.YesNoUnknown
-import uk.gov.hmrc.disguisedremunerationfrontend.data.Scheme.MoneyRegex
+import uk.gov.hmrc.disguisedremunerationfrontend.controllers.{YesNoUnknown, YesNoUnknownWrittenOff}
+import uk.gov.hmrc.disguisedremunerationfrontend.data.Scheme.moneyRegex
+
+import scala.language.higherKinds
+import cats.data.NonEmptyList
+import cats.implicits._
+import ltbs.uniform.{::, Language, NilTypes, _}
+import play.api.i18n.{Messages => _}
 
 case class LoanDetails(
-  year: Int,
-  hmrcApproved: Option[YesNoUnknown],
-  totalLoan: TotalLoan,
-  isGenuinelyRepaid: Boolean,
-  genuinelyRepaid: Option[Money],
-  isWrittenOff: YesNoUnknown,
-  writtenOff: Option[WrittenOff]
+    year: Int,
+    hmrcApproved: Option[YesNoUnknown],
+    totalLoan: TotalLoan,
+    isGenuinelyRepaid: Boolean,
+    genuinelyRepaid: Option[Money],
+    isWrittenOff: Option[List[String]],
+    writtenOff: Option[WrittenOff]
 )
 
 object LoanDetails {
+  type TellTypes = NilTypes
+  type AskTypes = YesNoUnknown :: Boolean :: Money :: WrittenOff :: YesNoUnknownWrittenOff :: TotalLoan :: NilTypes
 
-  type Stack = Fx.fx6[
-    UniformAsk[YesNoUnknown, ?],
-    UniformAsk[TotalLoan, ?],
-    UniformAsk[Boolean, ?],
-    UniformAsk[Money, ?],
-    UniformAsk[Option[Money], ?],
-    UniformAsk[WrittenOff, ?]
-    ]
-
-  def program[R
-  : _uniformCore
-  : _uniformAsk[YesNoUnknown, ?]
-  : _uniformAsk[TotalLoan, ?]
-  : _uniformAsk[Boolean, ?]
-  : _uniformAsk[Money, ?]
-  : _uniformAsk[Option[Money], ?]
-  : _uniformAsk[WrittenOff, ?]
-  ](year: Int, scheme: Scheme, default: Option[LoanDetails] = None)(implicit messages: Messages): Eff[R, LoanDetails] = {
+  def loanDetailsProgram[F[_]: cats.Monad](
+    interpreter: Language[F, TellTypes, AskTypes],
+    year: Int,
+    messages: Messages,
+    schemeName: String,
+    default: Option[LoanDetails] = None
+  ): F[LoanDetails] = {
+    import interpreter._
+    implicit val implMess = messages
     val (startDate, endDate) = year.toFinancialYear
     for {
-      approved <- ask[YesNoUnknown]("fixed-term-loan")
-        .defaultOpt(default.flatMap(_.hmrcApproved))
-        .withCustomContentAndArgs(
-            ("fixed-term-loan.heading.hint",
-              ("fixed-term-loan.heading.hint.custom",
-                List(scheme.name)
-              )
-            )
-          ).in[R] when startDate.isBefore(LocalDate.of(2010, 4, 6))
-      amount <- ask[TotalLoan]("loan-amount")
-        .defaultOpt(default.map(_.totalLoan)
-        )
-        .validating(
-          "format",
-          x => x.amount.matches(MoneyRegex)
-        )
-        .withCustomContentAndArgs(
-          ("loan-amount.amount.required",
-            ("loan-amount.amount.required",
-            List(formatDate(startDate),
-            formatDate(endDate))
-            )
-          )
-        )
-        .withCustomContentAndArgs(
-          ("loan-amount.heading",
-            ("loan-amount.heading",
-              List(formatDate(startDate),
-                formatDate(endDate))
-            )
-          )
-        )
-        .withCustomContentAndArgs(
-          ("loan-amount.heading.hint",
-            ("loan-amount.heading.hint",
-              List(scheme.name)
-            )
-          )
-        ).in[R]
-      isRepaid <- ask[Boolean]("repaid-any-loan-during-tax-year")
-        .defaultOpt(default.map(_.isGenuinelyRepaid))
-        .withCustomContentAndArgs(
-          ("repaid-any-loan-during-tax-year.heading",
-            ("repaid-any-loan-during-tax-year.heading.range",
-              List(formatDate(startDate),
-                formatDate(endDate))
-            ))
-        )
-        .withCustomContentAndArgs(
-          ("repaid-any-loan-during-tax-year.required",
-            ("repaid-any-loan-during-tax-year.required",
-              List(formatDate(startDate),
-                formatDate(endDate))
-            ))
-        )
-        .withCustomContentAndArgs(
-          ("repaid-any-loan-during-tax-year.heading.hint",
-            ("repaid-any-loan-during-tax-year.heading.hint.custom",
-              List(scheme.name)
-            )
-          )
-        ).in[R]
-      repaid <-  ask[Money]("loan-repaid")
-        .defaultOpt(default.flatMap(_.genuinelyRepaid))
-        .validating(
-          "format",
-          x => x.matches(MoneyRegex)
-        )
-        .withCustomContentAndArgs(
-          ("loan-repaid.heading.hint",
-            ("loan-repaid.heading.hint.custom",
-              List(scheme.name)
-            )
-          )
-        ).in[R] when isRepaid
-      isWrittenOff <- ask[YesNoUnknown]("written-off")
-        .defaultOpt(default.map(_.isWrittenOff))
-        .withCustomContentAndArgs(
-          ("written-off.heading",
-            ("written-off.heading.range",
-              List(formatDate(startDate),
-                formatDate(endDate))
-            ))
-        )
-        .withCustomContentAndArgs(
-          ("written-off.required",
-            ("written-off.required",
-              List(formatDate(startDate),
-                formatDate(endDate))
-            ))
-        )
-        .withCustomContentAndArgs(
-          ("written-off.heading.hint",
-            ("written-off.heading.hint.custom",
-              List(scheme.name)
-            )
-          )
-        ).in[R]
-      writtenOff <- ask[WrittenOff]("written-off-amount")
-        .defaultOpt(default.flatMap(_.writtenOff))
-        .validating(
-          "amount-format",
-            x => x.amount.matches(MoneyRegex)
-        )
-        .validating(
-          "tax-format",
-           x => x.taxPaid.matches(MoneyRegex)
-        )
-        .withCustomContentAndArgs(
-          ("written-off-amount.heading.hint",
-            ("written-off-amount.heading.hint.custom",
-              List(scheme.name)
-            )
-          )
-        ).in[R] when (isWrittenOff == YesNoUnknown.Yes)
+      approved <- ask[YesNoUnknown](
+        "fixed-term-loan",
+        default = default.flatMap(x => x.hmrcApproved),
+        customContent = Map(
+          "fixed-term-loan.heading.hint" ->
+            Tuple2("fixed-term-loan.heading.hint", List(schemeName)))
+      ) when startDate.isBefore(LocalDate.of(2010, 4, 6))
 
+      amount <- ask[TotalLoan](
+        "loan-amount",
+        default = default.map(_.totalLoan),
+        customContent = Map(
+          "loan-amount.amount.required" ->
+            Tuple2("loan-amount.amount.required", List(formatDate(startDate), formatDate(endDate))),
+          "loan-amount.heading" ->
+            Tuple2("loan-amount.heading", List(formatDate(startDate), formatDate(endDate))),
+          "loan-amount.heading.hint" ->
+            Tuple2("loan-amount.heading.hint", List(schemeName))
+        ),
+        validation = List(
+          List(
+            Rule.fromPred(
+              totalLoan => totalLoan.amount.matches(moneyRegex),
+              (ErrorMsg("format"), NonEmptyList.one(List("amount")))
+            ),
+            Rule.fromPred(
+              totalLoan => totalLoan.amount.nonEmpty,
+              (ErrorMsg("required"), NonEmptyList.one(List("amount")))
+            ),
+            Rule.fromPred(
+              totalLoan => totalLoan.estimate || !totalLoan.estimate,
+              (ErrorMsg("required"), NonEmptyList.one(List("estimate")))
+            )
+          )
+        )
+      )
+
+      isRepaid <- ask[Boolean](
+        "repaid-any-loan-during-tax-year",
+        default = default.map(_.isGenuinelyRepaid),
+        customContent = Map(
+          "repaid-any-loan-during-tax-year.heading" ->
+            Tuple2("repaid-any-loan-during-tax-year.heading", List(formatDate(startDate), formatDate(endDate))),
+          "repaid-any-loan-during-tax-year.required" ->
+            Tuple2("repaid-any-loan-during-tax-year.required", List(formatDate(startDate), formatDate(endDate))),
+          "repaid-any-loan-during-tax-year.heading.hint" ->
+            Tuple2("repaid-any-loan-during-tax-year.heading.hint", List(schemeName))
+          )
+      )
+
+      repaid <- ask[Money](
+        "loan-repaid",
+        default = default.map(_.genuinelyRepaid.getOrElse("")),
+        customContent = Map(
+          "loan-repaid.heading.hint" ->
+          Tuple2("loan-repaid.heading.hint", List(schemeName))),
+        validation = List(
+          List(
+            Rule.fromPred(
+              repaid => repaid.matches(moneyRegex),
+              (ErrorMsg("format"), NonEmptyList.one(Nil))
+            ),
+            Rule.fromPred(
+              repaid => repaid.nonEmpty,
+              (ErrorMsg("required"), NonEmptyList.one(Nil))
+            )
+          )
+        )
+      ) when isRepaid
+
+      isWrittenOff <- ask[YesNoUnknownWrittenOff](
+        "written-off",
+        default = default.map(x => x.isWrittenOff match {
+          case Some(x: List[String]) if x == List(YesNoUnknown.CUnknown.entryName) => YesNoUnknownWrittenOff.Unknown
+          case Some(x: List[String]) if x == List(YesNoUnknown.BNo.entryName) => YesNoUnknownWrittenOff.No
+          case Some(x: List[String]) => YesNoUnknownWrittenOff(x.some)
+        }),
+        customContent = Map(
+          "written-off.heading" ->
+            Tuple2("written-off.heading", List(formatDate(startDate), formatDate(endDate))),
+          "written-off.required" ->
+            Tuple2("written-off.required", List(formatDate(startDate), formatDate(endDate))),
+          "written-off.heading.hint" ->
+            Tuple2("written-off.heading.hint", List(schemeName))
+        ),
+        validation = List(
+          List(
+            Rule.fromPred(
+              {
+                case YesNoUnknownWrittenOff.Yes(writtenOff) => writtenOff.amount.matches(moneyRegex)
+                case _ => true
+              },
+              (ErrorMsg("format"), NonEmptyList.one(List("Yes", "writtenOff", "amount")))
+            ),
+            Rule.fromPred(
+              {
+                case YesNoUnknownWrittenOff.Yes(writtenOff) => writtenOff.amount.nonEmpty
+                case _ => true
+              },
+              (ErrorMsg("required"), NonEmptyList.one(List("Yes", "writtenOff", "amount")))
+            ),
+            Rule.fromPred(
+              {
+                case YesNoUnknownWrittenOff.Yes(writtenOff) => writtenOff.taxPaid.matches(moneyRegex)
+                case _ => true
+              },
+              (ErrorMsg("format"), NonEmptyList.one(List("Yes", "writtenOff", "taxPaid")))
+            ),
+            Rule.fromPred(
+              {
+                case YesNoUnknownWrittenOff.Yes(writtenOff) => writtenOff.taxPaid.nonEmpty
+                case _ => true
+              },
+              (ErrorMsg("required"), NonEmptyList.one(List("Yes", "writtenOff", "taxPaid")))
+            )
+          )
+        )
+      )
+      writtenOff = isWrittenOff match {
+        case YesNoUnknownWrittenOff.Yes(isWrittenOff) => Some(WrittenOff(isWrittenOff.amount, isWrittenOff.taxPaid))
+        case _ => None
+      }
     } yield {
-      LoanDetails(year, approved, amount, isRepaid, repaid, isWrittenOff, writtenOff)
+      LoanDetails(year,
+                  approved,
+                  amount,
+                  isRepaid,
+                  repaid,
+                  YesNoUnknownWrittenOff.unapply(isWrittenOff),
+                  writtenOff
+      )
     }
   }
 }
-

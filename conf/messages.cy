@@ -54,7 +54,7 @@ about-scheme-user.Right.label=Nadwch ei UTR Hunanasesiad
 was-user-self-employed.heading=Oedd y person a fu farw yn gyflogedig neu’n hunangyflogedig pan gafodd y benthyciad?
 was-user-self-employed.Employed=Cyflogedig
 was-user-self-employed.SelfEmployed=Hunangyflogedig
-was-user-self-employed.Both=Cyflogedig ac yn hunangyflogedig
+was-user-self-employed.ZBoth=Cyflogedig ac yn hunangyflogedig
 aboutyou-deceasedbefore.heading=A fu farw’r person ar 5 Ebrill 2019 neu cyn hynny?
 aboutyou-noloancharge.heading=Does dim angen i chi anfon unrhyw fanylion tâl ar fenthyciad
 aboutyou-noloancharge.intro=Ar sail eich atebion, does dim angen i chi anfon unrhyw fanylion tâl ar fenthyciad.
@@ -97,23 +97,23 @@ confirm-contact-prefs.email.heading=Cyfeiriad e-bost
 scheme-name.heading=Nodwch enw ar gyfer y cynllun hwn
 scheme-name.hint=Os nad ydych yn gwybod enw’r cynllun, gallwch nodi unrhyw enw yma.
 dotas-number.heading=Oes gennych rif Datgelu Cynlluniau Arbed Treth (DOTAS) ar gyfer y cynllun hwn?
-dotas-number.heading.hint=
-dotas-number.heading.hint.custom=Cynllun: {0}
+dotas-number.heading.hint=Cynllun: {0}
 dotas-number.intro=Gallwch gael y rhif DOTAS oddi wrth hyrwyddwr y cynllun – mae’n ofynnol iddo roi hwn i chi.
 dotas-number.Yes.dotas.heading=Nodwch y rhif DOTAS
 dotas-number.Yes.dotas.hint=Er enghraifft, 12345678
 dotas-number.Yes=Iawn
 dotas-number.No=Na
 dotas-number.DoNotKnow=Ddim yn gwybod
+
+case-reference-number.None=Na
+case-reference-number.Some=Iawn
+case-reference-number.Some.value.heading=Nodwch gyfeirnod achos CThEM
+case-reference-number.Some.value.hint=Mae hwn fel arfer yn dechrau gyda ‘CFS’ neu ‘CFSS’.
 case-reference-number.heading=Oes gennych gyfeirnod achos CThEM ar gyfer y cynllun hwn?
-case-reference-number.heading.hint=
-case-reference-number.heading.hint.custom=Cynllun: {0}
-case-reference-number.inner.string.heading=Nodwch gyfeirnod achos CThEM
-case-reference-number.inner.string.hint=Mae hwn fel arfer yn dechrau gyda ‘CFS’ neu ‘CFSS’.
+case-reference-number.heading.hint=Cynllun: {0}
 
 still-using-the-scheme.heading=A ydych yn cael taliadau benthyciad o hyd drwy’r cynllun?
-still-using-the-scheme.heading.hint=
-still-using-the-scheme.heading.hint.custom=Cynllun: {0}
+still-using-the-scheme.heading.hint=Cynllun: {0}
 still-using-the-scheme-yes.heading=Pryd gawsoch fenthyciad o’r cynllun am y tro cyntaf?
 still-using-the-scheme-yes.heading.hint=
 still-using-the-scheme-yes.heading.hint.custom=Cynllun: {0}
@@ -126,19 +126,22 @@ still-using-the-scheme-no.heading.hint.custom=Cynllun: {0}
 still-using-the-scheme-no.intro=Os nad ydych yn gwybod yr union ddyddiad, nodwch amcan o’r dyddiad.
 still-using-the-scheme-no._1.heading=Y dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun
 still-using-the-scheme-no._1.hint=Er enghraifft, 31 3 2015
-
 still-using-the-scheme-no._2.heading=Y dyddiad y cawsoch eich benthyciad olaf o’r cynllun
 still-using-the-scheme-no._2.hint=Er enghraifft, 31 3 2015
+
 scheme-dates.p1=Os nad ydych yn gwybod yr union ddyddiad, nodwch amcan o’r dyddiad.
 scheme-dates.start=Dyddiad dechrau
 scheme-dates.end=Dyddiad dod i ben
 scheme-dates.hint=Er enghraifft, 31 3 2015
+
+user-employed.None=Na
+user-employed.Some=Iawn
 user-employed.heading=Oeddech yn gyflogai pan oeddech yn defnyddio’r cynllun?
-user-employed.heading.hint=
-user-employed.heading.hint.custom=Cynllun: {0}
-user-employed.inner.name.heading=Enw’ch cyflogwr
-user-employed.inner.paye.heading=Cyfeirnod TWE y cyflogwr (dewisol)
-user-employed.inner.paye.hint=Rhif swyddfa dreth 3 digid yw hwn, wedi’i ddilyn gan blaenslaes a chyfeirnod y cyflogwr o’r swyddfa dreth, megis 123/AB456. Efallai y caiff ei alw’n ‘Cyfeirnod TWE y Cyflogwr’ neu’n ‘Cyfeirnod TWE’. Bydd hwn ar eich P60.
+user-employed.heading.hint=Cynllun: {0}
+user-employed.Some.value.name.heading=Enw’ch cyflogwr
+user-employed.Some.value.paye.heading=Cyfeirnod TWE y cyflogwr (dewisol)
+user-employed.Some.value.paye.hint=Rhif swyddfa dreth 3 digid yw hwn, wedi’i ddilyn gan blaenslaes a chyfeirnod y cyflogwr o’r swyddfa dreth, megis 123/AB456. Efallai y caiff ei alw’n ‘Cyfeirnod TWE y Cyflogwr’ neu’n ‘Cyfeirnod TWE’. Bydd hwn ar eich P60.
+
 user-employed.intro=Os oeddech yn gyfarwyddwr ac yn gyflogai o’ch cwmni eich hun, atebwch ‘Iawn’.
 scheme-employername=Enw’ch cyflogwr
 scheme-dates.employerpayeref=Cyfeirnod TWE y cyflogwr (dewisol)
@@ -146,61 +149,50 @@ scheme-dates.employerpayeref.hint=Rhif swyddfa dreth 3 digid yw hwn, wedi’i dd
 scheme-fixedterm.heading=Ydy’r benthyciad hwn yn fenthyciad cyfnod penodol cymeradwy?
 scheme-fixedterm.heading.hint=
 scheme-fixedterm.heading.hint.custom=Cynllun: {0}
+
 about-loan.heading=Ai yn eich enw chi oedd y benthyciad?
-about-loan.heading.hint=
-about-loan.heading.hint.custom=Cynllun: {0}
-about-loan.inner.string.heading=Nodwch enw’r sawl yr oedd y benthyciad yn ei enw
-about-loan.outer.TRUE=Na
-about-loan.outer.FALSE=Iawn
-about-loanname=Nodwch enw’r sawl yr oedd y benthyciad yn ei enw
+about-loan.heading.hint=Cynllun: {0}
+about-loan.Some.value.heading=Nodwch enw’r sawl yr oedd y benthyciad yn ei enw
+about-loan.None=Na
+about-loan.Some=Iawn
+
 tax-settled.heading=A oes rhywun wedi talu, neu wedi cytuno â ni i dalu, unrhyw dreth neu Yswiriant Gwladol sy’n ddyledus ar gyfer y cynllun hwn?
-tax-settled.heading.hint=
-tax-settled.heading.hint.custom=Cynllun: {0}
+tax-settled.heading.hint=Cynllun: {0}
 tax-settled.intro=Peidiwch â chynnwys unrhyw daliadau mewn ymateb i Hysbysiad i wneud Taliad Cyflymedig (APN).
-tax-settled.Yes=Iawn
-tax-settled.No=Na
-tax-settled.Unknown=Ddim yn gwybod
+tax-settled.AYes=Iawn
+tax-settled.BNo=Na
+tax-settled.CUnknown=Ddim yn gwybod
+
 add-settlement.heading=Faint o dreth ac Yswiriant Gwladol y mae rhywun wedi’u talu, neu wedi cytuno â ni i’w talu, ar gyfer y cynllun hwn?
-add-settlement.heading.hint=
-add-settlement.heading.hint.custom=Cynllun: {0}
+add-settlement.heading.hint=Cynllun: {0}
 add-settlement.amount.heading=
 add-settlement.amount.hint=Nodwch y cyfanswm.
 add-settlement.dateOfSettlement.heading=Date paid
 # scheme validation
 
 fixed-term-loan.heading=Ydy’r benthyciad hwn yn fenthyciad cyfnod penodol cymeradwy?
-fixed-term-loan.heading.hint=
-fixed-term-loan.heading.hint.custom=Cynllun: {0}
-fixed-term-loan.Yes=Iawn
-fixed-term-loan.No=Na
-fixed-term-loan.Unknown=Ddim yn gwybod
+fixed-term-loan.heading.hint=Cynllun: {0}
+fixed-term-loan.AYes=Iawn
+fixed-term-loan.BNo=Na
+fixed-term-loan.CUnknown=Ddim yn gwybod
 
 loan-amount.heading=Beth oedd cyfanswm y benthyciad a dalwyd o {0} i {1}?
 loan-amount.heading.hint=Cynllun: {0}
 loan-amount.estimate.heading.large=Ai amcangyfrif yw’r swm y gwnaethoch ei nodi?
-loan-amount.amount.heading=
-loan-amount.estimate.heading=
 
 loan-repaid.heading=Faint o’r benthyciad y gwnaethoch ei ad-dalu?
 loan-repaid.intro=Peidiwch â chynnwys unrhyw fathau o ad-daliadau yr ydym yn eu diystyru. \
   <a href='https://www.gov.uk/guidance/report-and-account-for-your-disguised-remuneration-loan-charge' target='_blank'>\
   Ewch i weld pa ad-daliadau yr ydym yn eu diystyru (yn agor ffenestr neu dab newydd).</a>
-loan-repaid.heading.hint=
-loan-repaid.heading.hint.custom=Cynllun: {0}
+loan-repaid.heading.hint=Cynllun: {0}
 
-repaid-any-loan-during-tax-year.heading=Have you made any repayments for the loans received between START to END?
-repaid-any-loan-during-tax-year.heading.range=A ydych wedi gwneud unrhyw ad-daliadau ar gyfer y benthyciadau a gawsoch rhwng {0} a {1}?
-repaid-any-loan-during-tax-year.heading.hint=
-repaid-any-loan-during-tax-year.heading.hint.custom=Cynllun: {0}
+repaid-any-loan-during-tax-year.heading=A ydych wedi gwneud unrhyw ad-daliadau ar gyfer y benthyciadau a gawsoch rhwng {0} a {1}?
+repaid-any-loan-during-tax-year.heading.hint=Cynllun: {0}
 
-written-off-amount.heading=Swm y benthyciad a gafodd ei ddileu
-written-off-amount.heading.hint=
-written-off-amount.heading.hint.custom=Cynllun: {0}
-written-off-amount.amount.heading=Swm y benthyciad a gafodd ei ddileu
-written-off-amount.taxPaid.heading=Treth ac Yswiriant Gwladol a dalwyd ar y benthyciad a gafodd ei ddileu
-written-off.heading.range=Ydy’r benthyciwr wedi dileu unrhyw ran o’r benthyciad a wnaed o {0} i {1}?
-written-off.heading.hint=
-written-off.heading.hint.custom=Cynllun: {0}
+written-off.Yes.writtenOff.amount.heading=Swm y benthyciad a gafodd ei ddileu
+written-off.Yes.writtenOff.taxPaid.heading=Treth ac Yswiriant Gwladol a dalwyd ar y benthyciad a gafodd ei ddileu
+written-off.heading=Ydy’r benthyciwr wedi dileu unrhyw ran o’r benthyciad a wnaed o {0} i {1}?
+written-off.heading.hint=Cynllun: {0}
 written-off.Yes=Iawn
 written-off.No=Na
 written-off.Unknown=Ddim yn gwybod
@@ -220,9 +212,9 @@ email-address=Cyfeiriad e-bost
 dates-you-received-loans=Dyddiadau pan gawsoch fenthyciadau
 scheme=Cynllun: 
 disclosure-of-tax-avoidance-schemes-dotas-number=Rhif Datgelu Cynlluniau Arbed Treth (DOTAS)
-disclosure-of-tax-avoidance-schemes-dotas-number.Yes=Iawn
-disclosure-of-tax-avoidance-schemes-dotas-number.No=Na
-disclosure-of-tax-avoidance-schemes-dotas-number.Unknown=Ddim yn gwybod
+disclosure-of-tax-avoidance-schemes-dotas-number.AYes=Iawn
+disclosure-of-tax-avoidance-schemes-dotas-number.BNo=Na
+disclosure-of-tax-avoidance-schemes-dotas-number.CUnknown=Ddim yn gwybod
 hmrc-case-reference-number=Cyfeirnod achos CThEM
 employment-status=Statws cyflogaeth
 employed=Cyflogedig
@@ -238,10 +230,10 @@ cya.title=Gwirio’ch atebion cyn anfon eich manylion
 confirm.title=Manylion tâl ar fenthyciad wedi dod i law
 cya.p1=Sicrhewch eich bod yn gwirio’ch atebion cyn i chi eu hanfon. Os bydd angen i chi ychwanegu neu newid unrhyw fanylion yn ddiweddarach, bydd angen i chi lenwi’r ffurflen hon eto.
 cya.p2=Drwy gyflwyno’ch atebion, rydych yn cadarnhau, hyd eithaf eich gwybodaeth, fod yr wybodaeth rydych wedi’i rhoi yn gywir ac yn gyflawn.
-cya.loandetails.h1=Manylion benthyciad ar gyfer {0}
+cya.loandetails.h1=Manylion benthyciad ar gyfer 
 cya.loandetails.header.tax-year=Blwyddyn dreth
 cya.loandetails.header.amount=Swm
-cya.loandetails.header.estimate=Amcangyfrif
+cya.loandetails.header.estimate=Ai amcangyfrif yw cyfanswm y benthyciad a dalwyd o {0} i {1}?
 cya.loandetails.header.repaid=Wedi’i ad-dalu
 cya.loandetails.header.written-off=Wedi’i ddileu
 cya.loandetails.header.tax-paid=Treth a dalwyd
@@ -264,12 +256,14 @@ your-ni-no.format=Nodwch eich rhif Yswiriant Gwladol yn y fformat cywir
 user-deceased.required=Dewiswch ‘Iawn’ os yw’r person rydych yn gweithredu ar ei ran yn fyw
 was-user-self-employed.required=Dewiswch a oedd y person a fu farw yn gyflogedig, yn hunangyflogedig, neu’n gyflogedig ac yn hunangyflogedig
 aboutyou-deceasedbefore.required=Dewiswch Iawn os bu farw’r person ar neu cyn 5 Ebrill 2019
-about-scheme-usera.required=Nodwch rif Yswiriant Gwladol y person
+
+about-scheme-user.required=Dewiswch os ydych am nodi rhif Yswiriant Gwladol y person neu ei Gyfeirnod Unigryw Trethdalwr \
+  (UTR) ar gyfer Hunanasesiad
 about-scheme-user.Left.a.required=Nodwch rif Yswiriant Gwladol y person
-about-scheme-userb.required=Nodwch Gyfeirnod Unigryw Trethdalwr (UTR) y person ar gyfer Hunanasesiad
 about-scheme-user.Right.b.required=Nodwch Gyfeirnod Unigryw Trethdalwr (UTR) y person ar gyfer Hunanasesiad
-about-scheme-user.nino-format=Nodwch rif Yswiriant Gwladol y person yn y fformat cywir
-about-scheme-user.utr-format=Nodwch Gyfeirnod Unigryw Trethdalwr (UTR) y person ar gyfer Hunanasesiad yn y fformat cywir
+about-scheme-user.Left.a.format=Nodwch rif Yswiriant Gwladol y person yn y fformat cywir
+about-scheme-user.Right.b.format=Nodwch Gyfeirnod Unigryw Trethdalwr (UTR) y person ar gyfer Hunanasesiad yn y fformat cywir
+
 confirm-about-scheme-user.required=Nodwch enw llawn y person rydych yn gweithredu ar ei ran
 confirm-about-scheme-user.limit=Mae'n rhaid i enw llawn fod yn 50 nod neu lai
 confirm-about-scheme-user.format=Rhaid i enw llawn ond yn cynnwys llythyrau aiy, gysylltnodau, atalnod llawn, collnodau a mannau
@@ -309,6 +303,8 @@ confirm-contact-prefs.email.email-format=Mae’n rhaid i’r cyfeiriad e-bost gy
 confirm-contact-prefs.email-or-phone-number-needed=Nodwch rif ffôn neu gyfeiriad e-bost
 confirm-contact-prefs.telephone.email-or-phone-number-needed=Nodwch rif ffôn neu gyfeiriad e-bost
 confirm-contact-prefs.email.email-or-phone-number-needed=Nodwch rif ffôn neu gyfeiriad e-bost
+confirm-contact-prefs.email.telephone.email-or-phone-number-needed=Nodwch rif ffôn neu gyfeiriad e-bost
+confirm-contact-prefs.email.confirm-contact-prefs.telephone.email-or-phone-number-needed=Nodwch rif ffôn neu gyfeiriad e-bost
 
 #scheme
 scheme-name.required=Nodwch enw’r cynllun
@@ -320,14 +316,36 @@ dotas-number.Yes.dotas.required=Mae’n rhaid i’r rhif Datgelu Cynlluniau Arbe
 dotas-number.char-limit=Mae’n rhaid i’r rhif Datgelu Cynlluniau Arbed Treth (DOTAS) gynnwys 8 rhif
 dotas-number.Yes.dotas.char-limit=Mae’n rhaid i’r rhif Datgelu Cynlluniau Arbed Treth (DOTAS) gynnwys 8 rhif
 
-case-reference-number.outer.required=Dewiswch Iawn os oes gennych gyfeirnod achos CThEM
-case-reference-number.inner.required=Mae’n rhaid i gyfeirnod achos CThEM gynnwys llythrennau a i z, rhifau a chysylltnodau yn unig
-case-reference-number.limit=Mae’n rhaid i gyfeirnod achos CThEM fod yn 10 o gymeriadau neu lai
-case-reference-number.inner.limit=Mae’n rhaid i gyfeirnod achos CThEM fod yn 10 o gymeriadau neu lai
-case-reference-number.format=Mae’n rhaid i gyfeirnod achos CThEM gynnwys llythrennau a i z, rhifau a chysylltnodau yn unig
-case-reference-number.inner.format=Mae’n rhaid i gyfeirnod achos CThEM gynnwys llythrennau a i z, rhifau a chysylltnodau yn unig
+case-reference-number.required=Dewiswch Iawn os oes gennych gyfeirnod achos CThEM
+case-reference-number.Some.value.required=Mae’n rhaid i gyfeirnod achos CThEM gynnwys llythrennau a i z, rhifau a chysylltnodau yn unig
+case-reference-number.Some.value.limit=Mae’n rhaid i gyfeirnod achos CThEM fod yn 10 o gymeriadau neu lai
+case-reference-number.Some.value.format=Mae’n rhaid i gyfeirnod achos CThEM gynnwys llythrennau a i z, rhifau a chysylltnodau yn unig
 
 still-using-the-scheme.required=Dewiswch Iawn os ydych yn dal i ddefnyddio’r cynllun
+
+still-using-the-scheme-yes.date-empty=Nodwch y dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun
+still-using-the-scheme-yes.day.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys diwrnod
+still-using-the-scheme-yes.month.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys mis
+still-using-the-scheme-yes.year.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys blwyddyn
+still-using-the-scheme-yes.day.month.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys diwrnod a mis
+still-using-the-scheme-yes.day.year.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys diwrnod a blwyddyn
+still-using-the-scheme-yes.year.month.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys mis a blwyddyn
+
+still-using-the-scheme-no._1.day.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys diwrnod
+still-using-the-scheme-no._1.month.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys mis
+still-using-the-scheme-no._1.year.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys blwyddyn
+still-using-the-scheme-no._1.day._1.month.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys diwrnod a mis
+still-using-the-scheme-no._1.day._1.year.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys diwrnod a blwyddyn
+still-using-the-scheme-no._1.year._1.month.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys mis a blwyddyn
+still-using-the-scheme-no._1.badDate=Nodwch ddyddiad go iawn
+
+still-using-the-scheme-no._2.day._2.month.empty=The date you received your last loan from the scheme must include a day and month
+still-using-the-scheme-no._2.day._2.year.empty=The date you received your last loan from the scheme must include a day and year
+still-using-the-scheme-no._2.year._2.month.empty=The date you received your last loan from the scheme must include a month and year
+still-using-the-scheme-no._2.day.empty=The date you received your last loan from the scheme must include a day
+still-using-the-scheme-no._2.month.empty=The date you received your last loan from the scheme must include a month
+still-using-the-scheme-no._2.year.empty=The date you received your last loan from the scheme must include a year
+still-using-the-scheme-no._2.badDate=Nodwch ddyddiad go iawn
 
 still-using-the-scheme-yes.badDate=Nodwch ddyddiad go iawn
 still-using-the-scheme-yes.year.required=Mae’n rhaid i’r dyddiad y gwnaethoch ddechrau defnyddio’r cynllun gynnwys blwyddyn
@@ -345,25 +363,18 @@ still-using-the-scheme-no.day._1.required=Mae’n rhaid i’r dyddiad y gwnaetho
 still-using-the-scheme-no._1.same-or-after=Mae’n rhaid i’r dyddiad y gwnaethoch roi’r gorau i ddefnyddio’r cynllun fod yr un fath â’r dyddiad y gwnaethoch ddechrau defnyddio’r cynllun neu ar ôl hynny
 still-using-the-scheme-no._2.same-or-after=Mae’n rhaid i’r dyddiad y gwnaethoch roi’r gorau i ddefnyddio’r cynllun fod yr un fath â’r dyddiad y gwnaethoch ddechrau defnyddio’r cynllun neu ar ôl hynny
 still-using-the-scheme-no.same-or-after=Mae’n rhaid i’r dyddiad y gwnaethoch roi’r gorau i ddefnyddio’r cynllun fod yr un fath â’r dyddiad y gwnaethoch ddechrau defnyddio’r cynllun neu ar ôl hynny
-still-using-the-scheme-no._1.badDate=Nodwch ddyddiad go iawn
-still-using-the-scheme-no._2.badDate=Nodwch ddyddiad go iawn
 
-user-employed.outer.required=Dewiswch Iawn os oeddech yn gyflogai pan oeddech yn defnyddio’r cynllun
-user-employed.name.inner.required=Nodwch enw’r cyflogwr
-user-employed.inner.name.required=Nodwch enw’r cyflogwr
+user-employed.required=Dewiswch Iawn os oeddech yn gyflogai pan oeddech yn defnyddio’r cynllun
+user-employed.Some.value.name.required=Nodwch enw’r cyflogwr
 
-user-employed.char-limit=Mae’n rhaid i enw’r cyflogwr fod yn 50 o gymeriadau neu lai
-user-employed.inner.name.char-limit=Mae’n rhaid i enw’r cyflogwr fod yn 50 o gymeriadau neu lai
-user-employed.name-format=Mae’n rhaid i enw’r cyflogwr gynnwys llythrennau a-z, rhifau, collnodau, symbolau ampersand, comas, cysylltnodau, atalnodau llawn, blaenslaesau, cromfachau crwn a bylchau yn unig
-user-employed.inner.name.name-format=Mae’n rhaid i enw’r cyflogwr gynnwys llythrennau a-z, rhifau, collnodau, symbolau ampersand, comas, cysylltnodau, atalnodau llawn, blaenslaesau, cromfachau crwn a bylchau yn unig
+user-employed.Some.value.name.char-limit=Mae’n rhaid i enw’r cyflogwr fod yn 50 o gymeriadau neu lai
+user-employed.Some.value.name.format=Mae’n rhaid i enw’r cyflogwr gynnwys llythrennau a-z, rhifau, collnodau, symbolau ampersand, comas, cysylltnodau, atalnodau llawn, blaenslaesau, cromfachau crwn a bylchau yn unig
 user-employed.paye.inner.paye-format=Nodwch gyfeirnod TWE y cyflogwr yn y fformat cywir
 
-about-loan.outer.required=Dewiswch Iawn os mai yn eich enw chi oedd y benthyciad
-about-loan.inner.required=Nodwch enw llawn y sawl y gwnaed y benthyciad yn ei enw
-about-loan.char-limit=Mae’n rhaid i enw’r sawl y gwnaed y benthyciad yn ei enw fod yn 50 o gymeriadau neu lai
-about-loan.inner.char-limit=Mae’n rhaid i enw’r sawl y gwnaed y benthyciad yn ei enw fod yn 50 o gymeriadau neu lai
-about-loan.name-format=Mae’n rhaid i enw’r sawl y gwnaed y benthyciad yn ei enw gynnwys llythrennau a-z, rhifau, collnodau, symbolau ampersand, comas, cysylltnodau, atalnodau llawn, blaenslaesau, cromfachau crwn a bylchau yn unig
-about-loan.inner.name-format=Mae’n rhaid i enw’r sawl y gwnaed y benthyciad yn ei enw gynnwys llythrennau a-z, rhifau, collnodau, symbolau ampersand, comas, cysylltnodau, atalnodau llawn, blaenslaesau, cromfachau crwn a bylchau yn unig
+about-loan.required=Dewiswch Iawn os mai yn eich enw chi oedd y benthyciad
+about-loan.Some.value.required=Nodwch enw llawn y sawl y gwnaed y benthyciad yn ei enw
+about-loan.Some.value.name-length=Mae’n rhaid i enw’r sawl y gwnaed y benthyciad yn ei enw fod yn 50 o gymeriadau neu lai
+about-loan.Some.value.name-format=Mae’n rhaid i enw’r sawl y gwnaed y benthyciad yn ei enw gynnwys llythrennau a-z, rhifau, collnodau, symbolau ampersand, comas, cysylltnodau, atalnodau llawn, blaenslaesau, cromfachau crwn a bylchau yn unig
 
 tax-settled.required=Dewiswch Iawn os oes rhywun wedi talu, neu wedi cytuno â ni i dalu, unrhyw dreth neu Yswiriant Gwladol sy’n ddyledus ar gyfer y cynllun hwn
 
@@ -380,21 +391,18 @@ fixed-term-loan.required=Dewiswch Iawn os oedd y benthyciad yn un cyfnod penodol
 loan-amount.amount.required=Nodwch gyfanswm y benthyciad o {0} i {1}
 loan-amount.amount.nonnumericformat=Mae’n rhaid i’r swm rydych wedi'i ad-dalu fod yn swm o arian, megis 123.45 neu 150
 loan-amount.amount.format=Mae’n rhaid i gyfanswm y benthyciad fod yn swm o arian, megis 123.45 neu 150
-loan-amount.format=Mae’n rhaid i gyfanswm y benthyciad fod yn swm o arian, megis 123.45 neu 150
-loan-amount.estimate.estimate.required=Dewiswch ‘Iawn’ os mai amcangyfrif yw’r swm y gwnaethoch ei nodi
 loan-amount.estimate.required=Dewiswch ‘Iawn’ os mai amcangyfrif yw’r swm y gwnaethoch ei nodi
 
 repaid-any-loan-during-tax-year.required=Dewiswch Iawn os ydych wedi ad-dalu unrhyw ran o’r benthyciad a wnaed o {0} i {1}
+
 loan-repaid.required=Nodwch faint o’r benthyciad y gwnaethoch ei ad-dalu
 loan-repaid.format=Mae’n rhaid i’r swm rydych wedi'i ad-dalu fod yn swm o arian, megis 123.45 neu 150
 
 written-off.required=Dewiswch Iawn os yw’r benthyciwr wedi dileu unrhyw ran o’r benthyciad a wnaed o {0} i {1}
-written-off-amount.taxPaid.required=Nodwch swm y dreth neu Yswiriant Gwladol a dalwyd ar y benthyciad a gafodd ei ddileu
-written-off-amount.amount.required=Nodwch y swm y mae’r benthyciwr wedi’i ddileu o’r benthyciad
-written-off-amount.amount-format=Mae’n rhaid i swm y benthyciad sydd wedi’i ddileu fod yn swm o arian, megis 123.45 neu 150
-written-off-amount.amount.amount-format=Mae’n rhaid i swm y benthyciad sydd wedi’i ddileu fod yn swm o arian, megis 123.45 neu 150
-written-off-amount.tax-format=Mae’n rhaid i swm y dreth neu Yswiriant Gwladol a dalwyd ar y benthyciad a gafodd ei ddileu fod yn swm o arian, megis 123.45 neu 150
-written-off-amount.taxPaid.tax-format=Mae’n rhaid i swm y dreth neu Yswiriant Gwladol a dalwyd ar y benthyciad a gafodd ei ddileu fod yn swm o arian, megis 123.45 neu 150
+written-off.Yes.writtenOff.amount.required=Nodwch y swm y mae’r benthyciwr wedi’i ddileu o’r benthyciad
+written-off.Yes.writtenOff.amount.format=Mae’n rhaid i swm y benthyciad sydd wedi’i ddileu fod yn swm o arian, megis 123.45 neu 150
+written-off.Yes.writtenOff.taxPaid.required=Nodwch swm y dreth neu Yswiriant Gwladol a dalwyd ar y benthyciad a gafodd ei ddileu
+written-off.Yes.writtenOff.taxPaid.format=Mae’n rhaid i swm y dreth neu Yswiriant Gwladol a dalwyd ar y benthyciad a gafodd ei ddileu fod yn swm o arian, megis 123.45 neu 150
 
 # Confirmation
 confirmation.heading=Manylion tâl ar fenthyciad wedi dod i law

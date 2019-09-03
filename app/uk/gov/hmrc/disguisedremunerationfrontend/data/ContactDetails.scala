@@ -16,11 +16,15 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
-import ltbs.uniform._
-import org.atnos.eff._
-import play.api.i18n.Messages
+import cats.data.NonEmptyList
+import cats.implicits._
+import ltbs.uniform.{::, Language, NilTypes, _}
+import play.api.i18n.{Messages => _}
 
-case class TelAndEmail(telephone: Option[String], email: Option[String])
+import scala.language.higherKinds
+
+
+case class TelAndEmail(telephone: String, email: String)
 
 case class ContactDetails(
   address: Address,
@@ -28,76 +32,96 @@ case class ContactDetails(
 )
 
 object ContactDetails {
+  type TellTypes = NilTypes
+  type AskTypes = Address :: TelAndEmail :: NilTypes
 
   lazy val nameRegex = """^[a-zA-Z0-9',-./ ]*$"""
   lazy val townCountyRegex = """^[a-zA-Z0-9',-./ ]*$"""
-  lazy val telephoneRegex = """^\+?[0-9\s\(\)]{1,20}$"""
-  lazy val emailRegex = """^[a-zA-Z0-9\./_-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"""
-  lazy val postCodeRegex = """([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z]))))\s?[0-9][A-Za-z]{2})"""
+  lazy val telephoneRegex = """^\+?[0-9\s\(\)]{1,20}$|.{0}"""
+  lazy val emailRegex = """^[a-zA-Z0-9\./_-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$|.{0}"""
+  lazy val postCodeRegex = """([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z]))))\s?[0-9][A-Za-z]{2}|.{0})"""
 
-  type Stack = Fx.fx2[
-    UniformAsk[Address, ?],
-    UniformAsk[TelAndEmail, ?]
-  ]
-  def program[R
-      : _uniformCore
-      : _uniformAsk[Address, ?]
-      : _uniformAsk[TelAndEmail, ?]
-  ](default: Option[ContactDetails]): Eff[R, ContactDetails] = {
+  def contactDetailsProgram[F[_] : cats.Monad](
+    interpreter: Language[F, TellTypes, AskTypes]
+  ): F[ContactDetails] = {
+    import interpreter._
+
     for {
-      address <- ask[Address]("confirm-contact-details")
-        .defaultOpt(default.map(_.address))
-        .validating(
-          "street-limit",
-          address => address.line1.length <= 40
+      address <- ask[Address]("confirm-contact-details", validation =
+        List(
+          List(
+            Rule.fromPred(
+              address => address.line1.matches(nonEmptyStringRegex),
+              (ErrorMsg("required"), NonEmptyList.one(List("line1")))
+            ),
+            Rule.fromPred(
+              address => address.line1.matches(nameRegex),
+              (ErrorMsg("street-format"), NonEmptyList.one(List("line1")))
+            ),
+            Rule.fromPred(
+              address => address.line1.length <= 40,
+              (ErrorMsg("street-limit"), NonEmptyList.one(List("line1")))
+            ),
+            Rule.fromPred(
+              address => address.town.matches(nonEmptyStringRegex),
+              (ErrorMsg("required"), NonEmptyList.one(List("town")))
+            ),
+            Rule.fromPred(
+              address => address.town.length <= 40,
+              (ErrorMsg("town-limit"), NonEmptyList.one(List("town")))
+            ),
+            Rule.fromPred(
+              address => address.town.matches(townCountyRegex),
+              (ErrorMsg("town-format"), NonEmptyList.one(List("town")))
+            ),
+            Rule.fromPred(
+              address => address.county.length <= 40,
+              (ErrorMsg("county-limit"), NonEmptyList.one(List("county")))
+            ),
+            Rule.fromPred(
+              address => address.county.matches(townCountyRegex),
+              (ErrorMsg("county-format"), NonEmptyList.one(List("county")))
+            ),
+            Rule.fromPred(
+              address => address.postcode.matches(nonEmptyStringRegex),
+              (ErrorMsg("required"), NonEmptyList.one(List("postcode")))
+            ),
+            Rule.fromPred(
+              address => address.postcode.length <= 40,
+              (ErrorMsg("postcode-limit"), NonEmptyList.one(List("postcode")))
+            )
+          )
         )
-        .validating(
-          "street-format",
-          address => address.line1.matches(nameRegex)
+      )
+      telAndEmail <- ask[TelAndEmail]("confirm-contact-prefs", validation =
+        List(
+          List(
+            Rule.fromPred(
+              telAndEmail => telAndEmail.telephone.length <= 24,
+              (ErrorMsg("phone-limit"), NonEmptyList.one(List("telephone")))
+            ),
+            Rule.fromPred(
+              telAndEmail => telAndEmail.telephone.matches(telephoneRegex),
+              (ErrorMsg("phone-format"), NonEmptyList.one(List("telephone")))
+            ),
+            Rule.fromPred(
+              telAndEmail => telAndEmail.email.length <= 256,
+              (ErrorMsg("email-limit"), NonEmptyList.one(List("email")))
+            ),
+            Rule.fromPred(
+              telAndEmail => telAndEmail.email.matches(emailRegex),
+              (ErrorMsg("email-format"), NonEmptyList.one(List("email")))
+            ),
+            Rule.fromPred(
+              {
+                case a => a.email.matches(nonEmptyStringRegex) || a.telephone.matches(nonEmptyStringRegex)
+                case _ => false
+              },
+              (ErrorMsg("email-or-phone-number-needed"), NonEmptyList[InputPath](List("email"), List(List("telephone"))))
+            )
+          )
         )
-        .validating(
-          "town-limit",
-          address => address.town.length <= 40
-        )
-        .validating(
-          "town-format",
-          address => address.town.matches(townCountyRegex)
-        )
-        .validating(
-          "county-limit",
-          address => address.county.getOrElse("").length <= 40
-        )
-        .validating(
-          "county-format",
-          address => address.county.getOrElse("").matches(townCountyRegex)
-        )
-        .validating(
-          "postcode-limit",
-          address => address.postcode.length <= 40
-        )
-      telAndEmail <- ask[TelAndEmail]("confirm-contact-prefs")
-        .defaultOpt(default.map(_.telephoneAndEmail))
-        .validating(
-          "phone-limit",
-          contact =>  contact.telephone.fold(true)(_.length <= 24)
-        )
-        .validating(
-          "phone-format",
-          contact => contact.telephone.fold(true)(_.matches(telephoneRegex))
-        )
-        .validating(
-          "email-limit",
-          contact => contact.email.fold(true)(_.length <= 256)
-        )
-        .validating(
-          "email-format",
-          contact => contact.email.fold(true)(_.matches(emailRegex))
-        )
-        .validating(
-          "email-or-phone-number-needed",
-          {case TelAndEmail(None,None) => false; case _ => true}
-        )
-      
+      )
     } yield {
       ContactDetails(address, telAndEmail)
     }

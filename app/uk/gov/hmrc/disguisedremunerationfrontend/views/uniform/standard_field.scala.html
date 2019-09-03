@@ -1,0 +1,59 @@
+@*
+ * Copyright 2019 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import cats.implicits._
+@import ltbs.uniform._
+
+@(keyList: List[String], errors: ErrorTree, messages: UniformMessages[Html])(inner: Html)
+
+@key=@{keyList.mkString(".")}
+<div class="form-group">
+    @messages.get(s"$key.heading.large").map { largeHead =>
+    <h2 class="heading-m">
+        @largeHead
+    </h2>
+    }
+@if(errors.definedAtRoot){
+    <div class="form-group-error">
+}
+        @if(keyList.length > 1) {
+            @messages.get(s"$key.heading").map { hint =>
+                <label class="label" for="@key">@messages.decompose(s"$key.heading")</label>
+            }
+        }
+
+        @messages.get(s"$key.hint").map { hint =>
+            <span id="@key-hint" class="hint">@messages.decompose(s"$key.hint")</span>
+        }
+
+        @errors.valueAtRootList.map { error =>
+            <span id="@key-error" class="error-message">
+                @error.prefixWith(keyList).render(messages)
+            </span>
+        }
+
+        @inner
+
+        @for(msg <- messages.list(s"$key.outro")) {
+            <p class="govuk-body">
+                @msg
+            </p>
+        }
+@if(errors.definedAtRoot){
+    </div>
+}
+</div>
+

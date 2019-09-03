@@ -16,134 +16,173 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
-
-import ltbs.uniform._
-import org.atnos.eff._
-import uk.gov.hmrc.disguisedremunerationfrontend.controllers.EmploymentStatus
+import cats.data.NonEmptyList
 import cats.implicits._
+import ltbs.uniform.{::, Language, NilTypes, _}
+import play.api.i18n.{Messages => _}
+import uk.gov.hmrc.disguisedremunerationfrontend.controllers.EmploymentStatus
+
+import scala.language.higherKinds
 
 sealed trait AboutYou {
   def identification: Either[Nino, Utr]
   def completedBySelf: Boolean
 }
 
-case class AboutSelf (
-  nino: String
+case class AboutSelf(
+    nino: String
 ) extends AboutYou {
   def identification: Either[Nino, Utr] = Left(nino)
-  def completedBySelf: Boolean = true  
+  def completedBySelf: Boolean = true
 }
 
-case class AboutAnother (
-  alive: Boolean,
-  identification: Either[Nino, Utr],
-  deceasedBefore: Option[Boolean],
-  employmentStatus: Option[EmploymentStatus] = None,
-  actingFor: String
+case class AboutAnother(
+    alive: Boolean,
+    identification: Either[Nino, Utr],
+    deceasedBefore: Option[Boolean],
+    employmentStatus: Option[EmploymentStatus] = None,
+    actingFor: String
 ) extends AboutYou {
   def completedBySelf: Boolean = false
 }
 
 object AboutYou {
-
+  case object NoNeedToComplete
   // Move into utils
   lazy val nameRegex = """^[a-zA-Z',-. ]*$"""
   lazy val regExUTR = """^(?:[ \t]*(?:[a-zA-Z]{3})?\d[ \t]*){10}$"""
   lazy val regExNino = """^[ \t]*[A-Z,a-z]{1}[ \t]*[ \t]*[A-Z,a-z]{1}[ \t]*[0-9]{1}[ \t]*[ \t]*[0-9]{1}[ \t]*""" +
     """[ \t]*[0-9]{1}[ \t]*[ \t]*[0-9]{1}[ \t]*[ \t]*[0-9]{1}[ \t]*[ \t]*[0-9]{1}[ \t]*[A-D,a-d]{1}[ \t]*$"""
+  type TellTypes = NoNeedToComplete.type :: NilTypes
+  type AskTypes = Boolean :: String :: Either[Nino,Utr] :: EmploymentStatus :: NilTypes
 
-  sealed trait Error
-  case object NoNeedToComplete extends Error
+  def validIdentifier[A <: Either[Nino,Utr]](input: A): Boolean = input.fold(validNino, validUtr)
+  def validNino(nino: Nino):Boolean = nino.matches(regExNino)
+  def validUtr(utr: Utr):Boolean = utr.matches(regExUTR)
 
-  type Stack = Fx.fx5[
-    UniformAsk[Boolean,?],
-    UniformAsk[String,?],
-    UniformAsk[Unit,?],
-    UniformAsk[Either[Nino,Utr],?],
-    UniformAsk[EmploymentStatus,?]
-  ]
+  private def aboutAnotherProgram[F[_] : cats.Monad] (
+    interpreter: Language[F, TellTypes, AskTypes]
+  ): F[Either[NoNeedToComplete.type, AboutYou]] = {
 
-  def program[R
-      : _uniformCore
-      : _uniformAsk[Boolean,?]
-      : _uniformAsk[String,?]
-      : _uniformAsk[Either[Nino,Utr],?]
-      : _uniformAsk[EmploymentStatus,?]
-      : _uniformAsk[Unit,?]
-  ](default: Option[AboutYou], nino: Option[Nino], utr: Option[Utr]): Eff[R, Either[Error,AboutYou]] = {
+    import interpreter._
 
-    def aboutAnotherProgram(localDefault: Option[AboutAnother]): Eff[R, Either[Error,AboutYou]] =
-      for {
-        alive            <- ask[Boolean]("user-deceased")
-                              .defaultOpt(localDefault.map(_.alive))
-        employmentStatus <- ask[EmploymentStatus]("was-user-self-employed")
-                              .defaultOpt(localDefault.flatMap(_.employmentStatus))
-                              .in[R] when !alive
-        deceasedBefore   <- ask[Boolean]("aboutyou-deceasedbefore")
-                              .defaultOpt(localDefault.flatMap(_.deceasedBefore))
-                              .in[R] when employmentStatus == Some(EmploymentStatus.Employed)
-        r                <- if (deceasedBefore == Some(true)) { 
-          tell[Unit]("aboutyou-noloancharge")(()).in[R] >> Eff.pure(Left(NoNeedToComplete))
-        } else {
-          for {
-            id <- ask[Either[Nino,Utr]]("about-scheme-user")
-              .defaultOpt(localDefault.map(_.identification))
-              .validating(
-                "nino-format", {
-                  case Left(nino) => nino.matches(regExNino)
-                  case _ => true
-                }
-              ).validating(
-                "utr-format",
-                {
-                  case Left(nino) => true
-                  case Right(utr) => utr.matches(regExUTR)
-                }
-              )
-              .in[R]
-            personName <- ask[String]("confirm-about-scheme-user")
-            .defaultOpt(localDefault.map(_.actingFor))
-              .validating(
-                "format",
-                name => name.matches(nameRegex)
-              )
-              .validating(
-                "limit",
-                name => name.length <= 50
-              )
-
-            .in[R]
-          } yield Right(AboutAnother(
-            alive,
-            id,
-            deceasedBefore,
-            employmentStatus,
-            personName
-          ))
-        }
-      } yield r
-
-    def aboutSelfProgram(default: Option[AboutSelf]): Eff[R, Either[Error,AboutYou]] = {
-      val i: Eff[R, String] = nino match {
-        case Some(n) => Eff.pure(n)
-        case None    => ask[Nino]("your-ni-no")
-          .defaultOpt(default.map{_.nino})
-          .validating(
-            "format",
-              ni => ni.matches(regExNino)
+    for {
+      alive <- ask[Boolean]("user-deceased")
+      employmentStatus <- ask[EmploymentStatus]("was-user-self-employed") when !alive
+      deceasedBefore <- ask[Boolean]("aboutyou-deceasedbefore") when employmentStatus.contains(EmploymentStatus.Employed)
+      r <- if(deceasedBefore.contains(true)) {
+        tell[NoNeedToComplete.type ]("aboutyou-noloancharge", NoNeedToComplete)  >> Left(NoNeedToComplete).pure[F]
+      } else {
+        for {
+          id <- ask[Either[Nino, Utr]]("about-scheme-user",
+            validation = List(
+              List(
+                Rule.fromPred({
+                  case Left(nino) => nino.nonEmpty
+                  case _          => true
+                },
+                  (ErrorMsg("required"),
+                  NonEmptyList.one(List("Left", "a")))),
+                Rule.fromPred({
+                  case Right(utr) => utr.nonEmpty
+                  case _          => true
+                },
+                  (ErrorMsg("required"),
+                  NonEmptyList.one(List("Right", "b"))))
+              ),
+              List(
+                Rule.fromPred({
+                                case Left(nino) => nino.matches(regExNino)
+                                case _          => true
+                              },
+                              (ErrorMsg("format"),
+                               NonEmptyList.one(List("Left", "a")))),
+                Rule.fromPred({
+                                case Right(utr) => utr.matches(regExUTR)
+                                case _          => true
+                              },
+                              (ErrorMsg("format"),
+                               NonEmptyList.one(List("Right", "b"))))
+                  )
+                )
           )
+          personName <- ask[String](
+            "confirm-about-scheme-user",
+            validation = List(
+              List(
+                Rule.fromPred(
+                  x => x.matches(nonEmptyStringRegex),
+                  (ErrorMsg("required"), NonEmptyList.one(Nil))
+                )
+              ),
+              List(
+                Rule.fromPred(
+                  x ⇒ x.matches(nameRegex),
+                  (ErrorMsg("format"), NonEmptyList.one(Nil))
+                )
+              ),
+              List(
+                Rule.fromPred(
+                  x ⇒ x.length <= 50,
+                  (ErrorMsg("limit"), NonEmptyList.one(Nil))
+                ))
+            )
+          )
+        } yield Right(AboutAnother(
+          alive,
+          id,
+          deceasedBefore,
+          employmentStatus,
+          personName
+        ))
       }
-      i.map{x => AboutSelf(x).asRight[Error]}
-    }
+    } yield r
+  }
 
-    ask[Boolean]("about-you")
-      .defaultOpt(default.map{_.isInstanceOf[AboutAnother]}) >>= {
-        if (_) aboutAnotherProgram(
-          default.collect{case x: AboutAnother => x}
-        ) else aboutSelfProgram(
-          default.collect{case x: AboutSelf => x}
+  private def aboutSelfProgram[F[_]: cats.Monad](
+    nino: Option[Nino], // TODO these should be used
+    utr: Option[Utr],   // TODO ditto
+    interpreter: Language[F, TellTypes, AskTypes]
+  ): F[Either[NoNeedToComplete.type, AboutYou]] = {
+    import interpreter._
+
+    val i = nino match {
+      case Some(n) => n.pure[F]
+      case None =>
+        ask[Nino]("your-ni-no",
+          validation =
+            List(
+              List(
+                Rule.fromPred(
+                  nino => nino.nonEmpty,
+                  (ErrorMsg("required"), NonEmptyList.one(Nil))
+                )
+              ),
+              List(
+                Rule.fromPred(
+                  validNino,
+                  (ErrorMsg("format"), NonEmptyList.one(Nil))
+                )
+              )
+            )
         )
-      }
+    }
+    i.map { x =>
+      AboutSelf(x).asRight[NoNeedToComplete.type]
+    }
+  }
 
+  def aboutYouProgram[F[_]: cats.Monad](
+      interpreter: Language[F, TellTypes, AskTypes],
+      nino: Option[Nino] = None,
+      utr: Option[Utr] = None
+  ): F[Either[NoNeedToComplete.type, AboutYou]] = {
+    import interpreter._
+
+    for {
+      aboutAnother <- ask[Boolean]("about-you")
+      aboutBranch <- if (aboutAnother) aboutAnotherProgram(interpreter)
+      else aboutSelfProgram(nino, utr, interpreter)
+    } yield aboutBranch
   }
 }

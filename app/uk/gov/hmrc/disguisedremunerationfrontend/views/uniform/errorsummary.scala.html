@@ -16,26 +16,32 @@
 
 @import cats.implicits._
 
-@(key: String, values: Input, errors: ErrorTree, messages: UniformMessages[Html])
+@(keyList: List[String], errors: ErrorTree, messages: UniformMessages[Html])
 
-
-@if(errors.nonEmpty) { 
-
+@if(keyList.length == 1 && errors.nonEmpty) {
 <div class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
-
   <h2 class="heading-medium error-summary-heading" id="error-summary-title">
-    @messages(List(s"$key.there.is.a.problem", "there.is.a.problem"))
+    @messages(List(s"$keyList.there.is.a.problem", "there.is.a.problem"))
   </h2>
     <ul class="error-summary-list">
-      @for((path, errormsg) <- errors.flatTree.reverse) {
+      @for((path, errormsg) <- errors) {
       <li>
-        <a href="#@{(key :: path).mkString(".")}"
-            id="@{(key :: path).mkString(".") ++ ".error-summary"}"
-            data-focuses="@{(key :: path).mkString(".")}@if(values.flatTree.isEmpty){-0}">
-            @messages.decompose((key :: path).mkString(".") ++ "." ++ errormsg)
+        <a href="#@{keyList.mkString(".")}"
+            id="@{keyList.mkString(".") ++ ".error-summary"}"
+            data-focuses="@{keyList.mkString(".")}">
+        @if(path.map(x => x.nonEmpty).head) {
+            @if(path.length > 1) {
+                @errormsg.head.prefixWith(List(s"""${keyList.head}.${path.toList.flatten.mkString(".")}""")).render(messages)
+            } else {
+                @errormsg.head.prefixWith(path.map(x => s"${keyList.head}.${x.mkString(".")}").toList).render(messages)
+            }
+        } else {
+            @errormsg.head.prefixWith(keyList).render(messages)
+        }
         </a>
       </li>
       }
     </ul>
 </div>
 }
+

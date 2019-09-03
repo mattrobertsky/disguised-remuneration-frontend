@@ -62,7 +62,7 @@
             )
         }
 	    }
-	}.sortBy(_._1)
+	}
 	if (details.isEmpty) Left {
 	    Html(s"""${messages("landing.loan.taxyear.info1")} <a href="scheme/new/scheme-name" class="govuk-link">${messages("landing.loan.taxyear.info2")}</a> ${messages("landing.loan.taxyear.info3")}""")
         } else Right(details)
@@ -76,3 +76,4 @@
                             Left{ messages("landing.sendanswers.link") }
                           }}
                       )
+

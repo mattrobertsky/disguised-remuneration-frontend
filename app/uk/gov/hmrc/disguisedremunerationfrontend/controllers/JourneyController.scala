@@ -17,47 +17,68 @@
 package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 import cats.implicits._
 import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import javax.inject.{Inject, Singleton}
-import ltbs.uniform._
-import ltbs.uniform.interpreters.playframework._
-import ltbs.uniform.web.InferParser._
-import ltbs.uniform.web._
-import ltbs.uniform.web.parser._
-import org.atnos.eff._
+import ltbs.uniform.common.web.GenericWebTell
+import ltbs.uniform.interpreters.playframework.{DebugPersistence, PersistenceEngine, UnsafePersistence, tellTwirlUnit, twirlUnitField}
+import ltbs.uniform.{ErrorTree, UniformMessages}
 import play.api.Logger
+import play.api.data.Form
 import play.api.data.Forms._
-import play.api.data._
-import play.api.i18n.I18nSupport
+import play.api.i18n.{I18nSupport, MessagesApi, Messages => _}
 import play.api.libs.json.{Json, OFormat}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
+import play.api.mvc._
+import play.twirl.api.Html
 import play.twirl.api.HtmlFormat.escape
-import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
 import uk.gov.hmrc.disguisedremunerationfrontend.actions.{AuthorisedAction, AuthorisedRequest}
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
-import uk.gov.hmrc.disguisedremunerationfrontend.controllers.AssetsFrontend.{optionHtml => _, _}
 import uk.gov.hmrc.disguisedremunerationfrontend.data.JsonConversion._
-import uk.gov.hmrc.disguisedremunerationfrontend.data.{Date, Nino, Utr, _}
-import uk.gov.hmrc.disguisedremunerationfrontend.repo.{JourneyStateStore, ShortLivedStore}
+import uk.gov.hmrc.disguisedremunerationfrontend.data.{AboutYou, ContactDetails, JourneyState, LoanDetails, Scheme, WrittenOff, Year, _}
+import uk.gov.hmrc.disguisedremunerationfrontend.repo.{JourneyStateStore, _}
 import uk.gov.hmrc.disguisedremunerationfrontend.views
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.controller.FrontendHeaderCarrierProvider
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
+import scala.language.higherKinds
 
 sealed abstract class EmploymentStatus extends EnumEntry
 object EmploymentStatus
     extends Enum[EmploymentStatus]
-    with PlayJsonEnum[EmploymentStatus]
-{
+    with PlayJsonEnum[EmploymentStatus] {
   val values = findValues
-  case object Employed      extends EmploymentStatus
-  case object SelfEmployed  extends EmploymentStatus
-  case object Both          extends EmploymentStatus
+  case object Employed extends EmploymentStatus
+  case object SelfEmployed extends EmploymentStatus
+  case object ZBoth extends EmploymentStatus { // TODO this will be redundant when Enumeratum included with Uniform
+    override def entryName: String = "Both"
+  }
 }
+
+//sealed abstract class YesWrittenOffNoUnknown extends EnumEntry
+//object YesWrittenOffNoUnknown
+//  extends Enum[YesWrittenOffNoUnknown]
+//    with PlayJsonEnum[YesWrittenOffNoUnknown] {
+//  val values = findValues
+//
+//  val Yes = a.Yes
+//  object a {
+//    case class Yes(writtenOff: WrittenOff) extends YesWrittenOffNoUnknown
+//  }
+//  val No = b.No
+//  object b {
+//    case object No extends YesWrittenOffNoUnknown
+//  }
+//
+//  val Unknown = c.Unknown
+//  object c {
+//    case object Unknown extends YesWrittenOffNoUnknown
+//  }
+//}
 
 sealed abstract class YesNoUnknown extends EnumEntry
 object YesNoUnknown
@@ -65,9 +86,45 @@ object YesNoUnknown
     with PlayJsonEnum[YesNoUnknown]
 {
   val values = findValues
-  case object Yes      extends YesNoUnknown
-  case object No       extends YesNoUnknown
-  case object Unknown  extends YesNoUnknown
+  case object AYes      extends YesNoUnknown {
+    override def entryName: String = "Yes"
+  }
+  case object BNo       extends YesNoUnknown {
+    override def entryName: String = "No"
+  }
+  case object CUnknown  extends YesNoUnknown {
+    override def entryName: String = "Unknown"
+  }
+}
+
+sealed trait YesNoUnknownWrittenOff
+object YesNoUnknownWrittenOff {
+  case class Yes(writtenOff: WrittenOff) extends YesNoUnknownWrittenOff
+  val No = a.No
+  object a {
+    case object No extends YesNoUnknownWrittenOff
+  }
+  val Unknown = b.Unknown
+  object b {
+    case object Unknown extends YesNoUnknownWrittenOff
+  }
+
+  def apply(optString: Option[List[String]]): YesNoUnknownWrittenOff = {
+    val u: List[String] = List(YesNoUnknown.CUnknown.entryName)
+    val n: List[String] = List(YesNoUnknown.BNo.entryName)
+    optString match {
+      case Some(`u`) => YesNoUnknownWrittenOff.Unknown
+      case Some(`n`) => YesNoUnknownWrittenOff.No
+      case Some(msg) => YesNoUnknownWrittenOff.Yes(WrittenOff.fromList(msg))
+    }
+  }
+
+  def unapply(yesNoDoNotKnow: YesNoUnknownWrittenOff): Option[List[String]] =
+    yesNoDoNotKnow match {
+      case Unknown => Some(List(YesNoUnknown.CUnknown.entryName))
+      case No => Some(List(YesNoUnknown.BNo.entryName))
+      case Yes(msg) => Some(msg.toList)
+    }
 }
 
 // unable to move to data package!
@@ -87,8 +144,8 @@ object YesNoDoNotKnow {
   }
 
   def apply(optString: Option[String]): YesNoDoNotKnow = {
-    val u: String = YesNoUnknown.Unknown.entryName
-    val n: String = YesNoUnknown.No.entryName
+    val u: String = YesNoUnknown.CUnknown.entryName
+    val n: String = YesNoUnknown.BNo.entryName
     optString match {
       case Some(`u`) => YesNoDoNotKnow.DoNotKnow
       case Some(`n`) => YesNoDoNotKnow.No
@@ -98,8 +155,8 @@ object YesNoDoNotKnow {
 
   def unapply(yesNoDoNotKnow: YesNoDoNotKnow): Option[String] =
     yesNoDoNotKnow match {
-      case DoNotKnow => Some(YesNoUnknown.Unknown.toString)
-      case No => Some(YesNoUnknown.No.toString)
+      case DoNotKnow => Some(YesNoUnknown.CUnknown.entryName)
+      case No => Some(YesNoUnknown.BNo.entryName)
       case Yes(msg) => Some(msg)
     }
 }
@@ -108,16 +165,24 @@ object YesNoDoNotKnow {
 class JourneyController @Inject()(
   mcc: MessagesControllerComponents,
   auditConnector: AuditConnector,
-  shortLivedStore: ShortLivedStore,
+  aboutYouSave4Later: AboutYouSave4LaterPersistence,
+  contactDetailsSave4Later: ContactDetailsSave4LaterPersistence,
+  schemeSave4Later: SchemeSave4LaterPersistence,
+  loanDetailsSave4Later: LoanDetailsSave4LaterPersistence,
   authorisedAction: AuthorisedAction,
   journeyStateStore: JourneyStateStore,
   val authConnector: AuthConnector
 )(
-  implicit val appConfig: AppConfig, ec: ExecutionContext
-) extends FrontendController(mcc)
-    with PlayInterpreter
-    with I18nSupport
-    with AuthorisedFunctions {
+  implicit val appConfig: AppConfig,
+  ec: ExecutionContext,
+  implicit val messagesApi: MessagesApi
+) extends ControllerHelpers
+  with FrontendHeaderCarrierProvider
+  with I18nSupport
+  with AuthorisedFunctions {
+
+  lazy val interpreter = DRInterpreter(appConfig, this, messagesApi)
+  import interpreter._
 
   def getState(implicit request: AuthorisedRequest[AnyContent]): Future[JourneyState] =
     journeyStateStore.getState(request.internalId)
@@ -126,261 +191,159 @@ class JourneyController @Inject()(
     journeyStateStore.storeState(request.internalId, in)
 
   /**
-    * This clears both the journeyState and the shortLivedStore AKA save4later
+    * Clears the journeyState
+    *
     * @param request
     * @return
     */
   def clearState(implicit request: AuthorisedRequest[AnyContent]): Future[Unit] = {
-    shortLivedStore.clearPersistence(request.internalId)
     journeyStateStore.clear(request.internalId)
   }
 
-  def username(implicit  request: AuthorisedRequest[AnyContent]): String = {
+  def username(implicit request: AuthorisedRequest[AnyContent]): String = {
     s"${request.name.name.getOrElse("")} ${request.name.lastName.getOrElse("")}"
   }
 
+  //  def timeOut: Action[AnyContent] = Action { implicit request =>
+  //    implicit val msg: UniformMessages[Html] = messages(request)
+  //    Ok(uk.gov.hmrc.disguisedremunerationfrontend.views.html.time_out()).withNewSession
+  //  }
 
-  def messages(request: Request[AnyContent]): UniformMessages[Html] =
-    convertMessages(messagesApi.preferred(request)) |+| UniformMessages.bestGuess.map(HtmlFormat.escape)
-
-    //  def timeOut: Action[AnyContent] = Action { implicit request =>
-//    implicit val msg: UniformMessages[Html] = messages(request)
-//    Ok(uk.gov.hmrc.disguisedremunerationfrontend.views.html.time_out()).withNewSession
-//  }
-
-  def renderForm(
-    key: List[String],
-    errors: ErrorTree,
-    form: Html,
-    breadcrumbs: List[String],
-    request: Request[AnyContent],
-    messagesIn: ltbs.uniform.UniformMessages[Html]
-  ): Html = {
-    implicit val r = request
-    val content = views.html.about_you(
-      key.last,
-      errors,
-      form,
-      breadcrumbs
-    )(messagesIn, request)
-    implicit val msg: UniformMessages[Html] = messages(request)
-    views.html.main_template(title = s"${messagesIn(key.mkString("-")+".heading")} - ${messagesIn("common.title")}")(content)
-  }
-
-  override lazy val parse = super[FrontendController].parse
+  //  override lazy val parse = super[FrontendController].parse
 
   def index: Action[AnyContent] = authorisedAction.async { implicit request =>
     getState.map { state =>
-      implicit val msg: UniformMessages[Html] = messages(request)
-      Ok(views.html.main_template(title = s"${msg("common.title")}")(views.html.index(state)))
+      implicit val msg: UniformMessages[Html] = interpreter.messages(request)
+      Ok(views.html.main_template(
+        title =
+          s"${msg("common.title.short")} - ${msg("common.title")}"
+      )(views.html.index(state)))
     }
   }
 
-
-  // tell uniform to not use the nested fields with radio buttons
-  // for an Option[String], instead treat an empty string as None
-  val optStringParser = new DataParser[Option[String]] {
-
-    import cats.implicits._
-
-    def bind(in: Input): Either[ErrorTree, Option[String]] = in.value match {
-      case Nil => Tree("required").asLeft
-      case empty :: Nil if empty.trim == "" => none[String].asRight
-      case s :: Nil => Some(s).asRight
-      case _ => Tree("badValue").asLeft
+  private def updateStateAndRedirect(
+    message: String,
+    state: JourneyState,
+    redirect: Result = Redirect(routes.JourneyController.index())
+  )(
+    implicit request: AuthorisedRequest[AnyContent]
+  ) =
+    setState(state).map {_=>
+      Logger.debug(message)
+      redirect
     }
 
-    def unbind(a: Option[String]): Input = Tree(List(a.getOrElse("")))
-  }
+  def aboutAction(targetId: String): Action[AnyContent] = authorisedAction.async {
+    implicit request: AuthorisedRequest[AnyContent] =>
+      implicit val persistence = aboutYouSave4Later.persistence
+      import uk.gov.hmrc.disguisedremunerationfrontend.data.AboutYou._
 
-  // tell uniform to use the same renderer for an Option[String] as
-  // is used for a String field
-  val optStringHtml = new HtmlField[Option[String]] {
-    def render(
-      key: String,
-      values: Input,
-      errors: ErrorTree,
-      messages: UniformMessages[Html]
-    ) = implicitly[HtmlField[String]].render(key, values, errors, messages)
-  }
-
-  def contactDetails(implicit key: String): Action[AnyContent] =
-    authorisedAction.async { implicit request =>
-      implicit val keys: List[String] = key.split("/").toList
-      import ContactDetails._
-
-      // tell uniform to not use the nested fields with radio buttons
-      // for an Option[String], instead treat an empty string as None
-      implicit val optStringParserImplicit = optStringParser
-
-      // tell uniform to use the same renderer for an Option[String] as
-      // is used for a String field
-      implicit val optStringHtmlImplicit = optStringHtml
+      implicit val playTell: GenericWebTell[AboutYou.NoNeedToComplete.type, Html] = new GenericWebTell[NoNeedToComplete.type, Html] {
+        override def render(in: NoNeedToComplete.type, key: String, messages: UniformMessages[Html]): Html =
+          views.html.uniform.standard_field(List(key), ErrorTree.empty, messages)(Html(""))
+      }
 
       getState.flatMap { state =>
-        runWeb(
-          program = ContactDetails.program[FxAppend[Stack, PlayStack]](state.contactDetails)
-            .useForm(automatic[Unit, Address])
-            .useForm(automatic[Unit, TelAndEmail]),
-          shortLivedStore.persistence(request.internalId)
-        ) { data =>
-          setState(state.copy(contactDetails = Some(data))) map { _ =>
-            Logger.debug("completed contact details")
-            Redirect(routes.JourneyController.index())
+        aboutYouProgram[WM](
+          interpreter.create[TellTypes, AskTypes](interpreter.messages(request)),
+          request.nino,
+          request.utr
+        ).run(targetId, false) {
+          case Left(_) =>
+            clearState map { _ => Redirect(routes.AuthenticationController.signOut()) }
+          case Right(data: AboutYou) =>
+            updateStateAndRedirect(
+              "completedAboutYou",
+              state.copy(aboutYou = Some(data))
+            )
           }
         }
       }
-    }
 
-  def addScheme(key: String) = runScheme(None, key)
+  def contactDetailsAction(targetId: String) = authorisedAction.async {
+    import uk.gov.hmrc.disguisedremunerationfrontend.data.ContactDetails.{AskTypes, TellTypes, contactDetailsProgram}
+    implicit request: AuthorisedRequest[AnyContent] =>
+      implicit val persistence = contactDetailsSave4Later.persistence
+      val playProgram = contactDetailsProgram[WM](
+        interpreter.create[TellTypes, AskTypes](interpreter.messages(request))
+      )
+      getState.flatMap { state =>
+        playProgram.run(targetId) {
+          case data: ContactDetails =>
+            updateStateAndRedirect("completed contact details", state.copy(contactDetails = Some(data)))
+        }
+      }
+  }
+
+  def addScheme(key: String) = schemeAction(None, key)
 
   def editScheme(
     schemeIndex: Int,
     key: String
-  ) = runScheme(Some(schemeIndex), key)
+  ) = schemeAction(Some(schemeIndex), key)
 
-  def runScheme(
-    schemeIndex: Option[Int],
-    key: String
-  ) = authorisedAction.async {
-    implicit request =>
 
-      implicit val keys: List[String] = key.split("/").toList
-      import AssetsFrontend.optionHtml
-      import Scheme._
+  def schemeAction(schemeIndex: Option[Int], targetId: String) = authorisedAction.async {
+    import uk.gov.hmrc.disguisedremunerationfrontend.data.Scheme.{AskTypes, TellTypes, schemeProgram}
+    implicit request: AuthorisedRequest[AnyContent] =>
+      implicit val persistence = schemeSave4Later.persistence
       getState.flatMap { state =>
-        val default: Option[Scheme] = schemeIndex.map(state.schemes(_))
-        runWeb(
-          program = Scheme.program[FxAppend[Stack, PlayStack]](default)
-            .useForm(automatic[Unit, String])
-            .useFormMap{
-              case List("about-loan") => {
-                implicit val rev: HtmlField[Option[String]] = optionReversed[String]
-                automatic[Unit, Option[String]]
-              }
-              case _ => automatic[Unit, Option[String]]
+        val default = schemeIndex.map(state.schemes(_))
+        val result = updateStateAndRedirect("completed scheme details", _: JourneyState)
+        val playProgram = schemeProgram[WM](
+          interpreter.create[TellTypes, AskTypes](interpreter.messages(request)),
+          default
+        )
+        playProgram.run(targetId, true) {
+          data: Scheme =>
+            schemeIndex match {
+              case Some(i) =>
+                val updatedScheme = data.copy(loanDetailsProvided = default.fold(Map.empty[Year, LoanDetails])(_.loanDetailsProvided))
+                result(state.copy(schemes = state.schemes.patch(i, Seq(updatedScheme), 1)))
+              case None =>
+                result(state.copy(schemes = state.schemes :+ data))
             }
-            .useForm(automatic[Unit, Option[Employer]]({
-              implicit val dp: DataParser[Option[String]] = optStringParser
-              implicitly[DataParser[Option[Employer]]]
-            }, {
-              implicit val hf: HtmlField[Option[String]] = optStringHtml
-              implicitly[HtmlForm[Option[Employer]]]
-            }, implicitly))
-            .useForm(automatic[Unit, YesNoUnknown])
-            .useForm(automatic[Unit, TaxSettlement])
-            .useForm(automatic[Unit, YesNoDoNotKnow])
-            .useForm(automatic[Unit, Boolean])
-            .useForm(automatic[Unit, Date])
-            .useForm(automatic[Unit, (Date, Date)]),
-          shortLivedStore.persistence(request.internalId)
-        ) { data =>
-          setState(schemeIndex match {
-            case Some(i) =>
-              val updatedScheme = data.copy(loanDetailsProvided = default.fold(Map.empty[Year, LoanDetails])(_.loanDetailsProvided))
-              state.copy(schemes = state.schemes.patch(i, Seq(updatedScheme), 1))
-            case None =>
-              state.copy(schemes = data :: state.schemes)
-          }).map { _ =>
-            Logger.debug("completed scheme")
-            Redirect(routes.JourneyController.index())
-          }
         }
       }
   }
 
-  def loanDetails(
-    schemeIndex: Int,
-    year: Year,
-    key: String
-  ) = authorisedAction.async { implicit request =>
-    implicit val keys: List[String] = key.split("/").toList
-    import LoanDetails._
-    import uk.gov.hmrc.disguisedremunerationfrontend.views.html.{uniform => html}
-
-    getState.flatMap { state =>
-      val scheme = state.schemes(schemeIndex)
-      val existing = scheme.loanDetails(year)
-      runWeb(
-        program = LoanDetails.program[FxAppend[Stack, PlayStack]](year, scheme, existing)
-          .useForm(automatic[Unit, YesNoUnknown])
-          .useForm(automatic[Unit, TotalLoan])
-          .useForm(automatic[Unit, Boolean])
-          .useForm(automatic[Unit, Money])
-          .useForm(automatic[Unit, Option[Money]])
-          .useForm(automatic[Unit, WrittenOff]),
-        shortLivedStore.persistence(request.internalId)
-      ){data =>
-        val updatedScheme = scheme.copy(
-          loanDetailsProvided = scheme.loanDetailsProvided + (year -> data))
-        setState(state.copy(
-          schemes = state.schemes.patch(schemeIndex, Seq(updatedScheme), 1)
-        )).map { _ =>
-          Logger.debug("completed loan details")
-          Redirect(routes.JourneyController.index())
-        }
-      }
-    }
-  }
-
-  implicit def renderTell: (Unit, String) => Html = {case _ => Html("")}
-
-  def aboutYou(implicit key: String): Action[AnyContent] = authorisedAction.async {
-    implicit request =>
-      implicit val keys: List[String] = key.split("/").toList
-
-      val customBool = {
-        implicit val booleanField = new HtmlField[Boolean] {
-          override def render(
-            key: String,
-            values: Input,
-            errors: ErrorTree,
-            messages: UniformMessages[Html]
-          ): Html =
-            views.html.uniform.radios(
-              key,
-              Seq("FALSE", "TRUE"),
-              values.value.headOption,
-              errors,
-              messages
+  def loanDetailsAction(schemeIndex: Int = 0, year: Int = 2019, targetId : String): Action[AnyContent] = authorisedAction.async {
+    import uk.gov.hmrc.disguisedremunerationfrontend.data.LoanDetails.{AskTypes, TellTypes, loanDetailsProgram}
+    implicit request: AuthorisedRequest[AnyContent] =>
+      implicit val persistence = loanDetailsSave4Later.persistence
+      implicit val messages = messagesApi.preferred(request)
+      getState.flatMap { state =>
+        val scheme = state.schemes(schemeIndex)
+        val result = updateStateAndRedirect("completed loan details", _: JourneyState)
+        val playProgram = loanDetailsProgram[WM](
+          interpreter.create[TellTypes, AskTypes](interpreter.messages(request)),
+          year,
+          messages,
+          scheme.name,
+          scheme.loanDetails(year)
+        )
+        playProgram.run(targetId, true) {
+          data: LoanDetails =>
+            result(
+              state.copy(
+                schemes =
+                  state.schemes.patch(
+                    schemeIndex,
+                    Seq(
+                      scheme.copy(loanDetailsProvided = scheme.loanDetailsProvided.updated(year, data))
+                    ),
+                    1
+                  )
+              )
             )
         }
-        automatic[Unit, Boolean]
       }
 
-      import AboutYou._
-      getState.flatMap { state =>
-        runWeb(
-          program = AboutYou.program[FxAppend[Stack, PlayStack]](state.aboutYou, request.nino, request.utr)
-            .useFormMap {
-              case List("about-you") => customBool
-              case _ => automatic[Unit, Boolean]
-            }
-            .useForm(automatic[Unit, Either[Nino, Utr]])
-            .useForm(automatic[Unit, EmploymentStatus])
-            .useForm(automatic[Unit, String])
-            .useForm(automatic[Unit, Unit]),
-          shortLivedStore.persistence(request.internalId)
-        ) {
-          _ match {
-            case Left(err) => {
-              clearState
-              Future.successful(Redirect(routes.AuthenticationController.signOut()))
-            }
-            case Right(data: AboutYou) =>
-                setState(state.copy(aboutYou = Some(data))) map { _ =>
-                  Logger.debug("completed about you for someone else without enrolments")
-                  Redirect(routes.JourneyController.index())
-            }
-          }
-        }
-      }
-    }
+  }
 
   val confirmationForm = Form(single(
     "confirm" -> boolean.verifying("error.cya.confirmation-needed", identity(_))
   ))
-
 
   private def msg(in: String)(implicit request: AuthorisedRequest[AnyContent]) = {
     messages(request)(in)
@@ -396,29 +359,28 @@ class JourneyController @Inject()(
     state match {
       case JourneyState(Some(aboutYou), _, Some(contactDetails)) =>
         val checkYourNinoOrUtr = aboutYou match {
-        case a@AboutSelf(nino) =>
-          List((msg("nino"), escape(nino), if(!retrievedNino)"about-you/your-ni-no".some else None))
-        case a@AboutAnother(_, ninoOrUtr, _, _, _) =>
-          ninoOrUtr match {
-            case Left(nino) =>  List((msg("nino"), escape(nino), "about-you/about-scheme-user".some))
-            case Right(utr) =>  List((msg("utr"), escape(utr), "about-you/about-scheme-user".some))
-            case _ => List.empty
-          }
-        case _ => List.empty
+          case a@AboutSelf(nino) =>
+            List((msg("nino"), escape(nino), if(!retrievedNino)"about-you/your-ni-no".some else None))
+          case a@AboutAnother(_, ninoOrUtr, _, _, _) =>
+            ninoOrUtr match {
+              case Left(nino) =>  List((msg("nino"), escape(nino), "about-you/about-scheme-user".some))
+              case Right(utr) =>  List((msg("utr"), escape(utr), "about-you/about-scheme-user".some))
+              case _ => List.empty
+            }
+          case _ => List.empty
         }
-
         views.html.answer_list(
           msg("personal-details"),
           List(
             (msg("name"), escape(username), None),
             (msg("filling-in-form-for-self"), msg(if(aboutYou.completedBySelf) "TRUE" else "FALSE"), "about-you/about-you".some),
-            checkYourNinoOrUtr.head,
+            checkYourNinoOrUtr.headOption.getOrElse((Html(""), Html(""), None)),
             (msg("address"), contactDetails.address.lines.map(escape).intercalate(Html("<br />")), "contact-details/confirm-contact-details".some),
             (msg("contact-details"), {
               import contactDetails.telephoneAndEmail._
               List(
-                telephone.map{x => ("telephone", x)},
-                email.map{x => ("email-address", x)}
+                telephone.some.map{x => ("telephone", x)},
+                email.some.map{x => ("email-address", x)}
               ).flatten.map{ case (l,r) =>
                 msg(l) |+| Html(": ") |+| escape(r)
               }.intercalate(Html("<br />"))
@@ -428,36 +390,12 @@ class JourneyController @Inject()(
     }
   }
 
-  implicit class LoanDetailTableDecorator(loanDetails: LoanDetails) {
-    def rowValues(index: Int, year: String)(implicit request: AuthorisedRequest[AnyContent]): List[(Html)] = {
-      List(
-        messages(request)("cya.loandetails.tax-year", year, (year.toInt + 1).toString),
-        Html("£" ++ loanDetails.totalLoan.amount.toString),
-        msg("cya.total-loan.estimate." ++ loanDetails.totalLoan.estimate.toString),
-        Html(loanDetails.genuinelyRepaid.fold("£" ++ "0")(gr => "£" ++ gr.toString)),
-        Html(loanDetails.writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.amount.toString)),
-        Html(loanDetails.writtenOff.fold("£" ++ "0")(wo =>"£" ++ wo.taxPaid.toString))
-      )
-    }
-  }
-
-
   private def schemeBlock(
     state: JourneyState
   )(
     implicit request: AuthorisedRequest[AnyContent]
   ): Html = {
-    implicit val m: UniformMessages[Html] = messages(request)
-    val loanDetailsTableHeadings =
-      List(
-        "cya.loandetails.header.tax-year",
-        "cya.loandetails.header.amount",
-        "cya.loandetails.header.estimate",
-        "cya.loandetails.header.repaid",
-        "cya.loandetails.header.written-off",
-        "cya.loandetails.header.tax-paid",
-        ""
-      )
+    implicit val ufMsg: UniformMessages[Html] = messages(request)
     state match {
       case JourneyState(Some(_), schemes, Some(_)) =>
         Html(schemes.zipWithIndex.map { case(scheme, index) =>
@@ -485,17 +423,40 @@ class JourneyController @Inject()(
                 settlement.fold(s"scheme/$index/tax-settled")(_ => s"scheme/$index/add-settlement").some )
             )
           ) |+|
-          views.html.answer_table(Html(s"$name"), loanDetailsTableHeadings, scheme.loanDetails.flatMap(
-            {
-              case(k,v) => {
-                Map(k.toString -> v.fold(List.empty[Html]){ ld => {
-                  val targetPage = if (k >= 2010) "loan-amount" else "fixed-term-loan"
-                  ld.rowValues(index, k.toString) :+ Html(s"""<a href="scheme/$index/details/${k.toString}/$targetPage">${msg("tasklist.edit")}</a>""")
-                }
-                })
-              }
-            }
-          ))
+            Html(
+              scheme.loanDetails.map(
+                {
+                  case(k,v) => {
+                    views.html.answer_list(
+                      msg("cya.loandetails.h1") |+| escape(s" $name"),
+                      List(
+                        (msg("cya.loandetails.header.tax-year"),
+                          Html(s"${k.toString} ${msg("language.to")} ${(k.toInt + 1).toString}"),
+                          None),
+                        (msg("cya.loandetails.header.amount"),
+                          v.fold(Html("£0"))( x => Html(s"£${x.totalLoan.amount}")),
+                          s"scheme/$index/details/$k/loan-amount".some),
+                        (Html(s"${ufMsg(
+                          "cya.loandetails.header.estimate",
+                          formatDate(LocalDate.of(k, 4, 6), "d MMMM yyyy"),
+                          formatDate(LocalDate.of(k + 1, 4, 5), "d MMMM yyyy"))}"
+                        ),
+                          v.fold(Html("£0"))( x => msg(if(x.totalLoan.estimate)"TRUE" else "FALSE")),
+                          s"scheme/$index/details/$k/loan-amount".some),
+                        (msg("cya.loandetails.header.repaid"),
+                          v.fold(Html("£0"))( x => Html(s"£${x.genuinelyRepaid.getOrElse("0")}")),
+                          s"scheme/$index/details/$k/loan-repaid".some),
+                        (msg("cya.loandetails.header.written-off"),
+                          v.fold(Html("£0"))( x =>  Html(s"£${x.writtenOff.fold("0")(x => x.amount)}")),
+                          s"scheme/$index/details/$k/written-off".some),
+                        (msg("cya.loandetails.header.tax-paid"),
+                          v.fold(Html("£0"))( x =>  Html(s"£${x.writtenOff.fold("0")(x => x.taxPaid)}")),
+                          s"scheme/$index/details/$k/written-off".some)
+                      )
+                    )
+                  }
+              }).mkString
+            )
         }.mkString)
     }
   }
@@ -534,14 +495,14 @@ class JourneyController @Inject()(
       confirmationForm.bindFromRequest.fold(
         formWithErrors => {
           val contents =
-            views.html.cya(username, blocksFromState(state), formWithErrors)
+            views.html.cya(username, blocksFromState(state, request.nino.nonEmpty), formWithErrors)
           BadRequest(views.html.main_template(
             title = s"${m("cya.title")} - ${m("common.title")}"
           )(contents))
         },
         postedForm => {
 
-          makeAudit(java.util.UUID.randomUUID().toString, username, state)
+          makeAudit(java.util.UUID.randomUUID().toString, username, state)(request)
           clearState
           Logger.info(s"submission details sent to splunk")
           val contents = views.html.confirmation(
@@ -560,6 +521,7 @@ class JourneyController @Inject()(
     submitterName: String,
     data: JourneyState
   )
+
   case object AuditWrapper {
     implicit val auditWrapperFormatter: OFormat[AuditWrapper] = Json.format[AuditWrapper]
   }
@@ -576,6 +538,8 @@ class JourneyController @Inject()(
     }
     // the audit for TXM
     auditConnector.sendExplicitAudit("disguisedRemunerationCheck", Json.toJson(AuditWrapper(username, cleanNinoState)))
+
+
     // the audit for RIS
     for {
       scheme <- state.schemes

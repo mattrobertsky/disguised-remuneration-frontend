@@ -11,31 +11,30 @@ GET        /time-in                  uk.gov.hmrc.disguisedremunerationfrontend.c
 # re-implement
 #GET        /time-out                 uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.timeOut()
 
-GET        /about-you/               uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutYou(id = "")
-GET        /about-you/:id            uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutYou(id: String)
-POST       /about-you/               uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutYou(id = "")
-POST       /about-you/:id            uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutYou(id: String)
+GET        /about-you/               uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutAction(id = "")
+GET        /about-you/:id            uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutAction(id: String)
+POST       /about-you/               uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutAction(id = "")
+POST       /about-you/:id            uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutAction(id: String)
 
-GET        /contact-details/         uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetails(id = "")
-GET        /contact-details/:id      uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetails(id: String)
-POST       /contact-details/         uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetails(id = "")
-POST       /contact-details/:id      uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetails(id: String)
+GET        /contact-details/         uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetailsAction(id = "")
+GET        /contact-details/:id      uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetailsAction(id: String)
+POST       /contact-details/         uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetailsAction(id = "")
+POST       /contact-details/:id      uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetailsAction(id: String)
 
 GET        /scheme/new/              uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id = "")
 GET        /scheme/new/:id           uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id: String)
 POST       /scheme/new/              uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id = "")
 POST       /scheme/new/:id           uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id: String)
 
-
 GET        /scheme/:schemeIndex/     uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.editScheme(schemeIndex: Int, id = "")
 GET        /scheme/:schemeIndex/:id  uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.editScheme(schemeIndex: Int, id: String)
 POST       /scheme/:schemeIndex/     uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.editScheme(schemeIndex: Int, id = "")
 POST       /scheme/:schemeIndex/:id  uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.editScheme(schemeIndex: Int, id: String)
 
-GET        /scheme/:schemeIndex/details/:year/		uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.loanDetails(schemeIndex: Int, year: Int, id = "")
-GET        /scheme/:schemeIndex/details/:year/:id	uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.loanDetails(schemeIndex: Int, year: Int, id: String)
-POST       /scheme/:schemeIndex/details/:year/		uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.loanDetails(schemeIndex: Int, year: Int, id = "")
-POST       /scheme/:schemeIndex/details/:year/:id	uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.loanDetails(schemeIndex: Int, year: Int, id: String)
+GET        /scheme/:schemeIndex/details/:year/		uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.loanDetailsAction(schemeIndex: Int, year: Int, id = "")
+GET        /scheme/:schemeIndex/details/:year/:id	uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.loanDetailsAction(schemeIndex: Int, year: Int, id: String)
+POST       /scheme/:schemeIndex/details/:year/		uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.loanDetailsAction(schemeIndex: Int, year: Int, id = "")
+POST       /scheme/:schemeIndex/details/:year/:id	uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.loanDetailsAction(schemeIndex: Int, year: Int, id: String)
 
 GET        /check-your-answers       uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.cya
 POST       /complete                 uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.cyaPost
