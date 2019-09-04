@@ -49,7 +49,7 @@
     },
     messages("landing.loan.taxyear.heading") -> {
 	val details = state.schemes.zipWithIndex.flatMap{ case (scheme,schemeIndex) =>
-	    scheme.loanDetails.map { case (year, optDetails) => {
+	    scheme.loanDetails.toList.sortBy(_._1).map { case (year, optDetails) => {
             val targetPage = if (year >= 2010) "loan-amount" else "fixed-term-loan"
             (
                     s"${
