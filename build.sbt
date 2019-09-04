@@ -82,9 +82,6 @@ lazy val microservice = Project(appName, file("."))
     )
   )
 
-// TODO - remove this line before merging fork back into base
-resolvers += Resolver.sonatypeRepo("snapshots")
-
 libraryDependencies ++= Seq(
   ws
 )
