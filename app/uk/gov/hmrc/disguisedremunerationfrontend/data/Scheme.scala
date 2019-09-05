@@ -141,7 +141,7 @@ object Scheme {
                                       ),
                                       Rule.fromPred(
                                         {
-                                          case Some(ref) => ref.length <= 10
+                                          case Some(ref) => ref.length <= 12
                                           case _ => true
                                         },
                                         (ErrorMsg("limit"), NonEmptyList.one(List("Some", "value")))
