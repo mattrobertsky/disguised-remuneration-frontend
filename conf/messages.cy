@@ -318,7 +318,7 @@ dotas-number.Yes.dotas.char-limit=Mae’n rhaid i’r rhif Datgelu Cynlluniau Ar
 
 case-reference-number.required=Dewiswch Iawn os oes gennych gyfeirnod achos CThEM
 case-reference-number.Some.value.required=Mae’n rhaid i gyfeirnod achos CThEM gynnwys llythrennau a i z, rhifau a chysylltnodau yn unig
-case-reference-number.Some.value.limit=Mae’n rhaid i gyfeirnod achos CThEM fod yn 10 o gymeriadau neu lai
+case-reference-number.Some.value.limit=Mae’n rhaid i gyfeirnod achos CThEM fod yn 12 o gymeriadau neu lai
 case-reference-number.Some.value.format=Mae’n rhaid i gyfeirnod achos CThEM gynnwys llythrennau a i z, rhifau a chysylltnodau yn unig
 
 still-using-the-scheme.required=Dewiswch Iawn os ydych yn dal i ddefnyddio’r cynllun

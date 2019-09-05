@@ -311,7 +311,7 @@ dotas-number.Yes.dotas.required=Enter the Disclosure of Tax Avoidance Schemes (D
 
 case-reference-number.required=Select yes if you have an HMRC case reference number
 case-reference-number.Some.value.required=Enter the HMRC case reference number
-case-reference-number.Some.value.limit=HMRC case reference number must be 10 characters or less
+case-reference-number.Some.value.limit=HMRC case reference number must be 12 characters or less
 case-reference-number.Some.value.format=HMRC case reference number must only include letters a to z, numbers and hyphens
 
 still-using-the-scheme.required=Select yes if you are still receiving loan payments through the scheme
