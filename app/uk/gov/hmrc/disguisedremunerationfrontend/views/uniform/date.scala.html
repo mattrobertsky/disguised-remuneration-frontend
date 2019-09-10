@@ -38,7 +38,7 @@
         <div class="govuk-date-input__item">
             <div class="govuk-form-group">
                 <label class="govuk-label govuk-date-input__label" for="@key-@field">
-                @messages(List(s"$key.$field",field))
+                @messages(List((key :+ field).mkString("."),field))
                 </label>
                 <input
                 class="govuk-input govuk-date-input__input govuk-input--width-@if(field=="year"){4}else{2} @if(errors.definedAt(field)) {govuk-input--error}"

@@ -65,13 +65,14 @@ object Scheme {
   type AskTypes = String :: Option[String] :: Date :: (Date, Date) :: Option[Employer] :: Boolean :: TaxSettlement :: YesNoDoNotKnow :: YesNoUnknown :: NilTypes
 
 
-  val earliestDate: Date = LocalDate.parse("1900-01-01")
-
-  def isInRange(d: LocalDate): Boolean = d.isAfter(earliestDate) && d.isBefore(LocalDate.now())
-  def isAfterEarliestDate(d: LocalDate): Boolean = d.isAfter(earliestDate)
+// TODO Check business logic on the earliest date
+//
+//  val earliestDate: Date = LocalDate.parse("1900-01-01")
+//  def isInRange(d: LocalDate): Boolean = d.isAfter(earliestDate) && d.isBefore(LocalDate.now())
+//  def isAfterEarliestDate(d: LocalDate): Boolean = d.isAfter(earliestDate)
 
   def startBeforeEnd(dates: (LocalDate, LocalDate)): Boolean = (dates._1, dates._2) match {
-    case (start, end) if isInRange(start) && isInRange(end) && (start.isBefore(end) || start.isEqual(end)) => true
+    case (start, end) if start.isBefore(end) || start.isEqual(end) => true
     case _ => false
   }
 
@@ -170,9 +171,15 @@ object Scheme {
                                     validation = List(List(
                                       Rule.fromPred(
                                         {
-                                          date: Date => isAfterEarliestDate(date)
+                                          date: Date => date.getYear.toString.length == 4
                                         },
-                                        (ErrorMsg("date-far-past"), NonEmptyList.one(Nil))),
+                                        (ErrorMsg("not-a-date"), NonEmptyList.one(Nil))),
+                                      //TODO Check business rules on this
+//                                      Rule.fromPred(
+//                                        {
+//                                          date: Date => isAfterEarliestDate(date)
+//                                        },
+//                                        (ErrorMsg("date-far-past"), NonEmptyList.one(Nil))),
                                       Rule.fromPred(
                                         {
                                           date: Date => date.isBefore(LocalDate.now)
@@ -189,10 +196,38 @@ object Scheme {
                                     validation = List(List(
                                       Rule.fromPred[(Date,Date)](
                                         {
+                                          d:(Date,Date) => d._1.getYear.toString.length == 4
+                                        },
+                                        (ErrorMsg("not-a-date"), NonEmptyList.one(List("_1")))
+                                      ),
+                                      Rule.fromPred[(Date,Date)](
+                                        {
+                                          d:(Date,Date) => d._2.getYear.toString.length == 4
+                                        },
+                                        (ErrorMsg("not-a-date"), NonEmptyList.one(List("_2")))
+                                      ),
+                                      Rule.fromPred[(Date,Date)](
+                                        {
                                           d:(Date,Date) => startBeforeEnd(d)
                                         },
-                                        (ErrorMsg("same-or-after"), NonEmptyList.one(Nil))
-                                      )
+                                        (ErrorMsg("same-or-after"), NonEmptyList.one(List("_1")))
+                                      ),
+                                      Rule.fromPred[(Date,Date)](
+                                        {
+                                          d:(Date,Date) => startBeforeEnd(d)
+                                        },
+                                        (ErrorMsg("same-or-after"), NonEmptyList.one(List("_2")))
+                                      ),
+                                      Rule.fromPred(
+                                        {
+                                          date: (Date, Date) => date._1.isBefore(LocalDate.now)
+                                        },
+                                        (ErrorMsg("date-in-future"), NonEmptyList.one(List("_1")))),
+                                      Rule.fromPred(
+                                        {
+                                          date: (Date, Date) => date._2.isBefore(LocalDate.now)
+                                        },
+                                        (ErrorMsg("date-in-future"), NonEmptyList.one(List("_2"))))
                                     )),
                                     customContent = headingHint("still-using-the-scheme-no.heading.hint", schemeName)
                                   ).map (x => (x._1, x._2.some))

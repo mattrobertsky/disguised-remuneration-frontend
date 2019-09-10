@@ -243,7 +243,16 @@ cya.total-loan.estimate.false=Na
 cya.warning.body=Gallech gael eich erlyn os byddwch yn rhoi gwybodaeth anwir neu gamarweiniol yn fwriadol.
 cya.declaration.p1=Rwyf i
 cya.declaration.p2=yn cadarnhau, hyd eithaf fy ngwybodaeth, fod yr wybodaeth a roddwyd gennyf yn wir ac yn gywir.
-cya.submit=Derbyn ac anfon y manylion
+cya.submit=Derbyn ac anfon y manylion3
+
+disclosure-of-tax-avoidance-schemes-dotas-number.Yes=Iawn
+disclosure-of-tax-avoidance-schemes-dotas-number.No=Na
+disclosure-of-tax-avoidance-schemes-dotas-number.Unknown=Ddim yn gwybod
+disclosure-of-tax-avoidance-schemes-dotas-number.Unknown=Ddim yn gwybod
+
+tax-or-national-insurance-paid-or-agreed-to-pay.AYes=Iawn
+tax-or-national-insurance-paid-or-agreed-to-pay.BNo=Na
+tax-or-national-insurance-paid-or-agreed-to-pay.CUnknown=Ddim yn gwybod
 
 # Error messages
 there.is.a.problem=Mae problem wedi codi
@@ -323,43 +332,38 @@ case-reference-number.Some.value.format=Mae’n rhaid i gyfeirnod achos CThEM gy
 
 still-using-the-scheme.required=Dewiswch Iawn os ydych yn dal i ddefnyddio’r cynllun
 
+still-using-the-scheme-yes.not-a-date=Nodwch ddyddiad go iawn
 still-using-the-scheme-yes.date-empty=Nodwch y dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun
 still-using-the-scheme-yes.day.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys diwrnod
 still-using-the-scheme-yes.month.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys mis
 still-using-the-scheme-yes.year.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys blwyddyn
-still-using-the-scheme-yes.day.month.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys diwrnod a mis
-still-using-the-scheme-yes.day.year.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys diwrnod a blwyddyn
-still-using-the-scheme-yes.year.month.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys mis a blwyddyn
+still-using-the-scheme-yes.day-and-month.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys diwrnod a mis
+still-using-the-scheme-yes.day-and-year.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys diwrnod a blwyddyn
+still-using-the-scheme-yes.month-and-year.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys mis a blwyddyn
+still-using-the-scheme-yes.day-and-month-and-year.empty=Nodwch y dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun
+still-using-the-scheme-yes.date-far-past=Mae’n rhaid i’r dyddiad y gwnaethoch ddechrau defnyddio’r cynllun fod ar ôl 4 Ebrill 1999
+still-using-the-scheme-yes.date-in-future=Mae’n rhaid i’r dyddiad y gwnaethoch ddechrau defnyddio’r cynllun fod yn y gorffennol
 
 still-using-the-scheme-no._1.day.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys diwrnod
 still-using-the-scheme-no._1.month.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys mis
 still-using-the-scheme-no._1.year.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys blwyddyn
-still-using-the-scheme-no._1.day._1.month.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys diwrnod a mis
-still-using-the-scheme-no._1.day._1.year.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys diwrnod a blwyddyn
-still-using-the-scheme-no._1.year._1.month.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys mis a blwyddyn
-still-using-the-scheme-no._1.badDate=Nodwch ddyddiad go iawn
+still-using-the-scheme-no._1.day-and-month.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys diwrnod a mis
+still-using-the-scheme-no._1.day-and-year.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys diwrnod a blwyddyn
+still-using-the-scheme-no._1.month-and-year.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun gynnwys mis a blwyddyn
+still-using-the-scheme-no._1.day-and-month-and-year.empty=Nodwch y dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun
 
-still-using-the-scheme-no._2.day._2.month.empty=The date you received your last loan from the scheme must include a day and month
-still-using-the-scheme-no._2.day._2.year.empty=The date you received your last loan from the scheme must include a day and year
-still-using-the-scheme-no._2.year._2.month.empty=The date you received your last loan from the scheme must include a month and year
-still-using-the-scheme-no._2.day.empty=The date you received your last loan from the scheme must include a day
-still-using-the-scheme-no._2.month.empty=The date you received your last loan from the scheme must include a month
-still-using-the-scheme-no._2.year.empty=The date you received your last loan from the scheme must include a year
-still-using-the-scheme-no._2.badDate=Nodwch ddyddiad go iawn
+still-using-the-scheme-no._2.day.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad olaf o’r cynllun gynnwys diwrnod
+still-using-the-scheme-no._2.month.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad olaf o’r cynllun gynnwys mis
+still-using-the-scheme-no._2.year.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad olaf o’r cynllun gynnwys blwyddyn
+still-using-the-scheme-no._2.day-and-month.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad olaf o’r cynllun gynnwys diwrnod a mis
+still-using-the-scheme-no._2.day-and-year.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad olaf o’r cynllun gynnwys diwrnod a blwyddyn
+still-using-the-scheme-no._2.month-and-year.empty=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad olaf o’r cynllun gynnwys mis a blwyddyn
+still-using-the-scheme-no._2.day-and-month-and-year.empty=Nodwch y dyddiad y cawsoch eich benthyciad olaf o’r cynllun
 
-still-using-the-scheme-yes.badDate=Nodwch ddyddiad go iawn
-still-using-the-scheme-yes.year.required=Mae’n rhaid i’r dyddiad y gwnaethoch ddechrau defnyddio’r cynllun gynnwys blwyddyn
-still-using-the-scheme-yes.month.required=Mae’n rhaid i’r dyddiad y gwnaethoch ddechrau defnyddio’r cynllun gynnwys mis
-still-using-the-scheme-yes.day.required=Mae’n rhaid i’r dyddiad y gwnaethoch ddechrau defnyddio’r cynllun gynnwys diwrnod
-still-using-the-scheme-yes.date-far-past=Mae’n rhaid i’r dyddiad y gwnaethoch ddechrau defnyddio’r cynllun fod ar ôl 4 Ebrill 1999
-still-using-the-scheme-yes.date-in-future=Mae’n rhaid i’r dyddiad y gwnaethoch ddechrau defnyddio’r cynllun fod yn y gorffennol
-
-still-using-the-scheme-no.year._2.required=Mae’n rhaid i’r dyddiad y gwnaethoch roi’r gorau i ddefnyddio’r cynllun gynnwys blwyddyn
-still-using-the-scheme-no.month._2.required=Mae’n rhaid i’r dyddiad y gwnaethoch roi’r gorau i ddefnyddio’r cynllun gynnwys mis
-still-using-the-scheme-no.day._2.required=Mae’n rhaid i’r dyddiad y gwnaethoch roi’r gorau i ddefnyddio’r cynllun gynnwys diwrnod
-still-using-the-scheme-no.year._1.required=Mae’n rhaid i’r dyddiad y gwnaethoch ddechrau defnyddio’r cynllun gynnwys blwyddyn
-still-using-the-scheme-no.month._1.required=Mae’n rhaid i’r dyddiad y gwnaethoch ddechrau defnyddio’r cynllun gynnwys mis
-still-using-the-scheme-no.day._1.required=Mae’n rhaid i’r dyddiad y gwnaethoch ddechrau defnyddio’r cynllun gynnwys diwrnod
+still-using-the-scheme-no._1.not-a-date=Nodwch ddyddiad go iawn
+still-using-the-scheme-no._2.not-a-date=Nodwch ddyddiad go iawn
+still-using-the-scheme-no._1.date-in-future=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad cyntaf o’r cynllun fod yn y gorffennol
+still-using-the-scheme-no._2.date-in-future=Mae’n rhaid i’r dyddiad y cawsoch eich benthyciad olaf o’r cynllun fod yn y gorffennol
 still-using-the-scheme-no._1.same-or-after=Mae’n rhaid i’r dyddiad y gwnaethoch roi’r gorau i ddefnyddio’r cynllun fod yr un fath â’r dyddiad y gwnaethoch ddechrau defnyddio’r cynllun neu ar ôl hynny
 still-using-the-scheme-no._2.same-or-after=Mae’n rhaid i’r dyddiad y gwnaethoch roi’r gorau i ddefnyddio’r cynllun fod yr un fath â’r dyddiad y gwnaethoch ddechrau defnyddio’r cynllun neu ar ôl hynny
 still-using-the-scheme-no.same-or-after=Mae’n rhaid i’r dyddiad y gwnaethoch roi’r gorau i ddefnyddio’r cynllun fod yr un fath â’r dyddiad y gwnaethoch ddechrau defnyddio’r cynllun neu ar ôl hynny

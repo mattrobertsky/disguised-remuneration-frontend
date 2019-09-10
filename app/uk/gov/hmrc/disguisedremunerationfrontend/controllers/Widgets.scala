@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 
-import cats.syntax.either._, cats.syntax.applicative._, cats.instances.list._
+import cats.implicits._
 import cats.data.{Validated, NonEmptyList}
 import java.time.LocalDate
 import ltbs.uniform.TreeLike.ops._
@@ -87,34 +87,26 @@ trait Widgets {
 
     def decode(out: Input): Either[ErrorTree, LocalDate] = {
 
-      def intAtKey(key: String): String =
-        out.valueAt(key).flatMap(x => x.headOption).getOrElse("")
+      def intAtKey(key: String): Validated[List[String], Int] =
+        Validated.fromOption(
+          out.valueAt(key).flatMap{_.find(_.trim.nonEmpty)},
+          List(key)
+        ).andThen{
+          x => Validated.catchOnly[NumberFormatException](x.toInt).leftMap(_ => List(key))
+        }
 
-      (
-        intAtKey("year"),
-        intAtKey("month"),
-        intAtKey("day")
-      ) match {
-        case (y, m, d) if y.isEmpty && m.isEmpty && d.isEmpty =>
-          ErrorTree.oneErr(ErrorMsg("date-empty")).asLeft
-        case (_, m, d) if m.isEmpty && d.isEmpty =>
-          Map(NonEmptyList.of(List("day"), List("month")) -> NonEmptyList.one(ErrorMsg("empty"))).asLeft
-        case (y, _, d) if y.isEmpty && d.isEmpty =>
-          Map(NonEmptyList.of(List("day"), List("month")) -> NonEmptyList.one(ErrorMsg("empty"))).asLeft
-        case (y, m, _) if y.isEmpty && m.isEmpty =>
-          Map(NonEmptyList.of(List("year"), List("month")) -> NonEmptyList.one(ErrorMsg("empty"))).asLeft
-        case (y, _, _) if y.isEmpty =>
-          Map(NonEmptyList.of(List("year")) -> NonEmptyList.one(ErrorMsg("empty"))).asLeft
-        case (_, m, _) if m.isEmpty =>
-          Map(NonEmptyList.of(List("month")) -> NonEmptyList.one(ErrorMsg("empty"))).asLeft
-        case (_, _, d) if d.isEmpty =>
-          Map(NonEmptyList.of(List("day")) -> NonEmptyList.one(ErrorMsg("empty"))).asLeft
-        //        case (y, _, _) if !y.matches(yearRegex) => // TODO clarify why this was here (no message)
-        //          ErrorTree.oneErr(ErrorMsg("year-incorrect")).prefixWith("year").asLeft
-        case (y, m, d) => Either.catchOnly[java.time.DateTimeException] {
-          LocalDate.of(y.toInt, m.toInt, d.toInt)
-        }.leftMap(_ => ErrorTree.oneErr(ErrorMsg("not-a-date")))
-      }
+        (
+          intAtKey("year"),
+          intAtKey("month"),
+          intAtKey("day")
+        ).tupled
+        .leftMap{x => ErrorMsg(x.reverse.mkString("-and-") + ".empty").toTree}
+        .toEither
+        .flatMap{ case (y,m,d) =>
+          Either.catchOnly[java.time.DateTimeException]{
+            LocalDate.of(y,m,d)
+          }.leftMap(_ => ErrorTree.oneErr(ErrorMsg("not-a-date")))
+        }
     }
 
     def encode(in: LocalDate): Input = Map(
