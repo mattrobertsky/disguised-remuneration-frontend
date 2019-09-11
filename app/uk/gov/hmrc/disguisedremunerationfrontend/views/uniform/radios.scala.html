@@ -22,7 +22,7 @@
 @standard_field(key, errors, messages) {
 
 <div class="radios@if(inlineRadioKeys){--inline}">
-  @for((opt,num) <- options.zipWithIndex) {
+  @for((opt,num) <- if(key.head == "about-loan"){options.reverse.zipWithIndex} else {options.zipWithIndex}) {
     <div class="radios__item multiple-choice" data-target="@keyNoDots-@opt">
       <input
       class="radios__input"
