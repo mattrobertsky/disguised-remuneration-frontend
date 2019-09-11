@@ -212,6 +212,14 @@ cya.declaration.p1=I
 cya.declaration.p2=confirm that, to the best of my knowledge, the information given is true and correct.
 cya.complete=Accept and send details
 
+disclosure-of-tax-avoidance-schemes-dotas-number.Yes=Yes
+disclosure-of-tax-avoidance-schemes-dotas-number.No=No
+disclosure-of-tax-avoidance-schemes-dotas-number.Unknown=Do not know
+
+tax-or-national-insurance-paid-or-agreed-to-pay.AYes=Yes
+tax-or-national-insurance-paid-or-agreed-to-pay.BNo=No
+tax-or-national-insurance-paid-or-agreed-to-pay.CUnknown=Do not know
+
 personal-details=Personal details
 name=Name
 filling-in-form-for-self=Filling in form for self
@@ -316,34 +324,38 @@ case-reference-number.Some.value.format=HMRC case reference number must only inc
 
 still-using-the-scheme.required=Select yes if you are still receiving loan payments through the scheme
 
+still-using-the-scheme-yes.not-a-date=Enter a real date
 still-using-the-scheme-yes.date-empty=Enter the date you received your first loan from the scheme
 still-using-the-scheme-yes.day.empty=The date you received your first loan from the scheme must include a day
 still-using-the-scheme-yes.month.empty=The date you received your first loan from the scheme must include a month
 still-using-the-scheme-yes.year.empty=The date you received your first loan from the scheme must include a year
-still-using-the-scheme-yes.day.month.empty=The date you received your first loan from the scheme must include a day and month
-still-using-the-scheme-yes.day.year.empty=The date you received your first loan from the scheme must include a day and year
-still-using-the-scheme-yes.year.month.empty=The date you received your first loan from the scheme must include a month and year
+still-using-the-scheme-yes.day-and-month.empty=The date you received your first loan from the scheme must include a day and month
+still-using-the-scheme-yes.day-and-year.empty=The date you received your first loan from the scheme must include a day and year
+still-using-the-scheme-yes.month-and-year.empty=The date you received your first loan from the scheme must include a month and year
+still-using-the-scheme-yes.day-and-month-and-year.empty=Enter the date you received your first loan from the scheme
+still-using-the-scheme-yes.date-far-past=The date you received your first loan from the scheme must be in the past
+still-using-the-scheme-yes.date-in-future=The date you received your first loan from the scheme must be in the past
 
-still-using-the-scheme-no._1.date-empty=Enter the date you received your first loan from the scheme
-still-using-the-scheme-no._2.date-empty=Enter the date you received your last loan from the scheme
-        
 still-using-the-scheme-no._1.day.empty=The date you received your first loan from the scheme must include a day
 still-using-the-scheme-no._1.month.empty=The date you received your first loan from the scheme must include a month
 still-using-the-scheme-no._1.year.empty=The date you received your first loan from the scheme must include a year
-still-using-the-scheme-no._1.day._1.month.empty=The date you received your first loan from the scheme must include a day and month
-still-using-the-scheme-no._1.day._1.year.empty=The date you received your first loan from the scheme must include a day and year
-still-using-the-scheme-no._1.year._1.month.empty=The date you received your first loan from the scheme must include a month and year
+still-using-the-scheme-no._1.day-and-month.empty=The date you received your first loan from the scheme must include a day and month
+still-using-the-scheme-no._1.day-and-year.empty=The date you received your first loan from the scheme must include a day and year
+still-using-the-scheme-no._1.month-and-year.empty=The date you received your first loan from the scheme must include a month and year
+still-using-the-scheme-no._1.day-and-month-and-year.empty=Enter the date you received your first loan from the scheme
 
-still-using-the-scheme-no._2.day._2.month.empty=The date you received your last loan from the scheme must include a day and month
-still-using-the-scheme-no._2.day._2.year.empty=The date you received your last loan from the scheme must include a day and year
-still-using-the-scheme-no._2.year._2.month.empty=The date you received your last loan from the scheme must include a month and year
 still-using-the-scheme-no._2.day.empty=The date you received your last loan from the scheme must include a day
 still-using-the-scheme-no._2.month.empty=The date you received your last loan from the scheme must include a month
 still-using-the-scheme-no._2.year.empty=The date you received your last loan from the scheme must include a year
+still-using-the-scheme-no._2.day-and-month.empty=The date you received your last loan from the scheme must include a day and month
+still-using-the-scheme-no._2.day-and-year.empty=The date you received your last loan from the scheme must include a day and year
+still-using-the-scheme-no._2.month-and-year.empty=The date you received your last loan from the scheme must include a month and year
+still-using-the-scheme-no._2.day-and-month-and-year.empty=Enter the date you received your last loan from the scheme
 
-still-using-the-scheme-yes.badDate=Enter a real date
-still-using-the-scheme-no._1.badDate=Enter a real date
-still-using-the-scheme-no._2.badDate=Enter a real date
+still-using-the-scheme-no._1.not-a-date=Enter a real date
+still-using-the-scheme-no._2.not-a-date=Enter a real date
+still-using-the-scheme-no._1.date-in-future=The date you received your first loan from the scheme must be in the past
+still-using-the-scheme-no._2.date-in-future=The date you received your last loan from the scheme must be in the past
 still-using-the-scheme-no._1.same-or-after=The date you stopped using the scheme must be the same as or after the date you started using the scheme
 still-using-the-scheme-no._2.same-or-after=The date you stopped using the scheme must be the same as or after the date you started using the scheme
 still-using-the-scheme-no.same-or-after=The date you stopped using the scheme must be the same as or after the date you started using the scheme

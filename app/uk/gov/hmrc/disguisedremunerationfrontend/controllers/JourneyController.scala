@@ -419,7 +419,9 @@ class JourneyController @Inject()(
                 msg(if(loanRecipient) "TRUE" else "FALSE"),
                 s"scheme/$index/about-loan".some),
               (msg("tax-or-national-insurance-paid-or-agreed-to-pay"),
-                settlement.fold(msg("none")){x => Html(s"£${x.amount}")},
+                settlement.fold(
+                  msg(s"tax-or-national-insurance-paid-or-agreed-to-pay.$settlementAgreed")
+                ){taxSettlement => Html(s"£${taxSettlement.amount}")},
                 settlement.fold(s"scheme/$index/tax-settled")(_ => s"scheme/$index/add-settlement").some )
             )
           ) |+|

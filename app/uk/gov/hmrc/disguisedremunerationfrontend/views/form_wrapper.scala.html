@@ -21,7 +21,7 @@
         @key = @{keyList.last}
             
         @for(back <- breadcrumbs.headOption) {
-            <a href="@back" class="govuk link-back">@messages(List(s"back-to-$back","back"))</a>
+            <a href="@back" class="govuk link-back">@messages(List("back-to-" + back.mkString("-"),"back"))</a>
         }
 
         @if(breadcrumbs.isEmpty){
