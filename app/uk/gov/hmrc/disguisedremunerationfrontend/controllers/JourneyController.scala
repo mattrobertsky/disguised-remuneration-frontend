@@ -359,8 +359,11 @@ class JourneyController @Inject()(
     state match {
       case JourneyState(Some(aboutYou), _, Some(contactDetails)) =>
         val checkYourNinoOrUtr = aboutYou match {
-          case a@AboutSelf(nino) =>
-            List((msg("nino"), escape(nino), if(!retrievedNino)"about-you/your-ni-no".some else None))
+          case a@AboutSelf(ninoOrUtr) =>
+            ninoOrUtr match {
+              case Left(nino) => List((msg("nino"), escape(nino), if(!retrievedNino)"about-you/your-ni-no".some else None))
+              case Right(utr) => List((msg("utr"), escape(utr), None))
+            }
           case a@AboutAnother(_, ninoOrUtr, _, _, _) =>
             ninoOrUtr match {
               case Left(nino) =>  List((msg("nino"), escape(nino), "about-you/about-scheme-user".some))
@@ -465,7 +468,7 @@ class JourneyController @Inject()(
 
   private def blocksFromState(
     state: JourneyState,
-    retrievedNino: Boolean = false
+    retrievedNino: Boolean
   )(
     implicit request: AuthorisedRequest[AnyContent]
   ): Html = {
@@ -531,8 +534,11 @@ class JourneyController @Inject()(
   def makeAudit(id: String, username: String, state: JourneyState)(implicit request: AuthorisedRequest[AnyContent]): List[Unit] = {
     // remove spaces from nino for splunk
     val cleanNinoState = state.aboutYou match {
-      case Some(a@AboutSelf(spaceyNino)) =>
-        state.copy(aboutYou = a.copy(nino = spaceyNino.replace(" ", "")).some)
+      case Some(a@AboutSelf(ninoOrUtr)) =>
+        ninoOrUtr match {
+          case Left(spaceyNino) => state.copy(aboutYou = a.copy(ninoOrUtr = Left(spaceyNino.replace(" ", ""))).some)
+          case Right(utr) => state.copy(aboutYou = a.copy(ninoOrUtr = Right(utr.replace(" ", ""))).some)
+        }
       case Some(a@AboutAnother(_, Left(nino), _, _, _)) =>
         state.copy(aboutYou = a.copy(identification = Left(nino.replace(" ", ""))).some)
       case _ =>
