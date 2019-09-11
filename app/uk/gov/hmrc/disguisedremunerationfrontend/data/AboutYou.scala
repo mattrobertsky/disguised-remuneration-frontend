@@ -30,9 +30,9 @@ sealed trait AboutYou {
 }
 
 case class AboutSelf(
-    nino: String
+    ninoOrUtr: Either[Nino, Utr]
 ) extends AboutYou {
-  def identification: Either[Nino, Utr] = Left(nino)
+  def identification: Either[Nino, Utr] = ninoOrUtr
   def completedBySelf: Boolean = true
 }
 
@@ -140,15 +140,22 @@ object AboutYou {
   }
 
   private def aboutSelfProgram[F[_]: cats.Monad](
-    nino: Option[Nino], // TODO these should be used
-    utr: Option[Utr],   // TODO ditto
+    nino: Option[Nino],
+    utr: Option[Utr],
     interpreter: Language[F, TellTypes, AskTypes]
   ): F[Either[NoNeedToComplete.type, AboutYou]] = {
     import interpreter._
 
-    val i = nino match {
-      case Some(n) => n.pure[F]
-      case None =>
+     (nino, utr) match {
+      case (Some(n), _) =>
+        n.pure[F].map { x =>
+          AboutSelf(Left(x)).asRight[NoNeedToComplete.type]
+      }
+      case (_, Some(u)) =>
+        u.pure[F].map { y =>
+          AboutSelf(Right(y)).asRight[NoNeedToComplete.type]
+      }
+      case _ =>
         ask[Nino]("your-ni-no",
           validation =
             List(
@@ -165,10 +172,9 @@ object AboutYou {
                 )
               )
             )
-        )
+        ).map { x =>
+      AboutSelf(Left(x)).asRight[NoNeedToComplete.type]
     }
-    i.map { x =>
-      AboutSelf(x).asRight[NoNeedToComplete.type]
     }
   }
 

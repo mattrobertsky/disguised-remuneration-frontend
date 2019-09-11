@@ -75,8 +75,8 @@ object JsonConversion {
   implicit private[data] lazy val taxSettlementFormatter = Json.format[TaxSettlement]
 
   implicit val formatAboutYou: Format[AboutYou] = {
-    implicit val fself = Json.format[AboutSelf]
     implicit lazy val ef = eitherFormatter[Nino,Utr]("nino", "utr")
+    implicit val fself = Json.format[AboutSelf]
     implicit val fanother = Json.format[AboutAnother]
     val feither = eitherFormatter[AboutSelf, AboutAnother]("aboutSelf", "aboutAnother")
     new Format[AboutYou] {
