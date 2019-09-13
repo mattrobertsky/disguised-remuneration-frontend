@@ -49,11 +49,12 @@
                             }. </span>
                             @title
                         </h2>
-                        <ul class="app-task-list__items">
 
-                            @for(message <- group.left.toOption) {
-                                <p>@message</p>
-                            }
+                        @for(message <- group.left.toOption) {
+                            <p>@message</p>
+                        }
+                        
+                        <ul class="app-task-list__items">
 
                             @for((subtitle, mainLink, ancilliaryLink, done) <- group.right.toOption.toList.flatten) {
                                 <li class="app-task-list__item">

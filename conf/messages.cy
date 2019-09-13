@@ -9,6 +9,7 @@ common.alpha-info.link=adborth
 common.alpha-info.p2= yn ein helpu i’w wella.
 common.print-save=Argraffu neu gadw’r dudalen hon
 common.warning.title=Rhybudd
+common.error=Gwall
 
 common.title=Anfon manylion eich tâl ar fenthyciad - GOV.UK
 common.title.short=Anfon manylion eich tâl ar fenthyciad

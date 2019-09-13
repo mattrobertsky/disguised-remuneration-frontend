@@ -53,8 +53,9 @@ case class DRInterpreter(
       errors,
       Html(tell.toString + ask.toString),
       breadcrumbs.drop(1))(messages, request)
+    val errorTitle: String = if(errors.isNonEmpty) s"${messages("common.error")}: " else ""
     views.html.main_template(title =
-      s"${messages(keyList.mkString("-") + ".heading")} - ${messages("common.title")}")(
+       errorTitle + s"${messages(keyList.mkString("-") + ".heading")} - ${messages("common.title")}")(
       content)(request, messages, appConfig)
   }
 

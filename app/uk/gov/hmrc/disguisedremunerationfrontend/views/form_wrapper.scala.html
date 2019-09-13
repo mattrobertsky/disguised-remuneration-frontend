@@ -40,9 +40,9 @@
               >
                     <legend class="fieldset__legend fieldset__legend--xl">
                         @messages.get(s"$key.heading.hint").map { headHint =>
-                            <span class="govuk-caption-xl">
+                            <p class="govuk-caption-xl">
                                 @headHint
-                            </span>
+                            </p>
                         }
                         <h1 class="fieldset__heading @if(messages.get(s"$key.heading.hint").isDefined) {fieldset__heading--no-span}">
                         @messages(s"$key.heading")
