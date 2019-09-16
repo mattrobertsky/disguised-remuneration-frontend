@@ -407,6 +407,7 @@ written-off.Yes.writtenOff.taxPaid.format=Amount of tax or National Insurance pa
 
 # Confirmation
 confirmation.heading=Loan charge details received
+confirmation.heading.with-name=Loan charge details received for {0}
 confirmation.detail=We received the details you sent on {0} at {1}
 confirmation.h2=What happens next
 confirmation.p1=We will check the details you sent and check if they match our records.
