@@ -23,7 +23,7 @@
 }
 
 @taskIncomplete = {
-    <strong class="govuk-tag app-task-list__task-completed incomplete" id="eligibility-completed">
+    <strong class="govuk-tag app-task-list__task-completed incomplete" id="eligibility-incomplete">
     @messages("common.todo")
     </strong>
 }
@@ -51,36 +51,38 @@
                         </h2>
 
                         @for(message <- group.left.toOption) {
-                            <p>@message</p>
+                            <p class="index-element">
+                                @message
+                            </p>
                         }
-                        
+
                         <ul class="app-task-list__items">
 
-                            @for((subtitle, mainLink, ancilliaryLink, done) <- group.right.toOption.toList.flatten) {
-                                <li class="app-task-list__item">
-                                    @for(l <- mainLink) {
-                                        <a class="app-task-list__task-name" href="@l" aria-describedby="eligibility-completed">
+                                @for((subtitle, mainLink, ancilliaryLink, done) <- group.right.toOption.toList.flatten) {
+                                    <li class="app-task-list__item">
+                                        @for(l <- mainLink) {
+                                            <a class="app-task-list__task-name" href="@l" aria-describedby="eligibility-completed">
+                                            }
+                                        @subtitle
+                                        @for(_ <- mainLink) { </a> }
+
+                                        <!-- display status of section -->
+                                        @defining(
+                                            done match {
+                                                case Some(true) =>
+                                                    taskComplete
+
+                                                case Some(false) =>
+                                                    taskIncomplete
+
+                                                case _ => ""
+                                            }
+                                        ) { todoDoneIcon =>
+                                            @todoDoneIcon
                                         }
-                                    @subtitle
-                                    @for(_ <- mainLink) { </a> }
-
-                                    <!-- display status of section -->
-                                    @defining(
-                                        done match {
-                                            case Some(true) =>
-                                                taskComplete
-
-                                            case Some(false) =>
-                                                taskIncomplete
-
-                                            case _ => ""
-                                        }
-                                    ) { todoDoneIcon =>
-                                        @todoDoneIcon
-                                    }
-                                </li>
-                            }
-                        </ul>
+                                    </li>
+                                }
+                            </ul>
                     </li>
                 }
                 </ol>

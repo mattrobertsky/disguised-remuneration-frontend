@@ -305,6 +305,10 @@ details .address.progressive-reveal {
     padding-right: 4px;
 }
 
+.index-element {
+    margin: 5%
+}
+
 .fieldset__heading {
     font-size: 32px;
     margin-bottom: 10px;
