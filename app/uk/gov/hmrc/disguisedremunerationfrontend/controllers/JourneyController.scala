@@ -512,7 +512,7 @@ class JourneyController @Inject()(
             formatDate(LocalDate.now()),
             formattedTimeNow,
             state.aboutYou.map {
-              case ay@AboutAnother(_, _, _, _, actingFor) => actingFor
+              case AboutAnother(_, _, _, _, actingFor) => actingFor
               case _ => ""
             }.getOrElse("")
           )
