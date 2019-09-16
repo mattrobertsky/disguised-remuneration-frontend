@@ -432,12 +432,21 @@ class JourneyController @Inject()(
               scheme.loanDetails.map(
                 {
                   case(k,v) => {
+                    val isHmrcApproved = v.fold(Html(""), Html(""), None)( ld =>
+                          ld.hmrcApproved.fold(Html(""), Html(""), None)(ynu =>
+                            (msg(s"$ynu"),
+                            Html(""),
+                            None)
+                          )
+                    )
+
                     views.html.answer_list(
                       msg("cya.loandetails.h1") |+| escape(s" $name"),
                       List(
                         (msg("cya.loandetails.header.tax-year"),
                           Html(s"${k.toString} ${msg("language.to")} ${(k.toInt + 1).toString}"),
                           None),
+                        isHmrcApproved,
                         (msg("cya.loandetails.header.amount"),
                           v.fold(Html("£0"))( x => Html(s"£${x.totalLoan.amount}")),
                           s"scheme/$index/details/$k/loan-amount".some),
