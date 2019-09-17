@@ -26,9 +26,8 @@
     <ul class="error-summary-list">
       @for((path, errormsg) <- errors) {
       <li>
-        <a href="#@{path.head.mkString(".")}"
-            id="@{keyList.mkString(".") ++ ".error-summary"}"
-            data-focuses="@{{keyList ++ path.head}.mkString("_")}-input">
+        <a href="#@{(keyList ++ path.head).mkString("_")}-input"
+           data-focuses="@{(keyList ++ path.head).mkString("_")}-input">
         @if(path.map(x => x.nonEmpty).head) {
             @if(path.length > 1) {
                 @errormsg.head.prefixWith(List(s"""${keyList.head}.${path.toList.flatten.mkString(".")}""")).render(messages)

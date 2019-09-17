@@ -49,7 +49,7 @@
         }
         <input
           class="@{"form-control " + formControlClass} @if(errorOpt.nonEmpty){ form-control-error }"
-          id="@{field}"
+          id="@{(key :+field).mkString("_")}-input"
           type="text"
           @if(errorOpt.nonEmpty){aria-describedBy="@key-@field-error"}
           name="@{key.mkString(".")}.@{field}"
