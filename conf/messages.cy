@@ -412,6 +412,8 @@ written-off.Yes.writtenOff.taxPaid.format=Mae’n rhaid i swm y dreth neu Yswiri
 
 # Confirmation
 confirmation.heading=Manylion tâl ar fenthyciad wedi dod i law
+# Awaiting welsh translation
+confirmation.heading.with-name=Manylion tâl ar fenthyciad wedi dod i law {0}
 confirmation.detail=Cawsom y manylion y gwnaethoch eu hanfon ar {0} am {1}
 confirmation.h2=Yr hyn sy’n digwydd nesaf
 confirmation.p1=Byddwn yn gwirio’r manylion y gwnaethoch eu hanfon i weld a ydynt yn cyd-fynd â’n cofnodion.
