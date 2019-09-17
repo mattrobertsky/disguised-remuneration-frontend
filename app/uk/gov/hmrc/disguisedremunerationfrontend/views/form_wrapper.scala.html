@@ -36,7 +36,7 @@
               <fieldset
                 class="fieldset"
                 @if(hasHint || hasErrors){aria-describedby="@if(hasHint){@key-hint} @if(hasErrors){@key-error}"}
-                id="@key"
+                id="@key-input"
               >
                     <legend class="fieldset__legend fieldset__legend--xl">
                         @messages.get(s"$key.heading.hint").map { headHint =>

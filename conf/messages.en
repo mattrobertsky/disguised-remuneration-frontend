@@ -274,8 +274,8 @@ line1.limit=Building or street must be 40 characters or less
 line1.invalid=Building or street must only include letters a to z, numbers, apostrophes, \
   ampersands, commas, hyphens, full stops, forward slashes and spaces
 
-line2.invalid=Line 2 must only include letters a to z, numbers, apostrophes, \
-  ampersands, commas, hyphens, full stops, forward slashes and spaces
+line2.limit=Building or street line 2 must be 40 characters or less
+line2.invalid=Building or street line 2 must only include letters a to z, numbers, apostrophes, ampersands, commas, hyphens, full stops, forward slashes and spaces
   
 town.required=Enter the town or city of your address
 town.limit=Town or city must be 40 characters or less
