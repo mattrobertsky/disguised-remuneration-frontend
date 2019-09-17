@@ -233,6 +233,7 @@ cya.p1=Sicrhewch eich bod yn gwirio’ch atebion cyn i chi eu hanfon. Os bydd an
 cya.p2=Drwy gyflwyno’ch atebion, rydych yn cadarnhau, hyd eithaf eich gwybodaeth, fod yr wybodaeth rydych wedi’i rhoi yn gywir ac yn gyflawn.
 cya.loandetails.h1=Manylion benthyciad ar gyfer 
 cya.loandetails.header.tax-year=Blwyddyn dreth
+cya.loandetails.header.fixed-amount=Benthyciad cyfnod penodol cymeradwy
 cya.loandetails.header.amount=Swm
 cya.loandetails.header.estimate=Ai amcangyfrif yw cyfanswm y benthyciad a dalwyd o {0} i {1}?
 cya.loandetails.header.repaid=Wedi’i ad-dalu

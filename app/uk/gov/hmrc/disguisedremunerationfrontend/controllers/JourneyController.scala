@@ -432,11 +432,11 @@ class JourneyController @Inject()(
               scheme.loanDetails.map(
                 {
                   case(k,v) => {
-                    val isHmrcApproved = v.fold(Html(""), Html(""), None)( ld =>
-                          ld.hmrcApproved.fold(Html(""), Html(""), None)(ynu =>
-                            (msg(s"$ynu"),
-                            Html(""),
-                            None)
+                    val isHmrcApproved = v.fold(Html(""), Html(""), None: Option[String])( ld =>
+                          ld.hmrcApproved.fold(Html(""), Html(""), None: Option[String])(ynu =>
+                            (msg(s"cya.loandetails.header.fixed-amount"),
+                            msg(s"fixed-term-loan.$ynu"),
+                            s"scheme/$index/details/$k/fixed-term-loan".some)
                           )
                     )
 
@@ -466,7 +466,7 @@ class JourneyController @Inject()(
                         (msg("cya.loandetails.header.tax-paid"),
                           v.fold(Html("£0"))( x =>  Html(s"£${x.writtenOff.fold("0")(x => x.taxPaid)}")),
                           s"scheme/$index/details/$k/written-off".some)
-                      )
+                      ).filterNot{x => x._1 == Html("") && x._2 == Html("") && x._3.isEmpty}
                     )
                   }
               }).mkString
