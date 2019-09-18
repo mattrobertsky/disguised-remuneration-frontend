@@ -233,6 +233,7 @@ cya.p1=Sicrhewch eich bod yn gwirio’ch atebion cyn i chi eu hanfon. Os bydd an
 cya.p2=Drwy gyflwyno’ch atebion, rydych yn cadarnhau, hyd eithaf eich gwybodaeth, fod yr wybodaeth rydych wedi’i rhoi yn gywir ac yn gyflawn.
 cya.loandetails.h1=Manylion benthyciad ar gyfer 
 cya.loandetails.header.tax-year=Blwyddyn dreth
+cya.loandetails.header.fixed-amount=Benthyciad cyfnod penodol cymeradwy
 cya.loandetails.header.amount=Swm
 cya.loandetails.header.estimate=Ai amcangyfrif yw cyfanswm y benthyciad a dalwyd o {0} i {1}?
 cya.loandetails.header.repaid=Wedi’i ad-dalu
@@ -412,7 +413,7 @@ written-off.Yes.writtenOff.taxPaid.format=Mae’n rhaid i swm y dreth neu Yswiri
 # Confirmation
 confirmation.heading=Manylion tâl ar fenthyciad wedi dod i law
 # Awaiting welsh translation
-confirmation.heading.with-name=Manylion tâl ar fenthyciad wedi dod i law {0}
+confirmation.heading.with-name=Manylion tâl ar fenthyciad wedi dod i law ar gyfer {0}
 confirmation.detail=Cawsom y manylion y gwnaethoch eu hanfon ar {0} am {1}
 confirmation.h2=Yr hyn sy’n digwydd nesaf
 confirmation.p1=Byddwn yn gwirio’r manylion y gwnaethoch eu hanfon i weld a ydynt yn cyd-fynd â’n cofnodion.

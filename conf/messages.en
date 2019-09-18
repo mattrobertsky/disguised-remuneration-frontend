@@ -199,6 +199,7 @@ cya.p1=Make sure you check your answers before you send them. If you need to add
 cya.p2=By submitting your answers, you confirm that, to the best of your knowledge, the information you have provided is correct and complete.
 cya.loandetails.h1=Loan details for 
 cya.loandetails.header.tax-year=Tax year
+cya.loandetails.header.fixed-amount=Approved fixed-term loan
 cya.loandetails.header.amount=Amount
 cya.loandetails.header.estimate=Estimate
 cya.loandetails.header.repaid=Repaid
@@ -231,8 +232,8 @@ contact-details=Contact details
 telephone=Telephone number
 email-address=Email address
 
-dates-you-received-loans=Dates when you received loans
 scheme=Scheme: 
+dates-you-received-loans=Dates when you received loans
 disclosure-of-tax-avoidance-schemes-dotas-number=Disclosure of Tax Avoidance Schemes (DOTAS) number
 disclosure-of-tax-avoidance-schemes-dotas-number.AYes=Yes
 disclosure-of-tax-avoidance-schemes-dotas-number.BNo=No
