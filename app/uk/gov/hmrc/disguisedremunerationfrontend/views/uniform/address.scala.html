@@ -33,13 +33,13 @@
       <div class="form-group@if(errorOpt.nonEmpty) { form-group-error}">
 
         @if(field == "line2"){
-          <label class="form-label" for="@{field}">
+          <label class="form-label" for="@{(key :+field).mkString("_")}-input">
             <span class="govuk-visually-hidden">
               @messages((key :+ field :+ "heading").mkString("."))
             </span>
           </label>
         } else {
-          <label class="form-label" for="@{field}">@messages((key :+ field :+ "heading").mkString("."))</label>
+          <label class="form-label" for="@{(key :+field).mkString("_")}-input">@messages((key :+ field :+ "heading").mkString("."))</label>
         }
         @for(err <- errorOpt.fold(List.empty[ErrorMsg])(_.toList)) {
 
