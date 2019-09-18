@@ -16,8 +16,7 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend
 
-import java.time.format.DateTimeFormatter
-import java.time.{LocalDate, LocalDateTime, ZoneId}
+import java.time.{LocalDate => Date, _}, format.DateTimeFormatter
 
 import com.ibm.icu.text.SimpleDateFormat
 import com.ibm.icu.util.{TimeZone, ULocale}
@@ -32,14 +31,13 @@ package object data {
   type Paye = String
   type Money = String
   type CaseRef = String
-  type Date = java.time.LocalDate
   type Year = Int
   type EndJourney = String
 
   implicit class HMRCDate(val date: Date) {
 
     def financialYear: Int = {
-      val turningPoint = java.time.LocalDate.of(date.getYear, 4, 6)
+      val turningPoint = Date.of(date.getYear, 4, 6)
       if (date.isBefore(turningPoint))
         date.getYear - 1
       else
@@ -49,8 +47,8 @@ package object data {
 
   implicit class IntToFinancialYear(year: Int) {
     def toFinancialYear: (Date,Date) = (
-      java.time.LocalDate.of(year, 4, 6),
-      java.time.LocalDate.of(year+1, 4, 5)
+      Date.of(year, 4, 6),
+      Date.of(year+1, 4, 5)
     )
   }
 
@@ -59,7 +57,7 @@ package object data {
   private val timeFomat = "h:mma"
   def formattedTimeNow: String = LocalDateTime.now(zoneId).format(DateTimeFormatter.ofPattern(timeFomat)).toLowerCase
 
-  def formatDate(localDate: LocalDate, dateFormatPattern: String = "d MMMM yyyy")(implicit messages: Messages):String = {
+  def formatDate(localDate: Date, dateFormatPattern: String = "d MMMM yyyy")(implicit messages: Messages):String = {
     val date = java.util.Date.from(localDate.atStartOfDay(zoneId).toInstant)
     createDateFormatForPattern(dateFormatPattern).format(date)
   }

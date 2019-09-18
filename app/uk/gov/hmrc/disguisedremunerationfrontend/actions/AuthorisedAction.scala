@@ -19,10 +19,9 @@ package uk.gov.hmrc.disguisedremunerationfrontend.actions
 import play.api.mvc._
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
-import javax.inject.{Inject, Singleton}
+import javax.inject.Inject
 
 import play.api.Logger
-import play.api.i18n.I18nSupport
 import play.api.mvc.Results.Redirect
 import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core.retrieve.Retrievals._
@@ -33,7 +32,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.language.implicitConversions
 
 class AuthorisedAction @Inject()(mcc: MessagesControllerComponents, val authConnector: AuthConnector)
                                          (implicit val appConfig: AppConfig, val executionContext: ExecutionContext)

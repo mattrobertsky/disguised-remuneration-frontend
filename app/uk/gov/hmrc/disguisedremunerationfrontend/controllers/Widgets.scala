@@ -17,22 +17,21 @@
 package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 
 import cats.implicits._
-import cats.data.{Validated, NonEmptyList}
+import cats.data.Validated
 import java.time.LocalDate
 import ltbs.uniform.TreeLike.ops._
 import ltbs.uniform.common.web.FormField
-import ltbs.uniform.interpreters.playframework.{Path}
-import ltbs.uniform.{BigString, ErrorTree, Input, UniformMessages, ErrorMsg, BigStringTag, InputOps, RichInput}
+import ltbs.uniform.interpreters.playframework.Path
+import ltbs.uniform.{ErrorTree, Input, UniformMessages, ErrorMsg, InputOps, RichInput}
 import play.twirl.api.Html
-import uk.gov.hmrc.disguisedremunerationfrontend.data.{Scheme, Address}
+import uk.gov.hmrc.disguisedremunerationfrontend.data.Address
 import uk.gov.hmrc.disguisedremunerationfrontend.views
-import collection.immutable.ListMap
-
+import enumeratum._
 trait Widgets extends InputOps {
 
   implicit val twirlStringField = new FormField[String, Html] {
     def decode(out: Input): Either[ErrorTree, String] =
-      out.valueAtRoot.flatMap(_.headOption).getOrElse("").asRight
+      out.toStringField().toEither
 
     def encode(in: String): Input = Input.one(List(in))
 
@@ -53,15 +52,11 @@ trait Widgets extends InputOps {
     val True = true.toString.toUpperCase
     val False = false.toString.toUpperCase
 
-    def decode(out: Input): Either[ErrorTree, Boolean] = {
-      val root: Option[List[String]] = out.valueAtRoot
-      root match {
-        case None | Some(Nil) => Left(ErrorMsg("required").toTree)
-        case Some(List(True)) => Right(true)
-        case Some(List(False)) => Right(false)
-        case _ => Left(ErrorMsg("bad.value").toTree)
-      }
-    }
+    def decode(out: Input): Either[ErrorTree, Boolean] =
+      out.toField[Boolean](
+        x => Validated.catchOnly[IllegalArgumentException](x.toBoolean)
+          .leftMap(_ => ErrorMsg("invalid").toTree)
+      ).toEither
 
     def encode(in: Boolean): Input = Input.one(List(in.toString))
 
@@ -73,7 +68,7 @@ trait Widgets extends InputOps {
       messages: UniformMessages[Html]
     ): Html = {
       val options = if (key.contains("about-you") || key.contains("user-employed")) List(False, True) else List(True, False)
-      val existingValue: Option[String] = data.valueAtRoot.flatMap{_.headOption}
+      val existingValue = data.toStringField().toOption
       views.html.uniform.radios(key,
         options,
         existingValue,
@@ -83,8 +78,6 @@ trait Widgets extends InputOps {
   }
 
   implicit val twirlDateField = new FormField[LocalDate, Html] {
-
-    import Scheme._
 
     def decode(out: Input): Either[ErrorTree, LocalDate] = {
 
@@ -137,8 +130,6 @@ trait Widgets extends InputOps {
     ffhlist: FormField[T, Html]
   )= new FormField[Address, Html] {
 
-    import Scheme._
-
     def decode(out: Input): Either[ErrorTree, Address] = {
       import cats.implicits._
 
@@ -169,6 +160,24 @@ trait Widgets extends InputOps {
       views.html.uniform.address(
         key,
         data,
+        errors,
+        messages
+      )
+    }
+  }
+
+  implicit def enumeratumField[A <: EnumEntry](implicit enum: Enum[A]): FormField[A, Html] = new FormField[A, Html] {
+    def decode(out: Input): Either[ErrorTree,A] = { out.toField[A](x =>
+      Validated.catchOnly[IllegalArgumentException](enum.withName(x)).leftMap(_ => ErrorTree.oneErr(ErrorMsg("invalid")))
+    )}.toEither
+    def encode(in: A): Input = Input.one(List(in.entryName))
+    def render(key: List[String],path: Path,data: Input,errors: ErrorTree,messages: UniformMessages[Html]): Html = {
+      val options = enum.values.map{_.entryName}
+      val existingValue = decode(data).map{_.entryName}.toOption
+      views.html.uniform.radios(
+        key,
+        options,
+        existingValue,
         errors,
         messages
       )

@@ -19,8 +19,6 @@ package uk.gov.hmrc.disguisedremunerationfrontend.config
 import javax.inject.{Inject, Singleton}
 import play.api.{Configuration, Environment}
 import play.api.Mode
-import play.api.i18n.Lang
-import uk.gov.hmrc.disguisedremunerationfrontend.controllers.routes
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import scala.concurrent.duration.Duration

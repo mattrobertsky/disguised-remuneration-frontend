@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
+// TAGGED email/telephone address fields OR validation function
+
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
 import cats.data.NonEmptyList
 import cats.implicits._
-import ltbs.uniform.{::, Language, NilTypes, _}
-import play.api.i18n.{Messages => _}
+import ltbs.uniform._
 
 import scala.language.higherKinds
 
@@ -68,10 +69,7 @@ object ContactDetails {
               (ErrorMsg("email-format"), NonEmptyList.one(List("email")))
             ),
             Rule.fromPred(
-              {
-                case a => a.email.matches(nonEmptyStringRegex) || a.telephone.matches(nonEmptyStringRegex)
-                case _ => false
-              },
+              a => a.email.matches(nonEmptyStringRegex) || a.telephone.matches(nonEmptyStringRegex),
               (ErrorMsg("email-or-phone-number-needed"), NonEmptyList[InputPath](List("email"), List(List("telephone"))))
             )
           )
