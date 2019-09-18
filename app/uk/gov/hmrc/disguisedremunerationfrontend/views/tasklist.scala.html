@@ -17,15 +17,11 @@
 @(items: (Html, Either[Html, List[(String, Option[String], Option[String], Option[Boolean])]])*)(implicit messages: UniformMessages[Html])
 
 @taskComplete = {
-    <strong class="govuk-tag app-task-list__task-completed" id="eligibility-completed">
     @messages("common.done")
-    </strong>
 }
 
 @taskIncomplete = {
-    <strong class="govuk-tag app-task-list__task-completed incomplete" id="eligibility-incomplete">
     @messages("common.todo")
-    </strong>
 }
 <div class="govuk-width-container">
     <main class="govuk-main-wrapper govuk-main-wrapper--l" id="main-content" role="main">
@@ -68,7 +64,9 @@
                         @for((subtitle, mainLink, ancilliaryLink, done) <- group.right.toOption.toList.flatten) {
                                 <li class="app-task-list__item">
                                     @for(l <- mainLink) {
-                                        <a class="app-task-list__task-name" href="@l" aria-describedby="eligibility-completed">
+                                        <a class="app-task-list__task-name"
+                                        href="@l"
+                                        aria-describedby="eligibility-completed-@{mainLink.getOrElse("").replace("/", "-")}">
                                         }
                                     @subtitle
                                     @for(_ <- mainLink) { </a> }
@@ -77,10 +75,22 @@
                                     @defining(
                                         done match {
                                             case Some(true) =>
-                                                taskComplete
 
+                                                Html(
+                                                    "<strong " +
+                                                        "class='govuk-tag app-task-list__task-completed complete' " +
+                                                        s"id='eligibility-complete-${mainLink.getOrElse("").replace("/", "-")}'> " +
+                                                        s"${taskComplete}" +
+                                                     "</strong>"
+                                                    )
                                             case Some(false) =>
-                                                taskIncomplete
+                                                Html(
+                                                    "<strong " +
+                                                        "class='govuk-tag app-task-list__task-completed incomplete' " +
+                                                        s"id='eligibility-incomplete-${mainLink.getOrElse("").replace("/", "-")}'> " +
+                                                        s"${taskIncomplete} " +
+                                                     "</strong>"
+                                                    )
 
                                             case _ => ""
                                         }
