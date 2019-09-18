@@ -28,17 +28,18 @@
 }
 
 @standard_field(key, errors, messages) {
-
-    @if(currencyInput){
-        <span class="input-currency">
-    }
-            <input class="form-control form-control-2-3 @if(errors.definedAtRoot) {form-control-error}"
-            id="@{key.mkString("_")}-input"
-            name="@{key.mkString(".")}"
-            value="@{values}" />
-    @if(currencyInput){
-        </span>
-    }
+  @if(currencyInput){
+    <span class="input-currency">
+  }
+  <input class="form-control form-control-2-3 @if(errors.definedAtRoot) {form-control-error}"
+    id="@{key.mkString("_")}-input"
+    name="@{key.mkString(".")}"
+    value="@{values}"
+    @if(messages.get(s"${key.mkString(".")}.hint").isDefined){aria-describedby="@{key.mkString(".")}-hint"}
+  />
+  @if(currencyInput){
+    </span>
+  }
 }
 
 
