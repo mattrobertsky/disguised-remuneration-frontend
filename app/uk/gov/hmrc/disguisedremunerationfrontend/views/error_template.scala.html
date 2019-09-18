@@ -20,8 +20,8 @@
 @(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: UniformMessages[Html], appConfig: AppConfig)
 
 @mainContent = {
-  <h1 class="govuk-heading-xl">@heading</h1>
-  <p class="govuk-body">@message</p>
+  <h1 class="heading-xlarge">@heading</h1>
+  <p>@message</p>
 }
 
 @main_template(pageTitle)(mainContent)(request, messages, appConfig)
