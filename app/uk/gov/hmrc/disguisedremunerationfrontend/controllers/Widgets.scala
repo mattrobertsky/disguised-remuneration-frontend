@@ -17,15 +17,17 @@
 package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 
 import cats.implicits._
-import cats.data.{Validated, NonEmptyList}
+import cats.data.{NonEmptyList, Validated}
 import java.time.LocalDate
+
 import ltbs.uniform.TreeLike.ops._
 import ltbs.uniform.common.web.FormField
-import ltbs.uniform.interpreters.playframework.{Path}
-import ltbs.uniform.{BigString, ErrorTree, Input, UniformMessages, ErrorMsg, BigStringTag, InputOps, RichInput}
+import ltbs.uniform.interpreters.playframework.Path
+import ltbs.uniform.{BigString, BigStringTag, ErrorMsg, ErrorTree, Input, InputOps, RichInput, UniformMessages}
 import play.twirl.api.Html
-import uk.gov.hmrc.disguisedremunerationfrontend.data.{Scheme, Address}
+import uk.gov.hmrc.disguisedremunerationfrontend.data.{Address, Scheme, TotalLoan}
 import uk.gov.hmrc.disguisedremunerationfrontend.views
+
 import collection.immutable.ListMap
 
 trait Widgets extends InputOps {
@@ -48,6 +50,13 @@ trait Widgets extends InputOps {
       views.html.uniform.string(key, existingValue, errors, messages)
     }
   }
+
+  implicit val twirlBigDecimalField: FormField[BigDecimal, Html] =
+    twirlStringField.simap(
+      nonEmptyString(_).toEither >>= {x => Either.catchOnly[NumberFormatException]{
+        BigDecimal.apply(x)
+      }.leftMap(_ => ErrorTree.oneErr(ErrorMsg("format")))
+    })(_.toString)
 
   implicit val twirlBoolField = new FormField[Boolean, Html] {
     val True = true.toString.toUpperCase

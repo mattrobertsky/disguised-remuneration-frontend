@@ -20,8 +20,8 @@ case class WrittenOff(
   amount: Money,
   taxPaid: Money
 ) {
-  def toList:List[String] = List(amount, taxPaid)
+  def toList:List[String] = List(amount.toString(), taxPaid.toString())
 }
 case object WrittenOff {
-  def fromList(list: List[String]) = WrittenOff(list.headOption.getOrElse(""), list.tail.headOption.getOrElse(""))
+  def fromList(list: List[String]) = WrittenOff(BigDecimal(list.headOption.getOrElse("")), BigDecimal(list.tail.headOption.getOrElse("")))
 }

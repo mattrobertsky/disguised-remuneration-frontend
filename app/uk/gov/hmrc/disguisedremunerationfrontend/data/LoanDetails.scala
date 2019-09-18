@@ -21,7 +21,6 @@ import java.time.LocalDate
 import ltbs.uniform._
 import play.api.i18n.Messages
 import uk.gov.hmrc.disguisedremunerationfrontend.controllers.{YesNoUnknown, YesNoUnknownWrittenOff}
-import uk.gov.hmrc.disguisedremunerationfrontend.data.Scheme.moneyRegex
 
 import scala.language.higherKinds
 import cats.data.NonEmptyList
@@ -72,22 +71,6 @@ object LoanDetails {
             Tuple2("loan-amount.heading", List(formatDate(startDate), formatDate(endDate))),
           "loan-amount.heading.hint" ->
             Tuple2("loan-amount.heading.hint", List(schemeName))
-        ),
-        validation = List(
-          List(
-            Rule.fromPred(
-              totalLoan => totalLoan.amount.matches(moneyRegex),
-              (ErrorMsg("format"), NonEmptyList.one(List("amount")))
-            ),
-            Rule.fromPred(
-              totalLoan => totalLoan.amount.nonEmpty,
-              (ErrorMsg("required"), NonEmptyList.one(List("amount")))
-            ),
-            Rule.fromPred(
-              totalLoan => totalLoan.estimate || !totalLoan.estimate,
-              (ErrorMsg("required"), NonEmptyList.one(List("estimate")))
-            )
-          )
         )
       )
 
@@ -106,22 +89,10 @@ object LoanDetails {
 
       repaid <- ask[Money](
         "loan-repaid",
-        default = default.map(_.genuinelyRepaid.getOrElse("")),
+        default = default.map(_.genuinelyRepaid.getOrElse(0)),
         customContent = Map(
           "loan-repaid.heading.hint" ->
-          Tuple2("loan-repaid.heading.hint", List(schemeName))),
-        validation = List(
-          List(
-            Rule.fromPred(
-              repaid => repaid.matches(moneyRegex),
-              (ErrorMsg("format"), NonEmptyList.one(Nil))
-            ),
-            Rule.fromPred(
-              repaid => repaid.nonEmpty,
-              (ErrorMsg("required"), NonEmptyList.one(Nil))
-            )
-          )
-        )
+          Tuple2("loan-repaid.heading.hint", List(schemeName)))
       ) when isRepaid
 
       isWrittenOff <- ask[YesNoUnknownWrittenOff](
@@ -138,38 +109,6 @@ object LoanDetails {
             Tuple2("written-off.required", List(formatDate(startDate), formatDate(endDate))),
           "written-off.heading.hint" ->
             Tuple2("written-off.heading.hint", List(schemeName))
-        ),
-        validation = List(
-          List(
-            Rule.fromPred(
-              {
-                case YesNoUnknownWrittenOff.Yes(writtenOff) => writtenOff.amount.matches(moneyRegex)
-                case _ => true
-              },
-              (ErrorMsg("format"), NonEmptyList.one(List("Yes", "writtenOff", "amount")))
-            ),
-            Rule.fromPred(
-              {
-                case YesNoUnknownWrittenOff.Yes(writtenOff) => writtenOff.amount.nonEmpty
-                case _ => true
-              },
-              (ErrorMsg("required"), NonEmptyList.one(List("Yes", "writtenOff", "amount")))
-            ),
-            Rule.fromPred(
-              {
-                case YesNoUnknownWrittenOff.Yes(writtenOff) => writtenOff.taxPaid.matches(moneyRegex)
-                case _ => true
-              },
-              (ErrorMsg("format"), NonEmptyList.one(List("Yes", "writtenOff", "taxPaid")))
-            ),
-            Rule.fromPred(
-              {
-                case YesNoUnknownWrittenOff.Yes(writtenOff) => writtenOff.taxPaid.nonEmpty
-                case _ => true
-              },
-              (ErrorMsg("required"), NonEmptyList.one(List("Yes", "writtenOff", "taxPaid")))
-            )
-          )
         )
       )
       writtenOff = isWrittenOff match {
