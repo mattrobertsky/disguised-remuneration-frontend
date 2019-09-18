@@ -191,13 +191,17 @@ class JourneyController @Inject()(
     journeyStateStore.storeState(request.internalId, in)
 
   /**
-    * Clears the journeyState
+    * Clears the journeyState and the save4later
     *
     * @param request
     * @return
     */
   def clearState(implicit request: AuthorisedRequest[AnyContent]): Future[Unit] = {
     journeyStateStore.clear(request.internalId)
+    aboutYouSave4Later.clearPersistence
+    contactDetailsSave4Later.clearPersistence
+    schemeSave4Later.clearPersistence
+    loanDetailsSave4Later.clearPersistence
   }
 
   def username(implicit request: AuthorisedRequest[AnyContent]): String = {

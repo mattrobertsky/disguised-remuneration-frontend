@@ -74,7 +74,7 @@ abstract class Save4LaterPersistence @Inject() (
 
 
   def clearPersistence(implicit request: AuthorisedRequest[AnyContent]): Future[Unit] =
-    cacheRepository.createOrUpdate(request.internalId, makeKey(request.path), JsObject.empty).map(_ => (()))
+    cacheRepository.removeById(request.internalId).map(_ => ())
 
   override def persistence: PersistenceEngine[AuthorisedRequest[AnyContent]] =
     new PersistenceEngine[AuthorisedRequest[AnyContent]] {
