@@ -28,15 +28,15 @@
             Left {
                 Html(
                     s"""
-                                  |${messages("landing.loanarrangement.info")}
-                                  |<li class="add-scheme divider--bottom index-element">
+                                  |<div class="divider--bottom add-scheme">
+                                  |<p>${messages("landing.loanarrangement.info")}</p>
                                   |<a href="scheme/new/scheme-name" class="govuk-link">
                                   |${messages("landing.loanarrangement.link")}
                                   |</a>
                                   |<strong class="govuk-tag app-task-list__task-completed incomplete" id="eligibility-completed">
                                   |${messages("common.todo")}
                                   |</strong>
-                                  |</li>
+                                  |</div>
                                 """.stripMargin
                 )
             }
