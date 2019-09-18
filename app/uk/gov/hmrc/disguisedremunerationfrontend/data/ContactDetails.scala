@@ -47,52 +47,7 @@ object ContactDetails {
     import interpreter._
 
     for {
-      address <- ask[Address]("confirm-contact-details", validation =
-        List(
-          List(
-            Rule.fromPred(
-              address => address.line1.matches(nonEmptyStringRegex),
-              (ErrorMsg("required"), NonEmptyList.one(List("line1")))
-            ),
-            Rule.fromPred(
-              address => address.line1.matches(nameRegex),
-              (ErrorMsg("street-format"), NonEmptyList.one(List("line1")))
-            ),
-            Rule.fromPred(
-              address => address.line1.length <= 40,
-              (ErrorMsg("street-limit"), NonEmptyList.one(List("line1")))
-            ),
-            Rule.fromPred(
-              address => address.town.matches(nonEmptyStringRegex),
-              (ErrorMsg("required"), NonEmptyList.one(List("town")))
-            ),
-            Rule.fromPred(
-              address => address.town.length <= 40,
-              (ErrorMsg("town-limit"), NonEmptyList.one(List("town")))
-            ),
-            Rule.fromPred(
-              address => address.town.matches(townCountyRegex),
-              (ErrorMsg("town-format"), NonEmptyList.one(List("town")))
-            ),
-            Rule.fromPred(
-              address => address.county.length <= 40,
-              (ErrorMsg("county-limit"), NonEmptyList.one(List("county")))
-            ),
-            Rule.fromPred(
-              address => address.county.matches(townCountyRegex),
-              (ErrorMsg("county-format"), NonEmptyList.one(List("county")))
-            ),
-            Rule.fromPred(
-              address => address.postcode.matches(nonEmptyStringRegex),
-              (ErrorMsg("required"), NonEmptyList.one(List("postcode")))
-            ),
-            Rule.fromPred(
-              address => address.postcode.length <= 40,
-              (ErrorMsg("postcode-limit"), NonEmptyList.one(List("postcode")))
-            )
-          )
-        )
-      )
+      address <- ask[Address]("confirm-contact-details")
       telAndEmail <- ask[TelAndEmail]("confirm-contact-prefs", validation =
         List(
           List(

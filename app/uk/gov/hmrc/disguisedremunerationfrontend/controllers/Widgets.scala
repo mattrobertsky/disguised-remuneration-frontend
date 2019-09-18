@@ -22,12 +22,13 @@ import java.time.LocalDate
 import ltbs.uniform.TreeLike.ops._
 import ltbs.uniform.common.web.FormField
 import ltbs.uniform.interpreters.playframework.{Path}
-import ltbs.uniform.{BigString, ErrorTree, Input, UniformMessages, ErrorMsg, BigStringTag}
+import ltbs.uniform.{BigString, ErrorTree, Input, UniformMessages, ErrorMsg, BigStringTag, InputOps, RichInput}
 import play.twirl.api.Html
-import uk.gov.hmrc.disguisedremunerationfrontend.data.Scheme
+import uk.gov.hmrc.disguisedremunerationfrontend.data.{Scheme, Address}
 import uk.gov.hmrc.disguisedremunerationfrontend.views
+import collection.immutable.ListMap
 
-trait Widgets {
+trait Widgets extends InputOps {
 
   implicit val twirlStringField = new FormField[String, Html] {
     def decode(out: Input): Either[ErrorTree, String] =
@@ -123,6 +124,49 @@ trait Widgets {
       messages: UniformMessages[Html]
     ): Html = {
       views.html.uniform.date(
+        key,
+        data,
+        errors,
+        messages
+      )
+    }
+  }
+
+  implicit def twirlAddressField[T](
+    implicit gen: shapeless.LabelledGeneric.Aux[Address,T],
+    ffhlist: FormField[T, Html]
+  )= new FormField[Address, Html] {
+
+    import Scheme._
+
+    def decode(out: Input): Either[ErrorTree, Address] = {
+      import cats.implicits._
+
+      val postCodeRegex = """([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z]))))\s?[0-9][A-Za-z]{2}|.{0})"""
+
+      def standardValidation: String => Validated[ErrorTree, String] =
+        maxLength(40)(_) andThen matchesRegex("""^[a-zA-Z0-9',-./ ]*$""")
+
+      (
+        out.stringSubField("line1", nonEmpty(_) andThen standardValidation),
+        out.stringSubField("line2", standardValidation(_)),
+        out.stringSubField("town", nonEmpty(_) andThen standardValidation),
+        out.stringSubField("county", standardValidation(_)),
+        out.stringSubField("postcode", nonEmpty(_) andThen matchesRegex(postCodeRegex))
+      ).mapN(Address).toEither
+    }
+
+    def encode(in: Address): Input =
+      ffhlist.encode(gen.to(in))
+
+    def render(
+      key: List[String],
+      path: Path,
+      data: Input,
+      errors: ErrorTree,
+      messages: UniformMessages[Html]
+    ): Html = {
+      views.html.uniform.address(
         key,
         data,
         errors,

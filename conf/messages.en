@@ -74,7 +74,7 @@ confirm-about-scheme-user.FALSE=No - I need to start over again
 confirm-contact-details.heading=What is your address?
 confirm-contact-details.intro=We will only use these details to contact you about your case.
 confirm-contact-details.line1.heading=Building or street
-confirm-contact-details.line2.heading=
+confirm-contact-details.line2.heading=Building or street line 2 (optional)
 confirm-contact-details.town.heading=Town or city
 confirm-contact-details.county.heading=County
 confirm-contact-details.postcode.heading=Postcode
@@ -269,31 +269,25 @@ confirm-about-scheme-user.limit=Full name must be 50 characters or less
 confirm-about-scheme-user.format=Full name must only include letters a to z, hyphens, full stops, apostrophes and spaces
 
 # contact details
-confirm-contact-details.line1.required=Enter the building or street of your address
-confirm-contact-details.street-limit=Building or street must be 40 characters or less
-confirm-contact-details.line1.street-limit=Building or street must be 40 characters or less
-confirm-contact-details.street-format=Building or street must only include letters a to z, numbers, apostrophes, \
+line1.required=Enter the building or street of your address
+line1.limit=Building or street must be 40 characters or less
+line1.invalid=Building or street must only include letters a to z, numbers, apostrophes, \
   ampersands, commas, hyphens, full stops, forward slashes and spaces
-confirm-contact-details.line1.street-format=Building or street must only include letters a to z, numbers, apostrophes, \
-  ampersands, commas, hyphens, full stops, forward slashes and spaces
-confirm-contact-details.town.required=Enter the town or city of your address
-confirm-contact-details.town-limit=Town or city must be 40 characters or less
-confirm-contact-details.town.town-limit=Town or city must be 40 characters or less
-confirm-contact-details.town-format=Town or city must only include letters a to z, apostrophes, commas, hyphens, \
+
+line2.limit=Building or street line 2 must be 40 characters or less
+line2.invalid=Building or street line 2 must only include letters a to z, numbers, apostrophes, ampersands, commas, hyphens, full stops, forward slashes and spaces
+  
+town.required=Enter the town or city of your address
+town.limit=Town or city must be 40 characters or less
+town.invalid=Town or city must only include letters a to z, apostrophes, commas, hyphens, \
   full stops and spaces
-confirm-contact-details.town.town-format=Town or city must only include letters a to z, apostrophes, commas, hyphens, \
+  
+county.limit=County must be 40 characters or less
+county.invalid=County must only include letters a to z, apostrophes, commas, hyphens, \
   full stops and spaces
-confirm-contact-details.county-limit=County must be 40 characters or less
-confirm-contact-details.county.county-limit=County must be 40 characters or less
-confirm-contact-details.county-format=County must only include letters a to z, apostrophes, commas, hyphens, \
-  full stops and spaces
-confirm-contact-details.county.county-format=County must only include letters a to z, apostrophes, commas, hyphens, \
-  full stops and spaces
-confirm-contact-details.postcode.required=Enter the postcode of your address
-confirm-contact-details.postcode-limit=Postcode must be 40 characters or less
-confirm-contact-details.postcode.postcode-limit=Postcode must be 40 characters or less
-confirm-contact-details.postcode-format=Enter a real postcode
-confirm-contact-details.postcode.postcode-format=Enter a real postcode
+  
+postcode.required=Enter the postcode of your address
+postcode.invalid=Enter a real postcode
 
 confirm-contact-prefs.phone-limit=Telephone number must be 24 characters or less
 confirm-contact-prefs.telephone.phone-limit=Telephone number must be 24 characters or less
