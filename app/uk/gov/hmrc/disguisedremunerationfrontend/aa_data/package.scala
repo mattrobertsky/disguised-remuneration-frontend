@@ -29,7 +29,7 @@ package object data {
   type Nino = String
   type Utr = String
   type Paye = String
-  type Money = String
+  type Money = BigDecimal
   type CaseRef = String
   type Year = Int
   type EndJourney = String

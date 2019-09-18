@@ -19,4 +19,9 @@ package uk.gov.hmrc.disguisedremunerationfrontend.data
 case class WrittenOff(
   amount: Money,
   taxPaid: Money
-)
+) {
+  def toList:List[String] = List(amount.toString, taxPaid.toString)
+}
+case object WrittenOff {
+  def fromList(list: List[String]) = WrittenOff(BigDecimal(list.headOption.getOrElse("0")), BigDecimal(list.tail.headOption.getOrElse("0")))
+}

@@ -32,7 +32,7 @@ object YesNoUnknownWrittenOff {
     optString match {
       case List(u) if u == YesNoUnknown.CUnknown.entryName => YesNoUnknownWrittenOff.Unknown
       case List(n) if n == YesNoUnknown.BNo.entryName => YesNoUnknownWrittenOff.No
-      case List(amount,tax) => YesNoUnknownWrittenOff.Yes(WrittenOff(amount,tax))
+      case List(amount,tax) => YesNoUnknownWrittenOff.Yes(WrittenOff.fromList(List(amount,tax)))
       case err => throw new IllegalStateException(s"cannot parse $err")
     }
 
@@ -40,6 +40,6 @@ object YesNoUnknownWrittenOff {
     yesNoDoNotKnow match {
       case Unknown => Some(List(YesNoUnknown.CUnknown.entryName))
       case No => Some(List(YesNoUnknown.BNo.entryName))
-      case Yes(WrittenOff(amt, tax)) => Some(List(amt, tax))
+      case Yes(msg) => Some(msg.toList)
     }
 }

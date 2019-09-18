@@ -19,6 +19,7 @@ package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 import cats.implicits._
 import cats.data.Validated
 import java.time.LocalDate
+
 import ltbs.uniform.TreeLike.ops._
 import ltbs.uniform.common.web.FormField
 import ltbs.uniform.interpreters.playframework.Path
@@ -27,6 +28,7 @@ import play.twirl.api.Html
 import uk.gov.hmrc.disguisedremunerationfrontend.data.Address
 import uk.gov.hmrc.disguisedremunerationfrontend.views
 import enumeratum._
+
 trait Widgets extends InputOps {
 
   implicit val twirlStringField = new FormField[String, Html] {
@@ -47,6 +49,13 @@ trait Widgets extends InputOps {
       views.html.uniform.string(key, existingValue, errors, messages)
     }
   }
+
+  implicit val twirlBigDecimalField: FormField[BigDecimal, Html] =
+    twirlStringField.simap(
+      nonEmptyString(_).toEither >>= {x => Either.catchOnly[NumberFormatException]{
+        BigDecimal.apply(x)
+      }.leftMap(_ => ErrorTree.oneErr(ErrorMsg("format")))
+    })(_.toString)
 
   implicit val twirlBoolField = new FormField[Boolean, Html] {
     val True = true.toString.toUpperCase

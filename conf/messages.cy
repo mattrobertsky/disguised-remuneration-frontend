@@ -378,8 +378,8 @@ add-settlementyeardateOfSettlement.required=Nodwch faint o dreth ac Yswiriant Gw
 add-settlementamount.nonnumericformat=Mae’n rhaid i gyfanswm y benthyciad fod yn swm o arian, megis 123.45 neu 150
 add-settlementamount.required=Nodwch faint o dreth ac Yswiriant Gwladol y mae rhywun wedi’u talu, neu wedi cytuno â ni i’w talu
 add-settlement.amount.required=Nodwch faint o dreth ac Yswiriant Gwladol y mae rhywun wedi’u talu, neu wedi cytuno â ni i’w talu
-add-settlement.amount-format=Mae’n rhaid i’r dreth a’r Yswiriant Gwladol a dalwyd, neu y cytunwyd i’w talu, fod yn swm o arian, megis 123.45 neu 150
-add-settlement.amount.amount-format=Mae’n rhaid i’r dreth a’r Yswiriant Gwladol a dalwyd, neu y cytunwyd i’w talu, fod yn swm o arian, megis 123.45 neu 150
+add-settlement.format=Mae’n rhaid i’r dreth a’r Yswiriant Gwladol a dalwyd, neu y cytunwyd i’w talu, fod yn swm o arian, megis 123.45 neu 150
+add-settlement.amount.format=Mae’n rhaid i’r dreth a’r Yswiriant Gwladol a dalwyd, neu y cytunwyd i’w talu, fod yn swm o arian, megis 123.45 neu 150
 
 # loan details
 fixed-term-loan.required=Dewiswch Iawn os oedd y benthyciad yn un cyfnod penodol cymeradwy

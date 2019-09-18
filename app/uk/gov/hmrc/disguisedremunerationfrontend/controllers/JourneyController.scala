@@ -45,10 +45,6 @@ import uk.gov.hmrc.play.bootstrap.controller.FrontendHeaderCarrierProvider
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.higherKinds
 
-// unable to move to data package!
-// knownDirectSubclasses of YesNoDoNotKnow observed before subclass
-// Yes registered
-
 @Singleton
 class JourneyController @Inject()(
   mcc: MessagesControllerComponents,
@@ -357,10 +353,10 @@ class JourneyController @Inject()(
                               else s"scheme/$index/details/$k/repaid-any-loan-during-tax-year".some
                           }),
                         (msg("cya.loandetails.header.written-off"),
-                          v.fold(Html("£0"))( x =>  Html(s"£${x.writtenOff.fold("0")(x => x.amount)}")),
+                          v.fold(Html("£0"))( x =>  Html(s"£${x.writtenOff.fold("0")(x => x.amount.toString())}")),
                           s"scheme/$index/details/$k/written-off".some),
                         (msg("cya.loandetails.header.tax-paid"),
-                          v.fold(Html("£0"))( x =>  Html(s"£${x.writtenOff.fold("0")(x => x.taxPaid)}")),
+                          v.fold(Html("£0"))( x =>  Html(s"£${x.writtenOff.fold("0")(x => x.taxPaid.toString())}")),
                           s"scheme/$index/details/$k/written-off".some)
                       ).filterNot{x => x._1 == Html("") && x._2 == Html("") && x._3.isEmpty}
                     )
