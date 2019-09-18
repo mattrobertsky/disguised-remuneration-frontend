@@ -86,7 +86,7 @@ confirm-contact-detailspostcode.required=Nodwch god post eich cyfeiriad
 confirm-contact-details.heading=Beth yw’ch cyfeiriad?
 confirm-contact-details.intro=Dim ond i gysylltu â chi ynglŷn â’ch achos y byddwn yn defnyddio’r manylion hyn.
 confirm-contact-details.line1.heading=Adeilad neu stryd
-confirm-contact-details.line2.heading=
+confirm-contact-details.line2.heading=Adeilad a stryd – llinell 2 (dewisol)
 confirm-contact-details.town.heading=Tref neu ddinas
 confirm-contact-details.county.heading=Sir
 confirm-contact-details.postcode.heading=Cod post
@@ -233,6 +233,7 @@ cya.p1=Sicrhewch eich bod yn gwirio’ch atebion cyn i chi eu hanfon. Os bydd an
 cya.p2=Drwy gyflwyno’ch atebion, rydych yn cadarnhau, hyd eithaf eich gwybodaeth, fod yr wybodaeth rydych wedi’i rhoi yn gywir ac yn gyflawn.
 cya.loandetails.h1=Manylion benthyciad ar gyfer 
 cya.loandetails.header.tax-year=Blwyddyn dreth
+cya.loandetails.header.fixed-amount=Benthyciad cyfnod penodol cymeradwy
 cya.loandetails.header.amount=Swm
 cya.loandetails.header.estimate=Ai amcangyfrif yw cyfanswm y benthyciad a dalwyd o {0} i {1}?
 cya.loandetails.header.repaid=Wedi’i ad-dalu
@@ -279,28 +280,18 @@ confirm-about-scheme-user.limit=Mae'n rhaid i enw llawn fod yn 50 nod neu lai
 confirm-about-scheme-user.format=Rhaid i enw llawn ond yn cynnwys llythyrau aiy, gysylltnodau, atalnod llawn, collnodau a mannau
 
 # contact details
-confirm-contact-details.line1.required=Nodwch adeilad neu stryd eich cyfeiriad
-confirm-contact-details.street-limit=Mae’n rhaid i’r adeilad neu’r stryd fod yn 40 o gymeriadau neu lai
-confirm-contact-details.line1.street-limit=Mae’n rhaid i’r adeilad neu’r stryd fod yn 40 o gymeriadau neu lai
-confirm-contact-details.street-format=Mae’n rhaid i’r adeilad neu’r stryd gynnwys llythrennau a-z, rhifau, collnodau, symbolau ampersand, comas, cysylltnodau, atalnodau llawn, blaenslaesau a bylchau yn unig
-confirm-contact-details.line1.street-format=Mae’n rhaid i’r adeilad neu’r stryd gynnwys llythrennau a-z, rhifau, collnodau, symbolau ampersand, comas, cysylltnodau, atalnodau llawn, blaenslaesau a bylchau yn unig
-
-confirm-contact-details.town.required=Nodwch dref neu ddinas eich cyfeiriad
-confirm-contact-details.town-limit=Mae’n rhaid i’r dref neu’r ddinas fod yn 40 o gymeriadau neu lai
-confirm-contact-details.town.town-limit=Mae’n rhaid i’r dref neu’r ddinas fod yn 40 o gymeriadau neu lai
-confirm-contact-details.town-format=Mae’n rhaid i’r dref neu’r ddinas gynnwys llythrennau a i z, collnodau, comas, cysylltnodau, atalnodau llawn a bylchau yn unig
-confirm-contact-details.town.town-format=Mae’n rhaid i’r dref neu’r ddinas gynnwys llythrennau a i z, collnodau, comas, cysylltnodau, atalnodau llawn a bylchau yn unig
-
-confirm-contact-details.county-limit=Mae’n rhaid i’r sir fod yn 40 o gymeriadau neu lai
-confirm-contact-details.county.county-limit=Mae’n rhaid i’r sir fod yn 40 o gymeriadau neu lai
-confirm-contact-details.county-format=Mae’n rhaid i’r sir gynnwys llythrennau a i z, collnodau, comas, cysylltnodau, atalnodau llawn a bylchau yn unig
-confirm-contact-details.county.county-format=Mae’n rhaid i’r sir gynnwys llythrennau a i z, collnodau, comas, cysylltnodau, atalnodau llawn a bylchau yn unig
-
-confirm-contact-details.postcode.required=Nodwch god post eich cyfeiriad
-confirm-contact-details.postcode-limit=Rhaid i’r cod post fod yn 8 o gymeriadau neu lai
-confirm-contact-details.postcode.postcode-limit=Rhaid i’r cod post fod yn 8 o gymeriadau neu lai
-confirm-contact-details.postcode-format=Nodwch god post go iawn
-confirm-contact-details.postcode.postcode-format=Nodwch god post go iawn
+line1.required=Nodwch adeilad neu stryd eich cyfeiriad
+line1.limit=Mae’n rhaid i’r adeilad neu’r stryd fod yn 40 o gymeriadau neu lai
+line1.invalid=Mae’n rhaid i’r adeilad neu’r stryd gynnwys llythrennau a-z, rhifau, collnodau, symbolau ampersand, comas, cysylltnodau, atalnodau llawn, blaenslaesau a bylchau yn unig
+line2.limit=Mae'n rhaid i'r adeilad neu'r stryd 2 fod yn 40 o gymeriadau neu lai
+line2.invalid=Mae'n rhaid i'r adeilad neu'r stryd 2 gynnwys llythrennau a-z, rhifau, collnodau, symbolau ampersand, comas, cysylltnodau, atalnodau llawn, blaenslaesau a bylchau yn unig
+town.required=Nodwch dref neu ddinas eich cyfeiriad
+town.limit=Mae’n rhaid i’r dref neu’r ddinas fod yn 40 o gymeriadau neu lai
+town.invalid=Mae’n rhaid i’r dref neu’r ddinas gynnwys llythrennau a i z, collnodau, comas, cysylltnodau, atalnodau llawn a bylchau yn unig
+county.limit=Mae’n rhaid i’r sir fod yn 40 o gymeriadau neu lai
+county.invalid=Mae’n rhaid i’r sir gynnwys llythrennau a i z, collnodau, comas, cysylltnodau, atalnodau llawn a bylchau yn unig
+postcode.required=Nodwch god post eich cyfeiriad
+postcode.invalid=Nodwch god post go iawn
 
 confirm-contact-prefs.phone-limit=Mae’n rhaid i’r rhif ffôn fod yn 24 o gymeriadau neu lai
 confirm-contact-prefs.telephone.phone-limit=Mae’n rhaid i’r rhif ffôn fod yn 24 o gymeriadau neu lai
@@ -411,6 +402,8 @@ written-off.Yes.writtenOff.taxPaid.format=Mae’n rhaid i swm y dreth neu Yswiri
 
 # Confirmation
 confirmation.heading=Manylion tâl ar fenthyciad wedi dod i law
+# Awaiting welsh translation
+confirmation.heading.with-name=Manylion tâl ar fenthyciad wedi dod i law ar gyfer {0}
 confirmation.detail=Cawsom y manylion y gwnaethoch eu hanfon ar {0} am {1}
 confirmation.h2=Yr hyn sy’n digwydd nesaf
 confirmation.p1=Byddwn yn gwirio’r manylion y gwnaethoch eu hanfon i weld a ydynt yn cyd-fynd â’n cofnodion.

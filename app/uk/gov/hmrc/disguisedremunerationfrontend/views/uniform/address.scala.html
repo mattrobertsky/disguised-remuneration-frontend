@@ -1,0 +1,63 @@
+@*
+ * Copyright 2019 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import cats.implicits._
+
+@(key: List[String], values: Input, errors: ErrorTree, messages: UniformMessages[Html])
+
+<div class="govuk-date-input form-group">
+
+  @for(field <- List("line1", "line2", "town", "county", "postcode")) {
+    @defining(
+      field match {
+        case "line1" | "line2" => "form-control-3-4"
+        case "postcode" => "form-control-1-4"
+        case _ => "form-control-2-4"
+      },
+      errors.valueAtPath(List(field))
+    ) { case (formControlClass, errorOpt) =>
+
+      <div class="form-group@if(errorOpt.nonEmpty) { form-group-error}">
+
+        @if(field == "line2"){
+          <label class="form-label" for="@{(key :+field).mkString("_")}-input">
+            <span class="govuk-visually-hidden">
+              @messages((key :+ field :+ "heading").mkString("."))
+            </span>
+          </label>
+        } else {
+          <label class="form-label" for="@{(key :+field).mkString("_")}-input">@messages((key :+ field :+ "heading").mkString("."))</label>
+        }
+        @for(err <- errorOpt.fold(List.empty[ErrorMsg])(_.toList)) {
+
+            <span id="@key-@field-error" class="error-message">
+            @err.prefixWith(key :+ field).render(messages)
+            </span>
+        }
+        <input
+          class="@{"form-control " + formControlClass} @if(errorOpt.nonEmpty){ form-control-error }"
+          id="@{(key :+field).mkString("_")}-input"
+          type="text"
+          @if(errorOpt.nonEmpty){aria-describedBy="@key-@field-error"}
+          name="@{key.mkString(".")}.@{field}"
+	  value="@{values.valueAt(field).headOption}"
+        />
+      </div>
+    }
+
+  }
+
+</div>

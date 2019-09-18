@@ -14,12 +14,16 @@
  * limitations under the License.
  *@
 
-@(dateTime: String, time: String)(implicit messages: UniformMessages[Html], request: Request[AnyContent])
+@(dateTime: String, time: String, name: String)(implicit messages: UniformMessages[Html], request: Request[AnyContent])
 
     <form action="index" method="get" class="form">
         <div class="govuk-box-highlight">
             <h1 class="heading-xlarge">
-                @messages("confirmation.heading")
+                @if(name.isEmpty) {
+                    @messages("confirmation.heading")
+                } else {
+                    @messages("confirmation.heading.with-name", name)
+                }
             </h1>
             <span class="heading-large">
                 @messages("confirmation.detail", dateTime, time)

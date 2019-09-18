@@ -3,8 +3,7 @@ import sbt._
 
 object AppDependencies {
 
-//  val uniformVersion = "4.4.1"
-  val uniformVersion = "4.4.2-9-4b61e93-dirty-SNAPSHOT"
+  val uniformVersion = "4.5.1"
 
   val compile = Seq(
     "uk.gov.hmrc"             %% "govuk-template"           % "5.34.0-play-26",
@@ -27,4 +26,5 @@ object AppDependencies {
     "org.scalatestplus.play"  %% "scalatestplus-play"       % "3.1.2"                 % "test, it",
     "com.luketebbs.uniform"   %% "interpreter-logictable"   % uniformVersion          % "test"
   )
+
 }

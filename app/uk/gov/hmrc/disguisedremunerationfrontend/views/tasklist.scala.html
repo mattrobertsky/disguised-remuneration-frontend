@@ -40,51 +40,60 @@
 
                 <ol class="app-task-list">
 
-                @for(((title, group), index) <- items.zipWithIndex) {
+                    @for(((title, group), index) <- items.zipWithIndex) {
+                        @for(html <- group.left.toOption) {
+                            <li>
+                                <h2 class="app-task-list__section">
+                                    <span class="app-task-list__section-number">@{
+                                        index + 1
+                                    }. </span>
+                                    @title
+                                </h2>
+                                <div class="index-element">
+                                    @html
+                                </div>
 
-                    <li>
-                        <h2 class="app-task-list__section">
-                            <span class="app-task-list__section-number">@{
-                                index + 1
-                            }. </span>
-                            @title
-                        </h2>
-
-                        @for(message <- group.left.toOption) {
-                            <p class="index-element">
-                                @message
-                            </p>
+                            </li>
                         }
-
-                        <ul class="app-task-list__items">
-
-                                @for((subtitle, mainLink, ancilliaryLink, done) <- group.right.toOption.toList.flatten) {
-                                    <li class="app-task-list__item">
-                                        @for(l <- mainLink) {
-                                            <a class="app-task-list__task-name" href="@l" aria-describedby="eligibility-completed">
-                                            }
-                                        @subtitle
-                                        @for(_ <- mainLink) { </a> }
-
-                                        <!-- display status of section -->
-                                        @defining(
-                                            done match {
-                                                case Some(true) =>
-                                                    taskComplete
-
-                                                case Some(false) =>
-                                                    taskIncomplete
-
-                                                case _ => ""
-                                            }
-                                        ) { todoDoneIcon =>
-                                            @todoDoneIcon
+                        @if(group.isRight) {
+                            <li>
+                                <h2 class="app-task-list__section">
+                                    <span class="app-task-list__section-number">@{
+                                        index + 1
+                                    }. </span>
+                                    @title
+                                </h2>
+                                <ul class="app-task-list__items">
+                        }
+                        @for((subtitle, mainLink, ancilliaryLink, done) <- group.right.toOption.toList.flatten) {
+                                <li class="app-task-list__item">
+                                    @for(l <- mainLink) {
+                                        <a class="app-task-list__task-name" href="@l" aria-describedby="eligibility-completed">
                                         }
-                                    </li>
-                                }
-                            </ul>
-                    </li>
-                }
+                                    @subtitle
+                                    @for(_ <- mainLink) { </a> }
+
+                                    <!-- display status of section -->
+                                    @defining(
+                                        done match {
+                                            case Some(true) =>
+                                                taskComplete
+
+                                            case Some(false) =>
+                                                taskIncomplete
+
+                                            case _ => ""
+                                        }
+                                    ) { todoDoneIcon =>
+                                        @todoDoneIcon
+                                    }
+                                </li>
+                        }
+                        @if(group.isRight) {
+                                </ul>
+                            </li>
+                        }
+                    }
                 </ol>
 
             </div>
