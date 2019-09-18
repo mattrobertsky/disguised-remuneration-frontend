@@ -450,7 +450,11 @@ class JourneyController @Inject()(
                           s"scheme/$index/details/$k/loan-amount".some),
                         (msg("cya.loandetails.header.repaid"),
                           v.fold(Html("£0"))( x => Html(s"£${x.genuinelyRepaid.getOrElse("0")}")),
-                          s"scheme/$index/details/$k/loan-repaid".some),
+                          v.fold(s"scheme/$index/details/$k/repaid-any-loan-during-tax-year".some){
+                            x =>
+                              if (x.isGenuinelyRepaid) s"scheme/$index/details/$k/loan-repaid".some
+                              else s"scheme/$index/details/$k/repaid-any-loan-during-tax-year".some
+                          }),
                         (msg("cya.loandetails.header.written-off"),
                           v.fold(Html("£0"))( x =>  Html(s"£${x.writtenOff.fold("0")(x => x.amount)}")),
                           s"scheme/$index/details/$k/written-off".some),

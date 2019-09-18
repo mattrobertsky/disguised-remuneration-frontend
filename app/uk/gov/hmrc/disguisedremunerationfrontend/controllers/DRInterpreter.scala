@@ -48,7 +48,8 @@ case class DRInterpreter(
       ask: Html,
       breadcrumbs: Path,
       request: Request[AnyContent],
-      messages: UniformMessages[Html]): Html = {
+      messages: UniformMessages[Html],
+      isCompoundField: Boolean): Html = {
     val content = views.html.form_wrapper(keyList,
       errors,
       Html(tell.toString + ask.toString),
