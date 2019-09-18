@@ -59,7 +59,8 @@ object Scheme {
   lazy val maxNameLength = 50
   lazy val dotaRegex = "[0-9]{8}|.{0}"
   lazy val yearRegex = "[0-9]{4}"
-  lazy val moneyRegex = """(\d*[.]?\d{1,2}|.{0})"""
+//  No longer needed, but handy for future reference.
+//  lazy val moneyRegex = """(\d*[.]?\d{1,2}|.{0})"""
 
   type TellTypes = NilTypes
   type AskTypes = String :: Option[String] :: Date :: (Date, Date) :: Option[Employer] :: Boolean :: TaxSettlement :: YesNoDoNotKnow :: YesNoUnknown :: NilTypes
@@ -303,19 +304,7 @@ object Scheme {
       settlementStatus      <-  ask[TaxSettlement](
                                   "add-settlement",
                                   default.flatMap{_.settlement},
-                                  customContent = headingHint("add-settlement.heading.hint", schemeName),
-                                  validation = List(
-                                    List(
-                                      Rule.fromPred(
-                                        x => x.amount.matches(moneyRegex),
-                                        (ErrorMsg("amount-format"), NonEmptyList.one(List("amount")))
-                                      ),
-                                      Rule.fromPred(
-                                        x => x.amount.matches(nonEmptyStringRegex),
-                                        (ErrorMsg("required"), NonEmptyList.one(List("amount")))
-                                      )
-                                    )
-                                  )
+                                  customContent = headingHint("add-settlement.heading.hint", schemeName)
                                 ) when taxNIPaid == YesNoUnknown.AYes
     } yield {
       Scheme(

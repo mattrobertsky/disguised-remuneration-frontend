@@ -374,8 +374,8 @@ about-loan.Some.value.name-format=Name of who the loan was made out to must only
 tax-settled.required=Select yes if anyone has paid, or agreed with us to pay, any tax or National Insurance owed for this scheme
 add-settlementyeardateOfSettlement.required=Enter how much tax and National Insurance anyone has paid, or agreed with us to pay
 add-settlement.amount.required=Enter how much tax and National Insurance anyone has paid, or agreed with us to pay
-add-settlement.amount-format=Tax and National Insurance paid or agreed to be paid must be an amount of money, like 123.45 or 150
-add-settlement.amount.amount-format=Tax and National Insurance paid or agreed to be paid must be an amount of money, like 123.45 or 150
+add-settlement.format=Tax and National Insurance paid or agreed to be paid must be an amount of money, like 123.45 or 150
+add-settlement.amount.format=Tax and National Insurance paid or agreed to be paid must be an amount of money, like 123.45 or 150
 
 # loan details
 fixed-term-loan.required=Select yes if the loan was an approved fixed-term loan

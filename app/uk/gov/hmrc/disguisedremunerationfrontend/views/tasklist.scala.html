@@ -66,7 +66,7 @@
                                     @for(l <- mainLink) {
                                         <a class="app-task-list__task-name"
                                         href="@l"
-                                        aria-describedby="eligibility-completed-@{mainLink.getOrElse("").replace("/", "-")}">
+                                        aria-describedby="eligibility-status-@{mainLink.getOrElse("").replace("/", "-")}">
                                         }
                                     @subtitle
                                     @for(_ <- mainLink) { </a> }
@@ -79,7 +79,7 @@
                                                 Html(
                                                     "<strong " +
                                                         "class='govuk-tag app-task-list__task-completed complete' " +
-                                                        s"id='eligibility-complete-${mainLink.getOrElse("").replace("/", "-")}'> " +
+                                                        s"id='eligibility-status-${mainLink.getOrElse("").replace("/", "-")}'> " +
                                                         s"${taskComplete}" +
                                                      "</strong>"
                                                     )
@@ -87,7 +87,7 @@
                                                 Html(
                                                     "<strong " +
                                                         "class='govuk-tag app-task-list__task-completed incomplete' " +
-                                                        s"id='eligibility-incomplete-${mainLink.getOrElse("").replace("/", "-")}'> " +
+                                                        s"id='eligibility-status-${mainLink.getOrElse("").replace("/", "-")}'> " +
                                                         s"${taskIncomplete} " +
                                                      "</strong>"
                                                     )
