@@ -24,22 +24,21 @@
 <div class="radios@if(inlineRadioKeys){--inline}">
   @for((opt,num) <- if(key.head == "about-loan"){options.reverse.zipWithIndex} else {options.zipWithIndex}) {
     <div class="radios__item multiple-choice" data-target="@keyNoDots-@opt">
+
       <input
-      class="radios__input"
-      id="@keyNoDots-@num"
-      name="@{key.mkString(".")}"
-      type="radio"
-      value="@opt"
-      @if(existing.exists(_.toUpperCase == opt.toUpperCase())){ checked }
+        class="radios__input"
+        id="@keyNoDots-@num"
+        name="@{key.mkString(".")}"
+        type="radio"
+        value="@opt"
+        @if(existing.exists(_.toUpperCase == opt.toUpperCase())){ checked }
       >
       <label class="label radios__label form-label" for="@keyNoDots-@num">
-        <span>
-            @messages.decompose({key :+ opt}.mkString("."))
-        </span>
-      @messages.get({key :+ opt :+ "hint"}.mkString(".")).map { hint =>
-        <span id="@keyNoDots-@opt-item-hint" class="form-hint checkboxes__hint">
-          @hint
-        </span>
+        <span>@messages.decompose({key :+ opt}.mkString("."))</span>
+        @messages.get({key :+ opt :+ "hint"}.mkString(".")).map { hint =>
+          <span id="@keyNoDots-@opt-item-hint" class="form-hint checkboxes__hint">
+            @hint
+          </span>
       }
       </label>
     </div>
