@@ -14,26 +14,63 @@
  * limitations under the License.
  *@
 
-@import cats.implicits._
+@(key: String, content: Html, isCompoundField: Boolean, hasHint: Boolean, hasErrors: Boolean)(implicit messages: UniformMessages[Html])
 
-@(key: List[String], errors: ErrorTree, messages: UniformMessages[Html])(inner: Html)
+@defining((hasHint, hasErrors) match {
+  case (true,true) => s"$key-hint $key-error"
+  case (true,false) => s"$key-hint"
+  case (false,true) => s"$key-error"
+  case _ => ""
+}){ describedByClass =>
 
-<div class="govuk-form-group @if(errors.definedAtRoot) {govuk-form-group--error}">
-    <label class="govuk-label" for="@{key.mkString("_")}">
-    @messages(key.mkString("."))
-    </label>
-
-    @messages.get({key:+ "hint"}.mkString(".")).map { hint =>
-        <span id="@{key.mkString("_")}-hint" class="govuk-hint">
-        @hint
+<div class="form-group@if(hasErrors){ form-group-error}">
+  @if(isCompoundField){
+    <fieldset
+      class="fieldset"
+      @if(describedByClass.nonEmpty){aria-describedby="@describedByClass"}
+      id="@key-input"
+    >
+      <legend class="fieldset__legend fieldset__legend--xl">
+        @messages.get(s"$key.heading.hint").map { headHint =>
+        <span class="govuk-caption-xl@if(hasErrors){ flush--top}">
+          @headHint
         </span>
-    }
+        }
+      
+        <h1 class="fieldset__heading  @if(hasErrors){flush--top} @if(messages.get(s"$key.heading.hint").isDefined) {fieldset__heading--no-span}">
+          @messages(s"$key.heading")
+        </h1>
+      </legend>
+      
+      @for(msg <- messages.list(s"$key.intro")) {
+        <p class="govuk-body">
+          @msg
+        </p>
+      }
 
-    @errors.valueAtRootList.map { error =>
-        <span id="@{key.mkString("_")}-error" class="govuk-error-message">
-            <span class="govuk-visually-hidden">@messages("error"):</span> @error.prefixWith(key).render(messages)
-        </span>
-    }
+      @messages.get(s"$key.list").map { list =>
+        <ul class="list list-bullet">
+          @for(msg <- messages.list(s"$key.list")) {
+            <li>@msg</li>
+          }
+        </ul>
+      }
 
-    @inner
+      @content
+    </fieldset>
+  } else {
+
+    @*
+    * Note: Intro messages and message lists should ideally not appear between 
+    * labels & their inputs
+    *@
+
+    <h1 class="govuk-label-wrapper">
+      <label class="govuk-label--xl@if(hasErrors){ flush--top}" for="@{key}-input">
+        @messages(s"$key.heading")
+      </label>
+    </h1>
+    @content
+  }
 </div>
+  }

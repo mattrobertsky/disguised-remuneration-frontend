@@ -309,7 +309,7 @@ details .address.progressive-reveal {
     margin-left: 5%
 }
 
-.fieldset__heading {
+.fieldset__heading, .govuk-label--xl {
     font-size: 32px;
     margin-bottom: 10px;
     margin-top : 20px;
@@ -318,6 +318,11 @@ details .address.progressive-reveal {
 @media (min-width: 641px) {
     .fieldset__heading {
         font-size: 48px;
+    }
+
+    .govuk-label--xl {
+        font-size: 48px;
+        line-height: 1.11111;
     }
 }
 
@@ -332,6 +337,15 @@ details .address.progressive-reveal {
     font-size: 48px;
     line-height: 1.09375;
     margin-bottom: 3px;
+}
+
+.govuk-label--xl {
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.govuk-label-wrapper {
+    margin: 0;
 }
 
 fieldset__legend--l {

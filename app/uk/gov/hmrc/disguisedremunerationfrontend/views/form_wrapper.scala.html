@@ -16,67 +16,32 @@
 
 @import uniform._
 
-@(keyList: List[String], errors: ErrorTree, content: Html, breadcrumbs: Path = Nil)(implicit messages: UniformMessages[Html], request: Request[AnyContent])
+@(keyList: List[String], errors: ErrorTree, content: Html, breadcrumbs: Path = Nil, isCompoundField: Boolean)(implicit messages: UniformMessages[Html], request: Request[AnyContent])
+  @key = @{keyList.last}
+      
+  @for(back <- breadcrumbs.headOption) {
+    <a href="@back" class="govuk link-back">@messages(List("back-to-" + back.mkString("-"),"back"))</a>
+  }
 
-        @key = @{keyList.last}
-            
-        @for(back <- breadcrumbs.headOption) {
-            <a href="@back" class="govuk link-back">@messages(List("back-to-" + back.mkString("-"),"back"))</a>
-        }
+  @if(breadcrumbs.isEmpty){
+    <a href="/disguised-remuneration/" class="govuk link-back">@messages(List(s"back-to-service-page","back"))</a>
+  }
 
-        @if(breadcrumbs.isEmpty){
-            <a href="/disguised-remuneration/" class="govuk link-back">@messages(List(s"back-to-service-page","back"))</a>
-        }
+  @helper.form(action = play.api.mvc.Call("post", key)) {
+    @helper.CSRF.formField
+    @errorsummary(keyList, errors, messages)
+    @defining((messages.get(s"$key.hint").isDefined, errors.definedAtRoot)){ case (hasHint, hasErrors) =>
+      @fieldsurround(key, content, isCompoundField, hasHint, hasErrors)
+    }
 
-        @helper.form(action = play.api.mvc.Call("post", key)) {
-            @helper.CSRF.formField
-            @errorsummary(keyList, errors, messages)
-            @defining((messages.get(s"$key.hint").isDefined, errors.definedAtRoot)){ case (hasHint, hasErrors) =>
-            <div class="form-group">
-              <fieldset
-                class="fieldset"
-                @if(hasHint || hasErrors){aria-describedby="@if(hasHint){@key-hint} @if(hasErrors){@key-error}"}
-                id="@key-input"
-              >
-                    <legend class="fieldset__legend fieldset__legend--xl">
-                        @messages.get(s"$key.heading.hint").map { headHint =>
-                            <span class="govuk-caption-xl">
-                                @headHint
-                            </span>
-                        }
-                        <h1 class="fieldset__heading @if(messages.get(s"$key.heading.hint").isDefined) {fieldset__heading--no-span}">
-                        @messages(s"$key.heading")
-                        </h1>
-                    </legend>
-                    @for(msg <- messages.list(s"$key.intro")) {
-                      <p class="govuk-body">
-                        @msg
-                      </p>
-                    }
-
-                    @messages.get(s"$key.list").map { list =>
-                      <ul class="list list-bullet">
-                        @for(msg <- messages.list(s"$key.list")) {
-                            <li>@msg</li>
-                        }
-                      </ul>
-                    }
-
-                    @content
-                </fieldset>
-            </div>
-
-            }
-
-            @for((k :: v :: _) <- messages.list(s"$key.details").collect { case x if x.toString.contains("|") => x.toString.split("[|]").toList }) {
-
-                <details class="details">
-                    <summary class="details__summary">
-                        <span class="details__summary-text">@k</span>
-                    </summary>
-                    <div class="details__text">@v</div>
-                </details>
-            }
-
-            <button type="submit" class="button">@messages(List(s"$key.save-continue", "common.save-continue"))</button>
-        }
+    @for((k :: v :: _) <- messages.list(s"$key.details").collect { case x if x.toString.contains("|") => x.toString.split("[|]").toList }) {
+      <details class="details">
+        <summary class="details__summary">
+          <span class="details__summary-text">@k</span>
+        </summary>
+        <div class="details__text">@v</div>
+      </details>
+    }
+    
+    <button type="submit" class="button">@messages(List(s"$key.save-continue", "common.save-continue"))</button>
+  }
