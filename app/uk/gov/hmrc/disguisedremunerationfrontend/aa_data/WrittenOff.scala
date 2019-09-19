@@ -16,23 +16,12 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
-import org.scalatest.{Matchers, WordSpec}
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.libs.json._
-
-import JsonConversion._
-
-class JsonConversionSpec extends WordSpec with Matchers with GuiceOneAppPerSuite {
-
-  "eitherFormatter" should {
-    "encode and decode correctly" in {
-
-      val ef = eitherFormatter[String,String]("nino", "utr")
-
-      val inputs = List(Left("one"),Right("two"))
-      inputs.map { input =>
-        ef.reads(ef.writes(input)) shouldBe JsSuccess(input)
-      }
-    }
-  }
+case class WrittenOff(
+  amount: Money,
+  taxPaid: Money
+) {
+  def toList:List[String] = List(amount.toString, taxPaid.toString)
+}
+case object WrittenOff {
+  def fromList(list: List[String]) = WrittenOff(BigDecimal(list.headOption.getOrElse("0")), BigDecimal(list.tail.headOption.getOrElse("0")))
 }

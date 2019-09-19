@@ -32,13 +32,10 @@
 //
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
-import enumeratum.EnumEntry
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import uk.gov.hmrc.disguisedremunerationfrontend.controllers.{EmploymentStatus, YesNoUnknown, YesNoUnknownWrittenOff}
-import shapeless.tag.{@@, Tagger}
-
-import scala.language.higherKinds
+import shapeless.tag.{@@}
+import java.time.{LocalDate => Date}
 
 object JsonConversion {
 

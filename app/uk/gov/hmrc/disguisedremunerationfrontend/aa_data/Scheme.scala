@@ -16,13 +16,11 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
-import java.time.LocalDate
+import java.time.{LocalDate => Date}
 
 import cats.data.NonEmptyList
 import cats.implicits._
-import ltbs.uniform.{::, Language, NilTypes, _}
-import play.api.i18n.{Messages => _}
-import uk.gov.hmrc.disguisedremunerationfrontend.controllers.{YesNoDoNotKnow, YesNoUnknown, YesNoUnknownWrittenOff}
+import ltbs.uniform._
 
 import scala.language.higherKinds
 
@@ -40,9 +38,9 @@ case class Scheme(
   loanDetailsProvided: Map[Year, LoanDetails] = Map.empty
 ) {
   lazy val loanDetails: Map[Year, Option[LoanDetails]] = {
-    val cutoffDate = LocalDate.of(1999,5,1).financialYear
+    val cutoffDate = Date.of(1999,5,1).financialYear
     val start = Math.max(schemeStart.financialYear, cutoffDate)
-    val years = start to schemeStopped.getOrElse(LocalDate.now).financialYear
+    val years = start to schemeStopped.getOrElse(Date.now).financialYear
     Map( years.map{ y =>
       y -> loanDetailsProvided.get(y)
     }:_*)
@@ -72,7 +70,7 @@ object Scheme {
 //  def isInRange(d: LocalDate): Boolean = d.isAfter(earliestDate) && d.isBefore(LocalDate.now())
 //  def isAfterEarliestDate(d: LocalDate): Boolean = d.isAfter(earliestDate)
 
-  def startBeforeEnd(dates: (LocalDate, LocalDate)): Boolean = (dates._1, dates._2) match {
+  def startBeforeEnd(dates: (Date, Date)): Boolean = (dates._1, dates._2) match {
     case (start, end) if start.isBefore(end) || start.isEqual(end) => true
     case _ => false
   }
@@ -110,7 +108,7 @@ object Scheme {
                                   default = default.map(x => x.dotasReferenceNumber match {
                                     case Some(x: String) if x == YesNoDoNotKnow.DoNotKnow.toString => YesNoDoNotKnow.DoNotKnow
                                     case Some(x: String) if x == YesNoDoNotKnow.No.toString => YesNoDoNotKnow.No
-                                    case Some(x: String) => YesNoDoNotKnow(x.some)
+                                    case Some(x: String) => YesNoDoNotKnow(x)
                                   }),
                                   customContent = headingHint("dotas-number.heading.hint", schemeName),
                                   validation = List(List(
@@ -183,7 +181,7 @@ object Scheme {
 //                                        (ErrorMsg("date-far-past"), NonEmptyList.one(Nil))),
                                       Rule.fromPred(
                                         {
-                                          date: Date => date.isBefore(LocalDate.now)
+                                          date: Date => date.isBefore(Date.now)
                                         },
                                         (ErrorMsg("date-in-future"), NonEmptyList.one(Nil)))
                                       )
@@ -221,12 +219,12 @@ object Scheme {
                                       ),
                                       Rule.fromPred(
                                         {
-                                          date: (Date, Date) => date._1.isBefore(LocalDate.now)
+                                          date: (Date, Date) => date._1.isBefore(Date.now)
                                         },
                                         (ErrorMsg("date-in-future"), NonEmptyList.one(List("_1")))),
                                       Rule.fromPred(
                                         {
-                                          date: (Date, Date) => date._2.isBefore(LocalDate.now)
+                                          date: (Date, Date) => date._2.isBefore(Date.now)
                                         },
                                         (ErrorMsg("date-in-future"), NonEmptyList.one(List("_2"))))
                                     )),
@@ -305,7 +303,7 @@ object Scheme {
                                   "add-settlement",
                                   default.flatMap{_.settlement},
                                   customContent = headingHint("add-settlement.heading.hint", schemeName)
-                                ) when taxNIPaid == YesNoUnknown.AYes
+                                ) when taxNIPaid == YesNoUnknown.Yes
     } yield {
       Scheme(
         name = schemeName,

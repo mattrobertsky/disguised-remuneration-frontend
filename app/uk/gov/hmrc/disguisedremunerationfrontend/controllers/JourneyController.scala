@@ -14,152 +14,36 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.disguisedremunerationfrontend.controllers
+package uk.gov.hmrc.disguisedremunerationfrontend
+package controllers
 
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+
+import actions.{AuthorisedAction, AuthorisedRequest}
+import config.AppConfig
+import data._, JsonConversion._
+import repo._
+import uk.gov.hmrc.disguisedremunerationfrontend.views
 
 import cats.implicits._
-import enumeratum.{Enum, EnumEntry, PlayJsonEnum}
 import javax.inject.{Inject, Singleton}
 import ltbs.uniform.common.web.GenericWebTell
-import ltbs.uniform.interpreters.playframework.{DebugPersistence, PersistenceEngine, UnsafePersistence, tellTwirlUnit, twirlUnitField}
+import ltbs.uniform.interpreters.playframework.tellTwirlUnit
 import ltbs.uniform.{ErrorTree, UniformMessages}
 import play.api.Logger
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.{I18nSupport, MessagesApi, Messages => _}
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.libs.json.{Json, OFormat}
 import play.api.mvc._
 import play.twirl.api.Html
 import play.twirl.api.HtmlFormat.escape
 import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
-import uk.gov.hmrc.disguisedremunerationfrontend.actions.{AuthorisedAction, AuthorisedRequest}
-import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
-import uk.gov.hmrc.disguisedremunerationfrontend.data.JsonConversion._
-import uk.gov.hmrc.disguisedremunerationfrontend.data.{AboutYou, ContactDetails, JourneyState, LoanDetails, Scheme, WrittenOff, Year, _}
-import uk.gov.hmrc.disguisedremunerationfrontend.repo.{JourneyStateStore, _}
-import uk.gov.hmrc.disguisedremunerationfrontend.views
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.controller.FrontendHeaderCarrierProvider
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.higherKinds
-
-sealed abstract class EmploymentStatus extends EnumEntry
-object EmploymentStatus
-    extends Enum[EmploymentStatus]
-    with PlayJsonEnum[EmploymentStatus] {
-  val values = findValues
-  case object Employed extends EmploymentStatus
-  case object SelfEmployed extends EmploymentStatus
-  case object ZBoth extends EmploymentStatus { // TODO this will be redundant when Enumeratum included with Uniform
-    override def entryName: String = "Both"
-  }
-}
-
-//sealed abstract class YesWrittenOffNoUnknown extends EnumEntry
-//object YesWrittenOffNoUnknown
-//  extends Enum[YesWrittenOffNoUnknown]
-//    with PlayJsonEnum[YesWrittenOffNoUnknown] {
-//  val values = findValues
-//
-//  val Yes = a.Yes
-//  object a {
-//    case class Yes(writtenOff: WrittenOff) extends YesWrittenOffNoUnknown
-//  }
-//  val No = b.No
-//  object b {
-//    case object No extends YesWrittenOffNoUnknown
-//  }
-//
-//  val Unknown = c.Unknown
-//  object c {
-//    case object Unknown extends YesWrittenOffNoUnknown
-//  }
-//}
-
-sealed abstract class YesNoUnknown extends EnumEntry
-object YesNoUnknown
-  extends Enum[YesNoUnknown]
-    with PlayJsonEnum[YesNoUnknown]
-{
-  val values = findValues
-  case object AYes      extends YesNoUnknown {
-    override def entryName: String = "Yes"
-  }
-  case object BNo       extends YesNoUnknown {
-    override def entryName: String = "No"
-  }
-  case object CUnknown  extends YesNoUnknown {
-    override def entryName: String = "Unknown"
-  }
-}
-
-sealed trait YesNoUnknownWrittenOff
-object YesNoUnknownWrittenOff {
-  case class Yes(writtenOff: WrittenOff) extends YesNoUnknownWrittenOff
-  val No = a.No
-  object a {
-    case object No extends YesNoUnknownWrittenOff
-  }
-  val Unknown = b.Unknown
-  object b {
-    case object Unknown extends YesNoUnknownWrittenOff
-  }
-
-  def apply(optString: Option[List[String]]): YesNoUnknownWrittenOff = {
-    val u: List[String] = List(YesNoUnknown.CUnknown.entryName)
-    val n: List[String] = List(YesNoUnknown.BNo.entryName)
-    optString match {
-      case Some(`u`) => YesNoUnknownWrittenOff.Unknown
-      case Some(`n`) => YesNoUnknownWrittenOff.No
-      case Some(msg) => YesNoUnknownWrittenOff.Yes(WrittenOff.fromList(msg))
-    }
-  }
-
-  def unapply(yesNoDoNotKnow: YesNoUnknownWrittenOff): Option[List[String]] =
-    yesNoDoNotKnow match {
-      case Unknown => Some(List(YesNoUnknown.CUnknown.entryName))
-      case No => Some(List(YesNoUnknown.BNo.entryName))
-      case Yes(msg) => Some(msg.toList)
-    }
-}
-
-// unable to move to data package!
-// knownDirectSubclasses of YesNoDoNotKnow observed before subclass
-// Yes registered
-sealed trait YesNoDoNotKnow
-
-object YesNoDoNotKnow {
-  case class Yes(dotas: String) extends YesNoDoNotKnow
-  val No = y.No
-  object y {
-    case object No extends YesNoDoNotKnow
-  }
-  val DoNotKnow = z.DoNotKnow
-  object z {
-    case object DoNotKnow extends YesNoDoNotKnow
-  }
-
-  def apply(optString: Option[String]): YesNoDoNotKnow = {
-    val u: String = YesNoUnknown.CUnknown.entryName
-    val n: String = YesNoUnknown.BNo.entryName
-    optString match {
-      case Some(`u`) => YesNoDoNotKnow.DoNotKnow
-      case Some(`n`) => YesNoDoNotKnow.No
-      case Some(msg) => YesNoDoNotKnow.Yes(msg)
-    }
-  }
-
-  def unapply(yesNoDoNotKnow: YesNoDoNotKnow): Option[String] =
-    yesNoDoNotKnow match {
-      case DoNotKnow => Some(YesNoUnknown.CUnknown.entryName)
-      case No => Some(YesNoUnknown.BNo.entryName)
-      case Yes(msg) => Some(msg)
-    }
-}
 
 @Singleton
 class JourneyController @Inject()(

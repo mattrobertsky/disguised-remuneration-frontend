@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
+//REFACTOR: Tagged types for UTR and NINO, or validation functions??
+
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
 import cats.data.NonEmptyList
 import cats.implicits._
-import ltbs.uniform.{::, Language, NilTypes, _}
-import play.api.i18n.{Messages => _}
-import uk.gov.hmrc.disguisedremunerationfrontend.controllers.EmploymentStatus
+import ltbs.uniform._
 
 import scala.language.higherKinds
 

@@ -17,16 +17,10 @@
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
 import java.time.LocalDate
-
 import ltbs.uniform._
 import play.api.i18n.Messages
-import uk.gov.hmrc.disguisedremunerationfrontend.controllers.{YesNoUnknown, YesNoUnknownWrittenOff}
-
 import scala.language.higherKinds
-import cats.data.NonEmptyList
 import cats.implicits._
-import ltbs.uniform.{::, Language, NilTypes, _}
-import play.api.i18n.{Messages => _}
 
 case class LoanDetails(
     year: Int,
@@ -98,9 +92,9 @@ object LoanDetails {
       isWrittenOff <- ask[YesNoUnknownWrittenOff](
         "written-off",
         default = default.map(x => x.isWrittenOff match {
-          case Some(x: List[String]) if x == List(YesNoUnknown.CUnknown.entryName) => YesNoUnknownWrittenOff.Unknown
-          case Some(x: List[String]) if x == List(YesNoUnknown.BNo.entryName) => YesNoUnknownWrittenOff.No
-          case Some(x: List[String]) => YesNoUnknownWrittenOff(x.some)
+          case Some(x: List[String]) if x == List(YesNoUnknown.Unknown.entryName) => YesNoUnknownWrittenOff.Unknown
+          case Some(x: List[String]) if x == List(YesNoUnknown.No.entryName) => YesNoUnknownWrittenOff.No
+          case Some(x: List[String]) => YesNoUnknownWrittenOff(x)
         }),
         customContent = Map(
           "written-off.heading" ->

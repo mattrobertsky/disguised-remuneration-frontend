@@ -19,7 +19,7 @@ package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 import javax.inject.Inject
 
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 

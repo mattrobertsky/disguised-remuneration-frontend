@@ -16,12 +16,15 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
-case class WrittenOff(
-  amount: Money,
-  taxPaid: Money
-) {
-  def toList:List[String] = List(amount.toString(), taxPaid.toString())
-}
-case object WrittenOff {
-  def fromList(list: List[String]) = WrittenOff(BigDecimal(list.headOption.getOrElse("0")), BigDecimal(list.tail.headOption.getOrElse("0")))
+import enumeratum._
+
+sealed abstract class YesNoUnknown extends EnumEntry
+object YesNoUnknown
+  extends Enum[YesNoUnknown]
+    with PlayJsonEnum[YesNoUnknown]
+{
+  val values = findValues
+  case object Yes      extends YesNoUnknown 
+  case object No       extends YesNoUnknown 
+  case object Unknown  extends YesNoUnknown 
 }

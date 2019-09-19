@@ -16,23 +16,14 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.data
 
-import org.scalatest.{Matchers, WordSpec}
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.libs.json._
+import enumeratum._
 
-import JsonConversion._
-
-class JsonConversionSpec extends WordSpec with Matchers with GuiceOneAppPerSuite {
-
-  "eitherFormatter" should {
-    "encode and decode correctly" in {
-
-      val ef = eitherFormatter[String,String]("nino", "utr")
-
-      val inputs = List(Left("one"),Right("two"))
-      inputs.map { input =>
-        ef.reads(ef.writes(input)) shouldBe JsSuccess(input)
-      }
-    }
-  }
+sealed abstract class EmploymentStatus extends EnumEntry
+object EmploymentStatus
+    extends Enum[EmploymentStatus]
+    with PlayJsonEnum[EmploymentStatus] {
+  val values = findValues
+  case object Employed extends EmploymentStatus
+  case object SelfEmployed extends EmploymentStatus
+  case object Both extends EmploymentStatus
 }
