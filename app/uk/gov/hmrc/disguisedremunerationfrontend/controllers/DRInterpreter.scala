@@ -39,7 +39,7 @@ case class DRInterpreter(
     this.convertMessages(messagesApi.preferred(request)) |+|
       UniformMessages.bestGuess.map(HtmlFormat.escape)
   // N.b. this next line very useful for correcting the keys of missing content, leave for now
-  // UniformMessages.attentionSeeker.map(HtmlFormat.escape)
+//   UniformMessages.attentionSeeker.map(HtmlFormat.escape)
 
   override def pageChrome(
       keyList: List[String],
