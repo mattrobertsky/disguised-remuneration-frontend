@@ -16,16 +16,17 @@
 
 package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 
+import cats.syntax.semigroup._
 import ltbs.uniform.TreeLike.ops._
 import ltbs.uniform.common.web.InferFormField
-import ltbs.uniform.interpreters.playframework.{PlayInterpreter, Path, mon}
-import ltbs.uniform.{UniformMessages, ErrorTree, Input}
-import play.api.mvc.{Results, Request, AnyContent}
+import ltbs.uniform.interpreters.playframework.{Path, PlayInterpreter, RichPlayMessages, mon}
+import ltbs.uniform.{ErrorTree, Input, UniformMessages}
+import play.api.mvc.{AnyContent, Request, Results}
 import play.twirl.api.{Html, HtmlFormat}
-import scala.concurrent.ExecutionContext.Implicits.global
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
 import uk.gov.hmrc.disguisedremunerationfrontend.views
-import cats.syntax.semigroup._
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 case class DRInterpreter(
   appConfig: AppConfig,
@@ -36,7 +37,7 @@ case class DRInterpreter(
   def messages(
     request: Request[AnyContent]
   ): UniformMessages[Html] =
-    this.convertMessages(messagesApi.preferred(request)) |+|
+    messagesApi.preferred(request).convertMessages() |+|
       UniformMessages.bestGuess.map(HtmlFormat.escape)
   // N.b. this next line very useful for correcting the keys of missing content, leave for now
   // UniformMessages.attentionSeeker.map(HtmlFormat.escape)
