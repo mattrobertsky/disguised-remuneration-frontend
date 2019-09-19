@@ -30,16 +30,16 @@ object YesNoUnknownWrittenOff {
 
   def apply(optString: List[String]): YesNoUnknownWrittenOff =
     optString match {
-      case List(u) if u == YesNoUnknown.CUnknown.entryName => YesNoUnknownWrittenOff.Unknown
-      case List(n) if n == YesNoUnknown.BNo.entryName => YesNoUnknownWrittenOff.No
+      case List(u) if u == YesNoUnknown.Unknown.entryName => YesNoUnknownWrittenOff.Unknown
+      case List(n) if n == YesNoUnknown.No.entryName => YesNoUnknownWrittenOff.No
       case List(amount,tax) => YesNoUnknownWrittenOff.Yes(WrittenOff.fromList(List(amount,tax)))
       case err => throw new IllegalStateException(s"cannot parse $err")
     }
 
   def unapply(yesNoDoNotKnow: YesNoUnknownWrittenOff): Option[List[String]] =
     yesNoDoNotKnow match {
-      case Unknown => Some(List(YesNoUnknown.CUnknown.entryName))
-      case No => Some(List(YesNoUnknown.BNo.entryName))
+      case Unknown => Some(List(YesNoUnknown.Unknown.entryName))
+      case No => Some(List(YesNoUnknown.No.entryName))
       case Yes(msg) => Some(msg.toList)
     }
 }

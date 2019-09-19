@@ -92,8 +92,8 @@ object LoanDetails {
       isWrittenOff <- ask[YesNoUnknownWrittenOff](
         "written-off",
         default = default.map(x => x.isWrittenOff match {
-          case Some(x: List[String]) if x == List(YesNoUnknown.CUnknown.entryName) => YesNoUnknownWrittenOff.Unknown
-          case Some(x: List[String]) if x == List(YesNoUnknown.BNo.entryName) => YesNoUnknownWrittenOff.No
+          case Some(x: List[String]) if x == List(YesNoUnknown.Unknown.entryName) => YesNoUnknownWrittenOff.Unknown
+          case Some(x: List[String]) if x == List(YesNoUnknown.No.entryName) => YesNoUnknownWrittenOff.No
           case Some(x: List[String]) => YesNoUnknownWrittenOff(x)
         }),
         customContent = Map(

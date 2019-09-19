@@ -177,7 +177,7 @@ trait Widgets extends InputOps {
 
   implicit def enumeratumField[A <: EnumEntry](implicit enum: Enum[A]): FormField[A, Html] = new FormField[A, Html] {
     def decode(out: Input): Either[ErrorTree,A] = { out.toField[A](x =>
-      Validated.catchOnly[IllegalArgumentException](enum.withName(x)).leftMap(_ => ErrorTree.oneErr(ErrorMsg("invalid")))
+      Validated.catchOnly[NoSuchElementException](enum.withName(x)).leftMap(_ => ErrorTree.oneErr(ErrorMsg("invalid")))
     )}.toEither
     def encode(in: A): Input = Input.one(List(in.entryName))
     def render(key: List[String],path: Path,data: Input,errors: ErrorTree,messages: UniformMessages[Html]): Html = {

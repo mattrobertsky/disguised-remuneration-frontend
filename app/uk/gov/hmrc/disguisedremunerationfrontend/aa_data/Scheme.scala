@@ -303,7 +303,7 @@ object Scheme {
                                   "add-settlement",
                                   default.flatMap{_.settlement},
                                   customContent = headingHint("add-settlement.heading.hint", schemeName)
-                                ) when taxNIPaid == YesNoUnknown.AYes
+                                ) when taxNIPaid == YesNoUnknown.Yes
     } yield {
       Scheme(
         name = schemeName,

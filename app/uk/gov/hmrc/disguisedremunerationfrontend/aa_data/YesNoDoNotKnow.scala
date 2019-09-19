@@ -30,15 +30,15 @@ object YesNoDoNotKnow {
   }
 
   def apply(optString: String): YesNoDoNotKnow = optString match {
-    case u if u == YesNoUnknown.CUnknown.entryName => DoNotKnow
-    case n if n == YesNoUnknown.BNo.entryName      => No
+    case u if u == YesNoUnknown.Unknown.entryName => DoNotKnow
+    case n if n == YesNoUnknown.No.entryName      => No
     case msg                                       => Yes(msg)
   }
 
   def unapply(yesNoDoNotKnow: YesNoDoNotKnow): Option[String] =
     yesNoDoNotKnow match {
-      case DoNotKnow => Some(YesNoUnknown.CUnknown.entryName)
-      case No => Some(YesNoUnknown.BNo.entryName)
+      case DoNotKnow => Some(YesNoUnknown.Unknown.entryName)
+      case No => Some(YesNoUnknown.No.entryName)
       case Yes(msg) => Some(msg)
     }
 }

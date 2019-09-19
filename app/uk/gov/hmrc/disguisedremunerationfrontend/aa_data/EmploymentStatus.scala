@@ -25,7 +25,5 @@ object EmploymentStatus
   val values = findValues
   case object Employed extends EmploymentStatus
   case object SelfEmployed extends EmploymentStatus
-  case object ZBoth extends EmploymentStatus { // TODO this will be redundant when Enumeratum included with Uniform
-    override def entryName: String = "Both"
-  }
+  case object Both extends EmploymentStatus
 }

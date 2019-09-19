@@ -24,13 +24,7 @@ object YesNoUnknown
     with PlayJsonEnum[YesNoUnknown]
 {
   val values = findValues
-  case object AYes      extends YesNoUnknown {
-    override def entryName: String = "Yes"
-  }
-  case object BNo       extends YesNoUnknown {
-    override def entryName: String = "No"
-  }
-  case object CUnknown  extends YesNoUnknown {
-    override def entryName: String = "Unknown"
-  }
+  case object Yes      extends YesNoUnknown 
+  case object No       extends YesNoUnknown 
+  case object Unknown  extends YesNoUnknown 
 }
