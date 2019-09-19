@@ -63,8 +63,8 @@ trait Widgets extends InputOps {
 
     def decode(out: Input): Either[ErrorTree, Boolean] =
       out.toField[Boolean](
-        x => Validated.catchOnly[IllegalArgumentException](x.toBoolean)
-          .leftMap(_ => ErrorMsg("invalid").toTree)
+        x => nonEmptyString(x) andThen ( y => Validated.catchOnly[IllegalArgumentException](y.toBoolean)
+          .leftMap(_ => ErrorMsg("invalid").toTree))
       ).toEither
 
     def encode(in: Boolean): Input = Input.one(List(in.toString))
@@ -176,9 +176,11 @@ trait Widgets extends InputOps {
   }
 
   implicit def enumeratumField[A <: EnumEntry](implicit enum: Enum[A]): FormField[A, Html] = new FormField[A, Html] {
-    def decode(out: Input): Either[ErrorTree,A] = { out.toField[A](x =>
-      Validated.catchOnly[NoSuchElementException](enum.withName(x)).leftMap(_ => ErrorTree.oneErr(ErrorMsg("invalid")))
+    def decode(out: Input): Either[ErrorTree,A] = {out.toField[A](x =>
+      nonEmptyString(x) andThen
+        ( y => Validated.catchOnly[NoSuchElementException](enum.withName(y)).leftMap(_ => ErrorTree.oneErr(ErrorMsg("invalid"))))
     )}.toEither
+
     def encode(in: A): Input = Input.one(List(in.entryName))
     def render(key: List[String],path: Path,data: Input,errors: ErrorTree,messages: UniformMessages[Html]): Html = {
       val options = enum.values.map{_.entryName}

@@ -160,9 +160,9 @@ about-loan.Some=Iawn
 tax-settled.heading=A oes rhywun wedi talu, neu wedi cytuno â ni i dalu, unrhyw dreth neu Yswiriant Gwladol sy’n ddyledus ar gyfer y cynllun hwn?
 tax-settled.heading.hint=Cynllun: {0}
 tax-settled.intro=Peidiwch â chynnwys unrhyw daliadau mewn ymateb i Hysbysiad i wneud Taliad Cyflymedig (APN).
-tax-settled.AYes=Iawn
-tax-settled.BNo=Na
-tax-settled.CUnknown=Ddim yn gwybod
+tax-settled.Yes=Iawn
+tax-settled.No=Na
+tax-settled.Unknown=Ddim yn gwybod
 
 add-settlement.heading=Faint o dreth ac Yswiriant Gwladol y mae rhywun wedi’u talu, neu wedi cytuno â ni i’w talu, ar gyfer y cynllun hwn?
 add-settlement.heading.hint=Cynllun: {0}
@@ -173,9 +173,9 @@ add-settlement.dateOfSettlement.heading=Date paid
 
 fixed-term-loan.heading=Ydy’r benthyciad hwn yn fenthyciad cyfnod penodol cymeradwy?
 fixed-term-loan.heading.hint=Cynllun: {0}
-fixed-term-loan.AYes=Iawn
-fixed-term-loan.BNo=Na
-fixed-term-loan.CUnknown=Ddim yn gwybod
+fixed-term-loan.Yes=Iawn
+fixed-term-loan.No=Na
+fixed-term-loan.Unknown=Ddim yn gwybod
 
 loan-amount.heading=Beth oedd cyfanswm y benthyciad a dalwyd o {0} i {1}?
 loan-amount.heading.hint=Cynllun: {0}
@@ -213,9 +213,9 @@ email-address=Cyfeiriad e-bost
 dates-you-received-loans=Dyddiadau pan gawsoch fenthyciadau
 scheme=Cynllun: 
 disclosure-of-tax-avoidance-schemes-dotas-number=Rhif Datgelu Cynlluniau Arbed Treth (DOTAS)
-disclosure-of-tax-avoidance-schemes-dotas-number.AYes=Iawn
-disclosure-of-tax-avoidance-schemes-dotas-number.BNo=Na
-disclosure-of-tax-avoidance-schemes-dotas-number.CUnknown=Ddim yn gwybod
+disclosure-of-tax-avoidance-schemes-dotas-number.Yes=Iawn
+disclosure-of-tax-avoidance-schemes-dotas-number.No=Na
+disclosure-of-tax-avoidance-schemes-dotas-number.Unknown=Ddim yn gwybod
 hmrc-case-reference-number=Cyfeirnod achos CThEM
 employment-status=Statws cyflogaeth
 employed=Cyflogedig
@@ -252,9 +252,9 @@ disclosure-of-tax-avoidance-schemes-dotas-number.No=Na
 disclosure-of-tax-avoidance-schemes-dotas-number.Unknown=Ddim yn gwybod
 disclosure-of-tax-avoidance-schemes-dotas-number.Unknown=Ddim yn gwybod
 
-tax-or-national-insurance-paid-or-agreed-to-pay.AYes=Iawn
-tax-or-national-insurance-paid-or-agreed-to-pay.BNo=Na
-tax-or-national-insurance-paid-or-agreed-to-pay.CUnknown=Ddim yn gwybod
+tax-or-national-insurance-paid-or-agreed-to-pay.Yes=Iawn
+tax-or-national-insurance-paid-or-agreed-to-pay.No=Na
+tax-or-national-insurance-paid-or-agreed-to-pay.Unknown=Ddim yn gwybod
 
 # Error messages
 there.is.a.problem=Mae problem wedi codi
