@@ -276,15 +276,15 @@ about-scheme-user.Left.a.format=Nodwch rif Yswiriant Gwladol y person yn y fform
 about-scheme-user.Right.b.format=Nodwch Gyfeirnod Unigryw Trethdalwr (UTR) y person ar gyfer Hunanasesiad yn y fformat cywir
 
 confirm-about-scheme-user.required=Nodwch enw llawn y person rydych yn gweithredu ar ei ran
-confirm-about-scheme-user.limit=Mae'n rhaid i enw llawn fod yn 50 nod neu lai
+confirm-about-scheme-user.limit=Mae’n rhaid i enw llawn fod yn 50 nod neu lai
 confirm-about-scheme-user.format=Rhaid i enw llawn ond yn cynnwys llythyrau aiy, gysylltnodau, atalnod llawn, collnodau a mannau
 
 # contact details
 line1.required=Nodwch adeilad neu stryd eich cyfeiriad
 line1.limit=Mae’n rhaid i’r adeilad neu’r stryd fod yn 40 o gymeriadau neu lai
 line1.invalid=Mae’n rhaid i’r adeilad neu’r stryd gynnwys llythrennau a-z, rhifau, collnodau, symbolau ampersand, comas, cysylltnodau, atalnodau llawn, blaenslaesau a bylchau yn unig
-line2.limit=Mae'n rhaid i'r adeilad neu'r stryd 2 fod yn 40 o gymeriadau neu lai
-line2.invalid=Mae'n rhaid i'r adeilad neu'r stryd 2 gynnwys llythrennau a-z, rhifau, collnodau, symbolau ampersand, comas, cysylltnodau, atalnodau llawn, blaenslaesau a bylchau yn unig
+line2.limit=Mae’n rhaid i’r adeilad neu’r stryd 2 fod yn 40 o gymeriadau neu lai
+line2.invalid=Mae’n rhaid i’r adeilad neu’r stryd 2 gynnwys llythrennau a-z, rhifau, collnodau, symbolau ampersand, comas, cysylltnodau, atalnodau llawn, blaenslaesau a bylchau yn unig
 town.required=Nodwch dref neu ddinas eich cyfeiriad
 town.limit=Mae’n rhaid i’r dref neu’r ddinas fod yn 40 o gymeriadau neu lai
 town.invalid=Mae’n rhaid i’r dref neu’r ddinas gynnwys llythrennau a i z, collnodau, comas, cysylltnodau, atalnodau llawn a bylchau yn unig
@@ -385,14 +385,14 @@ add-settlement.amount.format=Mae’n rhaid i’r dreth a’r Yswiriant Gwladol a
 fixed-term-loan.required=Dewiswch Iawn os oedd y benthyciad yn un cyfnod penodol cymeradwy
 
 loan-amount.amount.required=Nodwch gyfanswm y benthyciad o {0} i {1}
-loan-amount.amount.nonnumericformat=Mae’n rhaid i’r swm rydych wedi'i ad-dalu fod yn swm o arian, megis 123.45 neu 150
+loan-amount.amount.nonnumericformat=Mae’n rhaid i’r swm rydych wedi’i ad-dalu fod yn swm o arian, megis 123.45 neu 150
 loan-amount.amount.format=Mae’n rhaid i gyfanswm y benthyciad fod yn swm o arian, megis 123.45 neu 150
 loan-amount.estimate.required=Dewiswch ‘Iawn’ os mai amcangyfrif yw’r swm y gwnaethoch ei nodi
 
 repaid-any-loan-during-tax-year.required=Dewiswch Iawn os ydych wedi ad-dalu unrhyw ran o’r benthyciad a wnaed o {0} i {1}
 
 loan-repaid.required=Nodwch faint o’r benthyciad y gwnaethoch ei ad-dalu
-loan-repaid.format=Mae’n rhaid i’r swm rydych wedi'i ad-dalu fod yn swm o arian, megis 123.45 neu 150
+loan-repaid.format=Mae’n rhaid i’r swm rydych wedi’i ad-dalu fod yn swm o arian, megis 123.45 neu 150
 
 written-off.required=Dewiswch Iawn os yw’r benthyciwr wedi dileu unrhyw ran o’r benthyciad a wnaed o {0} i {1}
 written-off.Yes.writtenOff.amount.required=Nodwch y swm y mae’r benthyciwr wedi’i ddileu o’r benthyciad
