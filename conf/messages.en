@@ -145,7 +145,7 @@ tax-settled.heading.hint=Scheme: {0}
 tax-settled.intro=If you made payments in response to an Accelerated Payments Notice (APN), do not include these.
 tax-settled.AYes=Yes
 tax-settled.BNo=No
-tax-settled.CUnknown=Do not know
+tax-settled.Unknown=Do not know
 
 add-settlement.heading=How much tax and National Insurance has anyone paid, or agreed with us to pay, for this scheme?
 add-settlement.heading.hint=Scheme: {0}
@@ -158,7 +158,7 @@ fixed-term-loan.heading=Is this loan an approved fixed-term loan?
 fixed-term-loan.heading.hint=Scheme: {0}
 fixed-term-loan.AYes=Yes
 fixed-term-loan.BNo=No
-fixed-term-loan.CUnknown=Do not know
+fixed-term-loan.Unknown=Do not know
 
 loan-amount.heading=What was the total loan amount paid from {0} to {1}?
 loan-amount.heading.hint=Scheme: {0}
@@ -220,7 +220,7 @@ disclosure-of-tax-avoidance-schemes-dotas-number.Unknown=Do not know
 
 tax-or-national-insurance-paid-or-agreed-to-pay.AYes=Yes
 tax-or-national-insurance-paid-or-agreed-to-pay.BNo=No
-tax-or-national-insurance-paid-or-agreed-to-pay.CUnknown=Do not know
+tax-or-national-insurance-paid-or-agreed-to-pay.Unknown=Do not know
 
 personal-details=Personal details
 name=Name
@@ -237,7 +237,7 @@ dates-you-received-loans=Dates when you received loans
 disclosure-of-tax-avoidance-schemes-dotas-number=Disclosure of Tax Avoidance Schemes (DOTAS) number
 disclosure-of-tax-avoidance-schemes-dotas-number.AYes=Yes
 disclosure-of-tax-avoidance-schemes-dotas-number.BNo=No
-disclosure-of-tax-avoidance-schemes-dotas-number.CUnknown=Do not know
+disclosure-of-tax-avoidance-schemes-dotas-number.Unknown=Do not know
 hmrc-case-reference-number=HMRC case reference number
 employment-status=Employment status
 employed=Employed
