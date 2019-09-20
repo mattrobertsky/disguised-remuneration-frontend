@@ -71,8 +71,19 @@
       gaCalls = None)
 }
 
-@footerTop = {}
-@footerLinks = {}
+@footerTop = {
+}
+
+@footerLinks = {
+    <li>
+        <a href='accessibility-statement'
+        data-sso="false"
+        data-journey-click="footer:Click:Accessibility"
+        target="_blank">
+        @Messages("footer.links.accessibility.text")
+        </a>
+    </li>
+}
 
 @betaBanner = {
     <div class="phase-banner" style="text-align: left">
@@ -133,4 +144,4 @@
     <script defer src='@routes.Assets.versioned("javascripts/show-hide-content2.js")'></script>
 }
 
-@hmrcGovUkTemplate(Some(title), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links()), true)(content)
+@hmrcGovUkTemplate(Some(title), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links(additionalLinks = Some(footerLinks))), true)(content)

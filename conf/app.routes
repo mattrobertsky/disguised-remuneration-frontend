@@ -40,3 +40,5 @@ GET        /check-your-answers       uk.gov.hmrc.disguisedremunerationfrontend.c
 POST       /complete                 uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.cyaPost
 
 GET        /language/:lang           uk.gov.hmrc.disguisedremunerationfrontend.controllers.LanguageSwitchController.switchToLanguage(lang: String)
+
+GET        /accessibility-statement  uk.gov.hmrc.disguisedremunerationfrontend.controllers.AccessibilityStatementController.showAccessibilityStatement
