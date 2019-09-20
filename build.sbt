@@ -49,3 +49,7 @@ libraryDependencies ++= Seq(
 )
 
 scalacOptions += "-P:silencer:pathFilters=.*views.*;.*routes"
+
+// If you're doing a PR, or someone has asked you to merge this into master
+// politely decline - snapshots are for development only. 
+resolvers += Resolver.sonatypeRepo("snapshots")

@@ -21,7 +21,7 @@ import cats.data.Validated
 import java.time.LocalDate
 
 import ltbs.uniform.TreeLike.ops._
-import ltbs.uniform.common.web.FormField
+import ltbs.uniform.common.web.{FormField, FormFieldStats}
 import ltbs.uniform.interpreters.playframework.Path
 import ltbs.uniform.{ErrorTree, Input, UniformMessages, ErrorMsg, InputOps, RichInput}
 import play.twirl.api.Html
@@ -90,6 +90,8 @@ trait Widgets extends InputOps {
 
   implicit val twirlDateField = new FormField[LocalDate, Html] {
     override def isCompound = true
+
+    override def stats = FormFieldStats(children = 3)
 
     def decode(out: Input): Either[ErrorTree, LocalDate] = {
 

@@ -17,7 +17,7 @@
 package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 
 import ltbs.uniform.TreeLike.ops._
-import ltbs.uniform.common.web.InferFormField
+import ltbs.uniform.common.web.{InferFormField, FormFieldStats}
 import ltbs.uniform.interpreters.playframework.{PlayInterpreter, Path, mon}
 import ltbs.uniform.{UniformMessages, ErrorTree, Input}
 import play.api.mvc.{Results, Request, AnyContent}
@@ -42,22 +42,18 @@ case class DRInterpreter(
 //   UniformMessages.attentionSeeker.map(HtmlFormat.escape)
 
   override def pageChrome(
-    keyList: List[String],
-    errors: ErrorTree,
-    tell: Html,
-    ask: Html,
-    breadcrumbs: Path,
-    request: Request[AnyContent],
-    messages: UniformMessages[Html],
-    isCompoundField: Boolean): Html = {
-
-      val content = views.html.form_wrapper(
-        keyList,
-        errors,
-        Html(tell.toString + ask.toString),
-        breadcrumbs.drop(1),
-        isCompoundField
-      )(messages, request)
+      keyList: List[String],
+      errors: ErrorTree,
+      tell: Html,
+      ask: Html,
+      breadcrumbs: Path,
+      request: Request[AnyContent],
+      messages: UniformMessages[Html],
+      stats: FormFieldStats): Html = {
+    val content = views.html.form_wrapper(keyList,
+      errors,
+      Html(tell.toString + ask.toString),
+      breadcrumbs.drop(1))(messages, request)
     val errorTitle: String = if(errors.isNonEmpty) s"${messages("common.error")}: " else ""
     views.html.main_template(title =
        errorTitle + s"${messages(keyList.mkString("-") + ".heading")} - ${messages("common.title")}")(
