@@ -18,7 +18,7 @@
 
 @(key: List[String], values: Input, errors: ErrorTree, messages: UniformMessages[Html])
 
-<div class="govuk-date-input form-group">
+<div class="form-group">
 
   @for(field <- List("line1", "line2", "town", "county", "postcode")) {
     @defining(

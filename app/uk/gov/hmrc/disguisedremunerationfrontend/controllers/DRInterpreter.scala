@@ -42,18 +42,22 @@ case class DRInterpreter(
 //   UniformMessages.attentionSeeker.map(HtmlFormat.escape)
 
   override def pageChrome(
-      keyList: List[String],
-      errors: ErrorTree,
-      tell: Html,
-      ask: Html,
-      breadcrumbs: Path,
-      request: Request[AnyContent],
-      messages: UniformMessages[Html],
-      isCompoundField: Boolean): Html = {
-    val content = views.html.form_wrapper(keyList,
-      errors,
-      Html(tell.toString + ask.toString),
-      breadcrumbs.drop(1))(messages, request)
+    keyList: List[String],
+    errors: ErrorTree,
+    tell: Html,
+    ask: Html,
+    breadcrumbs: Path,
+    request: Request[AnyContent],
+    messages: UniformMessages[Html],
+    isCompoundField: Boolean): Html = {
+
+      val content = views.html.form_wrapper(
+        keyList,
+        errors,
+        Html(tell.toString + ask.toString),
+        breadcrumbs.drop(1),
+        isCompoundField
+      )(messages, request)
     val errorTitle: String = if(errors.isNonEmpty) s"${messages("common.error")}: " else ""
     views.html.main_template(title =
        errorTitle + s"${messages(keyList.mkString("-") + ".heading")} - ${messages("common.title")}")(

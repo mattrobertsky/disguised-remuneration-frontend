@@ -61,6 +61,8 @@ trait Widgets extends InputOps {
     val True = true.toString.toUpperCase
     val False = false.toString.toUpperCase
 
+    override def isCompound = true
+
     def decode(out: Input): Either[ErrorTree, Boolean] =
       out.toField[Boolean](
         x => nonEmptyString(x) andThen ( y => Validated.catchOnly[IllegalArgumentException](y.toBoolean)
@@ -87,6 +89,7 @@ trait Widgets extends InputOps {
   }
 
   implicit val twirlDateField = new FormField[LocalDate, Html] {
+    override def isCompound = true
 
     def decode(out: Input): Either[ErrorTree, LocalDate] = {
 
@@ -138,6 +141,7 @@ trait Widgets extends InputOps {
     implicit gen: shapeless.LabelledGeneric.Aux[Address,T],
     ffhlist: FormField[T, Html]
   )= new FormField[Address, Html] {
+    override def isCompound = true
 
     def decode(out: Input): Either[ErrorTree, Address] = {
       import cats.implicits._
