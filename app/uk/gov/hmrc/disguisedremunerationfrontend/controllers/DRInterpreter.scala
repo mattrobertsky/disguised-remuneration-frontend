@@ -53,7 +53,8 @@ case class DRInterpreter(
     val content = views.html.form_wrapper(keyList,
       errors,
       Html(tell.toString + ask.toString),
-      breadcrumbs.drop(1))(messages, request)
+      breadcrumbs.drop(1),
+      stats)(messages, request)
     val errorTitle: String = if(errors.isNonEmpty) s"${messages("common.error")}: " else ""
     views.html.main_template(title =
        errorTitle + s"${messages(keyList.mkString("-") + ".heading")} - ${messages("common.title")}")(

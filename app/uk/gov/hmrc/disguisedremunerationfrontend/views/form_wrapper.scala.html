@@ -15,13 +15,17 @@
  *@
 
 @import uniform._
+@import ltbs.uniform.common.web.FormFieldStats
 
-@(keyList: List[String], errors: ErrorTree, content: Html, breadcrumbs: Path = Nil, isCompoundField: Boolean)(implicit messages: UniformMessages[Html], request: Request[AnyContent])
-  @key = @{keyList.last}
-      
-  @for(back <- breadcrumbs.headOption) {
-    <a href="@back" class="govuk link-back">@messages(List("back-to-" + back.mkString("-"),"back"))</a>
-  }
+@(keyList: List[String], errors: ErrorTree, content: Html, breadcrumbs: Path = Nil, stats: FormFieldStats)(implicit messages: UniformMessages[Html], request: Request[AnyContent])
+        <div style="background:#f4f4f4;padding: 10px;">
+          @stats
+        </div>
+        @key = @{keyList.last}
+            
+        @for(back <- breadcrumbs.headOption) {
+            <a href="@back" class="govuk link-back">@messages(List("back-to-" + back.mkString("-"),"back"))</a>
+        }
 
   @if(breadcrumbs.isEmpty){
     <a href="/disguised-remuneration/" class="govuk link-back">@messages(List(s"back-to-service-page","back"))</a>
@@ -42,6 +46,6 @@
         <div class="details__text">@v</div>
       </details>
     }
-    
+
     <button type="submit" class="button">@messages(List(s"$key.save-continue", "common.save-continue"))</button>
   }
