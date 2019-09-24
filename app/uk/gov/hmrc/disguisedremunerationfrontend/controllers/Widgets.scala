@@ -21,9 +21,9 @@ import cats.data.Validated
 import java.time.LocalDate
 
 import ltbs.uniform.TreeLike.ops._
-import ltbs.uniform.common.web.FormField
+import ltbs.uniform.common.web.{FormField, FormFieldStats}
 import ltbs.uniform.interpreters.playframework.Path
-import ltbs.uniform.{ErrorTree, Input, UniformMessages, ErrorMsg, InputOps, RichInput}
+import ltbs.uniform.{ErrorMsg, ErrorTree, Input, InputOps, RichInput, UniformMessages}
 import play.twirl.api.Html
 import uk.gov.hmrc.disguisedremunerationfrontend.data.Address
 import uk.gov.hmrc.disguisedremunerationfrontend.views
@@ -61,7 +61,7 @@ trait Widgets extends InputOps {
     val True = true.toString.toUpperCase
     val False = false.toString.toUpperCase
 
-    override def isCompound = true
+    override def stats: FormFieldStats = FormFieldStats(children = 2)
 
     def decode(out: Input): Either[ErrorTree, Boolean] =
       out.toField[Boolean](
@@ -89,7 +89,7 @@ trait Widgets extends InputOps {
   }
 
   implicit val twirlDateField = new FormField[LocalDate, Html] {
-    override def isCompound = true
+    override def stats: FormFieldStats = FormFieldStats(children = 2)
 
     def decode(out: Input): Either[ErrorTree, LocalDate] = {
 
@@ -141,7 +141,7 @@ trait Widgets extends InputOps {
     implicit gen: shapeless.LabelledGeneric.Aux[Address,T],
     ffhlist: FormField[T, Html]
   )= new FormField[Address, Html] {
-    override def isCompound = true
+    override def stats: FormFieldStats = FormFieldStats(children = 2)
 
     def decode(out: Input): Either[ErrorTree, Address] = {
       import cats.implicits._

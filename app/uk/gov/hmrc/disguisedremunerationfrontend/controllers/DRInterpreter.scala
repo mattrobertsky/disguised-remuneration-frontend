@@ -49,14 +49,14 @@ case class DRInterpreter(
     breadcrumbs: Path,
     request: Request[AnyContent],
     messages: UniformMessages[Html],
-    isCompoundField: Boolean): Html = {
+    fieldStats: ltbs.uniform.common.web.FormFieldStats): Html = {
 
       val content = views.html.form_wrapper(
         keyList,
         errors,
         Html(tell.toString + ask.toString),
         breadcrumbs.drop(1),
-        isCompoundField
+        fieldStats.isCompound
       )(messages, request)
     val errorTitle: String = if(errors.isNonEmpty) s"${messages("common.error")}: " else ""
     views.html.main_template(title =

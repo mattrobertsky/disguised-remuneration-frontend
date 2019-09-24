@@ -3,7 +3,7 @@ import sbt._
 
 object AppDependencies {
 
-  val uniformVersion = "4.5.1"
+  val uniformVersion = "4.5.2-9-084dbf4-SNAPSHOT"
 
   val compile = Seq(
     "uk.gov.hmrc"             %% "govuk-template"           % "5.34.0-play-26",
