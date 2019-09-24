@@ -89,7 +89,7 @@ trait Widgets extends InputOps {
   }
 
   implicit val twirlDateField = new FormField[LocalDate, Html] {
-    override def stats: FormFieldStats = FormFieldStats(children = 2)
+    override def stats: FormFieldStats = FormFieldStats(children = 3)
 
     def decode(out: Input): Either[ErrorTree, LocalDate] = {
 
@@ -141,7 +141,7 @@ trait Widgets extends InputOps {
     implicit gen: shapeless.LabelledGeneric.Aux[Address,T],
     ffhlist: FormField[T, Html]
   )= new FormField[Address, Html] {
-    override def stats: FormFieldStats = FormFieldStats(children = 2)
+    override def stats: FormFieldStats = FormFieldStats(children = 5)
 
     def decode(out: Input): Either[ErrorTree, Address] = {
       import cats.implicits._
@@ -181,7 +181,7 @@ trait Widgets extends InputOps {
 
   implicit def enumeratumField[A <: EnumEntry](implicit enum: Enum[A]): FormField[A, Html] = new FormField[A, Html] {
 
-    override def stats: FormFieldStats = FormFieldStats(children = 2)
+    override def stats: FormFieldStats = FormFieldStats(children = enum.values.size)
 
     def decode(out: Input): Either[ErrorTree,A] = {out.toField[A](x =>
       nonEmptyString(x) andThen
