@@ -15,8 +15,9 @@
  *@
 
 @import uniform._
+@import ltbs.uniform.common.web.FormFieldStats
 
-@(keyList: List[String], errors: ErrorTree, content: Html, breadcrumbs: Path = Nil, isCompoundField: Boolean)(implicit messages: UniformMessages[Html], request: Request[AnyContent])
+@(keyList: List[String], errors: ErrorTree, content: Html, breadcrumbs: Path = Nil, fieldStats: FormFieldStats)(implicit messages: UniformMessages[Html], request: Request[AnyContent])
   @key = @{keyList.last}
       
   @for(back <- breadcrumbs.headOption) {
@@ -31,7 +32,7 @@
     @helper.CSRF.formField
     @errorsummary(keyList, errors, messages)
     @defining((messages.get(s"$key.hint").isDefined, errors.definedAtRoot)){ case (hasHint, hasErrors) =>
-      @fieldsurround(key, content, isCompoundField, hasHint, hasErrors)
+      @fieldsurround(key, content, fieldStats, hasHint, hasErrors)
     }
 
     @for((k :: v :: _) <- messages.list(s"$key.details").collect { case x if x.toString.contains("|") => x.toString.split("[|]").toList }) {

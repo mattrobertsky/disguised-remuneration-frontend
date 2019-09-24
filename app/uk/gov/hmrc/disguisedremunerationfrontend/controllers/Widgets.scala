@@ -180,6 +180,9 @@ trait Widgets extends InputOps {
   }
 
   implicit def enumeratumField[A <: EnumEntry](implicit enum: Enum[A]): FormField[A, Html] = new FormField[A, Html] {
+
+    override def stats: FormFieldStats = FormFieldStats(children = 2)
+
     def decode(out: Input): Either[ErrorTree,A] = {out.toField[A](x =>
       nonEmptyString(x) andThen
         ( y => Validated.catchOnly[NoSuchElementException](enum.withName(y)).leftMap(_ => ErrorTree.oneErr(ErrorMsg("invalid"))))

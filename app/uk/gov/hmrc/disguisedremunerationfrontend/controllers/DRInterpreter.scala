@@ -17,11 +17,12 @@
 package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 
 import ltbs.uniform.TreeLike.ops._
-import ltbs.uniform.common.web.InferFormField
-import ltbs.uniform.interpreters.playframework.{PlayInterpreter, Path, mon}
-import ltbs.uniform.{UniformMessages, ErrorTree, Input}
-import play.api.mvc.{Results, Request, AnyContent}
+import ltbs.uniform.common.web.{FormFieldStats, InferFormField}
+import ltbs.uniform.interpreters.playframework.{Path, PlayInterpreter, mon}
+import ltbs.uniform.{ErrorTree, Input, UniformMessages}
+import play.api.mvc.{AnyContent, Request, Results}
 import play.twirl.api.{Html, HtmlFormat}
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
 import uk.gov.hmrc.disguisedremunerationfrontend.views
@@ -49,14 +50,14 @@ case class DRInterpreter(
     breadcrumbs: Path,
     request: Request[AnyContent],
     messages: UniformMessages[Html],
-    fieldStats: ltbs.uniform.common.web.FormFieldStats): Html = {
+    fieldStats: FormFieldStats): Html = {
 
       val content = views.html.form_wrapper(
         keyList,
         errors,
         Html(tell.toString + ask.toString),
         breadcrumbs.drop(1),
-        fieldStats.isCompound
+        fieldStats
       )(messages, request)
     val errorTitle: String = if(errors.isNonEmpty) s"${messages("common.error")}: " else ""
     views.html.main_template(title =

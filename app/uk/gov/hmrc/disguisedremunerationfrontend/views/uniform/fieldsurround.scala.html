@@ -14,7 +14,9 @@
  * limitations under the License.
  *@
 
-@(key: String, content: Html, isCompoundField: Boolean, hasHint: Boolean, hasErrors: Boolean)(implicit messages: UniformMessages[Html])
+@import ltbs.uniform.common.web.FormFieldStats
+
+@(key: String, content: Html, fieldStats: FormFieldStats, hasHint: Boolean, hasErrors: Boolean)(implicit messages: UniformMessages[Html])
 
 @defining((hasHint, hasErrors) match {
   case (true,true) => s"$key-hint $key-error"
@@ -23,8 +25,10 @@
   case _ => ""
 }){ describedByClass =>
 
+<div>@fieldStats</div>
+
 <div class="form-group@if(hasErrors){ form-group-error}">
-  @if(isCompoundField){
+  @if(fieldStats.isCompound){
     <fieldset
       class="fieldset"
       @if(describedByClass.nonEmpty){aria-describedby="@describedByClass"}
