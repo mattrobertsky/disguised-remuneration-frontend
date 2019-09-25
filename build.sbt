@@ -49,3 +49,4 @@ libraryDependencies ++= Seq(
 )
 
 scalacOptions += "-P:silencer:pathFilters=.*views.*;.*routes"
+resolvers += Resolver.sonatypeRepo("snapshots")

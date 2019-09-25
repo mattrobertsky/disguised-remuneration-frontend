@@ -21,9 +21,9 @@ import cats.data.Validated
 import java.time.LocalDate
 
 import ltbs.uniform.TreeLike.ops._
-import ltbs.uniform.common.web.FormField
+import ltbs.uniform.common.web.{FormField, FormFieldStats}
 import ltbs.uniform.interpreters.playframework.Path
-import ltbs.uniform.{ErrorTree, Input, UniformMessages, ErrorMsg, InputOps, RichInput}
+import ltbs.uniform.{ErrorMsg, ErrorTree, Input, InputOps, RichInput, UniformMessages}
 import play.twirl.api.Html
 import uk.gov.hmrc.disguisedremunerationfrontend.data.Address
 import uk.gov.hmrc.disguisedremunerationfrontend.views
@@ -60,8 +60,9 @@ trait Widgets extends InputOps {
   implicit val twirlBoolField = new FormField[Boolean, Html] {
     val True = true.toString.toUpperCase
     val False = false.toString.toUpperCase
+    override def stats = FormFieldStats(children = 2)
 
-    override def isCompound = true
+    override def simap[B](f: Boolean => Either[ErrorTree, B])(g: B => Boolean): FormField[B, Html] = super.simap(f)(g)
 
     def decode(out: Input): Either[ErrorTree, Boolean] =
       out.toField[Boolean](
@@ -89,7 +90,7 @@ trait Widgets extends InputOps {
   }
 
   implicit val twirlDateField = new FormField[LocalDate, Html] {
-    override def isCompound = true
+    override def stats = FormFieldStats(children = 3)
 
     def decode(out: Input): Either[ErrorTree, LocalDate] = {
 
@@ -141,7 +142,7 @@ trait Widgets extends InputOps {
     implicit gen: shapeless.LabelledGeneric.Aux[Address,T],
     ffhlist: FormField[T, Html]
   )= new FormField[Address, Html] {
-    override def isCompound = true
+    override def stats = FormFieldStats(children = 5)
 
     def decode(out: Input): Either[ErrorTree, Address] = {
       import cats.implicits._
@@ -180,6 +181,9 @@ trait Widgets extends InputOps {
   }
 
   implicit def enumeratumField[A <: EnumEntry](implicit enum: Enum[A]): FormField[A, Html] = new FormField[A, Html] {
+
+    override def stats = FormFieldStats(children = enum.values.size)
+
     def decode(out: Input): Either[ErrorTree,A] = {out.toField[A](x =>
       nonEmptyString(x) andThen
         ( y => Validated.catchOnly[NoSuchElementException](enum.withName(y)).leftMap(_ => ErrorTree.oneErr(ErrorMsg("invalid"))))

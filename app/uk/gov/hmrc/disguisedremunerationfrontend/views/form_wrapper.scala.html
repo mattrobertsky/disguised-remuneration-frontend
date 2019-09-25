@@ -16,7 +16,7 @@
 
 @import uniform._
 
-@(keyList: List[String], errors: ErrorTree, content: Html, breadcrumbs: Path = Nil, isCompoundField: Boolean)(implicit messages: UniformMessages[Html], request: Request[AnyContent])
+@(keyList: List[String], errors: ErrorTree, content: Html, breadcrumbs: Path = Nil, stats: common.web.FormFieldStats)(implicit messages: UniformMessages[Html], request: Request[AnyContent])
   @key = @{keyList.last}
       
   @for(back <- breadcrumbs.headOption) {
@@ -27,11 +27,13 @@
     <a href="/disguised-remuneration/" class="govuk link-back">@messages(List(s"back-to-service-page","back"))</a>
   }
 
+  <div>@stats</div>
+
   @helper.form(action = play.api.mvc.Call("post", key)) {
     @helper.CSRF.formField
     @errorsummary(keyList, errors, messages)
     @defining((messages.get(s"$key.hint").isDefined, errors.definedAtRoot)){ case (hasHint, hasErrors) =>
-      @fieldsurround(key, content, isCompoundField, hasHint, hasErrors)
+      @fieldsurround(key, content, stats.isCompound, hasHint, hasErrors)
     }
 
     @for((k :: v :: _) <- messages.list(s"$key.details").collect { case x if x.toString.contains("|") => x.toString.split("[|]").toList }) {
