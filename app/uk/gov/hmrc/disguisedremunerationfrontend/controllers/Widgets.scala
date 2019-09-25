@@ -145,8 +145,8 @@ trait Widgets extends InputOps {
 
     def decode(out: Input): Either[ErrorTree, Address] = {
       import cats.implicits._
-
-      val postCodeRegex = """([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z]))))\s?[0-9][A-Za-z]{2}|.{0})"""
+      // Not used due to international postcodes
+      // val postCodeRegex = """([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9]?[A-Za-z]))))\s?[0-9][A-Za-z]{2}|.{0})"""
 
       def standardValidation: String => Validated[ErrorTree, String] =
         maxLength(40)(_) andThen matchesRegex("""^[a-zA-Z0-9',-./ ]*$""")
@@ -156,7 +156,7 @@ trait Widgets extends InputOps {
         out.stringSubField("line2", standardValidation(_)),
         out.stringSubField("town", nonEmpty(_) andThen standardValidation),
         out.stringSubField("county", standardValidation(_)),
-        out.stringSubField("postcode", nonEmpty(_) andThen matchesRegex(postCodeRegex))
+        out.stringSubField("postcode", nonEmpty(_) andThen maxLength(40))
       ).mapN(Address).toEither
     }
 
