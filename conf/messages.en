@@ -287,7 +287,7 @@ county.invalid=County must only include letters a to z, apostrophes, commas, hyp
   full stops and spaces
   
 postcode.required=Enter the postcode of your address
-postcode.invalid=Enter a real postcode
+postcode.limit=Enter a real postcode
 
 confirm-contact-prefs.phone-limit=Telephone number must be 24 characters or less
 confirm-contact-prefs.telephone.phone-limit=Telephone number must be 24 characters or less

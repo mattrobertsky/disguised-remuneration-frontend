@@ -291,7 +291,7 @@ town.invalid=Mae’n rhaid i’r dref neu’r ddinas gynnwys llythrennau a i z, 
 county.limit=Mae’n rhaid i’r sir fod yn 40 o gymeriadau neu lai
 county.invalid=Mae’n rhaid i’r sir gynnwys llythrennau a i z, collnodau, comas, cysylltnodau, atalnodau llawn a bylchau yn unig
 postcode.required=Nodwch god post eich cyfeiriad
-postcode.invalid=Nodwch god post go iawn
+postcode.limit=Nodwch god post go iawn
 
 confirm-contact-prefs.phone-limit=Mae’n rhaid i’r rhif ffôn fod yn 24 o gymeriadau neu lai
 confirm-contact-prefs.telephone.phone-limit=Mae’n rhaid i’r rhif ffôn fod yn 24 o gymeriadau neu lai
