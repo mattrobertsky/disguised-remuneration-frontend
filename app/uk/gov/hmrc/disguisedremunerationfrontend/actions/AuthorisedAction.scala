@@ -23,7 +23,7 @@ import javax.inject.Inject
 
 import play.api.Logger
 import play.api.mvc.Results.Redirect
-import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
+import uk.gov.hmrc.auth.core.AuthProvider.{GovernmentGateway, Verify}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals._
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.auth.core.retrieve.Name
@@ -43,7 +43,7 @@ class AuthorisedAction @Inject()(mcc: MessagesControllerComponents, val authConn
 
     val retrieval = internalId and nino and saUtr and name
 
-      authorised(AuthProviders(GovernmentGateway)).retrieve(retrieval) { case id ~ natInsNo ~ sUtr ~ name =>
+      authorised(AuthProviders(GovernmentGateway, Verify)).retrieve(retrieval) { case id ~ natInsNo ~ sUtr ~ name =>
         val internalId = id.getOrElse(throw new RuntimeException("No internal ID for user"))
         Future.successful(Right(AuthorisedRequest(internalId, natInsNo, sUtr, request, name)))
     } recover {
