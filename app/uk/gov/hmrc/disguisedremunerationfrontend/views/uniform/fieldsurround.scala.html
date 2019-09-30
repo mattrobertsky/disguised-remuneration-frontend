@@ -14,7 +14,9 @@
  * limitations under the License.
  *@
 
-@(key: String, content: Html, isCompoundField: Boolean, hasHint: Boolean, hasErrors: Boolean)(implicit messages: UniformMessages[Html])
+ @import ltbs.uniform.common.web.FormFieldStats
+
+@(key: String, content: Html, isCompoundField: Boolean, hasHint: Boolean, hasErrors: Boolean, stats: FormFieldStats)(implicit messages: UniformMessages[Html])
 
 @defining((hasHint, hasErrors) match {
   case (true,true) => s"$key-hint $key-error"
@@ -24,7 +26,21 @@
 }){ describedByClass =>
 
 <div class="form-group@if(hasErrors){ form-group-error}">
-  @if(isCompoundField){
+  @if(stats.compoundChildren >= 2) {
+    <h1 class="heading-xlarge">Need heading</h1>
+    <p>Then need any paragraph copy</p>
+    
+    @*
+    * Will need to query if the content is a compound or standard field 
+    * so that we know how to wrap?
+    *@
+    <fieldset>
+      <legend>
+        @messages(s"$key.heading")
+      </legend>
+      @content
+    </fieldset>
+  } else { @if(isCompoundField){
     <fieldset
       class="fieldset"
       @if(describedByClass.nonEmpty){aria-describedby="@describedByClass"}
@@ -71,6 +87,6 @@
       </label>
     </h1>
     @content
-  }
+  }}
 </div>
   }

@@ -18,14 +18,12 @@
 @import ltbs.uniform.common.web.FormFieldStats
 
 @(keyList: List[String], errors: ErrorTree, content: Html, breadcrumbs: Path = Nil, stats: FormFieldStats)(implicit messages: UniformMessages[Html], request: Request[AnyContent])
-        <div style="background:#f4f4f4;padding: 10px;">
-          @stats
-        </div>
-        @key = @{keyList.last}
-            
-        @for(back <- breadcrumbs.headOption) {
-            <a href="@back" class="govuk link-back">@messages(List("back-to-" + back.mkString("-"),"back"))</a>
-        }
+  
+  @key = @{keyList.last}
+      
+  @for(back <- breadcrumbs.headOption) {
+      <a href="@back" class="govuk link-back">@messages(List("back-to-" + back.mkString("-"),"back"))</a>
+  }
 
   @if(breadcrumbs.isEmpty){
     <a href="/disguised-remuneration/" class="govuk link-back">@messages(List(s"back-to-service-page","back"))</a>
@@ -35,7 +33,7 @@
     @helper.CSRF.formField
     @errorsummary(keyList, errors, messages)
     @defining((messages.get(s"$key.hint").isDefined, errors.definedAtRoot)){ case (hasHint, hasErrors) =>
-      @fieldsurround(key, content, isCompoundField, hasHint, hasErrors)
+      @fieldsurround(key, content, stats.isCompound, hasHint, hasErrors, stats)
     }
 
     @for((k :: v :: _) <- messages.list(s"$key.details").collect { case x if x.toString.contains("|") => x.toString.split("[|]").toList }) {
