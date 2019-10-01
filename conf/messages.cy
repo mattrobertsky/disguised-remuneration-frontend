@@ -223,7 +223,7 @@ loan-recipient=Derbynnydd y benthyciad
 tax-or-national-insurance-paid-or-agreed-to-pay=Treth neu Yswiriant Gwladol a dalwyd neu y cytunwyd i’w dalu
 
 # time out
-time-out.title=For your security, we signed you out
+time-out.title=Er eich diogelwch, gwnaethom eich allgofnodi
 time-out.save=Cedwir eich cynnydd am 30 diwrnod
 
 # cya
