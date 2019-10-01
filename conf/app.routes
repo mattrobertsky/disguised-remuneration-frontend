@@ -2,43 +2,42 @@
 
 GET        /assets/*file            controllers.Assets.versioned(path="/public", file: Asset)
 
-GET        /                         uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.index
-GET        /task-list                uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.index
+GET        /                                        uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.index
+GET        /task-list                               uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.index
 
-GET        /sign-in                  uk.gov.hmrc.disguisedremunerationfrontend.controllers.AuthenticationController.signIn()
-GET        /sign-out                 uk.gov.hmrc.disguisedremunerationfrontend.controllers.AuthenticationController.signOut()
-GET        /time-in                  uk.gov.hmrc.disguisedremunerationfrontend.controllers.AuthenticationController.timeIn(referrer)
-# re-implement
-#GET        /time-out                 uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.timeOut()
+GET        /sign-in                                 uk.gov.hmrc.disguisedremunerationfrontend.controllers.AuthenticationController.signIn()
+GET        /sign-out                                uk.gov.hmrc.disguisedremunerationfrontend.controllers.AuthenticationController.signOut()
+GET        /time-in                                 uk.gov.hmrc.disguisedremunerationfrontend.controllers.AuthenticationController.timeIn(referrer)
+GET        /time-out                                uk.gov.hmrc.disguisedremunerationfrontend.controllers.AuthenticationController.timeOut()
 
-GET        /about-you/               uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutAction(id = "")
-GET        /about-you/:id            uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutAction(id: String)
-POST       /about-you/               uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutAction(id = "")
-POST       /about-you/:id            uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutAction(id: String)
+GET        /about-you/                              uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutAction(id = "")
+GET        /about-you/:id                           uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutAction(id: String)
+POST       /about-you/                              uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutAction(id = "")
+POST       /about-you/:id                           uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.aboutAction(id: String)
 
-GET        /contact-details/         uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetailsAction(id = "")
-GET        /contact-details/:id      uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetailsAction(id: String)
-POST       /contact-details/         uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetailsAction(id = "")
-POST       /contact-details/:id      uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetailsAction(id: String)
+GET        /contact-details/                        uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetailsAction(id = "")
+GET        /contact-details/:id                     uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetailsAction(id: String)
+POST       /contact-details/                        uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetailsAction(id = "")
+POST       /contact-details/:id                     uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.contactDetailsAction(id: String)
 
-GET        /scheme/new/              uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id = "")
-GET        /scheme/new/:id           uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id: String)
-POST       /scheme/new/              uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id = "")
-POST       /scheme/new/:id           uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id: String)
+GET        /scheme/new/                             uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id = "")
+GET        /scheme/new/:id                          uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id: String)
+POST       /scheme/new/                             uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id = "")
+POST       /scheme/new/:id                          uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.addScheme(id: String)
 
-GET        /scheme/:schemeIndex/     uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.editScheme(schemeIndex: Int, id = "")
-GET        /scheme/:schemeIndex/:id  uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.editScheme(schemeIndex: Int, id: String)
-POST       /scheme/:schemeIndex/     uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.editScheme(schemeIndex: Int, id = "")
-POST       /scheme/:schemeIndex/:id  uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.editScheme(schemeIndex: Int, id: String)
+GET        /scheme/:schemeIndex/                    uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.editScheme(schemeIndex: Int, id = "")
+GET        /scheme/:schemeIndex/:id                 uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.editScheme(schemeIndex: Int, id: String)
+POST       /scheme/:schemeIndex/                    uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.editScheme(schemeIndex: Int, id = "")
+POST       /scheme/:schemeIndex/:id                 uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.editScheme(schemeIndex: Int, id: String)
 
 GET        /scheme/:schemeIndex/details/:year/		uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.loanDetailsAction(schemeIndex: Int, year: Int, id = "")
 GET        /scheme/:schemeIndex/details/:year/:id	uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.loanDetailsAction(schemeIndex: Int, year: Int, id: String)
 POST       /scheme/:schemeIndex/details/:year/		uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.loanDetailsAction(schemeIndex: Int, year: Int, id = "")
 POST       /scheme/:schemeIndex/details/:year/:id	uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.loanDetailsAction(schemeIndex: Int, year: Int, id: String)
 
-GET        /check-your-answers       uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.cya
-POST       /complete                 uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.cyaPost
+GET        /check-your-answers                      uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.cya
+POST       /complete                                uk.gov.hmrc.disguisedremunerationfrontend.controllers.JourneyController.cyaPost
 
-GET        /language/:lang           uk.gov.hmrc.disguisedremunerationfrontend.controllers.LanguageSwitchController.switchToLanguage(lang: String)
+GET        /language/:lang                          uk.gov.hmrc.disguisedremunerationfrontend.controllers.LanguageSwitchController.switchToLanguage(lang: String)
 
-GET        /accessibility-statement  uk.gov.hmrc.disguisedremunerationfrontend.controllers.AccessibilityStatementController.showAccessibilityStatement
+GET        /accessibility-statement                 uk.gov.hmrc.disguisedremunerationfrontend.controllers.AccessibilityStatementController.showAccessibilityStatement

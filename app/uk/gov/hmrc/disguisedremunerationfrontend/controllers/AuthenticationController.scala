@@ -17,9 +17,10 @@
 package uk.gov.hmrc.disguisedremunerationfrontend.controllers
 
 import javax.inject.Inject
-
+import ltbs.uniform.UniformMessages
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.twirl.api.Html
 import uk.gov.hmrc.disguisedremunerationfrontend.config.AppConfig
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
@@ -38,5 +39,11 @@ class AuthenticationController @Inject()(mcc: MessagesControllerComponents)
 
   def timeIn(referrer: String): Action[AnyContent] = Action { implicit request =>
     Redirect(appConfig.ggLoginUrl, Map("continue" -> Seq(referrer), "origin" -> Seq(appConfig.appName)))
+  }
+  def timeOut: Action[AnyContent] = Action { implicit request =>
+    lazy val interpreter = DRInterpreter(appConfig, this, messagesApi)
+    implicit val msg: UniformMessages[Html] = interpreter.messages(request)
+
+    Ok(uk.gov.hmrc.disguisedremunerationfrontend.views.html.time_out()).withNewSession
   }
 }

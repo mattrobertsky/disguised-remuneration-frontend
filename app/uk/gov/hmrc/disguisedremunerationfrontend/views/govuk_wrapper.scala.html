@@ -141,7 +141,8 @@
     <!-- @ufMessagesToPlayMessages.lang.code -->
     <script defer src='@routes.Assets.versioned("javascripts/dr-application.js")'></script>
     <script defer src='@routes.Assets.versioned("javascripts/modernizr.js")'></script>
-    <script defer src='@routes.Assets.versioned("javascripts/show-hide-content2.js")'></script>
+    <script defer src='@routes.Assets.versioned("javascripts/show-hide-content.js")'></script>
+    <script defer src='@routes.Assets.versioned("javascripts/timeout-dialog.js")'></script>
 }
 
 @hmrcGovUkTemplate(Some(title), bodyClasses)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links(additionalLinks = Some(footerLinks))), true)(content)
