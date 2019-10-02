@@ -402,8 +402,9 @@ class JourneyController @Inject()(
         formWithErrors => {
           val contents =
             views.html.cya(username, blocksFromState(state, request.nino.nonEmpty), formWithErrors)
+          val errorTitle: String = if(formWithErrors.errors.nonEmpty) s"${m("common.error")}: " else ""
           BadRequest(views.html.main_template(
-            title = s"${m("cya.title")} - ${m("common.title")}"
+            title = errorTitle + s"${m("cya.title")} - ${m("common.title")}"
           )(contents))
         },
         postedForm => {

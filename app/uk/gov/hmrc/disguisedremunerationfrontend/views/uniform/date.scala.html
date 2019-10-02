@@ -44,7 +44,7 @@
                 class="govuk-input govuk-date-input__input govuk-input--width-@if(field=="year"){4}else{2} @if(errors.definedAt(field)) {govuk-input--error}"
                 id="@key-@field"
                 name="@{(key :+ field).mkString(".") }"
-                type="number"
+                type="tel"
                 pattern="[0-9]*"
                 value="@{values.valueAt(field).headOption}" />
             </div>
