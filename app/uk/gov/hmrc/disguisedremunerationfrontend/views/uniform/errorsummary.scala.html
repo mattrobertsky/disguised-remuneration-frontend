@@ -19,7 +19,7 @@
 @(keyList: List[String], errors: ErrorTree, messages: UniformMessages[Html])
 
 @if(keyList.length == 1 && errors.nonEmpty) {
-<div class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+<div class="error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary" id="error-summary-heading">
   <h2 class="heading-medium error-summary-heading" id="error-summary-title">
     @messages(List(s"${keyList.mkString(".")}.there.is.a.problem", "there.is.a.problem"))
   </h2>

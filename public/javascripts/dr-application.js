@@ -5,7 +5,7 @@
 $(document).ready(function () {
     // Turn off jQuery animation
     jQuery.fx.off = true;
-
+    document.getElementById("error-summary-heading").focus();
     $('input.volume').keyup(function(event) {
         // format number
         $(this).val(function(index, value) {
