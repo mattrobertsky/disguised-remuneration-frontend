@@ -943,6 +943,10 @@ strong, b {
 }
 
 /* Confirmation Page */
+.govuk-box-highlight {
+    background:#00703c;
+}
+
 .govuk-box-highlight span {
     display: block;
     font-weight: normal;
