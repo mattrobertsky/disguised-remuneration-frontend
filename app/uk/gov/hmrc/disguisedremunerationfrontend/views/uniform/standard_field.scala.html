@@ -27,10 +27,14 @@
   </h2>
 }
     
-@if(keyList.length > 1) {
+@if(keyList.length == 1) {
+  <h1 class="heading-xlarge">
+}
   @messages.get(s"$key.heading").map { hint =>
     <label class="label" for="@{keyList.mkString("_")}-input">@messages.decompose(s"$key.heading")</label>
   }
+  @if(keyList.length == 1) {
+ </h1>
 }
 
 @messages.get(s"$key.hint").map { hint =>

@@ -18,37 +18,92 @@
 
 @(key: List[String], values: Input, errors: ErrorTree, messages: UniformMessages[Html])
 
-<div class="govuk-date-input form-group @if(errors) {form-group-error}" id="@key">
-    <fieldset>
-        @messages.get(s"${key.mkString(".")}.heading").map { hint =>
-            <!--<legend class="label govuk-!-font-weight-bold" for="@key">@messages.decompose(s"${key.mkString(".")}.heading")</legend>-->
-        }
+  <!--
+  <div style="background: #f4f4f4; padding: 10px; font-size: 12px; color: #a9a9a9;">
+    <h4 style="margin-top: 0;">Field Surround</h4>
+    <p>Key Length: @key.length</p>
+    <p>Target fieldset ID: #still-using-the-scheme-no__1-input</p>
+    <p>@key</p>
+    <p>Key hint: @key-hint</p>
+    <p>Key error: @key-error</p>
+  </div>
+  -->
 
-        @messages.get(s"${key.mkString(".")}.hint").map { hint =>
+
+  @if(key.length > 1) {
+    <div class="form-group @if(errors) {form-group-error}" id="@key">
+      @defining((messages.get(s"${key.mkString(".")}.hint").isDefined, errors.definedAtRoot) match {
+          case (true,true) => s"$key-hint $key-error"
+          case (true,false) => s"$key-hint"
+          case (false,true) => s"$key-error"
+          case _ => ""
+        }
+      ){ describedByClass =>
+        <fieldset id="@{key.mkString("_")}-input" @if(describedByClass.nonEmpty){aria-describedby="@describedByClass"}>
+          @messages.get(s"${key.mkString(".")}.heading").map { hint =>
+            <legend class="label govuk-!-font-weight-bold" for="@key">@messages.decompose(s"${key.mkString(".")}.heading")</legend>
+          }
+
+          @messages.get(s"${key.mkString(".")}.hint").map { hint =>
             <span id="@key-hint" class="hint">@messages.decompose(s"${key.mkString(".")}.hint")</span>
-        }
+          }
 
-        @for((k,v) <- errors) {
+          @for((k,v) <- errors) {
             <span id="@key-error" class="error-message">
-                @v.head.prefixWith(key ++ k.head).render(messages)
+              @v.head.prefixWith(key ++ k.head).render(messages)
             </span>
-        }
+          }
 
-        @for(field <- List("day","month","year")) {
-            <div class="govuk-date-input__item">
+          <div class="govuk-date-input">
+            @for(field <- List("day","month","year")) {
+              <div class="govuk-date-input__item">
                 <div class="govuk-form-group">
-                    <label class="govuk-label govuk-date-input__label" for="@key-@field">
+                  <label class="govuk-label govuk-date-input__label" for="@key-@field">
                     @messages(List((key :+ field).mkString("."),field))
-                    </label>
-                    <input
-                    class="govuk-input govuk-date-input__input govuk-input--width-@if(field=="year"){4}else{2} @if(errors.definedAt(field)) {govuk-input--error}"
+                  </label>
+                  <input
+                    class="form-control govuk-input govuk-date-input__input govuk-input--width-@if(field=="year"){4}else{2} @if(errors.definedAt(field)) {form-control-error}"
                     id="@key-@field"
                     name="@{(key :+ field).mkString(".") }"
                     type="number"
                     pattern="[0-9]*"
-                    value="@{values.valueAt(field).headOption}" />
+                    value="@{values.valueAt(field).headOption}"
+                  />
                 </div>
-            </div>
-        }
-    </fieldset>
-</div>
+              </div>
+            }
+          </div>
+        </fieldset>
+      }
+    </div>
+  } else {
+    <div class="govuk-date-input" id="@key">
+      @messages.get(s"${key.mkString(".")}.hint").map { hint =>
+        <span id="@key-hint" class="hint">@messages.decompose(s"${key.mkString(".")}.hint")</span>
+      }
+
+      @for((k,v) <- errors) {
+        <span id="@key-error" class="error-message">
+          @v.head.prefixWith(key ++ k.head).render(messages)
+        </span>
+      }
+
+      @for(field <- List("day","month","year")) {
+        <div class="govuk-date-input__item">
+          <div class="govuk-form-group">
+            <label class="govuk-label govuk-date-input__label" for="@key-@field">
+              @messages(List((key :+ field).mkString("."),field))
+            </label>
+            <input
+              class="form-control govuk-input govuk-date-input__input govuk-input--width-@if(field=="year"){4}else{2} @if(errors.definedAt(field)) {form-control-error}"
+              id="@key-@field"
+              name="@{(key :+ field).mkString(".") }"
+              type="number"
+              pattern="[0-9]*"
+              value="@{values.valueAt(field).headOption}"
+            />
+          </div>
+        </div>
+      }
+    </div>
+  }

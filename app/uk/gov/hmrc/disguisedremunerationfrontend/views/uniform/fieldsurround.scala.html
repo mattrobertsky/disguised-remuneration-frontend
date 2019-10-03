@@ -26,21 +26,46 @@
 }){ describedByClass =>
 
 <div class="form-group@if(hasErrors){ form-group-error}">
+  <!--
+  <div style="background: #f4f4f4; padding: 10px; font-size: 12px; color: #a9a9a9;">
+    <h4 style="margin-top: 0;">Field Surround</h4>
+    <p>Key Length: @key.length</p>
+    <p>Stats Children: @stats.children</p>
+    <p>Stats Compound Children: @stats.compoundChildren</p>
+  </div>
+  -->
+
+  @*
+  * There are more than one fieldset/formgroup on the page
+  *@
   @if(stats.compoundChildren >= 2) {
-    <h1 class="heading-xlarge">Need heading</h1>
-    <p>Then need any paragraph copy</p>
+    <h1 class="heading-xlarge">
+      @messages.get(s"$key.heading.hint").map { headHint =>
+      <span class="govuk-caption-xl@if(hasErrors){ flush--top}">
+        @headHint
+      </span>
+      }
+      @messages(s"$key.heading")
+    </h1>
+
+    @for(msg <- messages.list(s"$key.intro")) {
+      <p class="govuk-body">
+        @msg
+      </p>
+    }
     
     @*
     * Will need to query if the content is a compound or standard field 
     * so that we know how to wrap?
     *@
-    <fieldset>
-      <legend>
-        @messages(s"$key.heading")
-      </legend>
-      @content
-    </fieldset>
+    @content
+
+
+
+
   } else { @if(isCompoundField){
+
+
     <fieldset
       class="fieldset"
       @if(describedByClass.nonEmpty){aria-describedby="@describedByClass"}
@@ -80,13 +105,7 @@
     * Note: Intro messages and message lists should ideally not appear between 
     * labels & their inputs
     *@
-
-    <h1 class="govuk-label-wrapper">
-      <label class="govuk-label--xl@if(hasErrors){ flush--top}" for="@{key}-input">
-        @messages(s"$key.heading")
-      </label>
-    </h1>
     @content
   }}
 </div>
-  }
+}

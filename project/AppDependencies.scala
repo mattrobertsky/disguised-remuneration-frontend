@@ -5,7 +5,7 @@ object AppDependencies {
 
   // If you're doing a PR, or someone has asked you to merge this into master
   // politely decline - snapshots are for development only.
-  val uniformVersion = "4.5.2-4-50f5ac3-SNAPSHOT"
+  val uniformVersion = "4.6.0"
 
   val compile = Seq(
     "uk.gov.hmrc"             %% "govuk-template"           % "5.34.0-play-26",
